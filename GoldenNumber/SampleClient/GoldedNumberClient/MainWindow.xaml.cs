@@ -1,4 +1,7 @@
-﻿using GoldedNumberClient.Models;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using GoldedNumberClient.Models;
 using GoldedNumberClient.Utils;
 using System;
 using System.Linq;

@@ -1,4 +1,7 @@
-﻿namespace MNIST.App
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace MNIST.App
 {
     partial class MainWindow
     {

@@ -1,4 +1,7 @@
-﻿# 为了“开箱即用”，本脚本没有依赖除了Python库以外的组件。
+﻿# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
+# 为了“开箱即用”，本脚本没有依赖除了Python库以外的组件。
 # 添加自己的代码时，可以自由地引用如numpy这样的组件以方便编程。
 
 import sys

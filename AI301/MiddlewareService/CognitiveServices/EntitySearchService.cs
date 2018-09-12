@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 

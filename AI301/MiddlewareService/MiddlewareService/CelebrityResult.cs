@@ -1,4 +1,7 @@
-﻿namespace CognitiveMiddlewareService.MiddlewareService
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace CognitiveMiddlewareService.MiddlewareService
 {
     public class CelebrityResult
     {

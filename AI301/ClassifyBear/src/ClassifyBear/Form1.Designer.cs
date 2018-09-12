@@ -1,4 +1,7 @@
-﻿namespace ClassifyBear
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace ClassifyBear
 {
     partial class Form1
     {

@@ -1,4 +1,7 @@
-﻿using CognitiveMiddlewareService.MiddlewareService;
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using CognitiveMiddlewareService.MiddlewareService;
 
 namespace CognitiveMiddlewareService.Processors
 {

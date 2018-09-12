@@ -1,3 +1,9 @@
+# 目录结构
+
+- [AI 301 课程](./AI301)
+    - 关注AI应用开发。
+- [GoldenNumber “黄金点”游戏相关内容](./GoldenNumber)
+    - 通过预测、博弈来体验和学习AI。
 
 # Contributing
 

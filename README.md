@@ -35,3 +35,9 @@ Privacy information can be found at https://privacy.microsoft.com/en-us/
 
 Microsoft and any contributors reserve all others rights, whether under their respective copyrights, patents,
 or trademarks, whether by implication, estoppel or otherwise.
+
+# License
+
+Some open-source code and materials are used. They are under different licenses:
+
+- The script [convolutional.py](./AI301/self-built_mnist_extenstion/tensorflow_model/convolutional.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). Origin code isn't changed.

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3F317BFA-42C9-48AE-929F-794AACB6148A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>OfflineClient</RootNamespace>
-    <AssemblyName>OfflineClient</AssemblyName>
+    <RootNamespace>OfflineScoreboard</RootNamespace>
+    <AssemblyName>OfflineScoreboard</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -104,6 +104,12 @@
     <None Include="TestScript\get_numbers.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bot\Bot.csproj">
+      <Project>{80152300-1fc2-4599-950f-68a3373ae777}</Project>
+      <Name>Bot</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

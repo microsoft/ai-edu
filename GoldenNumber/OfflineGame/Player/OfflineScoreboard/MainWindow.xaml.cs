@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace OfflineClient
+namespace OfflineScoreboard
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -29,13 +29,6 @@ namespace OfflineClient
 
         private const char Delimiter = '\t';
         private const string NewLine = "\n";
-
-        // !!! 需要提供实现的函数。
-        // 请注意，该函数会在后台线程执行。
-        private static Tuple<double, double> GetNumber(string input)
-        {
-            return Tuple.Create(42.0, 1.5);
-        }
 
         private async void StartButton_Click(object sender, RoutedEventArgs e)
         {
@@ -58,7 +51,7 @@ namespace OfflineClient
             }
             else
             {
-                getNumberProcedure = GetNumber;
+                getNumberProcedure = Bot.NumberHelper.GetNumber;
             }
 
             var lines = File.ReadAllLines(@"Data\SecondData.txt");

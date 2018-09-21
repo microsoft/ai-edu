@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace OfflineClient
+namespace OfflineScoreboard
 {
     /// <summary>
     /// Interaction logic for App.xaml

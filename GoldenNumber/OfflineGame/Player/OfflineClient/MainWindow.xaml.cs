@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace OfflineClient
+namespace OfflineScoreboard
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -51,7 +51,7 @@ namespace OfflineClient
             }
             else
             {
-                getNumberProcedure = NumberHelper.GetNumber;
+                getNumberProcedure = Bot.NumberHelper.GetNumber;
             }
 
             var lines = File.ReadAllLines(@"Data\SecondData.txt");

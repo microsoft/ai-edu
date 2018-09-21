@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OfflineClient
+namespace Bot
 {
     public class NumberHelper
     {

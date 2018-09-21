@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfflineScoreboard", "OfflineClient\OfflineScoreboard.csproj", "{3F317BFA-42C9-48AE-929F-794AACB6148A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfflineScoreboard", "OfflineScoreboard\OfflineScoreboard.csproj", "{3F317BFA-42C9-48AE-929F-794AACB6148A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bot", "Bot\Bot.csproj", "{80152300-1FC2-4599-950F-68A3373AE777}"
 EndProject

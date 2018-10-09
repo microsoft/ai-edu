@@ -3,6 +3,7 @@
 
 using BotRun;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -95,17 +96,25 @@ namespace LocalManager
             var dirs = Directory.GetDirectories(selectedPath);
             foreach (var dir in dirs)
             {
+                bool isSupportPython = Bot.IsSupportPython();
+                bool isSupportJulia = Bot.IsSupportJulia();
+
                 var exeFiles = Directory.GetFiles(dir, "*.exe");
                 if (exeFiles.Length == 0)
                 {
                     var getNumbersPyFile = Path.Combine(dir, "get_numbers.py");
-                    if (File.Exists(getNumbersPyFile))
+                    var getNumbersJuliaFile = Path.Combine(dir, "get_numbers.jl");
+                    if (isSupportPython && File.Exists(getNumbersPyFile))
                     {
                         botList.Add(new Bot(getNumbersPyFile, index++) { ActionLog = Log });
                     }
+                    else if (isSupportJulia && File.Exists(getNumbersJuliaFile))
+                    {
+                        botList.Add(new Bot(getNumbersJuliaFile, index++) { ActionLog = Log });
+                    }
                     else
                     {
-                        Log($"警告：跳过 \"{dir}\" 没有找到exe或者get_numbers.py");
+                        Log($"警告：跳过 \"{dir}\" 没有找到exe{(isSupportPython ? "或者get_numbers.py" : "")}{(isSupportJulia ? "或者get_numbers.jl" : "")}");
                     }
                     continue;
                 }
@@ -175,6 +184,32 @@ namespace LocalManager
             btnExport.Enabled = true;
         }
 
+        readonly static object botIndexLocker = new object();
+        private int nextBotIndex = 0;
+
+        private async Task RunBotsAsync(string historyString, int roundNum, ConcurrentBag<BotRunResult> results)
+        {
+            while (nextBotIndex < botList.Count)
+            {
+                Bot bot = null;
+                lock (botIndexLocker)
+                {
+                    if (nextBotIndex < botList.Count)
+                    {
+                        bot = botList[nextBotIndex++];
+                    }
+                }
+
+                if (bot == null)
+                {
+                    return;
+                }
+
+                var result = await bot.RunAsync(historyString, roundNum);
+                results.Add(result);
+            }
+        }
+
         // 运行一回合
         private async Task RunOneRoundAsync()
         {
@@ -189,21 +224,22 @@ namespace LocalManager
             // 从比赛数据中按约定格式生成输入数据
             var historyString = FormatBotInput(dtHistory);
 
-            List<Task<BotRunResult>> tasks = new List<Task<BotRunResult>>();
-            foreach (var bot in botList)
+            // Bot执行结果列表
+            ConcurrentBag<BotRunResult> botRunResultList = new ConcurrentBag<BotRunResult>();
+
+            List<Task> tasks = new List<Task>();
+            nextBotIndex = 0;
+            for (int i = 0; i < Environment.ProcessorCount; i++)
             {
-                tasks.Add(bot.RunAsync(historyString, curRoundNum));
+                tasks.Add(RunBotsAsync(historyString, curRoundNum, botRunResultList));
             }
 
             // 等待所有Bot执行完成
             await Task.WhenAll(tasks);
 
-            // Bot执行结果列表
-            var botRunResultList = tasks.Select(task => task.Result).ToList();
-
             // Bot输出的预测值列表
             var numberList = new List<double>();
-            foreach (var result in botRunResultList)
+            foreach (var result in botRunResultList.OrderBy(result => result.Bot.Index))
             {
                 numberList.Add(result.MasterValue);
                 numberList.Add(result.SlaveValue);

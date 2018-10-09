@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,6 +52,11 @@ namespace BotRun
                 {
                     f.StartInfo.FileName = "cmd.exe";
                     f.StartInfo.Arguments = $"/C python \"{FilePath}\"";
+                }
+                else if (Path.GetExtension(FilePath).Equals(".jl", StringComparison.OrdinalIgnoreCase))
+                {
+                    f.StartInfo.FileName = "cmd.exe";
+                    f.StartInfo.Arguments = $"/C julia \"{FilePath}\"";
                 }
                 else
                 {
@@ -182,5 +188,23 @@ namespace BotRun
                 ActionLog(message);
             }
         }
+
+        public static bool IsSupportPython()
+        {
+            StringBuilder sb = new StringBuilder("python.exe", MAX_PATH);
+            return PathFindOnPath(sb, null);
+        }
+
+        public static bool IsSupportJulia()
+        {
+            StringBuilder sb = new StringBuilder("julia.exe", MAX_PATH);
+            return PathFindOnPath(sb, null);
+        }
+
+        private const int MAX_PATH = 260;
+
+        [DllImport("shlwapi.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern bool PathFindOnPath([In, Out] StringBuilder pszFile, [In] String[] ppszOtherDirs);
+
     }
 }

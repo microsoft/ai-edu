@@ -96,17 +96,25 @@ namespace LocalManager
             var dirs = Directory.GetDirectories(selectedPath);
             foreach (var dir in dirs)
             {
+                bool isSupportPython = Bot.IsSupportPython();
+                bool isSupportJulia = Bot.IsSupportJulia();
+
                 var exeFiles = Directory.GetFiles(dir, "*.exe");
                 if (exeFiles.Length == 0)
                 {
                     var getNumbersPyFile = Path.Combine(dir, "get_numbers.py");
-                    if (File.Exists(getNumbersPyFile))
+                    var getNumbersJuliaFile = Path.Combine(dir, "get_numbers.jl");
+                    if (isSupportPython && File.Exists(getNumbersPyFile))
                     {
                         botList.Add(new Bot(getNumbersPyFile, index++) { ActionLog = Log });
                     }
+                    else if (isSupportJulia && File.Exists(getNumbersJuliaFile))
+                    {
+                        botList.Add(new Bot(getNumbersJuliaFile, index++) { ActionLog = Log });
+                    }
                     else
                     {
-                        Log($"警告：跳过 \"{dir}\" 没有找到exe或者get_numbers.py");
+                        Log($"警告：跳过 \"{dir}\" 没有找到exe{(isSupportPython ? "或者get_numbers.py" : "")}{(isSupportJulia ? "或者get_numbers.jl" : "")}");
                     }
                     continue;
                 }

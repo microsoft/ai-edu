@@ -1,4 +1,4 @@
-﻿namespace LocalManager
+namespace LocalManager
 {
     partial class MainForm
     {

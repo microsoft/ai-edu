@@ -1,4 +1,4 @@
-# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
+﻿# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,9 @@ from __future__ import print_function
 
 import argparse
 import gzip
+import numpy as np
 import os
+import shutil
 import sys
 import time
 
@@ -33,10 +35,14 @@ import numpy
 from six.moves import urllib
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
+from PIL import Image
+import itertools
+from random import shuffle
 
-# CVDF mirror of http://yann.lecun.com/exdb/mnist/
-SOURCE_URL = 'https://storage.googleapis.com/cvdf-datasets/mnist/'
-WORK_DIRECTORY = 'data'
+FLAGS = None
+
+SOURCE_URL = 'http://yann.lecun.com/exdb/mnist/'
+WORK_DIRECTORY = None
 IMAGE_SIZE = 28
 NUM_CHANNELS = 1
 PIXEL_DEPTH = 255
@@ -48,8 +54,34 @@ NUM_EPOCHS = 10
 EVAL_BATCH_SIZE = 64
 EVAL_FREQUENCY = 100  # Number of steps between evaluations.
 
+EXTENSION_DIR = None
 
-FLAGS = None
+def load_extension_symbol_labels_and_data():
+  """Require EXTENSION_DIR exists, and has 6 sub-directories with special names.
+     Returns tuple (label: int, data: numpy.array)"""
+  assert os.path.isdir(EXTENSION_DIR)
+
+  for it in enumerate(["add", "minus", "mul", "div", "lp", "rp"]):
+    label = 10 + it[0]
+    sub_dir_name = it[1]
+
+    sub_dir = os.path.join(EXTENSION_DIR, sub_dir_name)
+    image_names = os.listdir(sub_dir)
+    size = len(image_names)
+    print('Loading', size, 'images in "' + sub_dir_name + '"folder.')
+
+    def load_label_data_pair(image_name):
+      image_path = os.path.join(sub_dir, image_name)
+      img = Image.open(image_path)
+      img.load()
+      image_data = numpy.asarray(img, dtype=numpy.float32)
+
+      # Convert (Foreground: 0, Background: 255) to (Foreground: 0.5, Background: -0.5), aligned with MNIST
+      data = (PIXEL_DEPTH / 2.0 - image_data) / PIXEL_DEPTH
+      return (label, data)
+
+    yield from map(load_label_data_pair, image_names)
+    #yield from itertools.islice(map(load_label_data_pair, image_names), 0, 50)
 
 
 def data_type():
@@ -120,6 +152,7 @@ def error_rate(predictions, labels):
 
 
 def main(_):
+  global BATCH_SIZE
   if FLAGS.self_test:
     print('Running self-test.')
     train_data, train_labels = fake_data(256)
@@ -139,12 +172,52 @@ def main(_):
     test_data = extract_data(test_data_filename, 10000)
     test_labels = extract_labels(test_labels_filename, 10000)
 
+    # This is 60000.
+    raw_train_size = len(train_data)
+
+    # Load all extension symbols and mix with raw MNIST data
+    if EXTENSION_DIR is not None:
+
+      # Including math symbols.
+      NUM_LABELS = 16
+
+      extension_label_data_pairs = list(load_extension_symbol_labels_and_data())
+      shuffle(extension_label_data_pairs)
+
+      extension_size = len(extension_label_data_pairs)
+      test_count = int(extension_size * 0.15) # 15% for test
+      train_count = extension_size - test_count
+
+      test_pairs = extension_label_data_pairs[:test_count]
+      train_pairs = extension_label_data_pairs[test_count:]
+
+      def mix(pairs, raw_data, raw_labels):
+        labels = numpy.asarray([pair[0] for pair in pairs], dtype=numpy.int64)
+        data = numpy.asarray([pair[1] for pair in pairs]).reshape((len(pairs), 28, 28, 1))
+        labels = numpy.concatenate([raw_labels, labels])
+        data = numpy.concatenate([raw_data, data])
+
+        idx = numpy.random.permutation(len(labels))
+
+        return (labels[idx], data[idx])
+
+      train_labels, train_data = mix(train_pairs, train_data, train_labels)
+      test_labels, test_data = mix(test_pairs, test_data, test_labels)
+
+      global VALIDATION_SIZE
+      validation_ratio = VALIDATION_SIZE * 1.0 / raw_train_size
+      VALIDATION_SIZE = VALIDATION_SIZE + int(validation_ratio * train_count)
+
+
+
     # Generate a validation set.
     validation_data = train_data[:VALIDATION_SIZE, ...]
     validation_labels = train_labels[:VALIDATION_SIZE]
     train_data = train_data[VALIDATION_SIZE:, ...]
     train_labels = train_labels[VALIDATION_SIZE:]
     num_epochs = NUM_EPOCHS
+
+
   train_size = train_labels.shape[0]
 
   # This is where training samples and labels are fed to the graph.
@@ -152,11 +225,12 @@ def main(_):
   # training step using the {feed_dict} argument to the Run() call below.
   train_data_node = tf.placeholder(
       data_type(),
-      shape=(BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
-  train_labels_node = tf.placeholder(tf.int64, shape=(BATCH_SIZE,))
+      shape=(None, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS),
+      name='image_input')
+  train_labels_node = tf.placeholder(tf.int64, shape=(None,))
   eval_data = tf.placeholder(
       data_type(),
-      shape=(EVAL_BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
+      shape=(None, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS))
 
   # The variables below hold all the trainable weights. They are passed an
   # initial value which will be assigned when we call:
@@ -216,7 +290,7 @@ def main(_):
     pool_shape = pool.get_shape().as_list()
     reshape = tf.reshape(
         pool,
-        [pool_shape[0], pool_shape[1] * pool_shape[2] * pool_shape[3]])
+        [tf.shape(pool)[0], pool_shape[1] * pool_shape[2] * pool_shape[3]])
     # Fully connected layer. Note that the '+' operation automatically
     # broadcasts the biases.
     hidden = tf.nn.relu(tf.matmul(reshape, fc1_weights) + fc1_biases)
@@ -230,6 +304,9 @@ def main(_):
   logits = model(train_data_node, True)
   loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
       labels=train_labels_node, logits=logits))
+
+  predict_logits = model(train_data_node)
+  predict_op = tf.argmax(predict_logits, 1, name='predict_op')
 
   # L2 regularization for the fully connected parameters.
   regularizers = (tf.nn.l2_loss(fc1_weights) + tf.nn.l2_loss(fc1_biases) +
@@ -280,12 +357,40 @@ def main(_):
         predictions[begin:, :] = batch_predictions[begin - size:, :]
     return predictions
 
+  ### Change original code
+  # Add model_dir to save model
+  if not os.path.exists(FLAGS.model_dir):
+    os.makedirs(FLAGS.model_dir)
+
+  ### Change original code
+  # Create a saver for writing training checkpoints.
+  saver = tf.train.Saver()
+  # Create a builder for writing saved model for serving.
+  if os.path.isdir(FLAGS.export_dir):
+    shutil.rmtree(FLAGS.export_dir)
+  builder = tf.saved_model.builder.SavedModelBuilder(FLAGS.export_dir)
+
+
   # Create a local session to run the training.
   start_time = time.time()
-  with tf.Session() as sess:
+  with tf.Session(config=tf.ConfigProto(log_device_placement=False)) as sess:
     # Run all the initializers to prepare the trainable parameters.
     tf.global_variables_initializer().run()
+    ### Change original code
+    # Save checkpoint when training
+    ckpt = tf.train.get_checkpoint_state(FLAGS.model_dir)
+    if ckpt and ckpt.model_checkpoint_path:
+      print('Load from ' + ckpt.model_checkpoint_path)
+      saver.restore(sess, ckpt.model_checkpoint_path)
+
+    ### Change original code
+    # Create summary, logs will be saved, which can display in Tensorboard
+    tf.summary.scalar("loss", loss)
+    merged = tf.summary.merge_all()
+    writer = tf.summary.FileWriter(os.path.join(FLAGS.model_dir, 'log'), sess.graph)
+
     print('Initialized!')
+
     # Loop through training steps.
     for step in xrange(int(num_epochs * train_size) // BATCH_SIZE):
       # Compute the offset of the current minibatch in the data.
@@ -302,10 +407,17 @@ def main(_):
       # print some extra information once reach the evaluation frequency
       if step % EVAL_FREQUENCY == 0:
         # fetch some extra nodes' data
-        l, lr, predictions = sess.run([loss, learning_rate, train_prediction],
+        ### Change original code
+        # Add summary
+        summary, l, lr, predictions = sess.run([merged, loss, learning_rate, train_prediction],
                                       feed_dict=feed_dict)
+        writer.add_summary(summary, step)
         elapsed_time = time.time() - start_time
         start_time = time.time()
+        ### Change original code
+        # save model
+        if step % (EVAL_FREQUENCY * 10) == 0:
+          saver.save(sess, os.path.join(FLAGS.model_dir, "model.ckpt"), global_step=step)
         print('Step %d (epoch %.2f), %.1f ms' %
               (step, float(step) * BATCH_SIZE / train_size,
                1000 * elapsed_time / EVAL_FREQUENCY))
@@ -314,13 +426,27 @@ def main(_):
         print('Validation error: %.1f%%' % error_rate(
             eval_in_batches(validation_data, sess), validation_labels))
         sys.stdout.flush()
+
+    ### Change original code
+    # Save model
+    inputs = { tf.saved_model.signature_constants.PREDICT_INPUTS: train_data_node }
+    outputs = { tf.saved_model.signature_constants.PREDICT_OUTPUTS: predict_op }
+    serving_signatures = {
+      'Infer': #tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY:
+      tf.saved_model.signature_def_utils.predict_signature_def(inputs, outputs)
+    }
+    builder.add_meta_graph_and_variables(sess, [tf.saved_model.tag_constants.SERVING],
+                                         signature_def_map=serving_signatures,
+                                         assets_collection=tf.get_collection(tf.GraphKeys.ASSET_FILEPATHS),
+                                         clear_devices=True)
+    builder.save()
+
     # Finally print the result!
     test_error = error_rate(eval_in_batches(test_data, sess), test_labels)
     print('Test error: %.1f%%' % test_error)
     if FLAGS.self_test:
       print('test_error', test_error)
-      assert test_error == 0.0, 'expected 0.0 test_error, got %.2f' % (
-          test_error,)
+      assert test_error == 0.0, 'expected 0.0 test_error, got %.2f' % (test_error,)
 
 
 if __name__ == '__main__':
@@ -335,6 +461,31 @@ if __name__ == '__main__':
       default=False,
       action='store_true',
       help='True if running a self test.')
+  parser.add_argument(
+    '--input_dir',
+    type=str,
+    default='input',
+    help='Directory to put the input data.')
+  parser.add_argument(
+    '--model_dir',
+    type=str,
+    default='output',
+    help='Directory to put the checkpoint files.')
+  parser.add_argument(
+    '--export_dir',
+    type=str,
+    default='export',
+    help='Directory to put the savedmodel files.')
+
+  parser.add_argument(
+    '--extension_dir',
+    type=str,
+    default=None,
+    help='Directory to put the extension images.')
 
   FLAGS, unparsed = parser.parse_known_args()
+  WORK_DIRECTORY = FLAGS.input_dir
+
+  EXTENSION_DIR = FLAGS.extension_dir
+
   tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)

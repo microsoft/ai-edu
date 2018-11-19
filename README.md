@@ -23,4 +23,4 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 Some open-source code and materials are used. They are under different licenses:
 
-- The script [convolutional.py](./AI301/self-built_mnist_extenstion/tensorflow_model/convolutional.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). [Origin code](https://github.com/tensorflow/models/blob/f81bb397efe57cf8bfb4a195c1b3064997f3e3c2/tutorials/image/mnist/convolutional.py) isn't changed.
+- The script [mnist_extension.py](./AI301/self-built_mnist_extension/tensorflow_model/mnist_extension.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). Based on [Origin code](https://github.com/tensorflow/models/blob/f81bb397efe57cf8bfb4a195c1b3064997f3e3c2/tutorials/image/mnist/convolutional.py).

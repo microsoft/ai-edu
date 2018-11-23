@@ -776,3 +776,7 @@ python中和矩阵运算有关的函数库是什么呢？numpy啊！所以，我
 
         return self.error
   ```
+
+  参考文章:
+
+  [https://zhuanlan.zhihu.com/c_162633442](https://zhuanlan.zhihu.com/c_162633442)

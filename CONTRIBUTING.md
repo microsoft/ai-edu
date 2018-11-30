@@ -1,6 +1,6 @@
 # 共建指南
 
-- 在提交Pull request之前，请确保：
+# 在提交Pull request之前，请确保：
    - 您提交的内容不是已存在的共建内容。
    - 您提交的内容位于正确的模块、路径下。
    - 检查您的语法和书写。
@@ -16,7 +16,7 @@
    - 不要到处留无用的空格。
    - 推荐书写相对链接实现站内跳转
 
-- 您可以贡献的内容可以包括：
+# 您可以贡献的内容可以包括：
    - 贡献到[A:人工智能教学课程共建模块](./A-教学-人工智能教学课程分享与共建)的人工智能教学课程大纲。
        - 确保为markdown格式，文件格式如下：
        <pre><code>[Title+author] (link_to_tutorial)</code></pre> 
@@ -42,12 +42,7 @@
   
     - 贡献到[E:等你来战](./E-等你来战)的主要为你提供的对于改模块下为解决的人工智能问题的解决方案。
 
-Make a separate pull request for each of the tutorial
-Use the following format [Title](link_to_tutorial)
-If your tutorial is a multi-part series, use the following format: 
-    * Title
-        * [Part 1](link_to_part_1)
-        * [Part 2](link_to_part_2)
+
 
 # 仔细阅读以下声明：
 

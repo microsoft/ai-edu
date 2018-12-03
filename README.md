@@ -7,6 +7,7 @@
 
 联系信息：msraeduhub@microsoft.com.
 
+
 # <font size=5>使用说明</font> 
 本共建资源分为若干模块。每个模块都支持开发者向其共建新内容。请参照 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解如何共建内容。
 

@@ -191,7 +191,7 @@ python中和矩阵运算有关的函数库是什么呢？numpy啊！所以，我
 
   用图来形象化这个过程
 
-  <img src="./Establish/matrix1.png" width="200">
+  <img src="./Images/12&13/matrix1.png" width="200">
 
   在这张图中，颜色相同的块表示属于同一个小区域，在每个小区域进行取区域中最大值的操作，得到结果如下
 

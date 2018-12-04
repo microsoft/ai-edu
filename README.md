@@ -48,7 +48,9 @@
 - [A:教学课程](./A-教学课程) 
   - 1. [人工智能基本原理简明教程-微软邹欣团队](./A-教学课程/人工智能基本原理简明教程-微软邹欣团队.md)
   - 2. [人工智能实践课程大纲-微软邹欣团队](./A-教学课程/人工智能实践课程大纲-微软邹欣团队.md)
-  - 3. [北京大学微软亚洲研究院人工智能与信息社会大纲（MOOC）-北大陈斌](./A-教学课程/北京大学微软亚洲研究院人工智能与信息社会大纲（MOOC）-北大陈斌.md)
+  - 3. [微软专业学位MPP（Microsoft Professional Program）人工智能课](./A-教学课程/MPP.md)
+  - 4. [微软人工智能公开课](https://mva.microsoft.com/colleges/microsoftai)
+  - 5. [北京大学微软亚洲研究院人工智能与信息社会大纲（MOOC）-北大陈斌](./A-教学课程/北京大学微软亚洲研究院人工智能与信息社会大纲（MOOC）-北大陈斌.md)
 - [B:教学案例与实践](./B-教学案例与实践)
   - 1. [预构建－OCR应用案例－漫画翻译](./B-教学案例与实践/B1-预构建－OCR应用案例－漫画翻译/README.md) 
   - 2. [定制化－文字理解应用案例-问答系统和对话机器人服务](./B-教学案例与实践/B2-定制化－文字理解应用案例-问答系统和对话机器人服务/README.md) 
@@ -61,8 +63,17 @@
   - 9. [自构建－图像识别应用案例-手写算式计算器](./B-教学案例与实践/B9-自构建－图像识别应用案例-手写算式计算器/README.md)
   - 10. [扩展阅读－机器学习平台建设](./B-教学案例与实践/B10-扩展阅读－机器学习平台建设/README.md) 
   
-- [C:人工智能开发工具与环境搭建教程](./C-开发工具与环境/README.md)
-   - 1. [从零开始搭建开发环境](https://mp.weixin.qq.com/s/-vG9kg48mt9vcmqDlWtxKw)
+- [C:开发工具与环境](./C-开发工具与环境/README.md)
+   - [Microsoft Visual Studio Tools for AI](./C-开发工具与环境/README.md) 
+     - [Microsoft Visual Studio Tools for AI (VS2017 version)安装包](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.vstoolsai-vs2017)
+     - [从零开始搭建开发环境](https://mp.weixin.qq.com/s/-vG9kg48mt9vcmqDlWtxKw)
+     - [Microsoft Visual Studio Tools for AI GitHub Repo](https://github.com/Microsoft/vs-tools-for-ai)
+   - [微软开源自动机器学习工具NNI](./C-开发工具与环境/README.md) 
+     - [微软开源自动机器学习工具NNI简介](https://www.cnblogs.com/ms-uap/p/9719071.html) 
+     - [微软开源自动机器学习工具NNI GitHub Repo](https://github.com/Microsoft/nni)
+   - [微软OpenPAI 开放人工智能平台](./C-开发工具与环境/README.md) 
+     - [微软OpenPAI 开放人工智能平台简介](https://www.cnblogs.com/ms-uap/p/openpai_or_pai.html) 
+     - [微软OpenPAI 开放人工智能平台 GitHub Repo](https://github.com/Microsoft/pai)
   
 - [D:答疑与交流](./D-答疑与交流)
   
@@ -86,4 +97,4 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 Some open-source code and materials are used. They are under different licenses:
 
-- The script [mnist_extension.py](./AI301/self-built_mnist_extension/tensorflow_model/mnist_extension.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). Based on [Origin code](https://github.com/tensorflow/models/blob/f81bb397efe57cf8bfb4a195c1b3064997f3e3c2/tutorials/image/mnist/convolutional.py).
+- The script [mnist_extension.py](./B-教学案例与实践/B9-自构建－图像识别应用案例-手写算式计算器/微软-方案1/tensorflow_model/mnist_extension.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). Based on [Origin code](https://github.com/tensorflow/models/blob/f81bb397efe57cf8bfb4a195c1b3064997f3e3c2/tutorials/image/mnist/convolutional.py).

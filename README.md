@@ -86,4 +86,4 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 Some open-source code and materials are used. They are under different licenses:
 
-- The script [mnist_extension.py](./AI301/self-built_mnist_extension/tensorflow_model/mnist_extension.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). Based on [Origin code](https://github.com/tensorflow/models/blob/f81bb397efe57cf8bfb4a195c1b3064997f3e3c2/tutorials/image/mnist/convolutional.py).
+- The script [mnist_extension.py](./B-教学案例与实践/B9-自构建－图像识别应用案例-手写算式计算器/微软-方案1/tensorflow_model/mnist_extension.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). Based on [Origin code](https://github.com/tensorflow/models/blob/f81bb397efe57cf8bfb4a195c1b3064997f3e3c2/tutorials/image/mnist/convolutional.py).

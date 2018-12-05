@@ -1,3 +1,6 @@
+Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+
 # 针对时序数据的AI构建实战 - 基于“黄金点”游戏
 
 **主要知识点：**

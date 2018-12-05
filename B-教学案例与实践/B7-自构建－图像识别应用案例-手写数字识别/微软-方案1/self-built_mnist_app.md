@@ -1,3 +1,6 @@
+Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+
 基于本地模型的手写数字识别应用开发案例
 ===
 使用Visual Studio Tools for AI加速桌面智能应用开发

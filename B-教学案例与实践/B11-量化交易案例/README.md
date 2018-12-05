@@ -1,3 +1,7 @@
+Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+  
+
 # 量化交易
 
 1. 案例介绍

@@ -1,6 +1,6 @@
 ﻿# AI基本原理简明教程的目录
 Copyright © Microsoft Corporation. All rights reserved.
-  适用于[License](./LICENSE.md)版权许可
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
   
 ## 写在前面，为什么要出这个系列的教程呢？
 

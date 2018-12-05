@@ -1,5 +1,8 @@
+Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+
 ---
-title: 机器学习平台建设
+机器学习平台建设
 ---
 
 本文从机器学习平台的架构开始，再到具体的功能，然后从需求的角度带给读者思考，找到合适的机器学习平台建设之路。最后，推荐了微软开源开放的机器学习平台OpenPAI，是可私有部署的机器学习训练平台。

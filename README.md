@@ -3,7 +3,7 @@
 
 本社区依托教育部-微软产学合作协同育人平台，由微软亚洲研究院学术合作部及产品组提供全面支撑，面向全国人工智能的学习者，通过微软亚洲研究院产品组提供的人工智能应用开发中的真实案例，及配套的工具、教程提供学习资源，同时结合大量的一线人工智能教学教师及人工智能学习者的分享，面向开源，与广大的老师、学生、开发者，一起学习，一起贡献，共建人工智能教育与学习社区。
 
-本社区部分资源为原创内容，如需引用，请注明出处。
+本社区注明版权出处的内容适用于[License](./LICENSE.md)版权许可。
 
 联系信息：msraeduhub@microsoft.com.
 
@@ -79,22 +79,4 @@
   
 - [E:等你来战](./E-等你来战)
 
-# Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
-
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-# Licenses
-
-Some open-source code and materials are used. They are under different licenses:
-
-- The script [mnist_extension.py](./B-教学案例与实践/B9-自构建－图像识别应用案例-手写算式计算器/微软-方案1/tensorflow_model/mnist_extension.py) is under [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). Based on [Origin code](https://github.com/tensorflow/models/blob/f81bb397efe57cf8bfb4a195c1b3064997f3e3c2/tutorials/image/mnist/convolutional.py).

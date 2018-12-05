@@ -1,4 +1,7 @@
-扩展手写数字识别应用
+Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+  
+  扩展手写数字识别应用
 ===
 识别并计算简单手写数学表达式
 ---

@@ -1,6 +1,8 @@
+Copyright © Microsoft Corporation. All rights reserved.适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+
 # 微软System团队
 # 人工智能应用开发实践课程
-Copyright © Microsoft Corporation. All rights reserved.适用于[License](./LICENSE.md)版权许可
+
 
 受众人群：具有人工智能理论基础/编程经验的的学生、程序员
 # 课程概述

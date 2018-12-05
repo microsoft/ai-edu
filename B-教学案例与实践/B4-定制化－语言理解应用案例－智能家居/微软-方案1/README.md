@@ -1,6 +1,6 @@
 # 智能家居
 Copyright © Microsoft Corporation. All rights reserved.
-  适用于[License](./LICENSE.md)版权许可
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
   
 **主要知识点：**
 

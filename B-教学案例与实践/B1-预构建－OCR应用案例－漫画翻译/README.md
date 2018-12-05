@@ -1,5 +1,8 @@
 # 目录
 
+Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](./LICENSE.md)版权许可
+  
 [知识点](#知识点)
 
 [概述](#概述)

@@ -1,5 +1,7 @@
 # 智能家居
-
+Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](./LICENSE.md)版权许可
+  
 **主要知识点：**
 
   - 了解微软认知服务 – 语音转文字服务

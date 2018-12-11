@@ -12,7 +12,7 @@ Copyright © Microsoft Corporation. All rights reserved.适用于[License](https
 
 # 课程结构
 
-* 1.人工智能应用开发概述
+* 1.[人工智能应用开发概述](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B0-introduction/AI301_intro.md)
 * 2.预构建的人工智能应用开发案例（持续更新中）
     * 2.1.	[OCR类应用开发详解](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B1-%E9%A2%84%E6%9E%84%E5%BB%BA%EF%BC%8DOCR%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%EF%BC%8D%E6%BC%AB%E7%94%BB%E7%BF%BB%E8%AF%91) 
     * 2.2.	搭建中间服务层

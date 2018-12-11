@@ -14,28 +14,32 @@ Copyright © Microsoft Corporation. All rights reserved.适用于[License](https
 
 * 1.人工智能应用开发概述
 * 2.预构建的人工智能应用开发案例（持续更新中）
-    * 2.1.	OCR类应用开发详解 
+    * 2.1.	[OCR类应用开发详解](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B1-%E9%A2%84%E6%9E%84%E5%BB%BA%EF%BC%8DOCR%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%EF%BC%8D%E6%BC%AB%E7%94%BB%E7%BF%BB%E8%AF%91) 
     * 2.2.	搭建中间服务层
 * 3.定制化的人工智能应用开发案例（持续更新中）
-    * 3.1.	智能家居应用开发详解
-    * 3.2.	看图识熊应用开发详解
-    * 3.3.  问答系统和对话机器人服务
-* 4.AI应用开发理论基础
-    * 4.1.	神经网络的基本工作原理
-    * 4.2.	神经网络中反向传播与梯度下降的基本概念
-    * 4.3.	损失函数和激活函数
-    * 4.4.	用线性回归来理解神经网络训练过程
-    * 4.5.	徒手搭建神经网络
-    * 4.6.	徒手搭建CNN网络
-    * 4.7.	徒手搭建RNN网络
-    * 4.8.	模型内部
-    * 4.9.	附录：基本数学导数公式
+    * 3.1.	[智能家居应用开发详解](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B4-%E5%AE%9A%E5%88%B6%E5%8C%96%EF%BC%8D%E8%AF%AD%E8%A8%80%E7%90%86%E8%A7%A3%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%EF%BC%8D%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85)
+    * 3.2.	[看图识熊应用开发详解](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B3-%E5%AE%9A%E5%88%B6%E5%8C%96%EF%BC%8D%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%EF%BC%8D%E7%9C%8B%E5%9B%BE%E8%AF%86%E7%86%8A)
+    * 3.3.  [问答系统和对话机器人服务](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B2-%E5%AE%9A%E5%88%B6%E5%8C%96%EF%BC%8D%E6%96%87%E5%AD%97%E7%90%86%E8%A7%A3%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B-%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%AF%B9%E8%AF%9D%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%9C%8D%E5%8A%A1)
+* 4.AI应用开发基本原理
+    * 4.1.	[神经网络的基本工作原理](https://github.com/Microsoft/ai-edu/blob/master/B-教学案例与实践/B6-人工智能基本原理简明教程/1-神经网络的基本工作原理.md)
+    * 4.2.	[神经网络中反向传播与梯度下降的基本概念](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/2-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%B8%8E%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D.md)
+    * 4.3.	[损失函数](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/3-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.md)
+    * 4.4.	[单入单出的一层神经网络](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/4-%E5%8D%95%E5%85%A5%E5%8D%95%E5%87%BA%E7%9A%84%E4%B8%80%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
+    * 4.5.	[多入单出的一层神经网络](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/5-%E5%A4%9A%E5%85%A5%E5%8D%95%E5%87%BA%E7%9A%84%E4%B8%80%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
+    * 4.6   [多入多出的一层神经网络](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/6-%E5%A4%9A%E5%85%A5%E5%A4%9A%E5%87%BA%E7%9A%84%E4%B8%80%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
+    * 4.7.	[扩展阅读](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/6-%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB.md)
+    * 4.8   [分类函数](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/7.1-%E5%88%86%E7%B1%BB%E5%87%BD%E6%95%B0.md)
+    * 4.9   [激活函数](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/7.2-%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.md)
+    * 4.10.	[单入单出的两层神经网络](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/8-%E5%8D%95%E5%85%A5%E5%8D%95%E5%87%BA%E7%9A%84%E4%B8%A4%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
+    * 4.11  徒手搭建CNN网络
+    * 4.12	徒手搭建RNN网络
+    * 4.13	[附录：基本数学导数公式](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/0-%E5%9F%BA%E6%9C%AC%E6%95%B0%E5%AD%A6%E5%AF%BC%E6%95%B0%E5%85%AC%E5%BC%8F.md)
 * 5.自建人工智能应用开发案例（持续更新中） 
-    * 5.1.  手写数字识别应用开发 
-    * 5.2.  手写算式计算器应用开发
-    * 5.3.  AI+游戏开发：黄金点程序
-    * 5.4.  预测股票价格走势案例
-* 6.人工智能与伦理 
-* 7.机器学习平台
+    * 5.1.  [手写数字识别应用开发](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B7-%E8%87%AA%E6%9E%84%E5%BB%BA%EF%BC%8D%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B-%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB) 
+    * 5.2.  [手写算式计算器应用开发](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B9-%E8%87%AA%E6%9E%84%E5%BB%BA%EF%BC%8D%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B-%E6%89%8B%E5%86%99%E7%AE%97%E5%BC%8F%E8%AE%A1%E7%AE%97%E5%99%A8)
+    * 5.3.  [AI+游戏开发：黄金点程序](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B8-%E8%87%AA%E6%9E%84%E5%BB%BA%EF%BC%8DAI%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91%E6%A1%88%E4%BE%8B%EF%BC%8D%E9%BB%84%E9%87%91%E7%82%B9%E6%B8%B8%E6%88%8F/%E5%BE%AE%E8%BD%AF-%E6%96%B9%E6%A1%881/README.md)
+    * 5.4.  [预测股票价格走势案例（更新中）](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B11-%E9%87%8F%E5%8C%96%E4%BA%A4%E6%98%93%E6%A1%88%E4%BE%8B)
+* 6.[人工智能与伦理](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B12-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E9%81%93%E5%BE%B7%E4%B8%8E%E4%BC%A6%E7%90%86/7_AI_Ethics.md) 
+* 7.[机器学习平台](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B10-%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB%EF%BC%8D%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B9%B3%E5%8F%B0%E5%BB%BA%E8%AE%BE)
 * 8.人工智能前沿综述（更新中）
 

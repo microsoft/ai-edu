@@ -1,12 +1,9 @@
+# AI基本原理简明教程的目录
 Copyright © Microsoft Corporation. All rights reserved.
   适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
   
-# AI基本原理简明教程的目录
-
 ## 写在前面，为什么要出这个系列的教程呢？
 
-  
-  
   总的说来，我们现在有了很多非常厉害的深度学习框架，比如tensorflow，pytorch，paddlepaddle，caffe2等等等等。然而，我们用这些框架在搭建我们自己的深度学习模型的时候，到底做了一些什么样的操作呢？我们试图去阅读框架的源码来理解框架到底帮助我们做了些什么，但是……很难！很难！很难！因为深度学习是需要加速啦，分布式计算啦，所以框架做了很多很多的优化，也让像我们这样的小白难以理解这些框架的源码。所以，为了帮助大家更进一步的了解神经网络模型的具体内容，我们整理了这样一个系列的教程。
 
 对于这份教程的内容，如果没有额外的说明，我们通常使用如下表格的命名约定
@@ -41,15 +38,14 @@ Copyright © Microsoft Corporation. All rights reserved.
   清醒的头脑（困了的同学请自觉泡茶），纸和笔（如果像跟着推公式的话），闹钟（防止久坐按时起来转转），厚厚的衣服（有暖气的同学请忽略）
 
 ## 目录
-+ [神经网络的基本工作原理](./1-神经网络的基本工作原理.md)
-+ [神经网络中反向传播与梯度下降的基本概念](./2-反向传播与梯度下降.md)
-+ [损失函数](./3-损失函数.md)
-+ [一层神经网络单输出能做什么](./4-一层神经网络单输出能做什么.md)
-+ [激活函数](./5-激活函数.md)
-+ [两层神经网络单输出能做什么](./6-两层神经网络单输出能做什么.md)
-+ 两层神经网络多输出能做什么
-+ 徒手搭建CNN网络（上）
-+ 徒手搭建CNN网络（下）
-+ 徒手搭建RNN网络
-+ 模型内部
-+ 附录：[基本数学导数公式](./0-基本数学导数公式.md)
++ [神经网络的基本工作原理](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/1-神经网络的基本工作原理.md)
++ [神经网络中反向传播与梯度下降的基本概念](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/2-反向传播与梯度下降.md)
++ [损失函数](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/3-损失函数.md)
++ [单入单出的一层神经网络](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/4-单入单出的一层神经网络.md)
++ [多入单出的一层神经网络](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/5-多入单出的一层神经网络.md)
++ [多入多出的一层神经网络](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/6-多入多出的一层神经网络.md)
++ [扩展阅读](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/6-扩展阅读.md)
++ [分类函数](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/7.1-分类函数.md)
++ [激活函数](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/7.2-激活函数.md)
++ [单入单出的两层神经网络](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/8-单入单出的两层神经网络.md)
++ 附录：[基本数学导数公式](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/0-基本数学导数公式.md)

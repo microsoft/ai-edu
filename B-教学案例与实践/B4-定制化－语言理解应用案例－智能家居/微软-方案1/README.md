@@ -371,7 +371,7 @@ Regions下出现了终结点密钥和使用该密钥的终结点地址。
 
 # 构建智能家居应用
 
-程序的源代码在<https://github.com/MS-UAP/edu/tree/master/AI301/LightControl/src>，将源代码下载到本地后，用Visual
+程序的源代码在[这里](./src)，将源代码下载到本地后，用Visual
 Studio
 2017打开解决方案文件LightControl.sln。
 

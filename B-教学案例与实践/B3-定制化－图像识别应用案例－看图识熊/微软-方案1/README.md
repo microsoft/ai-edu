@@ -185,7 +185,7 @@ Cognitive Toolkit、Caffe2、PyTorch等工具已经支持ONNX。
 Microsoft Visual Studio Tools for
 AI环境。
 
-项目的代码也可以在GitHub上找到，<https://github.com/MS-UAP/edu/tree/master/AI301/ClassifyBear/src>，下面的步骤是带着大家从头到尾做一遍。
+项目的代码也可以在[这里](./src)找到，下面的步骤是带着大家从头到尾做一遍。
 
 ## 界面设计
 

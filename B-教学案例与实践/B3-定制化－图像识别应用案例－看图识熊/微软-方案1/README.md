@@ -268,7 +268,7 @@ return r0;
 ```
 替换为
 ```C#
-List\<List\<string\>\> results = new List\<List\<string\>\>();
+List<List<string>> results = new List<List<string>>();
 results.Add(r0);
 return results;
 ```
@@ -288,7 +288,7 @@ return results;
 
 添加两个成员变量
 ```C#
-// 使用Netron查看模型，得到模型的输入应为227\*227大小的图片
+// 使用Netron查看模型，得到模型的输入应为227*227大小的图片
 private const int imageSize = 227;
 
 // 模型推理类
@@ -297,7 +297,7 @@ private Model.Bear model;
 
 回到Form1的设计界面，双击Form的标题栏，会自动跳转到代码页面并添加了Form1\_Load方法，在其中初始化模型推理对象
 ```C#
-private void Form1\_Load(object sender, EventArgs e)
+private void Form1_Load(object sender, EventArgs e)
 {
     // 初始化模型推理对象
     model = new Model.Bear();

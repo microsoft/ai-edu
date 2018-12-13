@@ -31,7 +31,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 
   环境：
   
-  windows（Linux也行），python（最好用3），anaconda（或者自己装numpy之类的），tensorflow（嫌麻烦地请看这里[《AI应用开发实战 - 从零开始配置环境》](https://www.cnblogs.com/ms-uap/p/9123033.html)，tools for AI（按照链接教程走的就不用管这个了）。
+  windows（Linux也行），python（最好用3），anaconda（或者自己装numpy之类的），tensorflow（嫌麻烦地请看这里[《AI应用开发实战 - 从零开始配置环境》](https://mp.weixin.qq.com/s/-vG9kg48mt9vcmqDlWtxKw)，tools for AI（按照链接教程走的就不用管这个了）。
   
   自己：
 
@@ -48,4 +48,5 @@ Copyright © Microsoft Corporation. All rights reserved.
 + [分类函数](./7.1-分类函数.md)
 + [激活函数](./7.2-激活函数.md)
 + [单入单出的两层神经网络](./8-单入单出的两层神经网络.md)
++ [多入多出的两层神经网络](./9-多入多出的两层神经网络.md)
 + 附录：[基本数学导数公式](./0-基本数学导数公式.md)

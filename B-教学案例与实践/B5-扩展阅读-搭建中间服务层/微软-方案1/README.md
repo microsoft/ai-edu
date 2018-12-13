@@ -164,7 +164,9 @@ Bob同学用手机给很多同学们安装后显摆了几天，有人问他：�
 ![](./media/image4.png)
 
 与前面的教程里描述的类似，申请了搜索服务后，也得到了Endpoint和Key，照猫画虎地把客户端改了一下，增加了搜索服务的功能，衔接到了地标识别逻辑的后面，也就是把地标识别的结果”Space
-Needle”作为关键字传送给实体搜索服务，然后再把结果展示出来。![](./media/image5.png)
+Needle”作为关键字传送给实体搜索服务，然后再把结果展示出来。
+
+![](./media/image5.png)
 
 注意这里要申请的API在Bing.Search.v7里面，[技术文档在这个链接里面](https://docs.microsoft.com/en-us/rest/api/cognitiveservices/bing-entities-api-v7-reference)。
 

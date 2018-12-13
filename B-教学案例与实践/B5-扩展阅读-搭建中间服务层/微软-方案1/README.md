@@ -127,7 +127,7 @@ API
 
 ![](./media/image2.png)
 
-向下卷滚屏幕，到“识别名人和地标”部分，在“图像URL”编辑框里输入了这张图片的[网络地址](http://4.bp.blogspot.com/-QQPNHGYQw8Y/UcI7nC4rt6I/AAAAAAAAD44/RsqiklldAv0/s1600/Seattle+Space+Needle+Pictures-740334.jpg)，然后点击“提交”，一两秒后，就能看到关于这张图片的文字信息了（见下图），原来这个建筑叫做“Space
+向下卷滚屏幕，到“识别名人和地标”部分，在“图像URL”编辑框里输入了这张图片的[网络地址](https://www.publicdomainpictures.net/pictures/210000/velka/seattle-skyline-14904764209Wo.jpg)，然后点击“提交”，一两秒后，就能看到关于这张图片的文字信息了（见下图），原来这个建筑叫做“Space
 Needle”！但是呢，不太人性化，因为是JSON文件格式的，幸好Bob同学是个程序员，Bob同学想把这个场景做成一个实际的应用，以帮助他人解决类似问题。
 
 Bob同学刚学习了微软认知服务的应用教程，于是打开Windows 10 PC，启动VS2017，安装了Visual Studio Tools

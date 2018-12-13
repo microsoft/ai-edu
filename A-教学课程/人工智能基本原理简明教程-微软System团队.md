@@ -48,4 +48,5 @@ Copyright © Microsoft Corporation. All rights reserved.
 + [分类函数](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/7.1-分类函数.md)
 + [激活函数](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/7.2-激活函数.md)
 + [单入单出的两层神经网络](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/8-单入单出的两层神经网络.md)
++ [多入多出的两层神经网络](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/9-%E5%A4%9A%E5%85%A5%E5%A4%9A%E5%87%BA%E7%9A%84%E4%B8%A4%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
 + 附录：[基本数学导数公式](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程/0-基本数学导数公式.md)

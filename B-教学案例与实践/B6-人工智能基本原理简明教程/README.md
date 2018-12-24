@@ -43,12 +43,15 @@ Copyright © Microsoft Corporation. All rights reserved.
 + [2-神经网络中反向传播与梯度下降的基本概念](./2-反向传播与梯度下降.md)
 + [3-损失函数](./3-损失函数.md)
 + [4-单入单出的一层神经网络](./4-单入单出的一层神经网络.md)
++ [4-扩展阅读](./4-扩展阅读.md)
 + [5-多入单出的一层神经网络](./5-多入单出的一层神经网络.md)
++ [5-扩展阅读](./5-扩展阅读.md)
 + [6-多入多出的一层神经网络](./6-多入多出的一层神经网络.md)
 + [6-扩展阅读](./6-扩展阅读.md)
 + [7.1-分类函数](./7.1-分类函数.md)
 + [7.2-激活函数](./7.2-激活函数.md)
 + [8-单入单出的两层神经网络](./8-单入单出的两层神经网络.md)
++ [8-扩展阅读](./8-扩展阅读.md)
 + [9-多入单出的两层神经网络](./9-多入单出的两层神经网络.md)
 + [9-扩展阅读](./9-扩展阅读.md)
 + [10-多入多出的两层神经网络](./10-多入多出的两层神经网络.md)
@@ -58,9 +61,9 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 |网络结构名称|网络结构图|前向计算图|应用领域|
 |----|----|----|----|
-|单入单出一层|<img src="./Images/4/Setup.jpg"/>|$Layer1 \\ Z=W*X+B=w*x+b$|一元线性回归/拟合<br>一般用于拟合直线，根据单输入值预测单输出值|
-|多入单出一层|<img src="./Images/5/setup.jpg"/>|$Layer1 \\ Z=W*X+B \\=w1*x1+w2*x2+w3*x3+b$|多元线性回归<br>根据一组输入值预测单输出值<br>与上一个的区别：多元输入|
-|多入多出一层|<img src="./Images/6/NN.jpg"/>|$Layer1 \\ Z=W*X+B \\ A=Softmax(Z)$|多元线性分类<br>与上一个的区别：最后增加了多分类）|
+|单入单出一层|<img src="./Images/4/Setup.jpg"/>|$$Layer1 \\ Z=W*X+B=w*x+b$$|一元线性回归/拟合<br>一般用于拟合直线，根据单输入值预测单输出值|
+|多入单出一层|<img src="./Images/5/setup.jpg"/>|$$Layer1 \\ Z=W*X+B \\=w1*x1+w2*x2+w3*x3+b$$|多元线性回归<br>根据一组输入值预测单输出值<br>与上一个的区别：多元输入|
+|多入多出一层|<img src="./Images/6/NN.jpg"/>|$$Layer1 \\ Z=W*X+B \\ A=Softmax(Z)$$|多元线性分类<br>与上一个的区别：最后增加了多分类|
 |单入单出两层|<img src="./Images/8/setup.jpg"/>|$Layer1 \\ Z1=W1*X+B1 \\ A1=Sigmoid(Z1) \\ Layer2 \\ Z2=W2*A1+B2$|一元非线性回归/拟合<br>可以拟合任意复杂函数<br>与第一个的区别：多一层网络|
 |多入单出两层|<img src="./Images/9/NN.jpg"/>|$Layer1 \\ Z1=W1*X+B1 \\ A1=Sigmoid(Z1) \\ Layer2 \\ Z2 = W2*A1 + B2 \\ A2 = Sigmoid(Z2)$|多元非线性二分类<br>可以做任意复杂边界的二分类<br>与上一个的区别：最后加了Sigmoid二分类|
 |多入多出两层|<img src="./Images/10/SetupNN.jpg"/>|$Layer1 \\ Z1=W1*X+B1 \\ A1=Sigmoid(Z1) \\ Layer2 \\ Z2=W2*A1+B2 \\ A2=Softmax(Z2)$|多元非线性多分类<br>与上一个的区别：用Softmax多分类代替二分类|

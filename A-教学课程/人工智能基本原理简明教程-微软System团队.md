@@ -66,7 +66,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 
 |网络结构|前向计算图|应用领域|
-|:--:|----|----|----|
+|:--:|----|----|
 |单入<br>单出<br>一层|Layer1 <br> Z = W * X + B = w * x + b|一元线性回归/拟合<br>一般用于拟合直线，根据单输入值预测单输出值|
 |多入<br>单出<br>一层|Layer1 <br> Z = W * X + B <br> = w1 * x1+ w2 * x2 + w3 * x3 + b|多元线性回归<br>根据一组输入值预测单输出值|
 |多入<br>多出<br>一层|Layer1 <br> Z = W * X + B <br> A = Softmax(Z)|多元线性分类|

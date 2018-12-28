@@ -7,7 +7,7 @@
     <ProjectHome>
     </ProjectHome>
     <ProjectTypeGuids>{8B0147FC-7A0C-481F-99C4-C90CCB52692E};{888888A0-9F3D-457C-B088-3A5042F75D52}</ProjectTypeGuids>
-    <StartupFile>HousePrice\HousePrice.py</StartupFile>
+    <StartupFile>LogicGate\LogicAnd.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,6 +31,9 @@
     <Compile Include="HousePrice\HousePriceCreateData.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LogicGate\LogicAnd.py" />
+    <Compile Include="LogicGate\LogicNot.py" />
+    <Compile Include="LogicGate\LogicOr.py" />
     <Compile Include="PollutionCategory\PollutionCategoryCreateData.py" />
     <Compile Include="PollutionCategory\PollutionCategory.py">
       <SubType>Code</SubType>
@@ -45,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HousePrice\" />
+    <Folder Include="LogicGate\" />
     <Folder Include="PollutionCategory\" />
     <Folder Include="TemperatureControl\" />
   </ItemGroup>

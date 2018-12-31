@@ -1,19 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>bcd7230d-8692-429d-b468-8d75632427a3</ProjectGuid>
+    <ProjectGuid>b903b338-af6e-42bb-86d3-af12c058f0b8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <ProjectTypeGuids>{8B0147FC-7A0C-481F-99C4-C90CCB52692E};{888888A0-9F3D-457C-B088-3A5042F75D52}</ProjectTypeGuids>
-    <StartupFile>MNIST2L\MnistTwoLayer.py</StartupFile>
+    <StartupFile>CrossEntropy.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <CommandLineArguments>--input_dir . --output_dir .</CommandLineArguments>
-    <Name>TwoLayerMLP</Name>
-    <RootNamespace>TwoLayerMLP</RootNamespace>
+    <Name>CostFunction</Name>
+    <RootNamespace>CostFunction</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,18 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MNIST2L\MnistTwoLayer.py" />
-    <Compile Include="TreeWorm\TreeWormCreateData.py" />
-    <Compile Include="CurveFitting\CurveFittingCreateData.py" />
-    <Compile Include="CurveFitting\CurveFitting.py">
+    <Compile Include="CrossEntropy.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TreeWorm\TreeWorm.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CurveFitting\" />
-    <Folder Include="MNIST2L\" />
-    <Folder Include="TreeWorm\" />
+    <Compile Include="MSE.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

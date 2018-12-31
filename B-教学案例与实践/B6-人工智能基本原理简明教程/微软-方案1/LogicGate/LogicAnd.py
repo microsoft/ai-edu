@@ -87,7 +87,10 @@ def Test(W,B):
     b = input("input number two:")
     x2 = float(b)
     z = ForwardCalculation(W, B, np.array([x1,x2]).reshape(2,1))
-    print (z)
+    if z >0.5:
+        return 1
+    else:
+        return 0
 
 n_input = 2
 n_output = 1
@@ -138,5 +141,5 @@ ShowResult(W,B,X,Y)
 
 # test
 while True:
-    Test(W,B)
+    print("result=",Test(W,B))
 

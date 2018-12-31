@@ -26,7 +26,6 @@
   <ItemGroup>
     <Compile Include="MNIST2L\MnistTwoLayer.py" />
     <Compile Include="TreeWorm\TreeWormCreateData.py" />
-    <Compile Include="CurveFitting\CurveFittingMiniBatch.py" />
     <Compile Include="CurveFitting\CurveFittingCreateData.py" />
     <Compile Include="CurveFitting\CurveFitting.py">
       <SubType>Code</SubType>

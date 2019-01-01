@@ -15,18 +15,31 @@ def LoadData():
     
     return None,None
 
-def NormalizeData(X):
-    X_NEW = np.zeros(X.shape)
-    # get number of features
+def NormalizeByData(X):
+    X_new = np.zeros(X.shape)
+    n = X.shape[0]
+    x_range = np.zeros((1,n))
+    x_min = np.zeros((1,n))
+    for i in range(n):
+        x = X[i,:]
+        max_value = np.max(x)
+        min_value = np.min(x)
+        x_min[0,i] = min_value
+        x_range[0,i] = max_value - min_value
+        x_new = (x - x_min[0,i])/(x_range[0,i])
+        X_new[i,:] = x_new
+    return X_new, x_range, x_min
+
+# normalize data by specified range and min_value
+def NormalizeByRange(X, x_range, x_min):
+    X_new = np.zeros(X.shape)
     n = X.shape[0]
     for i in range(n):
-        x_row = X[i,:]
-        x_max = np.max(x_row)
-        x_min = np.min(x_row)
-        if x_max != x_min:
-            x_new = (x_row - x_min)/(x_max-x_min)
-            X_NEW[i,:] = x_new
-    return X_NEW
+        x = X[i,:]
+        x_new = (x-x_min[0,i])/x_range[0,i]
+        X_new[i,:] = x_new
+    return X_new
+
 
 def ForwardCalculation(X, dict_Param):
     W1 = dict_Param["W1"]
@@ -152,12 +165,17 @@ def FindBoundary(dict_Param):
 
     return XT
 
+def Predicate(dict_Param, xt, x_range, x_min):
+    xt_new = NormalizeByRange(xt, x_range, x_min)
+    a2, cache = ForwardCalculation(xt_new, dict_Param)
+    return a2
+
 print("Loading...")
 learning_rate = 0.1
 num_hidden = 10
 num_output = 1
 raw_data,Y = LoadData()
-X = NormalizeData(raw_data)
+X,X_range,X_min = NormalizeByData(raw_data)
 
 num_images = X.shape[1]
 num_input = X.shape[0]
@@ -191,5 +209,9 @@ print("W2:", dict_Param["W2"])
 print("B2:", dict_Param["B2"])
 
 print("testing...")
-
+ 
 ShowResult(X, Y)
+
+x_test = np.array([2.2, 1.0]).reshape(2,1)
+result = Predicate(dict_Param, x_test, X_range, X_min)
+print(result)

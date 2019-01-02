@@ -69,13 +69,13 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 
 
-|网络结构名称|网络结构图|前向计算图|应用领域|
+|网络结构名称|网络结构图|前向计算图|应用领域与案例|
 |:--:|----|----|----|
-|单入<br>单出<br>一层|<img src="./Images/4/Setup.jpg"/>|Layer1 <br> Z = W * X + B = w * x + b <br> 代价函数：均方差|一元线性回归/拟合<br>一般用于拟合直线，根据单输入值预测单输出值|
-|多入<br>单出<br>一层|<img src="./Images/5/setup.jpg"/>|Layer1 <br> Z = W * X + B <br> = w1 * x1+ w2 * x2 + w3 * x3 + b <br> 代价函数：均方差|多元线性回归<br>根据一组输入值预测单输出值|
-|多入<br>多出<br>一层|<img src="./Images/6/NN.jpg"/>|Layer1 <br> Z = W * X + B <br> A = Softmax(Z) <br> 代价函数：交叉熵|多元线性分类|
-|单入<br>单出<br>两层|<img src="./Images/8/setup.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> 代价函数：均方差|一元非线性回归/拟合<br>可以拟合任意复杂函数|
-|多入<br>单出<br>两层|<img src="./Images/9/NN.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> A2 = Sigmoid(Z2) <br> 代价函数：交叉熵|多元非线性二分类<br>可以做任意复杂边界的二分类|
-|多入<br>多出<br>两层|<img src="./Images/10/SetupNN.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> A2 = Softmax(Z2) <br> 代价函数：交叉熵|多元非线性多分类|
+|单入<br>单出<br>一层|<img src="./Images/4/Setup.jpg"/>|Layer1 <br> Z = W * X + B = w * x + b <br> 代价函数：均方差|一元线性回归/拟合<br>一般用于拟合直线，根据单输入值预测单输出值<br>例：机房空调功率预测|
+|多入<br>单出<br>一层|<img src="./Images/5/setup.jpg"/>|Layer1 <br> Z = W * X + B <br> = w1 * x1+ w2 * x2 + w3 * x3 + b <br> 代价函数：均方差|多元线性回归<br>根据一组输入值预测单输出值<br>例：北京房价预测|
+|多入<br>多出<br>一层|<img src="./Images/6/NN.jpg"/>|Layer1 <br> Z = W * X + B <br> A = Softmax(Z) <br> 代价函数：交叉熵|多元线性分类<br>例：大气污染物成分分类|
+|单入<br>单出<br>两层|<img src="./Images/8/setup.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> 代价函数：均方差|一元非线性回归/拟合<br>可以拟合任意复杂函数<br>例：复杂函数拟合|
+|多入<br>单出<br>两层|<img src="./Images/9/NN.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> A2 = Sigmoid(Z2) <br> 代价函数：交叉熵|多元非线性二分类<br>可以做任意复杂边界的二分类<br>例：果树虫控决策|
+|多入<br>多出<br>两层|<img src="./Images/10/SetupNN.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> A2 = Softmax(Z2) <br> 代价函数：交叉熵|多元非线性多分类<br>例：MNIST手写数字识别（分类）|
 
 

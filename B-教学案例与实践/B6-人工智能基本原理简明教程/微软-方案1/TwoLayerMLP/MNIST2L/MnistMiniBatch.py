@@ -106,7 +106,7 @@ def ForwardCalculation(X, dict_Param):
              "A2": A2}
     return A2, dict_Cache
 
-def BackPropagation(dict_Param,cache,X,Y):
+def BackPropagation(dict_Param,cache,X,Y,count):
     W1=dict_Param["W1"]
     W2=dict_Param["W2"]
     A1 = cache["A1"]
@@ -114,16 +114,16 @@ def BackPropagation(dict_Param,cache,X,Y):
     Z1=cache["Z1"]
 
     dZ2= A2 - Y
-    dW2 = np.dot(dZ2, A1.T)
-    dB2 = np.sum(dZ2, axis=1, keepdims=True)
+    dW2 = np.dot(dZ2, A1.T)/count
+    dB2 = np.sum(dZ2, axis=1, keepdims=True)/count
 
     dLoss_A1 = np.dot(W2.T, dZ2)
     dA1_Z1 = A1 * (1 - A1)     # sigmoid
     #dA1_Z1 = 1-np.power(A1,2)   # tanh
     dZ1 = dLoss_A1 * dA1_Z1
     
-    dW1 = np.dot(dZ1, X.T)
-    dB1 = np.sum(dZ1, axis=1, keepdims=True)
+    dW1 = np.dot(dZ1, X.T)/count
+    dB1 = np.sum(dZ1, axis=1, keepdims=True)/count
 
     dict_Grads = {"dW1": dW1, "dB1": dB1, "dW2": dW2, "dB2": dB2}
     return dict_Grads
@@ -148,11 +148,12 @@ def UpdateParam(dict_Param, dict_Grads, learning_rate):
     return dict_Param
 
 # cross entropy: -Y*lnA
-def CalculateLoss(dict_Param, X, Y, count):
+def CalculateLoss(dict_Param, X, Y, count, prev_loss):
     A2, dict_Cache = ForwardCalculation(X, dict_Param)
     p = Y * np.log(A2)
-    Loss = -np.sum(p) / count
-    return Loss
+    loss = -np.sum(p) / count
+    diff_loss = abs(loss - prev_loss)
+    return loss, diff_loss
 
 def InitialParameters(num_input, num_hidden, num_output, flag):
     if flag == 0:
@@ -187,41 +188,59 @@ def Test(num_output, dict_Param, num_input):
             correct += 1
     return correct, num_images
 
+def GenerateMiniBatch(X,Y,iteraion,batch_size,total):
+    start = iteraion * batch_size
+    if start > total or (start+batch_size)>=total:
+        start = 0
+
+    end = start + batch_size
+    batchX = X[:,start:end]
+    batchY = Y[:,start:end]
+    return batchX,batchY
+
+
 print("Loading...")
 learning_rate = 0.1
 num_hidden = 32
 num_output = 10
-
+batch_size = 10
+loss, diff_loss, prev_loss = 10, 20, 30
+eps = 1e-5
 raw_data = ReadImageFile(train_image_file)
 X = NormalizeData(raw_data)
 Y = ReadLabelFile(train_label_file, num_output)
 
-num_images = X.shape[1]
-num_input = X.shape[0]
-max_iteration = 1
+num_example = X.shape[1]
+num_feature = X.shape[0]
+max_iteration = 40
 
-dict_Param = InitialParameters(num_input, num_hidden, num_output, 2)
-w = dict_Param["W1"]
-print(np.var(w))
+dict_Param = InitialParameters(num_feature, num_hidden, num_output, 2)
 
 loss_history = list()
 
 print("Training...")
 for iteration in range(max_iteration):
-    for item in range(num_images):
-        x = X[:,item].reshape(num_input,1)
-        y = Y[:,item].reshape(num_output,1)
-        A2, dict_Cache = ForwardCalculation(x, dict_Param)
-        dict_Grads = BackPropagation(dict_Param, dict_Cache, x, y)
+    loop = int(num_example/batch_size)
+    for item in range(loop):
+        batchX, batchY = GenerateMiniBatch(X,Y,item,batch_size,num_example)
+        A2, dict_Cache = ForwardCalculation(batchX, dict_Param)
+        dict_Grads = BackPropagation(dict_Param, dict_Cache, batchX, batchY,batch_size)
         dict_Param = UpdateParam(dict_Param, dict_Grads, learning_rate)
-        if item % 1000 == 0:
-            Loss = CalculateLoss(dict_Param, X, Y, num_images)
-            print(item, Loss)
-            loss_history = np.append(loss_history, Loss)
+        
+        if item % 100 == 0:
+            loss, diff_loss = CalculateLoss(dict_Param, X, Y, num_example, prev_loss)
+            if diff_loss < eps:
+                break
+            prev_loss = loss
+            print(item, loss, diff_loss)
+            loss_history = np.append(loss_history, loss)
+    if diff_loss < eps:
+        break
+        
     print(iteration)
 
 print("Testing...")
-correct, count = Test(num_output, dict_Param, num_input)
+correct, count = Test(num_output, dict_Param, num_feature)
 print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
 
 plt.plot(loss_history, "r")

@@ -1,10 +1,16 @@
 ﻿# AI-神经网络基本原理简明教程目录
 Copyright © Microsoft Corporation. All rights reserved.
 适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
-  
+
+## 如何浏览本系列教程
+
+1. 如果使用浏览器在线观看的话，可以使用Chrome浏览器，[加这个Math展示控件](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
+
+2. 也可以clone全部内容到本地，然后用VSCode浏览，但VSCode中需要安装能读取Markdown格式的扩展，比如Markdown Preview Enhanced.
+
 ## 写在前面，为什么要出这个系列的教程呢？
 
-总的说来，我们现在有了很多非常厉害的深度学习框架，比如tensorflow，pytorch，paddlepaddle，caffe2等等等等。然而，我们用这些框架在搭建我们自己的深度学习模型的时候，到底做了一些什么样的操作呢？我们试图去阅读框架的源码来理解框架到底帮助我们做了些什么，但是……很难！很难！很难！因为深度学习是需要加速啦，分布式计算啦，框架做了很多很多的优化，也让像我们这样的小白难以理解这些框架的源码。
+总的说来，我们现在有了很多非常厉害的深度学习框架，比如Tensorflow，CNTK，PaddlePaddle，Caffe2等等。然而，我们用这些框架在搭建我们自己的深度学习模型的时候，到底做了一些什么样的操作呢？我们试图去阅读框架的源码来理解框架到底帮助我们做了些什么，但是……很难！很难！很难！因为深度学习是需要加速啦，分布式计算啦，框架做了很多很多的优化，也让像我们这样的小白难以理解这些框架的源码。
 
 这取决于你是想真正地掌握“深度学习”的思想，还是只想成为一个调参师？在我们看来，如TensorFlow，CNTK这些伟大的深度学习工具，是为了解决实际的应用问题而生的，而不是用来学习“深度学习”知识和思想的。所以我们根据自己亲身经历的学习轨迹，归纳出了以下教程，可以帮助小白做到真正的从入门到精通。
 

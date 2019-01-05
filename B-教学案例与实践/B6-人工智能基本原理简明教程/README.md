@@ -72,6 +72,9 @@ Copyright © Microsoft Corporation. All rights reserved.
 + [9-扩展阅读：权重矩阵初始化](./9-扩展阅读.md)
 + [10-多入多出的两层神经网络：MNIST手写数字识别（复杂非线性多分类）](./10-多入多出的两层神经网络.md)
 + [10-扩展阅读（数据集的使用）](./10-扩展阅读.md)
++ [11-模型的导出](./11.1-模型的导出.md)
++ [11-Windows模型的部署](./11.2-Windows模型的部署.md)
++ [11-Android模型的部署](./11.3-Android模型的部署.md)
 
 
 

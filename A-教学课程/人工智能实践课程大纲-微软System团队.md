@@ -20,7 +20,7 @@ Copyright © Microsoft Corporation. All rights reserved.适用于[License](https
     * 3.1.	[智能家居应用开发详解](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B4-%E5%AE%9A%E5%88%B6%E5%8C%96%EF%BC%8D%E8%AF%AD%E8%A8%80%E7%90%86%E8%A7%A3%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%EF%BC%8D%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85)
     * 3.2.	[看图识熊应用开发详解](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B3-%E5%AE%9A%E5%88%B6%E5%8C%96%EF%BC%8D%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B%EF%BC%8D%E7%9C%8B%E5%9B%BE%E8%AF%86%E7%86%8A)
     * 3.3.  [问答系统和对话机器人服务](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B2-%E5%AE%9A%E5%88%B6%E5%8C%96%EF%BC%8D%E6%96%87%E5%AD%97%E7%90%86%E8%A7%A3%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B-%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%AF%B9%E8%AF%9D%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%9C%8D%E5%8A%A1)
-* 4.[神经网络基本原理简明教程](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-人工智能基本原理简明教程)
+* 4.[神经网络基本原理简明教程](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/B6-神经网络基本原理简明教程)（持续更新中）
 
 * 5.自建人工智能应用开发案例（持续更新中） 
     * 5.1.  [手写数字识别应用开发](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B7-%E8%87%AA%E6%9E%84%E5%BB%BA%EF%BC%8D%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B-%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB) 

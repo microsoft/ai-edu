@@ -5,7 +5,7 @@
   "name": "Bear",
   "params": {
     "model": {
-      "frameworkVersion": "WinMLTools0.1.0.5072",
+      "frameworkVersion": "OnnxMLTools1.2.2.0129",
       "graphVersion": 0,
       "interfaces": [
         {
@@ -24,7 +24,7 @@
               "description": "",
               "internalName": "classLabel",
               "name": "classLabel",
-              "shape": "[1]",
+              "shape": "[None, 1]",
               "type": "DATA_TYPE_STRING"
             }
           ]

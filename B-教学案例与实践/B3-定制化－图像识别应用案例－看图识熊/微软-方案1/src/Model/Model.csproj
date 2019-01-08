@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BC5781C8-408A-4D2A-9458-84A4C31FF355}</ProjectGuid>
+    <ProjectGuid>{3D9A9F2D-ACB4-44FD-8BE9-10D045B86904}</ProjectGuid>
     <ProjectTypeGuids>{c506c60f-1e0c-45db-a649-13be29e32e4a};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -37,8 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.ML.Scoring, Version=1.0.3.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\Microsoft.ML.Scoring.1.0.3\lib\net45\x64\release\Microsoft.ML.Scoring.dll</HintPath>
+    <Reference Include="Microsoft.ML.Scoring, Version=1.2.0.0, Culture=neutral, PublicKeyToken=49f60a3dc7486f49, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.Scoring.1.2.0\lib\netstandard1.3\x64\release\Microsoft.ML.Scoring.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,12 +63,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.ML.Scoring.1.0.3\build\net45\Microsoft.ML.Scoring.targets" Condition="Exists('..\packages\Microsoft.ML.Scoring.1.0.3\build\net45\Microsoft.ML.Scoring.targets')" />
+  <Import Project="..\packages\Microsoft.ML.Scoring.1.2.0\build\netstandard1.3\Microsoft.ML.Scoring.targets" Condition="Exists('..\packages\Microsoft.ML.Scoring.1.2.0\build\netstandard1.3\Microsoft.ML.Scoring.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.ML.Scoring.1.0.3\build\net45\Microsoft.ML.Scoring.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.Scoring.1.0.3\build\net45\Microsoft.ML.Scoring.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ML.Scoring.1.2.0\build\netstandard1.3\Microsoft.ML.Scoring.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.Scoring.1.2.0\build\netstandard1.3\Microsoft.ML.Scoring.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

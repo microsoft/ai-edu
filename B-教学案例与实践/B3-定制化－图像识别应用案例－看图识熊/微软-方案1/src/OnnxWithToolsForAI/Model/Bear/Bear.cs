@@ -49,25 +49,29 @@ namespace Model
         public IEnumerable<IEnumerable<string>> Infer(IEnumerable<IEnumerable<float>> dataBatch)
         {
             List<float> dataCombined = new List<float>();
+            long batchCount = 0;
             foreach (var input in dataBatch)
             {
                 dataCombined.AddRange(input);
+                ++batchCount;
             }
 
             List<Tensor> result = manager.RunModel(
                 modelName,
                 int.MaxValue,
                 inferInputNames,
-                new List<Tensor> { new Tensor(dataCombined, new List<long> { dataBatch.LongCount(), 3, 227, 227 }) },
+                new List<Tensor> { new Tensor(dataCombined, new List<long> { batchCount, 3, 227, 227 }) },
                 inferOutputNames
             );
 
-            List<string> r0 = new List<string>();
-            result[0].CopyTo(r0);
-
-            List<List<string>> results = new List<List<string>>();
-            results.Add(r0);
-            return results;
+            int classLabelBatchNum = (int)result[0].GetShape()[0];
+            int classLabelBatchSize = (int)result[0].GetShape().Aggregate((a, x) => a * x) / classLabelBatchNum;
+            for (int batchNum = 0, offset = 0; batchNum < classLabelBatchNum; batchNum++, offset += classLabelBatchSize)
+            {
+                List<string> tmp = new List<string>();
+                result[0].CopyTo(tmp, offset, classLabelBatchSize);
+                yield return tmp;
+            }
         }
     } // END OF CLASS
 } // END OF NAMESPACE

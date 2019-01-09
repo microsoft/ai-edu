@@ -6,7 +6,7 @@
 
 [Windows Machine Learning](https://docs.microsoft.com/zh-cn/windows/ai/)支持在Windows应用程序中加载并使用训练好的机器学习模型。Windows 10从10.0.17763.0版本开始提供这套推理引擎，所以需要安装17763版本的Windows 10 SDK进行开发，并且需要运行在17763及以上版本的Windows 10中。
 
-### 创建UWP项目
+## 创建UWP项目
 
 打开Visual Studio 2017，新建项目，在Visual C#分类中选择`空白应用(通用 Windows)`，填写项目名称为`ClassifyBear`，点击确定
 
@@ -16,7 +16,7 @@
 
 ![](./media/winml_winversion.png)
 
-### 添加模型文件到项目中
+## 添加模型文件到项目中
 
 打开解决方案资源管理器中，在项目中的`Assets`目录上点右键->添加->现有项，添加模型文件`BearModel.onnx`
 
@@ -38,7 +38,7 @@
 >
 > 生成成功后，可以手动将生成的BearModel.cs添加项目中；如果还是生成失败，需要根据错误信息继续排查原因
 
-### 设计界面
+## 设计界面
 
 打开`MainPage.xaml`，将整个Grid片段替换为如下代码：
 
@@ -67,7 +67,7 @@
 
 上面的`XAML`片段中分别给按钮和图片控件添加了事件响应，我们在后续小节中添加对应的实现。
 
-### 添加按钮的事件响应
+## 添加按钮的事件响应
 
 前面`XAML`文件中给按钮添加事件，这里在`MainPage.xaml.cs`中完成对应的实现，从输入框中读入图片的URL，然后让图片控件加载该URL对应的图片：
 
@@ -93,7 +93,7 @@ private void TbRun_Tapped(object sender, TappedRoutedEventArgs e)
 }
 ```
 
-### 添加图片控件的事件响应
+## 添加图片控件的事件响应
 
 前面`XAML`文件中给图片控件添加了两个事件：图片加载完成的事件和加载失败的事件，这里在`MainPage.xaml.cs`中完成对应的实现：
 
@@ -109,7 +109,7 @@ private void ImgBear_ImageFailed(object sender, ExceptionRoutedEventArgs e)
 }
 ```
 
-### 处理模型的输入
+###处理模型的输入
 
 打开自动生成的模型封装文件`BearModel.cs`可以看到需要的输入如下：
 
@@ -145,7 +145,7 @@ private async Task<BearModelInput> GetInputData()
 }
 ```
 
-### 加载模型并推理
+## 加载模型并推理
 
 这是最关键的一步，也是非常简单的一步。自动生成的模型封装文件`BearModel.cs`中已经封装了加载模型的方法和推理的方法，直接调用就可以：
 
@@ -166,7 +166,7 @@ private async void RecognizeBear()
 }
 ```
 
-### 测试
+## 测试
 
 编译运行，然后在网上找一张[熊的图片](https://cdn.pixabay.com/photo/2016/07/27/10/57/bear-1545031_960_720.jpg)，把地址填到输入框内，然后点击识别按钮，就可以看到识别的结果了。注意，这个URL应该是图片的URL，而不是包含该图片的网页的URL。
 

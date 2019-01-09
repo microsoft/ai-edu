@@ -199,8 +199,6 @@ model选择打开之前下载的BearModel.onnx文件。然后点击左上角的�
 
 1. 使用[Windows Machine Learning](https://docs.microsoft.com/zh-cn/windows/ai/)加载模型并推理，这种方式要求系统必须是Windows 10，版本号大于等于17763，详细步骤在[这个文档](./OnnxWithWinML.md)
 
-0. 使用由微软开源的[OnnxRuntime](https://github.com/Microsoft/onnxruntime)库加载模型并推理，系统可以是Windows 7 或 Windows 10，但目前仅支持x64平台，详细步骤在[这个文档](./OnnxWithOnnxRuntime.md)
-
 0. 使用Tools for AI对模型进行封装，可以运行在Windows 7 或 Windows 10，但目前仅支持x64平台，详细步骤在[这个文档](OnnxWithToolsForAI.md)
 
 # 小结

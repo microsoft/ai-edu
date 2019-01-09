@@ -68,10 +68,6 @@
   - [扩展阅读－机器学习平台建设](./B-教学案例与实践/B10-扩展阅读－机器学习平台建设/README.md) 
   
 - [C:开发工具与环境](./C-开发工具与环境/README.md)
-   - [Microsoft Visual Studio Tools for AI](./C-开发工具与环境/README.md) 
-     - [Microsoft Visual Studio Tools for AI (VS2017 version)安装包](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.vstoolsai-vs2017)
-     - [从零开始搭建开发环境](https://mp.weixin.qq.com/s/-vG9kg48mt9vcmqDlWtxKw)
-     - [Microsoft Visual Studio Tools for AI GitHub Repo](https://github.com/Microsoft/vs-tools-for-ai)
    - [微软开源自动机器学习工具NNI](./C-开发工具与环境/README.md) 
      - [微软开源自动机器学习工具NNI简介](https://www.cnblogs.com/ms-uap/p/9719071.html) 
      - [微软开源自动机器学习工具NNI GitHub Repo](https://github.com/Microsoft/nni)

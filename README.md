@@ -49,7 +49,7 @@
 # <font size=5>目录结构</font> 
 
 - [A:教学课程](./A-教学课程) 
-  - [神经网络基本原理简明教程-微软System团队](https://github.com/Microsoft/ai-edu/blob/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/README.md)
+  - [神经网络基本原理简明教程-微软System团队](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B)
   - [人工智能实践课程大纲-微软System团队](./A-教学课程/人工智能实践课程大纲-微软System团队.md)
   - [微软专业学位MPP（Microsoft Professional Program）人工智能课](./A-教学课程/MPP.md)
   - [微软人工智能公开课](./A-教学课程/微软人工智能公开课.md)

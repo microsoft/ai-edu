@@ -1,6 +1,6 @@
 Copyright © Microsoft Corporation. All rights reserved.适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
 
-# 微软System团队
+# 微软亚洲研究院  System Research 团队
 # 人工智能应用开发实践课程
 
 

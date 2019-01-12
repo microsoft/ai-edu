@@ -6,7 +6,7 @@
     <ProjectGuid>bcd7230d-8692-429d-b468-8d75632427a3</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <ProjectTypeGuids>{8B0147FC-7A0C-481F-99C4-C90CCB52692E};{888888A0-9F3D-457C-B088-3A5042F75D52}</ProjectTypeGuids>
-    <StartupFile>TreeWorm\TreeWorm.py</StartupFile>
+    <StartupFile>CurveFitting\CurveFitting.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

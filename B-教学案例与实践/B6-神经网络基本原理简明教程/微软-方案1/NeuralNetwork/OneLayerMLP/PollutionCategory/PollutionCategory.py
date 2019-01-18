@@ -23,7 +23,7 @@ def ForwardCalculation(W, X, B):
     return Z
 
 def Softmax(Z):
-    shift_z = Z - np.max(Z)
+    shift_z = Z - np.max(Z, axis=0)
     exp_z = np.exp(shift_z)
     A = exp_z / np.sum(exp_z, axis=0)
     return A

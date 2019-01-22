@@ -246,3 +246,38 @@ scoreList | array | 数组中的每个元素包含以下属性：<br>userId, nic
 &nbsp;&nbsp;&nbsp;&nbsp;nickName | string | 用户昵称
 &nbsp;&nbsp;&nbsp;&nbsp;score | int | 得分
 &nbsp;&nbsp;&nbsp;&nbsp;index | int | 该用户在当前房间内的索引号
+
+## 获取分页历史数据
+
+请求方式：GET
+
+路径：/api/History
+
+使用该接口可以获取当前房间内的历史数据，包括每回合的黄金点、每个玩家的预测值、得分等信息。
+
+没有指定任何参数时，返回0号房间内最新的10回合的历史。
+
+请求需要用到的参数：
+
+参数名 | 数据类型 | 是否必需 | 备注
+-|-|-|-
+roomid | String | 可选 | 房间编号<br>如果该参数为空，默认0号房间
+startrid | String | 可选 | 开始查询的游戏回合标识<br>如果该参数为空，默认为当前正在进行的回合
+count | Int | 可选 | 指定从startrid开始返回多少回合的历史，不包括startrid回合<br>如果没有指定该参数，默认为10，最大不超过100
+direction | Int | 可选 | 查询的方向<br>默认值是0，表示从startrid查询旧的历史数据<br>另一个值是1，表示从startrid查询更新数据
+
+响应报文内容中的属性：
+
+属性名 | 数据类型 | 备注
+-|-|-
+rounds | Array | 查询到的回合的数组，数组的每个元素包含以下属性：<br>roundId, time, goldenNumber, userNumbers
+&nbsp;&nbsp;&nbsp;&nbsp;roundId | String | 回合标识
+&nbsp;&nbsp;&nbsp;&nbsp;index | int | 该回合在当前房间中的索引编号
+&nbsp;&nbsp;&nbsp;&nbsp;time | String | 该回合的截止时间，UTC
+&nbsp;&nbsp;&nbsp;&nbsp;goldenNumber | Double | 该回合的黄金点
+&nbsp;&nbsp;&nbsp;&nbsp;userNumbers | Array | 该回合所有玩家提交的数的数组，数组的每个元素所含以下属性：<br>userId, masterNumber, slaveNumber, score
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;userId | String | 用户标识
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;masterNumber | double | 用户提交的第一个预测值
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slaveNumber | double | 用户提交的第二个预测值，仅当当前游戏支持提交两个数的时候有效
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;score | Int | 用户在当前回合的得分
+nickNames | object | 用户编号和用户昵称的字典<br>用户编号是key，用户昵称是value

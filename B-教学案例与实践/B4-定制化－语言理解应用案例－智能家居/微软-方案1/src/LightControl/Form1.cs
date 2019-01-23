@@ -36,18 +36,17 @@ namespace LightControl
         {
             try
             {
-                SpeechFactory speechFactory = SpeechFactory.FromSubscription(speechKey, speechRegion);
-
-                // 设置识别中文
-                recognizer = speechFactory.CreateSpeechRecognizer("zh-CN");
+                SpeechConfig config = SpeechConfig.FromSubscription(speechKey, speechRegion);
+                config.SpeechRecognitionLanguage = "zh-cn";
+                recognizer = new SpeechRecognizer(config);
 
                 // 挂载识别中的事件
                 // 收到中间结果
-                recognizer.IntermediateResultReceived += Recognizer_IntermediateResultReceived;
+                recognizer.Recognizing += Recognizer_Recognizing;
                 // 收到最终结果
-                recognizer.FinalResultReceived += Recognizer_FinalResultReceived;
+                recognizer.Recognized += Recognizer_Recognized;
                 // 发生错误
-                recognizer.RecognitionErrorRaised += Recognizer_RecognitionErrorRaised;
+                recognizer.Canceled += Recognizer_Canceled;
 
                 // 启动语音识别器，开始持续监听音频输入
                 recognizer.StartContinuousRecognitionAsync();
@@ -64,7 +63,7 @@ namespace LightControl
         }
 
         // 识别过程中的中间结果
-        private void Recognizer_IntermediateResultReceived(object sender, SpeechRecognitionResultEventArgs e)
+        private void Recognizer_Recognizing(object sender, SpeechRecognitionEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Result.Text))
             {
@@ -73,13 +72,13 @@ namespace LightControl
         }
 
         // 出错时的处理
-        private void Recognizer_RecognitionErrorRaised(object sender, RecognitionErrorEventArgs e)
+        private void Recognizer_Canceled(object sender, SpeechRecognitionCanceledEventArgs e)
         {
-            Log("识别错误: " + e.FailureReason);
+            Log("识别错误: " + e.ErrorDetails);
         }
 
         // 获得音频分析后的文本内容
-        private void Recognizer_FinalResultReceived(object sender, SpeechRecognitionResultEventArgs e)
+        private void Recognizer_Recognized(object sender, SpeechRecognitionEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Result.Text))
             {

@@ -162,7 +162,7 @@ python mnist_extension.py --extension_dir D:\extension_images
 
 ![](./md_resources/inference_wizard.png)
 
-推理类库创建成功后，我们还需要调整一个依赖项的版本，否则会出现不兼容的错误。要调整依赖项版本，请在解决方案管理器中，于 **ExtendedModel** 项目上右键，选择 **管理NuGet包**，如下图所示。
+推理类库创建成功后，我们还需要调整一个依赖项的版本，否则会出现不兼容的错误。要调整依赖项版本，请在解决方案管理器中，于 **ExtendedModel** 项目下的 **引用** 上右键，选择 **管理NuGet包**，如下图所示。
 
 ![管理NuGet包](./md_resources/Model_NuGet.png)
 

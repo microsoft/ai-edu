@@ -546,7 +546,7 @@ private void Recognizer_Recognizing(object sender, SpeechRecognitionEventArgs e)
 // 出错时的处理
 private void Recognizer_Canceled(object sender, SpeechRecognitionCanceledEventArgs e)
 {
-    Log("识别错误: " + e.FailureReason);
+    Log("识别错误: " + e.ErrorDetails);
 }
 ```
 

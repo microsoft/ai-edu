@@ -150,13 +150,27 @@ python mnist_extension.py --extension_dir D:\extension_images
 
 同手写数字识别课程类似，我们还是先于GitHub克隆主体的应用代码，再加以引用模型来完成本文中这款应用。
 
-按照训练模型一节中所述，完成克隆后，我们可以通过Visual Studio打开克隆目录下的MnistDemo.sln解决方案，并和上一课一样，在解决方案里添加AI Tools – Inference模型项目。不过与上一课程稍有不同的是，为了对我们扩展的新模型加以区分，我们需要将新模型项目命名为**ExtendedModel**（同时也是默认的命名空间名字），并将新的模型包装类命名为`MnistExtension`。并且这一次，在模型项目创建向导中，我们需要选择上文中训练出的新模型。
+> **注意**
+>
+> 由于本教程使用的工具对中文路径的支持不好，请务必将 `extended_mnist_calculator` 文件夹复制到 **没有中文字符的路径** 下，再从那里打开解决方案。
+
+按照训练模型一节中所述，成功获取代码后，我们可以通过Visual Studio打开 `extended_mnist_calculator\MnistDemo.sln` 解决方案，并和上一课一样，在解决方案里添加AI Tools – Inference模型项目。不过与上一课程稍有不同的是，为了对我们扩展的新模型加以区分，我们需要将新模型项目命名为**ExtendedModel**（同时也是默认的命名空间名字），并将新的模型包装类命名为`MnistExtension`。并且这一次，在模型项目创建向导中，我们需要选择上文中训练出的新模型。
 
 新的Inference模型项目和模型包装类配置如下图：
 
 ![](./md_resources/inference_project.png)
 
 ![](./md_resources/inference_wizard.png)
+
+推理类库创建成功后，我们还需要调整一个依赖项的版本，否则会出现不兼容的错误。要调整依赖项版本，请在解决方案管理器中，于 **ExtendedModel** 项目下的 **引用** 上右键，选择 **管理NuGet包**，如下图所示。
+
+![管理NuGet包](./md_resources/Model_NuGet.png)
+
+然后在弹出的NuGet包管理页面里，找到 Microsoft.ML.Scoring 项（已经被自动安装了，比如下图中显示的 1.2.0 版），我们需要将它换成其他版本。请在下图所示的高亮区里，选择 **1.0.3** 版本并安装。之后等待安装完备。这样就设置好可以运行本教程的软件环境了。
+
+![安装Microsoft.ML.Scoring包1.0.3版本](./md_resources/Model_Downgrade_MLScoring.png)
+
+完成NuGet包的版本替换之后，请不要忘记在主体界面的项目上，引用我们的模型推理类库。
  
 ## 理解代码
 

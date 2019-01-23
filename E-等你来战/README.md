@@ -20,6 +20,6 @@
 * [房间0](https://goldennumber.azurewebsites.net/main?roomid=0)要求每个玩家每回合提交一个数，[房间1](https://goldennumber.azurewebsites.net/main?roomid=1)要求每个玩家每回合提交两个数，可以用两个数双保险去接近黄金点值，也可以提交一个较大的数字来保证自己的另一个数字比较接近黄金点值。
 * 统计得分时，只累加当天进行的各回合比赛的得分。
 
-如果您的得分最高，请[联系我们](mailto:msraeduhub@microsoft.com)，并提供您的比赛日期、用户ID，我们将邀请您的AI与其它智能的bot进行比赛，并给予一定的评级和认证。
+如果您的得分最高，请[联系我们](mailto:msraeduhub@microsoft.com)，并提供您的比赛日期、用户ID等信息，我们将进行评审，并邀请您的AI与其它智能的bot进行比赛。
 
 另外，黄金点比赛正处在起步阶段，还有很多不足和考虑不周，您有任何建议都可以[发邮件给我们](mailto:msraeduhub@microsoft.com)，或者直接在本社区中提Issues。

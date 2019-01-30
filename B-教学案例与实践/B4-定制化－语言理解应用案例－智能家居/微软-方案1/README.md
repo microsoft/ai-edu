@@ -461,6 +461,8 @@ private void MakesureRunInUI(Action action)
 
   - Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime
 
+> 本次案例中使用的这三个库的版本分别是v1.2.0、v12.0.1、v2.0.0，如果后期有新版本库出现，后续代码的实现可能略有不同。
+
 然后回到Form1.cs的代码编辑页面，引用命名空间
 ```C#
 using Microsoft.CognitiveServices.Speech;
@@ -498,18 +500,17 @@ private void Form1_Load(object sender, EventArgs e)
 {
     try
     {
-        SpeechFactory speechFactory = SpeechFactory.FromSubscription(speechKey, speechRegion);
-
-        // 设置识别中文
-        recognizer = speechFactory.CreateSpeechRecognizer("zh-CN");
+        SpeechConfig config = SpeechConfig.FromSubscription(speechKey, speechRegion);
+        config.SpeechRecognitionLanguage = "zh-cn";
+        recognizer = new SpeechRecognizer(config);
 
         // 挂载识别中的事件
         // 收到中间结果
-        recognizer.IntermediateResultReceived += Recognizer_IntermediateResultReceived;
+        recognizer.Recognizing += Recognizer_Recognizing;
         // 收到最终结果
-        recognizer.FinalResultReceived += Recognizer_FinalResultReceived;
+        recognizer.Recognized += Recognizer_Recognized;
         // 发生错误
-        recognizer.RecognitionErrorRaised += Recognizer_RecognitionErrorRaised;
+        recognizer.Canceled += Recognizer_Canceled;
 
         // 启动语音识别器，开始持续监听音频输入
         recognizer.StartContinuousRecognitionAsync();
@@ -531,7 +532,7 @@ private void Form1_Load(object sender, EventArgs e)
 语音转文本时会不断的接收到中间结果，这里把中间结果输出到日志窗口中
 ```C#
 // 识别过程中的中间结果
-private void Recognizer_IntermediateResultReceived(object sender, SpeechRecognitionResultEventArgs e)
+private void Recognizer_Recognizing(object sender, SpeechRecognitionEventArgs e)
 {
     if (!string.IsNullOrEmpty(e.Result.Text))
     {
@@ -543,16 +544,16 @@ private void Recognizer_IntermediateResultReceived(object sender, SpeechRecognit
 识别出现错误的时候，也把错误信息输出到日志窗口
 ```C#
 // 出错时的处理
-private void Recognizer_RecognitionErrorRaised(object sender, RecognitionErrorEventArgs e)
+private void Recognizer_Canceled(object sender, SpeechRecognitionCanceledEventArgs e)
 {
-    Log("识别错误: " + e.FailureReason);
+    Log("识别错误: " + e.ErrorDetails);
 }
 ```
 
 静默几秒后，SDK会认为语音结束，此时返回语音转文本的最终结果。这里拿到结果后，在日志窗口中显示最终结果，并进一步处理文本结果
 ```C#
 // 获得音频分析后的文本内容
-private void Recognizer_FinalResultReceived(object sender, SpeechRecognitionResultEventArgs e)
+private void Recognizer_Recognized(object sender, SpeechRecognitionEventArgs e)
 {
     if (!string.IsNullOrEmpty(e.Result.Text))
     {

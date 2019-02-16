@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>81d83d89-23e8-428a-b5d7-3f563a3101bf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>bp.py</StartupFile>
+    <StartupFile>BP-Linear.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="bp.py" />
+    <Compile Include="BP-Linear.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GradientDescent.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LossFunction-MSE.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BP-NoneLinear.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

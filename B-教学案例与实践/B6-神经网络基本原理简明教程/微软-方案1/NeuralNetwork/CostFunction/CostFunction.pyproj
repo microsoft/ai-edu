@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b903b338-af6e-42bb-86d3-af12c058f0b8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>CrossEntropy.py</StartupFile>
+    <StartupFile>MSE.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

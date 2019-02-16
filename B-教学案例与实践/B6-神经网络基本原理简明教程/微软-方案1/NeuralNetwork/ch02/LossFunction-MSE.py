@@ -1,5 +1,3 @@
-# -*- coding: UTF-8 -*-
-
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -30,25 +28,32 @@ def ShowResult(ax,x,y,a,loss,title):
 
 # 显示只变化b时loss的变化情况
 def CalculateCostB(x,y,n):
-    B = np.arange(0,2,0.1)
+    B = np.arange(0,2,0.05)
     Loss=[]
     for i in range(len(B)):
         b = B[i]
         a = 3*x+b
         loss = CostFunction(x,y,a,n)
         Loss.append(loss)
-    plt.plot(B,Loss,'o')
+    plt.title("Loss according to b")
+    plt.xlabel("b")
+    plt.ylabel("Loss")
+    plt.plot(B,Loss,'x')
     plt.show()
 
 # 显示只变化w时loss的变化情况
 def CalculateCostW(x,y,n):
-    W = np.arange(2,4,0.1)
+    W = np.arange(2,4,0.05)
     Loss=[]
     for i in range(len(W)):
         w = W[i]
         a = w*x+1
         loss = CostFunction(x,y,a,n)
         Loss.append(loss)
+    plt.title("Loss according to w")
+    plt.xlabel("w")
+    plt.ylabel("Loss")
+    plt.title = "Loss according to w"
     plt.plot(W,Loss,'o')
     plt.show()
 
@@ -115,25 +120,27 @@ def test():
     z=np.zeros((200,200))
     for i in range(200):
         for j in range(200):
-            z[i,j] = (x[i]-y[j])**2
+            z[i,j] = (x[i]+y[j])**2
 
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    ax.plot_surface(x,y,z)
+    #ax.plot_surface(x,y,z)
+    ax.plot_wireframe(x,y,z)
     plt.show()
         
   
-n=12
+n=10
 x,y=CreateSampleData(n)
 plt.scatter(x,y)
 plt.axis([0,1.1,0,4.2])
 plt.show()
-'''
+
 show_cost_for_4b(x,y,n)
 show_all_4b(x,y,n)
 
 CalculateCostB(x,y,n)
 CalculateCostW(x,y,n)
-'''
+
 #CalculateCostWB(x,y,n)
-test()
+#test()
+

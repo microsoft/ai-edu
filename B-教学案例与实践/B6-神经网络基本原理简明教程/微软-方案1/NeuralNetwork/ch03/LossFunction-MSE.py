@@ -129,7 +129,7 @@ def test():
     plt.show()
         
   
-n=10
+n=100
 x,y=CreateSampleData(n)
 plt.scatter(x,y)
 plt.axis([0,1.1,0,4.2])

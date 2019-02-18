@@ -42,12 +42,20 @@ namespace GoldenNumber
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
     
+        /// <summary>Create a new player</summary>
+        /// <param name="nickName">User nickname
+        /// If the length exceeds 20, it will be truncated
+        /// It is recommended to set a nickname, which has a better recognition</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<UserRspModel> NewUserAsync(string nickName)
         {
             return NewUserAsync(nickName, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Create a new player</summary>
+        /// <param name="nickName">User nickname
+        /// If the length exceeds 20, it will be truncated
+        /// It is recommended to set a nickname, which has a better recognition</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task<UserRspModel> NewUserAsync(string nickName, System.Threading.CancellationToken cancellationToken)
@@ -136,12 +144,18 @@ namespace GoldenNumber
             }
         }
     
+        /// <summary>Set nickname</summary>
+        /// <param name="uid">User ID</param>
+        /// <param name="nickName">User nickname, length greater than 20 will be truncated</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<UserRspModel> SetNickNameAsync(string uid, string nickName)
         {
             return SetNickNameAsync(uid, nickName, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Set nickname</summary>
+        /// <param name="uid">User ID</param>
+        /// <param name="nickName">User nickname, length greater than 20 will be truncated</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task<UserRspModel> SetNickNameAsync(string uid, string nickName, System.Threading.CancellationToken cancellationToken)
@@ -235,12 +249,46 @@ namespace GoldenNumber
             }
         }
     
+        /// <summary>Get new game room</summary>
+        /// <param name="numbers">Set how many numbers that each player need submit. Currently supports submitting 1 or 2 numbers.
+        /// The default is 1, indicating that each player can submit one number</param>
+        /// <param name="duration">Set the duration for each round
+        /// The default value is 60 seconds, and the value ranges from 10 to 200</param>
+        /// <param name="uid">The room creator ID</param>
+        /// <param name="userCount">Set the maximum number of players allowed in the room
+        /// The default value is 0, indicating no limit
+        /// For the room with a limited number of players, when all players submit their numbers in current round, the score is calculated immediately and the next round begins.
+        /// Note: The number of players here is for the room, not for one round, as long as the player submits his number for any round in the room, the player is always in the room.</param>
+        /// <param name="roundCount">Set the total number of rounds
+        /// The default value is 0, indicating no limit
+        /// If there is no player submitting number in a certain round, the round is considered invalid, not counting the number of rounds.
+        /// If the number of valid rounds reaches the total number of rounds set, the game ends and data is no longer allowed to be submitted.</param>
+        /// <param name="manuallyStart">Whether to start the game manually
+        /// The default value is 0, indicating that the game starts automatically after the room is created.
+        /// If it is 1, it means that the game needs to be started manually by the creator.</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<NewRoomRspModel> NewRoomAsync(int? numbers, int? duration, string uid, int? userCount, int? roundCount, int? manuallyStart)
         {
             return NewRoomAsync(numbers, duration, uid, userCount, roundCount, manuallyStart, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Get new game room</summary>
+        /// <param name="numbers">Set how many numbers that each player need submit. Currently supports submitting 1 or 2 numbers.
+        /// The default is 1, indicating that each player can submit one number</param>
+        /// <param name="duration">Set the duration for each round
+        /// The default value is 60 seconds, and the value ranges from 10 to 200</param>
+        /// <param name="uid">The room creator ID</param>
+        /// <param name="userCount">Set the maximum number of players allowed in the room
+        /// The default value is 0, indicating no limit
+        /// For the room with a limited number of players, when all players submit their numbers in current round, the score is calculated immediately and the next round begins.
+        /// Note: The number of players here is for the room, not for one round, as long as the player submits his number for any round in the room, the player is always in the room.</param>
+        /// <param name="roundCount">Set the total number of rounds
+        /// The default value is 0, indicating no limit
+        /// If there is no player submitting number in a certain round, the round is considered invalid, not counting the number of rounds.
+        /// If the number of valid rounds reaches the total number of rounds set, the game ends and data is no longer allowed to be submitted.</param>
+        /// <param name="manuallyStart">Whether to start the game manually
+        /// The default value is 0, indicating that the game starts automatically after the room is created.
+        /// If it is 1, it means that the game needs to be started manually by the creator.</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task<NewRoomRspModel> NewRoomAsync(int? numbers, int? duration, string uid, int? userCount, int? roundCount, int? manuallyStart, System.Threading.CancellationToken cancellationToken)
@@ -349,12 +397,20 @@ namespace GoldenNumber
             }
         }
     
+        /// <summary>Start the game</summary>
+        /// <param name="uid">The room creator ID</param>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task StartGameAsync(string uid, int? roomid)
         {
             return StartGameAsync(uid, roomid, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Start the game</summary>
+        /// <param name="uid">The room creator ID</param>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task StartGameAsync(string uid, int? roomid, System.Threading.CancellationToken cancellationToken)
@@ -434,12 +490,20 @@ namespace GoldenNumber
             }
         }
     
+        /// <summary>Get game status</summary>
+        /// <param name="uid">User ID</param>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<StateRspModel> GetStateAsync(string uid, int? roomid)
         {
             return GetStateAsync(uid, roomid, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Get game status</summary>
+        /// <param name="uid">User ID</param>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task<StateRspModel> GetStateAsync(string uid, int? roomid, System.Threading.CancellationToken cancellationToken)
@@ -532,12 +596,22 @@ namespace GoldenNumber
             }
         }
     
+        /// <summary>Submit your numbers</summary>
+        /// <param name="uid">User ID</param>
+        /// <param name="rid">The round ID which the numbers submit to, in GUID format</param>
+        /// <param name="n1">The number that player want to submit. Must be a rational number between 0 and 100, excluding 0 and 100.</param>
+        /// <param name="n2">The second number that player want to sumbit. This parameter is required if current room support two numbers.</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<SubmitRspModel> SubmitAsync(string uid, string rid, string n1, string n2)
         {
             return SubmitAsync(uid, rid, n1, n2, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Submit your numbers</summary>
+        /// <param name="uid">User ID</param>
+        /// <param name="rid">The round ID which the numbers submit to, in GUID format</param>
+        /// <param name="n1">The number that player want to submit. Must be a rational number between 0 and 100, excluding 0 and 100.</param>
+        /// <param name="n2">The second number that player want to sumbit. This parameter is required if current room support two numbers.</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task<SubmitRspModel> SubmitAsync(string uid, string rid, string n1, string n2, System.Threading.CancellationToken cancellationToken)
@@ -639,12 +713,18 @@ namespace GoldenNumber
             }
         }
     
+        /// <summary>Get history of golden numbers</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<TodayGoldenListRspModel> GetTodayGoldenListAsync(int? roomid)
         {
             return GetTodayGoldenListAsync(roomid, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Get history of golden numbers</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task<TodayGoldenListRspModel> GetTodayGoldenListAsync(int? roomid, System.Threading.CancellationToken cancellationToken)
@@ -733,106 +813,18 @@ namespace GoldenNumber
             }
         }
     
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<TodayScoreRspModel> GetTodayScoreAsync(int? roomid)
-        {
-            return GetTodayScoreAsync(roomid, System.Threading.CancellationToken.None);
-        }
-    
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        public async System.Threading.Tasks.Task<TodayScoreRspModel> GetTodayScoreAsync(int? roomid, System.Threading.CancellationToken cancellationToken)
-        {
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/TodayScore?");
-            if (roomid != null) 
-            {
-                urlBuilder_.Append("roomid=").Append(System.Uri.EscapeDataString(ConvertToString(roomid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            }
-            urlBuilder_.Length--;
-    
-            var client_ = _httpClient;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
-                    PrepareRequest(client_, request_, urlBuilder_);
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-                    PrepareRequest(client_, request_, url_);
-    
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-    
-                        ProcessResponse(client_, response_);
-    
-                        var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(TodayScoreRspModel); 
-                            try
-                            {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<TodayScoreRspModel>(responseData_, _settings.Value);
-                                return result_; 
-                            } 
-                            catch (System.Exception exception_) 
-                            {
-                                throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
-                            }
-                        }
-                        else
-                        if (status_ == "400") 
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(BadRequestRspModel); 
-                            try
-                            {
-                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<BadRequestRspModel>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
-                            {
-                                throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
-                            }
-                            throw new SwaggerException<BadRequestRspModel>("A server side error occurred.", (int)response_.StatusCode, responseData_, headers_, result_, null);
-                        }
-                        else
-                        if (status_ != "200" && status_ != "204")
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
-                        }
-            
-                        return default(TodayScoreRspModel);
-                    }
-                    finally
-                    {
-                        if (response_ != null)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-            }
-        }
-    
+        /// <summary>Get history numbers submitted by players</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<TodayNumbersRspModel> GetTodayNumbersAsync(int? roomid)
         {
             return GetTodayNumbersAsync(roomid, System.Threading.CancellationToken.None);
         }
     
+        /// <summary>Get history numbers submitted by players</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         public async System.Threading.Tasks.Task<TodayNumbersRspModel> GetTodayNumbersAsync(int? roomid, System.Threading.CancellationToken cancellationToken)
@@ -921,6 +913,232 @@ namespace GoldenNumber
             }
         }
     
+        /// <summary>Get players' score</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task<TodayScoreRspModel> GetTodayScoreAsync(int? roomid)
+        {
+            return GetTodayScoreAsync(roomid, System.Threading.CancellationToken.None);
+        }
+    
+        /// <summary>Get players' score</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        public async System.Threading.Tasks.Task<TodayScoreRspModel> GetTodayScoreAsync(int? roomid, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/TodayScore?");
+            if (roomid != null) 
+            {
+                urlBuilder_.Append("roomid=").Append(System.Uri.EscapeDataString(ConvertToString(roomid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
+    
+            var client_ = _httpClient;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+    
+                    PrepareRequest(client_, request_, urlBuilder_);
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+                    PrepareRequest(client_, request_, url_);
+    
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+    
+                        ProcessResponse(client_, response_);
+    
+                        var status_ = ((int)response_.StatusCode).ToString();
+                        if (status_ == "200") 
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var result_ = default(TodayScoreRspModel); 
+                            try
+                            {
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<TodayScoreRspModel>(responseData_, _settings.Value);
+                                return result_; 
+                            } 
+                            catch (System.Exception exception_) 
+                            {
+                                throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
+                            }
+                        }
+                        else
+                        if (status_ == "400") 
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var result_ = default(BadRequestRspModel); 
+                            try
+                            {
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<BadRequestRspModel>(responseData_, _settings.Value);
+                            } 
+                            catch (System.Exception exception_) 
+                            {
+                                throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
+                            }
+                            throw new SwaggerException<BadRequestRspModel>("A server side error occurred.", (int)response_.StatusCode, responseData_, headers_, result_, null);
+                        }
+                        else
+                        if (status_ != "200" && status_ != "204")
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                        }
+            
+                        return default(TodayScoreRspModel);
+                    }
+                    finally
+                    {
+                        if (response_ != null)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+            }
+        }
+    
+        /// <summary>Get pagination history data</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
+        /// <param name="startrid">The ID of the round which the history start from
+        /// If this parameter is empty, the default is the current round</param>
+        /// <param name="count">Specifies the history of how many rounds to return from the round startid, excluding the round startrid
+        /// If this parameter is not specified, the default is 10 and the maximum is 100.</param>
+        /// <param name="direction">Direction when query the history
+        /// The default value is 0, indicating that the old historical data is queried from the round startid.
+        /// Another value is 1, indicating that the newer data is queried from the round startrid</param>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task<HistoryRspModel> GetHistoryAsync(int? roomid, string startrid, int? count, int? direction)
+        {
+            return GetHistoryAsync(roomid, startrid, count, direction, System.Threading.CancellationToken.None);
+        }
+    
+        /// <summary>Get pagination history data</summary>
+        /// <param name="roomid">Room ID
+        /// If this parameter is empty, use the default room 0</param>
+        /// <param name="startrid">The ID of the round which the history start from
+        /// If this parameter is empty, the default is the current round</param>
+        /// <param name="count">Specifies the history of how many rounds to return from the round startid, excluding the round startrid
+        /// If this parameter is not specified, the default is 10 and the maximum is 100.</param>
+        /// <param name="direction">Direction when query the history
+        /// The default value is 0, indicating that the old historical data is queried from the round startid.
+        /// Another value is 1, indicating that the newer data is queried from the round startrid</param>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        public async System.Threading.Tasks.Task<HistoryRspModel> GetHistoryAsync(int? roomid, string startrid, int? count, int? direction, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/History?");
+            if (roomid != null) 
+            {
+                urlBuilder_.Append("roomid=").Append(System.Uri.EscapeDataString(ConvertToString(roomid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (startrid != null) 
+            {
+                urlBuilder_.Append("startrid=").Append(System.Uri.EscapeDataString(ConvertToString(startrid, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (count != null) 
+            {
+                urlBuilder_.Append("count=").Append(System.Uri.EscapeDataString(ConvertToString(count, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (direction != null) 
+            {
+                urlBuilder_.Append("direction=").Append(System.Uri.EscapeDataString(ConvertToString(direction, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
+    
+            var client_ = _httpClient;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+    
+                    PrepareRequest(client_, request_, urlBuilder_);
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+                    PrepareRequest(client_, request_, url_);
+    
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+    
+                        ProcessResponse(client_, response_);
+    
+                        var status_ = ((int)response_.StatusCode).ToString();
+                        if (status_ == "200") 
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var result_ = default(HistoryRspModel); 
+                            try
+                            {
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<HistoryRspModel>(responseData_, _settings.Value);
+                                return result_; 
+                            } 
+                            catch (System.Exception exception_) 
+                            {
+                                throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
+                            }
+                        }
+                        else
+                        if (status_ == "400") 
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var result_ = default(BadRequestRspModel); 
+                            try
+                            {
+                                result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<BadRequestRspModel>(responseData_, _settings.Value);
+                            } 
+                            catch (System.Exception exception_) 
+                            {
+                                throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
+                            }
+                            throw new SwaggerException<BadRequestRspModel>("A server side error occurred.", (int)response_.StatusCode, responseData_, headers_, result_, null);
+                        }
+                        else
+                        if (status_ != "200" && status_ != "204")
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                        }
+            
+                        return default(HistoryRspModel);
+                    }
+                    finally
+                    {
+                        if (response_ != null)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+            }
+        }
+    
         private string ConvertToString(object value, System.Globalization.CultureInfo cultureInfo)
         {
             if (value is System.Enum)
@@ -962,9 +1180,11 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class UserRspModel 
     {
+        /// <summary>User ID in the format of Guid</summary>
         [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string UserId { get; set; }
     
+        /// <summary>User nickname</summary>
         [Newtonsoft.Json.JsonProperty("nickName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string NickName { get; set; }
     
@@ -983,6 +1203,7 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class BadRequestRspModel 
     {
+        /// <summary>Error message</summary>
         [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Message { get; set; }
     
@@ -1001,6 +1222,7 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class NewRoomRspModel 
     {
+        /// <summary>Room ID</summary>
         [Newtonsoft.Json.JsonProperty("roomId", Required = Newtonsoft.Json.Required.Always)]
         public int RoomId { get; set; }
     
@@ -1019,13 +1241,16 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class BaseRspModel 
     {
+        /// <summary>The current round ID in the current room</summary>
         [Newtonsoft.Json.JsonProperty("roundId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid RoundId { get; set; }
     
+        /// <summary>How many seconds are there in the current round</summary>
         [Newtonsoft.Json.JsonProperty("leftTime", Required = Newtonsoft.Json.Required.Always)]
         public int LeftTime { get; set; }
     
+        /// <summary>Current round deadline time in UTC format</summary>
         [Newtonsoft.Json.JsonProperty("roundEndTime", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset RoundEndTime { get; set; }
@@ -1045,39 +1270,57 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class StateRspModel : BaseRspModel
     {
+        /// <summary>User ID</summary>
         [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string UserId { get; set; }
     
+        /// <summary>User nickname</summary>
         [Newtonsoft.Json.JsonProperty("nickName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string NickName { get; set; }
     
+        /// <summary>Room ID</summary>
         [Newtonsoft.Json.JsonProperty("roomId", Required = Newtonsoft.Json.Required.Always)]
         public int RoomId { get; set; }
     
+        /// <summary>The number of numbers that can be submitted for the current room, 1 or 2.</summary>
         [Newtonsoft.Json.JsonProperty("numbers", Required = Newtonsoft.Json.Required.Always)]
         public int Numbers { get; set; }
     
         [Newtonsoft.Json.JsonProperty("duration", Required = Newtonsoft.Json.Required.Always)]
         public int Duration { get; set; }
     
+        /// <summary>Current game status
+        /// 0 means ongoing
+        /// 1 means not started, need room creator to manually start
+        /// 2 means the game is over, and it is not allowed to submit</summary>
         [Newtonsoft.Json.JsonProperty("state", Required = Newtonsoft.Json.Required.Always)]
         public int State { get; set; }
     
+        /// <summary>Whether the current user submitted numbers this round</summary>
         [Newtonsoft.Json.JsonProperty("hasSubmitted", Required = Newtonsoft.Json.Required.Always)]
         public bool HasSubmitted { get; set; }
     
+        /// <summary>Whether the current user is the creator of the current room
+        /// If the room is created without specifying an automatic start, the creator needs to manually start the game</summary>
         [Newtonsoft.Json.JsonProperty("isRoomCreator", Required = Newtonsoft.Json.Required.Always)]
         public bool IsRoomCreator { get; set; }
     
+        /// <summary>Number of players set when creating a room
+        /// 0 means no limit
+        /// Maximum cannot exceed 200
+        /// If the current room set the maximum number of players, then when all players submit their numbers in current round, the score is calculated immediately and the next round begins.</summary>
         [Newtonsoft.Json.JsonProperty("maxUserCount", Required = Newtonsoft.Json.Required.Always)]
         public int MaxUserCount { get; set; }
     
+        /// <summary>The number of players who submitted numbers in this room</summary>
         [Newtonsoft.Json.JsonProperty("currentUserCount", Required = Newtonsoft.Json.Required.Always)]
         public int CurrentUserCount { get; set; }
     
+        /// <summary>The number of valid rounds that can be made in this room</summary>
         [Newtonsoft.Json.JsonProperty("totalRoundCount", Required = Newtonsoft.Json.Required.Always)]
         public int TotalRoundCount { get; set; }
     
+        /// <summary>The number of valid rounds that have been performed in this room</summary>
         [Newtonsoft.Json.JsonProperty("finishedRoundCount", Required = Newtonsoft.Json.Required.Always)]
         public int FinishedRoundCount { get; set; }
     
@@ -1111,9 +1354,11 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class TodayGoldenListRspModel 
     {
+        /// <summary>Room ID</summary>
         [Newtonsoft.Json.JsonProperty("roomId", Required = Newtonsoft.Json.Required.Always)]
         public int RoomId { get; set; }
     
+        /// <summary>The golden number history in the room that day, the last value is the golden number of the latest round.</summary>
         [Newtonsoft.Json.JsonProperty("goldenNumberList", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<double> GoldenNumberList { get; set; }
     
@@ -1130,59 +1375,19 @@ namespace GoldenNumber
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class TodayScoreRspModel 
-    {
-        [Newtonsoft.Json.JsonProperty("scoreList", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<UserScore> ScoreList { get; set; }
-    
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static TodayScoreRspModel FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<TodayScoreRspModel>(data);
-        }
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
-    public partial class UserScore 
-    {
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UserId { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("nickName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string NickName { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("score", Required = Newtonsoft.Json.Required.Always)]
-        public int Score { get; set; }
-    
-        [Newtonsoft.Json.JsonProperty("index", Required = Newtonsoft.Json.Required.Always)]
-        public int Index { get; set; }
-    
-        public string ToJson() 
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
-        }
-    
-        public static UserScore FromJson(string data)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<UserScore>(data);
-        }
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class TodayNumbersRspModel 
     {
+        /// <summary>Room ID</summary>
         [Newtonsoft.Json.JsonProperty("roomId", Required = Newtonsoft.Json.Required.Always)]
         public int RoomId { get; set; }
     
+        /// <summary>The number of numbers that can be submitted for the current room, 1 or 2.
+        /// When it is 1, only number1 in the following data is valid;
+        /// When it is 2, number1 and number2 in the following data are valid numbers.</summary>
         [Newtonsoft.Json.JsonProperty("validNumbers", Required = Newtonsoft.Json.Required.Always)]
         public int ValidNumbers { get; set; }
     
+        /// <summary>The list of numbers that players submitted</summary>
         [Newtonsoft.Json.JsonProperty("numberList", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<UserNumber> NumberList { get; set; }
     
@@ -1201,15 +1406,19 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
     public partial class UserNumber 
     {
+        /// <summary>User index number, the same user index number indicates the number submitted by the same user in different rounds</summary>
         [Newtonsoft.Json.JsonProperty("userIndex", Required = Newtonsoft.Json.Required.Always)]
         public int UserIndex { get; set; }
     
+        /// <summary>Round index number, the same round index number indicates the number of different users submitted in the same round</summary>
         [Newtonsoft.Json.JsonProperty("roundIndex", Required = Newtonsoft.Json.Required.Always)]
         public int RoundIndex { get; set; }
     
+        /// <summary>The number that submitted by the user</summary>
         [Newtonsoft.Json.JsonProperty("number1", Required = Newtonsoft.Json.Required.Always)]
         public double Number1 { get; set; }
     
+        /// <summary>The second number submitted by the user, this is only valid when the current room supports submitting two numbers.</summary>
         [Newtonsoft.Json.JsonProperty("number2", Required = Newtonsoft.Json.Required.Always)]
         public double Number2 { get; set; }
     
@@ -1221,6 +1430,147 @@ namespace GoldenNumber
         public static UserNumber FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<UserNumber>(data);
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class TodayScoreRspModel 
+    {
+        /// <summary>Player score list</summary>
+        [Newtonsoft.Json.JsonProperty("scoreList", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<UserScore> ScoreList { get; set; }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static TodayScoreRspModel FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<TodayScoreRspModel>(data);
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class UserScore 
+    {
+        /// <summary>User ID</summary>
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string UserId { get; set; }
+    
+        /// <summary>User nickname</summary>
+        [Newtonsoft.Json.JsonProperty("nickName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NickName { get; set; }
+    
+        /// <summary>Score</summary>
+        [Newtonsoft.Json.JsonProperty("score", Required = Newtonsoft.Json.Required.Always)]
+        public int Score { get; set; }
+    
+        /// <summary>The user's index number in the current room</summary>
+        [Newtonsoft.Json.JsonProperty("index", Required = Newtonsoft.Json.Required.Always)]
+        public int Index { get; set; }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static UserScore FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<UserScore>(data);
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class HistoryRspModel 
+    {
+        /// <summary>Array of rounds</summary>
+        [Newtonsoft.Json.JsonProperty("rounds", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<RoundNumbers> Rounds { get; set; }
+    
+        /// <summary>User ID and nickname dictionary
+        /// The key is user ID, and the value is nickname</summary>
+        [Newtonsoft.Json.JsonProperty("nickNames", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.IDictionary<string, string> NickNames { get; set; }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static HistoryRspModel FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<HistoryRspModel>(data);
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class RoundNumbers 
+    {
+        /// <summary>Round ID</summary>
+        [Newtonsoft.Json.JsonProperty("roundId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string RoundId { get; set; }
+    
+        /// <summary>The index number of the round in the current room</summary>
+        [Newtonsoft.Json.JsonProperty("index", Required = Newtonsoft.Json.Required.Always)]
+        public int Index { get; set; }
+    
+        /// <summary>The golden number of the round</summary>
+        [Newtonsoft.Json.JsonProperty("goldenNumber", Required = Newtonsoft.Json.Required.Always)]
+        public double GoldenNumber { get; set; }
+    
+        /// <summary>Current round deadline time in UTC format</summary>
+        [Newtonsoft.Json.JsonProperty("time", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTimeOffset Time { get; set; }
+    
+        /// <summary>Number submitted by all players in the round</summary>
+        [Newtonsoft.Json.JsonProperty("userNumbers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<UserNumber2> UserNumbers { get; set; }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static RoundNumbers FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<RoundNumbers>(data);
+        }
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.13.0 (Newtonsoft.Json v9.0.0.0)")]
+    public partial class UserNumber2 
+    {
+        /// <summary>User ID</summary>
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string UserId { get; set; }
+    
+        /// <summary>The number that submitted by the user</summary>
+        [Newtonsoft.Json.JsonProperty("masterNumber", Required = Newtonsoft.Json.Required.Always)]
+        public double MasterNumber { get; set; }
+    
+        /// <summary>The second number submitted by the user, this is only valid when the current room supports submitting two numbers.</summary>
+        [Newtonsoft.Json.JsonProperty("slaveNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? SlaveNumber { get; set; }
+    
+        /// <summary>User's score in the current round</summary>
+        [Newtonsoft.Json.JsonProperty("score", Required = Newtonsoft.Json.Required.Always)]
+        public int Score { get; set; }
+    
+        public string ToJson() 
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
+        }
+    
+        public static UserNumber2 FromJson(string data)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<UserNumber2>(data);
         }
     
     }

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level1.py</StartupFile>
+    <StartupFile>level3-final.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,9 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="level1.py" />
-    <Compile Include="level3.py" />
-    <Compile Include="level2.py">
+    <Compile Include="level0-lse.py" />
+    <Compile Include="level1-simple.py" />
+    <Compile Include="level3-final.py" />
+    <Compile Include="level2-function.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

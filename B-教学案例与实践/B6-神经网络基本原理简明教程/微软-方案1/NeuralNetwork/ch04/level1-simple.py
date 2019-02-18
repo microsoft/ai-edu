@@ -1,4 +1,4 @@
-
+# 用单次迭代方式
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -16,13 +16,12 @@ def ReadData():
     else:
         return None,None
 
-max_iteration=1
-eta = 0.1
-X, Y = ReadData()
-w, b = 0.0, 0.0
-# count of samples
-num_example = X.shape[0]
-for iteration in range(max_iteration):
+if __name__ == '__main__':
+    eta = 0.1
+    X, Y = ReadData()
+    w, b = 0.0, 0.0
+    # count of samples
+    num_example = X.shape[0]
     for i in range(num_example):
         # get x and y value for one sample
         x = X[i]
@@ -37,4 +36,4 @@ for iteration in range(max_iteration):
         w = w - eta * dw
         b = b - eta * db
 
-print(w,b)
+    print(w,b)

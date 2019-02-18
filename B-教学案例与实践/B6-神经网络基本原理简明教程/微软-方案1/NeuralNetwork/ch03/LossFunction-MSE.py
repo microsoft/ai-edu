@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-import matplotlib as mpl
+
 
 def TargetFunction(x):
     y = 3*x + 1
@@ -114,33 +113,38 @@ def show_all_4b(x,y,n):
     plt.plot(x,a4)
     plt.show()
 
-def test():
-    x=np.arange(-10,10,step=0.1)
-    y=np.arange(-10,10,step=0.1)
-    z=np.zeros((200,200))
-    for i in range(200):
-        for j in range(200):
-            z[i,j] = (x[i]+y[j])**2
-
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    #ax.plot_surface(x,y,z)
-    ax.plot_wireframe(x,y,z)
-    plt.show()
         
-  
-n=100
-x,y=CreateSampleData(n)
-plt.scatter(x,y)
-plt.axis([0,1.1,0,4.2])
-plt.show()
+def show_3d_surface():
+    fig = plt.figure()
+    ax = Axes3D(fig)
+ 
+    u = np.linspace(0, 5, 100)
+    v = np.linspace(0, 5, 100)
+    X, Y = np.meshgrid(u, v)
+    R = np.zeros((len(u), len(v)))
+    for i in range(len(u)):
+        for j in range(len(v)):
+            R[i, j] = (X[i, j] - 2.5) ** 2 + (Y[i, j] - 2.5) ** 2
+            #print(R[i, j])
+ 
+    ax.plot_surface(X, Y, R, cmap='rainbow')
+    ax.contour(X, Y, R, zdir='z', levels=20, offset = 0)
+    plt.show()
 
-show_cost_for_4b(x,y,n)
-show_all_4b(x,y,n)
+if __name__ == '__main__':
+    
+    n=10
+    x,y=CreateSampleData(n)
+    plt.scatter(x,y)
+    plt.axis([0,1.1,0,4.2])
+    plt.show()
 
-CalculateCostB(x,y,n)
-CalculateCostW(x,y,n)
+    show_cost_for_4b(x,y,n)
+    show_all_4b(x,y,n)
 
-#CalculateCostWB(x,y,n)
-#test()
+    CalculateCostB(x,y,n)
+    CalculateCostW(x,y,n)
+    
+    CalculateCostWB(x,y,n)
 
+    show_3d_surface()

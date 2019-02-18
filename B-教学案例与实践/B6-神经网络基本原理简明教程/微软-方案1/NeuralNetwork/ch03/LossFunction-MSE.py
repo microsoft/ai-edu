@@ -131,14 +131,55 @@ def show_3d_surface():
     ax.contour(X, Y, R, zdir='z', levels=20, offset = 0)
     plt.show()
 
+
+def test_2d(x,y,n):
+    s = 200
+    W = np.linspace(1,5,s)
+    B = np.linspace(-2,3,s)
+    LOSS = np.zeros((s,s))
+    for i in range(len(W)):
+        for j in range(len(B)):
+            w = W[i]
+            b = B[j]
+            a = w * x + b
+            loss = CostFunction(x,y,a,n)
+            LOSS[i,j] = round(loss, 2)
+    print(LOSS)
+    print("please wait for 10 seconds...")
+    while(True):
+        X = []
+        Y = []
+        is_first = True
+        loss = 0
+        for i in range(len(W)):
+            for j in range(len(B)):
+                if LOSS[i,j] != 0:
+                    if is_first:
+                        loss = LOSS[i,j]
+                        X.append(W[i])
+                        Y.append(B[j])
+                        LOSS[i,j] = 0
+                        is_first = False
+                    elif LOSS[i,j] == loss:
+                        X.append(W[i])
+                        Y.append(B[j])
+                        LOSS[i,j] = 0
+        if is_first == True:
+            break
+        plt.plot(X,Y,'.')
+    
+    plt.show()
+
+
+
 if __name__ == '__main__':
     
-    n=10
+    n=100
     x,y=CreateSampleData(n)
     plt.scatter(x,y)
     plt.axis([0,1.1,0,4.2])
     plt.show()
-
+    
     show_cost_for_4b(x,y,n)
     show_all_4b(x,y,n)
 
@@ -148,3 +189,5 @@ if __name__ == '__main__':
     CalculateCostWB(x,y,n)
 
     show_3d_surface()
+    
+    test_2d(x,y,n)

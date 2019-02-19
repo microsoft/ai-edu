@@ -23,7 +23,7 @@ N个玩家，每人写一个或两个0~100之间的有理数 (不包括0或100)�
 
 * 用你熟悉的语言来挑战
 
-  服务端REST接口提供了Swagger描述文档： [swagger.json](https://goldennumber.azurewebsites.net/swagger/v1/swagger.json)  [中文版](https://goldennumber.fareast.corp.microsoft.com/swagger/v1%20-%20Chinese/swagger.json) [英文版](https://goldennumber.fareast.corp.microsoft.com/swagger/v1%20-%20English/swagger.json)
+  服务端REST接口提供了Swagger描述文档： [swagger.json](https://goldennumber.azurewebsites.net/swagger/v1/swagger.json)  [中文版](https://goldennumber.azurewebsites.net/swagger/v1%20-%20Chinese/swagger.json) [英文版](https://goldennumber.azurewebsites.net/swagger/v1%20-%20English/swagger.json)
   
   可以参考该API文档直接来调用服务器接口，也可以借助第三方工具从swagger文档生成所需语言的SDK来使用。比如，可以借助[SwaggerEditor](https://editor.swagger.io/)来生成各种语言版本的客户端SDK，可以极大的方便开发。
 

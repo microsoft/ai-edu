@@ -14,16 +14,18 @@ def draw_fun():
     plt.show()
 
 
-def draw_derivative():
-    x = np.linspace(1,10)
-    d = 1/(x*np.sqrt(np.log(x)))
-    plt.plot(x,d)
-    plt.show()
-
-
 if __name__ == '__main__':
-    x = 2
-    y = 2.13
+    print("how to play: 1) input x, 2) calculate c, 3) input target number but not faraway from c")
+    print("input x as initial number:")
+    line = input()
+    x = float(line)
+    a = x*x
+    b = np.log(a)
+    c = np.sqrt(b)
+    print("c=%f" %c)
+    print("input y as target number(not farway from c):")
+    line = input()
+    y = float(line)
     while(True):
         print("forward...")
         # forward
@@ -45,6 +47,6 @@ if __name__ == '__main__':
 
     print(x,a,b,c,loss)
     draw_fun()
-    #draw_derivative()
+
 
 

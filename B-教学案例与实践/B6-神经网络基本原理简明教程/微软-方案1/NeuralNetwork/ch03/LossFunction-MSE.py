@@ -145,7 +145,7 @@ def test_2d(x,y,n):
             loss = CostFunction(x,y,a,n)
             LOSS[i,j] = round(loss, 2)
     print(LOSS)
-    print("please wait for 10 seconds...")
+    print("please wait for 20 seconds...")
     while(True):
         X = []
         Y = []

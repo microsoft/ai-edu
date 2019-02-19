@@ -38,7 +38,7 @@ def gd(eta):
 
 if __name__ == '__main__':
 
-    eta = [1.,0.8,0.6,0.4,0.2,0.1]
+    eta = [1.1,1.,0.8,0.6,0.4,0.2,0.1]
 
     for e in eta:
         X,Y=create_sample()

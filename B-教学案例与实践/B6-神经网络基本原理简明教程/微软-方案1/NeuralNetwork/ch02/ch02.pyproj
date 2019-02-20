@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>b903b338-af6e-42bb-86d3-af12c058f0b8</ProjectGuid>
+    <ProjectGuid>81d83d89-23e8-428a-b5d7-3f563a3101bf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MSE.py</StartupFile>
+    <StartupFile>BP-Linear.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>CostFunction</Name>
-    <RootNamespace>CostFunction</RootNamespace>
+    <Name>ch02</Name>
+    <RootNamespace>ch02</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,10 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CrossEntropy.py">
+    <Compile Include="BP-Linear.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MSE.py" />
+    <Compile Include="BP-NoneLinear.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

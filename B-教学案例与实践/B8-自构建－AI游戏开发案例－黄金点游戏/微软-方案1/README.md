@@ -138,7 +138,11 @@ API接口实现游戏回合时间同步、获取历史数据、提交预测数�
 -|-|-
 message | String | 出错的具体信息
 
-服务端REST接口提供Swagger描述[swagger.json](https://goldennumber.azurewebsites.net/swagger/v1/swagger.json)，有了该描述文件，然后借助[SwaggerEditor](https://editor.swagger.io/)，可以很方便的生成各种语言版本的客户端SDK，可以极大的方便客户端的开发。另外，服务端也提供了[API试用页面](https://goldennumber.azurewebsites.net/swagger/index.html#/Default)，可以方便直接的在线试验API接口。
+服务端REST接口提供了Swagger描述文档： [swagger.json](https://goldennumber.azurewebsites.net/swagger/v1/swagger.json)  [中文版](https://goldennumber.azurewebsites.net/swagger/v1%20-%20Chinese/swagger.json) [英文版](https://goldennumber.azurewebsites.net/swagger/v1%20-%20English/swagger.json)
+  
+可以参考该API文档直接来调用服务器接口，也可以借助第三方工具从swagger文档生成所需语言的SDK来使用。比如，可以借助[SwaggerEditor](https://editor.swagger.io/)来生成各种语言版本的客户端SDK，可以极大的方便开发。
+
+另外，服务端也提供了[API试用页面](https://goldennumber.azurewebsites.net/swagger/index.html#/Default)，可以方便直接的在线试验API接口。
 
 下面是各个接口的详细描述：
 

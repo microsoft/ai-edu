@@ -16,18 +16,18 @@ namespace BotDemo
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("输入房间号：");
+            Console.WriteLine("Input room id: ");
             string inputRoomId = Console.ReadLine();
             int roomId = 0;
             if (!int.TryParse(inputRoomId, out roomId))
             {
-                Console.WriteLine("解析房间号失败，默认进入0号房间");
+                Console.WriteLine("Parse room id failed, default join in to room 0");
             }
 
             RunBot(roomId).Wait();
         }
 
-        static Tuple<double, double> GetNumber(List<double> goldenNumberList, int numberCount)
+        static Tuple<double, double> GeneratePredictionNumbers(List<double> goldenNumberList, int numberCount)
         {
             double number1 = 0;
             double number2 = 0;
@@ -42,11 +42,11 @@ namespace BotDemo
             }
             else
             {
-                // 用最近十回合的黄金点的均值作为下一回合的预测值
+                // Use the average of latest 10 rounds golden number as the prediction number for next round
                 number1 = goldenNumberList.AsEnumerable().Reverse().Take(10).Average();
                 if (numberCount == 2)
                 {
-                    // 用最近一回合的黄金点值作为下一回合的预测值
+                    // Use the latest round golden number as the prediction number for the next round
                     number2 = goldenNumberList.Last();
                 }
             }
@@ -57,88 +57,89 @@ namespace BotDemo
         static async Task RunBot(int roomId)
         {
             GoldenNumberService service = new GoldenNumberService(new HttpClient());
+            service.BaseUrl = "http://localhost:63416";
 
             try
             {
-                // 创建用户
-                var user = await service.NewUserAsync($"AI玩家{new Random().Next() % 10000}");
+                // Create a player
+                var user = await service.NewUserAsync($"AI Player {new Random().Next() % 10000}");
                 var userId = user.UserId;
-                Console.WriteLine($"玩家：{user.NickName}  Id：{user.UserId}");
+                Console.WriteLine($"Player: {user.NickName}  Id: {user.UserId}");
 
-                Console.WriteLine($"房间号：{roomId}");
+                Console.WriteLine($"Room id: {roomId}");
 
                 while (true)
                 {
-                    // 查询房间状态
+                    // Get the room state
                     var state = await service.GetStateAsync(userId, roomId);
 
                     if (state.State == 2)
                     {
-                        Console.WriteLine($"房间已结束，退出");
+                        Console.WriteLine($"The game has finished");
                         break;
                     }
 
                     if (state.State == 1)
                     {
-                        Console.WriteLine($"房间尚未开始，1秒后轮询");
+                        Console.WriteLine($"The game has not started, query again after 1 second");
                         await Task.Delay(1000);
                         continue;
                     }
 
                     if (state.HasSubmitted)
                     {
-                        Console.WriteLine($"已提交数据，等待下一回合");
+                        Console.WriteLine($"Already submitted this round, wait for next round");
                         await Task.Delay((state.LeftTime + 1) * 1000);
                         continue;
                     }
 
-                    Console.WriteLine($"进入第{state.FinishedRoundCount + 1}回合");
+                    Console.WriteLine($"This is round {state.FinishedRoundCount + 1}");
 
-                    // 查询历史黄金点
+                    // Get history of golden numbers
                     var todayGoldenList = await service.GetTodayGoldenListAsync(roomId);
 
                     if (todayGoldenList.GoldenNumberList.Count != 0)
                     {
-                        Console.WriteLine($"上一回合黄金点值为：{todayGoldenList.GoldenNumberList.Last()}");
+                        Console.WriteLine($"Last golden number is: {todayGoldenList.GoldenNumberList.Last()}");
                     }
 
-                    // 计算预测值
-                    var numbers = GetNumber(todayGoldenList.GoldenNumberList.ToList(), state.Numbers);
+                    // Predict
+                    var numbers = GeneratePredictionNumbers(todayGoldenList.GoldenNumberList.ToList(), state.Numbers);
                     double number1 = numbers.Item1;
                     double number2 = numbers.Item2;
 
-                    // 提交预测值
+                    // Submit prediction number
                     try
                     {
                         if (state.Numbers == 2)
                         {
                             await service.SubmitAsync(userId, state.RoundId.ToString(), number1.ToString(), number2.ToString());
-                            Console.WriteLine($"本回合提交的预测值为：{number1}，{number2}");
+                            Console.WriteLine($"You submit numbers: {number1}，{number2}");
                         }
                         else
                         {
                             await service.SubmitAsync(userId, state.RoundId.ToString(), number1.ToString(), "0");
-                            Console.WriteLine($"本回合提交的预测值为：{number1}");
+                            Console.WriteLine($"You submit number: {number1}");
                         }
                     }
                     catch (SwaggerException<BadRequestRspModel> ex)
                     {
-                        Console.WriteLine($"Error：{ex.Result.Message}");
+                        Console.WriteLine($"Error: {ex.Result.Message}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error：{ex.Message}");
+                        Console.WriteLine($"Error: {ex.Message}");
                     }
                 }
 
             }
             catch (SwaggerException<BadRequestRspModel> ex)
             {
-                Console.WriteLine($"Error：{ex.Result.Message}");
+                Console.WriteLine($"Error: {ex.Result.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error：{ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 

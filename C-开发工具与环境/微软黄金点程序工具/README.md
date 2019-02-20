@@ -6,4 +6,5 @@
     - 提供离线的机器人比赛环境
 - [OnlineGame 在线黄金点游戏](./OnlineGame)
     - [SampleClient 具有完整功能的联机客户端示例](./OnlineGame/SampleClient)
-    - [BotDemo 可以自动提交数字的AI bot示例](./OnlineGame/BotDemo)
+    - [BotDemoInCSharp 可以自动提交数字的AI bot示例CSharp实现](./OnlineGame/BotDemoInCSharp)
+    - [BotDemoInPython 可以自动提交数字的AI bot示例Python实现](./OnlineGame/BotDemoInPython)

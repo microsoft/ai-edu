@@ -11,7 +11,7 @@
 如何挑战：
 
 * 人工挑战：打开[网页客户端](https://goldennumber.azurewebsites.net/)或者使用[本地客户端](../C-开发工具与环境/微软黄金点程序工具/OnlineGame/SampleClient)，提交你的预测值，看能否最接近黄金点。
-* 写AI来挑战：[用C#写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame/BotDemo)，或者[用你熟悉的语言来写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame)，让你的bot智能的选择数字进行提交，看能否在多回合比赛中得分最高。
+* 写AI来挑战：[用C#写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame/BotDemoInCSharp)，或者[用Python写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame/BotDemoInPython)，或者[用你熟悉的语言来写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame)，让你的bot智能的选择数字进行提交，看能否在多回合比赛中得分最高。
 
 比赛说明：
 

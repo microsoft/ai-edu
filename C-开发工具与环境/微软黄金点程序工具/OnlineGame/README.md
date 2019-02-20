@@ -19,13 +19,13 @@ N个玩家，每人写一个或两个0~100之间的有理数 (不包括0或100)�
 
 * 写一个AI bot来挑战
 
-  在[BotDemo](./BotDemo)中，我们提供了一个简单的可以与“黄金点”服务器交互的控制台程序，只要将你的策略或者AI核心写到GetNumber函数中，就可以让你的bot在服务器上大战三百回合了。
+  在 [BotDemoInCSharp](./BotDemoInCSharp) 和 [BotDemoInPython](./BotDemoInPython) 中，我们提供了一个简单的可以与“黄金点”服务器交互的控制台程序，只要将你的策略或者AI核心写到 `GeneratePredictionNumbers` 函数中，就可以让你的bot在服务器上大战三百回合了。
 
 * 用你熟悉的语言来挑战
 
-  上面几个例子都是基于C#的，如果你习惯于别的语言，比如Python，没问题。
+  服务端REST接口提供了Swagger描述文档： [swagger.json](https://goldennumber.azurewebsites.net/swagger/v1/swagger.json)  [中文版](https://goldennumber.azurewebsites.net/swagger/v1%20-%20Chinese/swagger.json) [英文版](https://goldennumber.azurewebsites.net/swagger/v1%20-%20English/swagger.json)
   
-  服务端REST接口提供Swagger描述[swagger.json](https://goldennumber.azurewebsites.net/swagger/v1/swagger.json)，有了该描述文件，然后借助[SwaggerEditor](https://editor.swagger.io/)，可以很方便的生成各种语言版本的客户端SDK，可以极大的方便开发。
+  可以参考该API文档直接来调用服务器接口，也可以借助第三方工具从swagger文档生成所需语言的SDK来使用。比如，可以借助[SwaggerEditor](https://editor.swagger.io/)来生成各种语言版本的客户端SDK，可以极大的方便开发。
 
 # 配套的服务器接口介绍
 下图描述了服务器如何驱动游戏一回合接着一回合的运转，同时指出了AI或客户端应何时与服务器交互。

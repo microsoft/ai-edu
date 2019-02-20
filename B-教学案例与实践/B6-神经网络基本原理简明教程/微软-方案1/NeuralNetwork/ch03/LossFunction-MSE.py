@@ -1,10 +1,10 @@
-# -*- coding: UTF-8 -*-
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import cm
-import matplotlib as mpl
+
 
 def TargetFunction(x):
     y = 3*x + 1
@@ -30,25 +30,32 @@ def ShowResult(ax,x,y,a,loss,title):
 
 # 显示只变化b时loss的变化情况
 def CalculateCostB(x,y,n):
-    B = np.arange(0,2,0.1)
+    B = np.arange(0,2,0.05)
     Loss=[]
     for i in range(len(B)):
         b = B[i]
         a = 3*x+b
         loss = CostFunction(x,y,a,n)
         Loss.append(loss)
-    plt.plot(B,Loss,'o')
+    plt.title("Loss according to b")
+    plt.xlabel("b")
+    plt.ylabel("Loss")
+    plt.plot(B,Loss,'x')
     plt.show()
 
 # 显示只变化w时loss的变化情况
 def CalculateCostW(x,y,n):
-    W = np.arange(2,4,0.1)
+    W = np.arange(2,4,0.05)
     Loss=[]
     for i in range(len(W)):
         w = W[i]
         a = w*x+1
         loss = CostFunction(x,y,a,n)
         Loss.append(loss)
+    plt.title("Loss according to w")
+    plt.xlabel("w")
+    plt.ylabel("Loss")
+    plt.title = "Loss according to w"
     plt.plot(W,Loss,'o')
     plt.show()
 
@@ -109,31 +116,81 @@ def show_all_4b(x,y,n):
     plt.plot(x,a4)
     plt.show()
 
-def test():
-    x=np.arange(-10,10,step=0.1)
-    y=np.arange(-10,10,step=0.1)
-    z=np.zeros((200,200))
-    for i in range(200):
-        for j in range(200):
-            z[i,j] = (x[i]-y[j])**2
-
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    ax.plot_surface(x,y,z)
-    plt.show()
         
-  
-n=12
-x,y=CreateSampleData(n)
-plt.scatter(x,y)
-plt.axis([0,1.1,0,4.2])
-plt.show()
-'''
-show_cost_for_4b(x,y,n)
-show_all_4b(x,y,n)
+def show_3d_surface():
+    fig = plt.figure()
+    ax = Axes3D(fig)
+ 
+    u = np.linspace(0, 5, 100)
+    v = np.linspace(0, 5, 100)
+    X, Y = np.meshgrid(u, v)
+    R = np.zeros((len(u), len(v)))
+    for i in range(len(u)):
+        for j in range(len(v)):
+            R[i, j] = (X[i, j] - 2.5) ** 2 + (Y[i, j] - 2.5) ** 2
+            #print(R[i, j])
+ 
+    ax.plot_surface(X, Y, R, cmap='rainbow')
+    ax.contour(X, Y, R, zdir='z', levels=20, offset = 0)
+    plt.show()
 
-CalculateCostB(x,y,n)
-CalculateCostW(x,y,n)
-'''
-#CalculateCostWB(x,y,n)
-test()
+
+def test_2d(x,y,n):
+    s = 200
+    W = np.linspace(1,5,s)
+    B = np.linspace(-2,3,s)
+    LOSS = np.zeros((s,s))
+    for i in range(len(W)):
+        for j in range(len(B)):
+            w = W[i]
+            b = B[j]
+            a = w * x + b
+            loss = CostFunction(x,y,a,n)
+            LOSS[i,j] = round(loss, 2)
+    print(LOSS)
+    print("please wait for 20 seconds...")
+    while(True):
+        X = []
+        Y = []
+        is_first = True
+        loss = 0
+        for i in range(len(W)):
+            for j in range(len(B)):
+                if LOSS[i,j] != 0:
+                    if is_first:
+                        loss = LOSS[i,j]
+                        X.append(W[i])
+                        Y.append(B[j])
+                        LOSS[i,j] = 0
+                        is_first = False
+                    elif LOSS[i,j] == loss:
+                        X.append(W[i])
+                        Y.append(B[j])
+                        LOSS[i,j] = 0
+        if is_first == True:
+            break
+        plt.plot(X,Y,'.')
+    
+    plt.show()
+
+
+
+if __name__ == '__main__':
+    
+    n=100
+    x,y=CreateSampleData(n)
+    plt.scatter(x,y)
+    plt.axis([0,1.1,0,4.2])
+    plt.show()
+    
+    show_cost_for_4b(x,y,n)
+    show_all_4b(x,y,n)
+
+    CalculateCostB(x,y,n)
+    CalculateCostW(x,y,n)
+    
+    CalculateCostWB(x,y,n)
+
+    show_3d_surface()
+    
+    test_2d(x,y,n)

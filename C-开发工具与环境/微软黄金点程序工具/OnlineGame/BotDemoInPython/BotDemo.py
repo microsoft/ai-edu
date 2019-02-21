@@ -63,7 +63,11 @@ def main():
 
             if state.hasSubmitted:
                 print('Already submitted this round, wait for next round')
-                time.sleep(state.leftTime + 1)
+                if state.maxUserCount == 0:
+                    time.sleep(state.leftTime + 1)
+                else:
+                    # One round can be finished when all players submitted their numbers if the room have set the max count of users, need to check the state every second.
+                    time.sleep(1)
                 continue
 
             print('This is round ' + str(state.finishedRoundCount + 1))

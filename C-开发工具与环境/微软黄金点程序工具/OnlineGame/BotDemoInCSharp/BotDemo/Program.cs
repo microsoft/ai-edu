@@ -57,7 +57,7 @@ namespace BotDemo
         static async Task RunBot(int roomId)
         {
             GoldenNumberService service = new GoldenNumberService(new HttpClient());
-            service.BaseUrl = "http://localhost:63416";
+            service.BaseUrl = "https://goldennumber.azurewebsites.net/";
 
             try
             {
@@ -89,7 +89,15 @@ namespace BotDemo
                     if (state.HasSubmitted)
                     {
                         Console.WriteLine($"Already submitted this round, wait for next round");
-                        await Task.Delay((state.LeftTime + 1) * 1000);
+                        if (state.MaxUserCount == 0)
+                        {
+                            await Task.Delay((state.LeftTime + 1) * 1000);
+                        }
+                        else
+                        {
+                            // One round can be finished when all players submitted their numbers if the room have set the max count of users, need to check the state every second.
+                            await Task.Delay(1000);
+                        }
                         continue;
                     }
 

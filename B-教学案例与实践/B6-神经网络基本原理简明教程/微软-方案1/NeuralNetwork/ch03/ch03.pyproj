@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9dbe4bf6-d88b-4412-8bfa-d74691559308</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>LossFunction-MSE.py</StartupFile>
+    <StartupFile>LossFunction-CrossEntropy.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,6 +22,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GradientDescent.py" />
+    <Compile Include="LossFunction-CrossEntropy.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LossFunction-MSE.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

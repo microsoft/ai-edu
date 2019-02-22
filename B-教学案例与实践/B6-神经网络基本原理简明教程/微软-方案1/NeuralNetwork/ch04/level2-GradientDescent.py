@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 # 用单次迭代方式
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,6 +23,7 @@ if __name__ == '__main__':
     eta = 0.1
     X, Y = ReadData()
     w, b = 0.0, 0.0
+    #w,b = np.random.random(),np.random.random()
     # count of samples
     num_example = X.shape[0]
     for i in range(num_example):

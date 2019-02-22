@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level3-final.py</StartupFile>
+    <StartupFile>level4-final.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,10 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="level0-lse.py" />
-    <Compile Include="level1-simple.py" />
-    <Compile Include="level3-final.py" />
-    <Compile Include="level2-function.py">
+    <Compile Include="level1-LeastSquare.py" />
+    <Compile Include="level2-GradientDescent.py" />
+    <Compile Include="level4-final.py" />
+    <Compile Include="level3-NeuralNetwork.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

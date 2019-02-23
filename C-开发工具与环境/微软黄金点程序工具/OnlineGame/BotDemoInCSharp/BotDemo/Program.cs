@@ -57,7 +57,7 @@ namespace BotDemo
         static async Task RunBot(int roomId)
         {
             GoldenNumberService service = new GoldenNumberService(new HttpClient());
-            service.BaseUrl = "https://goldennumber.azurewebsites.net/";
+            service.BaseUrl = "https://goldennumber.aiedu.msra.cn/";
 
             try
             {

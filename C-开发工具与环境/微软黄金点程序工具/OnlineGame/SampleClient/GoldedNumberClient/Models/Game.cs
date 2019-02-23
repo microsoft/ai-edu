@@ -19,7 +19,7 @@ namespace GoldedNumberClient.Models
     public class Game
     {
         // 和游戏逻辑相关的一些远程网址。
-        private const string GameEndpointBase = "https://goldennumber.azurewebsites.net/api/";
+        private const string GameEndpointBase = "https://goldennumber.aiedu.msra.cn/api/";
         private const string StateEndpointTemplate = GameEndpointBase + "state?uid={0}&roomid={1}";
 
         //TODO 使用分页获取历史的接口。

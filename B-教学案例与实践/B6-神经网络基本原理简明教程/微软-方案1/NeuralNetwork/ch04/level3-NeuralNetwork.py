@@ -40,6 +40,11 @@ def Inference(w,b,x):
     z = ForwardCalculation(w,b,x)
     return z
 
+def GetSample(X,Y,i):
+    x = X[0,i]
+    y = Y[0,i]
+    return x,y
+
 def ShowResult(X, Y, w, b, iteration):
     # draw sample data
     plt.plot(X, Y, "b.")
@@ -67,8 +72,7 @@ if __name__ == '__main__':
 
     for i in range(num_example):
         # get x and y value for one sample
-        x = X[0,i]
-        y = Y[0,i]
+        x,y = GetSample(X,Y,i)
         # get z from x,y
         z = ForwardCalculation(w, b, x)
         # calculate gradient of w and b

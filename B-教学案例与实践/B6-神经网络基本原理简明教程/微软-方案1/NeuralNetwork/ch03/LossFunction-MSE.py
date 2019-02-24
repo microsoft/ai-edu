@@ -39,7 +39,7 @@ def CalculateCostB(x,y,n):
         Loss.append(loss)
     plt.title("Loss according to b")
     plt.xlabel("b")
-    plt.ylabel("Loss")
+    plt.ylabel("J")
     plt.plot(B,Loss,'x')
     plt.show()
 
@@ -54,7 +54,7 @@ def CalculateCostW(x,y,n):
         Loss.append(loss)
     plt.title("Loss according to w")
     plt.xlabel("w")
-    plt.ylabel("Loss")
+    plt.ylabel("J")
     plt.title = "Loss according to w"
     plt.plot(W,Loss,'o')
     plt.show()
@@ -128,7 +128,6 @@ def show_3d_surface():
     for i in range(len(u)):
         for j in range(len(v)):
             R[i, j] = (X[i, j] - 2.5) ** 2 + (Y[i, j] - 2.5) ** 2
-            #print(R[i, j])
  
     ax.plot_surface(X, Y, R, cmap='rainbow')
     ax.contour(X, Y, R, zdir='z', levels=20, offset = 0)
@@ -171,6 +170,8 @@ def test_2d(x,y,n):
             break
         plt.plot(X,Y,'.')
     
+    plt.xlabel("w")
+    plt.ylabel("b")
     plt.show()
 
 
@@ -189,7 +190,7 @@ if __name__ == '__main__':
     CalculateCostB(x,y,n)
     CalculateCostW(x,y,n)
     
-    CalculateCostWB(x,y,n)
+    #CalculateCostWB(x,y,n)
 
     show_3d_surface()
     

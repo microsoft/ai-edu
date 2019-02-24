@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>81d83d89-23e8-428a-b5d7-3f563a3101bf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>GridentDescent-DoubleVariable.py</StartupFile>
+    <StartupFile>GradientDescentLearningRate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,8 +25,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BP-NoneLinear.py" />
-    <Compile Include="GridentDescent-DoubleVariable.py" />
-    <Compile Include="GridentDescent-SingleVariable.py">
+    <Compile Include="GradientDescentLearningRate.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GradientDescent-DoubleVariable.py" />
+    <Compile Include="GradientDescent-SingleVariable.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

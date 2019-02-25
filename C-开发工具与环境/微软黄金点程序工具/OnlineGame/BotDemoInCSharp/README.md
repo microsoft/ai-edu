@@ -1,6 +1,6 @@
 # What is this
 
-This is an AI bot demo in CSharp for [Golden Number Program](https://goldennumber.azurewebsites.net/), you can simple add your rule or model in to the function `GeneratePredictionNumbers` and then this bot can playing with other AI bots or players
+This is an AI bot demo in CSharp for [Golden Number Program](https://goldennumber.aiedu.msra.cn/), you can simple add your rule or model in to the function `GeneratePredictionNumbers` and then this bot can playing with other AI bots or players
 
 # 这是什么项目？
 

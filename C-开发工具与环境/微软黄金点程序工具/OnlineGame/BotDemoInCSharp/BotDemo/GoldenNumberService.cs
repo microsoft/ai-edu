@@ -14,7 +14,7 @@ namespace GoldenNumber
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.0.11.0 (NJsonSchema v9.13.13.0 (Newtonsoft.Json v9.0.0.0))")]
     public partial class GoldenNumberService 
     {
-        private string _baseUrl = "https://goldennumber.azurewebsites.net";
+        private string _baseUrl = "https://goldennumber.aiedu.msra.cn";
         private System.Net.Http.HttpClient _httpClient;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
     

@@ -30,7 +30,7 @@ def GeneratePredictionNumbers(goldenNumberList, numberCount):
 
 
 def main():
-    host = 'https://goldennumber.azurewebsites.net/'
+    host = 'https://goldennumber.aiedu.msra.cn/'
     jsonpath = '/swagger/v1/swagger.json'
 
     client = SwaggerClient.from_url(host + jsonpath)

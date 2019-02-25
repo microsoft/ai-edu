@@ -9,25 +9,36 @@ from pathlib import Path
 x_data_name = "TemperatureControlXData.dat"
 y_data_name = "TemperatureControlYData.dat"
 
+
+class CData(object):
+    def __init__(self, loss, w, b, epoch, iteraion):
+        self.loss = loss
+        self.w = w
+        self.b = b
+        self.epoch = epoch
+        self.iteration = iteration
+
+
+
 def ReadData():
     Xfile = Path(x_data_name)
     Yfile = Path(y_data_name)
     if Xfile.exists() & Yfile.exists():
         X = np.load(Xfile)
         Y = np.load(Yfile)
-        # 注意这里和前面的例子不同
         return X.reshape(1,-1),Y.reshape(1,-1)
     else:
         return None,None
 
-def ForwardCalculation(w,b,x):
-    z = w * x + b
-    return z
+def ForwardCalculationBatch(W,B,batch_x):
+    Z = np.dot(W, batch_x) + B
+    return Z
 
-def BackPropagation(x,y,z):
-    dZ = z - y
-    dB = dZ
-    dW = dZ * x
+def BackPropagationBatch(batch_x, batch_y, batch_z):
+    m = batch_x.shape[1]
+    dZ = batch_z - batch_y
+    dB = dZ.sum(axis=1, keepdims=True)/m
+    dW = np.dot(dZ, batch_x.T)/m
     return dW, dB
 
 def UpdateWeights(w, b, dW, dB, eta):
@@ -35,8 +46,26 @@ def UpdateWeights(w, b, dW, dB, eta):
     b = b - eta*dB
     return w,b
 
+def InitialWeights(num_input, num_output, flag):
+    if flag == 0:
+        # zero
+        W = np.zeros((num_output, num_input))
+    elif flag == 1:
+        # normalize
+        W = np.random.normal(size=(num_output, num_input))
+    elif flag == 2:
+        # xavier
+        W=np.random.uniform(
+            -np.sqrt(6/(num_input+num_output)),
+            np.sqrt(6/(num_input+num_output)),
+            size=(num_output,num_input))
+
+    B = np.zeros((num_output, 1))
+    return W,B
+
+
 def Inference(w,b,x):
-    z = ForwardCalculation(w,b,x)
+    z = ForwardCalculationBatch(w,b,x)
     return z
 
 def ShowResult(X, Y, w, b, iteration):
@@ -53,55 +82,164 @@ def ShowResult(X, Y, w, b, iteration):
     print("iteration=",iteration)
     print("w=%f,b=%f" %(w,b))
 
-def CheckLoss(w, b, X, Y, count, prev_loss):
-    Z = w * X + b
+def CheckLoss(W, B, X, Y):
+    m = X.shape[1]
+    Z = np.dot(W, X) + B
     LOSS = (Z - Y)**2
-    loss = LOSS.sum()/count/2
-    diff_loss = abs(loss - prev_loss)
-    return loss, diff_loss
+    loss = LOSS.sum()/m/2
+    return loss
+
+def GetBatchSamples(X,Y,batch_size,iteration):
+    num_feature = X.shape[0]
+    start = iteration * batch_size
+    end = start + batch_size
+    batch_x = X[0,start:end].reshape(num_feature,batch_size)
+    batch_y = Y[0,start:end].reshape(num_feature,batch_size)
+    return batch_x, batch_y
+
+def GetMinimalLossData(dict_loss):
+    key = sorted(dict_loss.keys())[0]
+    w = dict_loss[key].w
+    b = dict_loss[key].b
+    return w,b,dict_loss[key]
+
+def ShowLossHistory(dict_loss, method):
+    loss = []
+    for key in dict_loss:
+        loss.append(key)
+
+    #plt.plot(loss)
+    plt.plot(loss[30:800])
+    plt.title(method)
+    plt.xlabel("epoch")
+    plt.ylabel("loss")
+    plt.show()
+
+def loss_2d(x,y,n,dict_loss,method,cdata):
+
+    result_w = cdata.w[0,0]
+    result_b = cdata.b[0,0]
+
+    # show contour of loss
+    s = 150
+    W = np.linspace(result_w-1,result_w+1,s)
+    B = np.linspace(result_b-1,result_b+1,s)
+    LOSS = np.zeros((s,s))
+    for i in range(len(W)):
+        for j in range(len(B)):
+            w = W[i]
+            b = B[j]
+            a = w * x + b
+            loss = CheckLoss(w,b,x,y)
+            LOSS[i,j] = np.round(loss, 2)
+    print("please wait for 20 seconds...")
+    while(True):
+        X = []
+        Y = []
+        is_first = True
+        loss = 0
+        for i in range(len(W)):
+            for j in range(len(B)):
+                if LOSS[i,j] != 0:
+                    if is_first:
+                        loss = LOSS[i,j]
+                        X.append(W[i])
+                        Y.append(B[j])
+                        LOSS[i,j] = 0
+                        is_first = False
+                    elif LOSS[i,j] == loss:
+                        X.append(W[i])
+                        Y.append(B[j])
+                        LOSS[i,j] = 0
+        if is_first == True:
+            break
+        plt.plot(X,Y,'.')
+
+    # show w,b trace
+    w_history = []
+    b_history = []
+    for key in dict_loss:
+        w = dict_loss[key].w[0,0]
+        b = dict_loss[key].b[0,0]
+        if w < result_w-1 or result_b-1 < 2:
+            continue
+        if key == cdata.loss:
+            break
+        w_history.append(w)
+        b_history.append(b)
+    plt.plot(w_history,b_history)
+
+    plt.xlabel("w")
+    plt.ylabel("b")
+    title = str.format("Method={0}, Epoch={1}, Iteration={2}, Loss={3:.3f}, W={4:.3f}, B={5:.3f}", method, cdata.epoch, cdata.iteration, cdata.loss, cdata.w[0,0], cdata.b[0,0])
+    plt.title(title)
+    plt.show()
+
+def InitializeHyperParameters(method):
+    if method=="SGD":
+        eta = 0.1
+        max_epoch = 50
+        batch_size = 1
+    elif method=="MiniBatch":
+        eta = 0.1
+        max_epoch = 50
+        batch_size = 10
+    elif method=="FullBatch":
+        eta = 0.5
+        max_epoch = 1000
+        batch_size = 200
+    return eta, max_epoch, batch_size
 
 if __name__ == '__main__':
+    # hyper parameters
+    # SGD, MiniBatch, FullBatch
+    method = "SGD"
 
-    # initialize_data
-    eta = 0.02
-    # set w,b=0, you can set to others values to have a try
-    #w, b = np.random.random(),np.random.random()
-    w, b = 0, 0
-    eps = 1e-10
-    iteration, max_iteration = 0, 10
+    eta, max_epoch,batch_size = InitializeHyperParameters(method)
+    
+    W, B = InitialWeights(1,1,0)
     # calculate loss to decide the stop condition
-    prev_loss, loss, diff_loss = 0,0,0
-    # create mock up data
+    loss = 5
+    dict_loss = {}
+    # read data
     X, Y = ReadData()
     # count of samples
     num_example = X.shape[1]
+    num_feature = X.shape[0]
 
-    for iteration in range(max_iteration):
-        for i in range(num_example):
+
+    # if num_example=200, batch_size=10, then iteration=200/10=20
+    max_iteration = (int)(num_example / batch_size)
+    for epoch in range(max_epoch):
+        print("epoch=%d" %epoch)
+        for iteration in range(max_iteration):
             # get x and y value for one sample
-            x = X[0,i]
-            y = Y[0,i]
+            batch_x, batch_y = GetBatchSamples(X,Y,batch_size,iteration)
             # get z from x,y
-            z = ForwardCalculation(w, b, x)
+            batch_z = ForwardCalculationBatch(W, B, batch_x)
             # calculate gradient of w and b
-            dW, dB = BackPropagation(x, y, z)
+            dW, dB = BackPropagationBatch(batch_x, batch_y, batch_z)
             # update w,b
-            w, b = UpdateWeights(w, b, dW, dB, eta)
+            W, B = UpdateWeights(W, B, dW, dB, eta)
+            
             # calculate loss for this batch
-            loss, diff_loss = CheckLoss(w,b,X,Y,num_example,prev_loss)
-            if i%10==0:
-                print(iteration,i,loss,diff_loss,w,b)
-            # condition 1 to stop
-            if diff_loss < eps:
-                break
+            loss = CheckLoss(W,B,X,Y)
+            print(epoch,iteration,loss,W,B)
             prev_loss = loss
 
-        if diff_loss < eps:
-            break
+            dict_loss[loss] = CData(loss, W, B, epoch, iteration)            
 
-    print(loss, diff_loss)
-    ShowResult(X, Y, w, b, iteration)
+    ShowLossHistory(dict_loss, method)
+    w,b,cdata = GetMinimalLossData(dict_loss)
+    print(cdata.w, cdata.b)
+    print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
+
+    #ShowResult(X, Y, W, B, epoch)
+    print(w,b)
 
     x = 346/1000
     result = Inference(w, b, x)
     print(result)
+    
+    loss_2d(X,Y,200,dict_loss,method,cdata)
+

@@ -32,10 +32,8 @@ def gd(eta):
         dx = derivativeFun(x)
         x = x - eta*dx
     
-    if eta < 0.5:
-        plt.plot(a[0,:],a[1,:],'x')
-    else:
-        plt.plot(a[0,:],a[1,:])
+    plt.plot(a[0,:],a[1,:],'x')
+    plt.plot(a[0,:],a[1,:])
     plt.title("eta=%f" %eta)
     plt.show()
 
@@ -46,4 +44,5 @@ if __name__ == '__main__':
     for e in eta:
         X,Y=create_sample()
         plt.plot(X,Y,'.')
+        #plt.show()
         gd(e)

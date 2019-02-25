@@ -21,7 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GradientDescent.py" />
+    <Compile Include="LossFunction-CrossEntropy.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LossFunction-MSE.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

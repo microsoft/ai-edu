@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>81d83d89-23e8-428a-b5d7-3f563a3101bf</ProjectGuid>
+    <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>GradientDescentLearningRate.py</StartupFile>
+    <StartupFile>level4-final.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch02</Name>
-    <RootNamespace>ch02</RootNamespace>
+    <Name>ch04</Name>
+    <RootNamespace>ch04</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,15 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BP-Linear.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BP-NoneLinear.py" />
-    <Compile Include="GradientDescentLearningRate.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GradientDescent-DoubleVariable.py" />
-    <Compile Include="GradientDescent-SingleVariable.py">
+    <Compile Include="level1-LeastSquare.py" />
+    <Compile Include="level2-GradientDescent.py" />
+    <Compile Include="level4-final.py" />
+    <Compile Include="level3-NeuralNetwork.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

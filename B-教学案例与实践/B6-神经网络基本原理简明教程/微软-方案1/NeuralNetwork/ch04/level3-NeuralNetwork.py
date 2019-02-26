@@ -22,13 +22,13 @@ def ReadData():
         return None,None
 
 def ForwardCalculation(w,b,x):
-    z = w * x + b
+    z = np.dot(w, x) + b
     return z
 
 def BackPropagation(x,y,z):
     dZ = z - y
     dB = dZ
-    dW = dZ * x
+    dW = np.dot(dZ, x)
     return dW, dB
 
 def UpdateWeights(w, b, dW, dB, eta):
@@ -45,7 +45,7 @@ def GetSample(X,Y,i):
     y = Y[0,i]
     return x,y
 
-def ShowResult(X, Y, w, b, iteration):
+def ShowResult(X, Y, w, b, epoch, iteration):
     # draw sample data
     plt.plot(X, Y, "b.")
     # draw predication data
@@ -56,7 +56,7 @@ def ShowResult(X, Y, w, b, iteration):
     plt.xlabel("Number of Servers(K)")
     plt.ylabel("Power of Air Conditioner(KW)")
     plt.show()
-    print("iteration=",iteration)
+    print("epoch=%d,iteration=%d,w=%f,b=%f" %(epoch,iteration,w,b))
     print("w=%f,b=%f" %(w,b))
 
 if __name__ == '__main__':
@@ -80,7 +80,7 @@ if __name__ == '__main__':
         # update w,b
         w, b = UpdateWeights(w, b, dW, dB, eta)
 
-    ShowResult(X, Y, w, b, 1)
+    ShowResult(X, Y, w, b, 1, num_example)
 
     result = Inference(w,b,0.346)
     print("result=", result)

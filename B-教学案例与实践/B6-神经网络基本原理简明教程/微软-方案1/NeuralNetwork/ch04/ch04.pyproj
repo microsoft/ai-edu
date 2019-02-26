@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level4-final.py</StartupFile>
+    <StartupFile>level3-NeuralNetwork.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,7 +23,7 @@
   <ItemGroup>
     <Compile Include="level1-LeastSquare.py" />
     <Compile Include="level2-GradientDescent.py" />
-    <Compile Include="level4-final.py" />
+    <Compile Include="level4-BatchGradientDescent.py" />
     <Compile Include="level3-NeuralNetwork.py">
       <SubType>Code</SubType>
     </Compile>

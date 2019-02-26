@@ -57,6 +57,7 @@ def ShowResult(X, Y, w, b, epoch, iteration):
     plt.ylabel("Power of Air Conditioner(KW)")
     plt.show()
     print("epoch=%d,iteration=%d,w=%f,b=%f" %(epoch,iteration,w,b))
+    print("w=%f,b=%f" %(w,b))
 
 if __name__ == '__main__':
     # learning rate

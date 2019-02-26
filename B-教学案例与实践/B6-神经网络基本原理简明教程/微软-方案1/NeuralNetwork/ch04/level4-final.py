@@ -193,7 +193,7 @@ def InitializeHyperParameters(method):
 if __name__ == '__main__':
     # hyper parameters
     # SGD, MiniBatch, FullBatch
-    method = "SGD"
+    method = "MiniBatch"
 
     eta, max_epoch,batch_size = InitializeHyperParameters(method)
     

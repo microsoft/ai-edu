@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-# define funtions to replace flat code, using SGD
+# define funtions to replace flat code, using SGD, single example for each iteration
 
 import numpy as np
 import matplotlib.pyplot as plt

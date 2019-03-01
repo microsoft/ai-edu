@@ -3,6 +3,16 @@
 
 import numpy as np
 from pathlib import Path
+import matplotlib.pyplot as plt
+
+class CData(object):
+    def __init__(self, loss, w, b, epoch, iteraion):
+        self.loss = loss
+        self.w = w
+        self.b = b
+        self.epoch = epoch
+        self.iteration = iteration
+
 
 # 加载数据
 def ReadData():
@@ -16,12 +26,12 @@ def ReadData():
     return None,None
 
 # 前向计算
-def ForwardCalculation(W, B, batch_X):
+def ForwardCalculationBatch(W, B, batch_X):
     Z = np.dot(W, batch_X) + B
     return Z
 
 # X:input example, Y:lable example, Z:predicated value
-def BackPropagation(batch_X, batch_Y, Z):
+def BackPropagationBatch(batch_X, batch_Y, Z):
     m = batch_X.shape[1]
     dZ = Z - batch_Y
     # dZ列相加，即一行内的所有元素相加
@@ -38,7 +48,7 @@ def UpdateWeights(W, B, dW, dB, eta):
 # 计算损失函数值
 def CheckLoss(W, B, X, Y):
     m = X.shape[1]
-    Z = ForwardCalculation(W,B,X)
+    Z = ForwardCalculationBatch(W,B,X)
     LOSS = (Z - Y)**2
     loss = LOSS.sum()/m/2
     return loss
@@ -47,14 +57,14 @@ def GetBatchSamples(X,Y,batch_size,iteration):
     num_feature = X.shape[0]
     start = iteration * batch_size
     end = start + batch_size
-    batch_X = X[0,start:end].reshape(num_feature,batch_size)
-    batch_Y = Y[0,start:end].reshape(num_feature,batch_size)
+    batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
+    batch_Y = Y[0, start:end].reshape(1, batch_size)
     return batch_X, batch_Y
 
 def InitialWeights(num_input, num_output, flag):
     if flag == 0:
         # zero
-        W = np.zeros(size=(num_output, num_input))
+        W = np.zeros((num_output, num_input))
     elif flag == 1:
         # normalize
         W = np.random.normal(size=(num_output, num_input))
@@ -65,21 +75,21 @@ def InitialWeights(num_input, num_output, flag):
             np.sqrt(6/(num_input+num_output)),
             size=(num_output,num_input))
 
-    B = np.zeros(size=(num_output, 1))
+    B = np.zeros((num_output, 1))
     return W,B
 
 def InitializeHyperParameters(method):
     if method=="SGD":
         eta = 0.1
-        max_epoch = 50
+        max_epoch = 1
         batch_size = 1
     elif method=="MiniBatch":
         eta = 0.1
         max_epoch = 50
-        batch_size = 10
+        batch_size = 20
     elif method=="FullBatch":
         eta = 0.5
-        max_epoch = 1000
+        max_epoch = 100
         batch_size = 200
     return eta, max_epoch, batch_size
 
@@ -95,14 +105,15 @@ def ShowLossHistory(dict_loss, method):
         loss.append(key)
 
     #plt.plot(loss)
-    plt.plot(loss[30:800])
+    plt.plot(loss)
     plt.title(method)
     plt.xlabel("epoch")
     plt.ylabel("loss")
+    plt.axis([200,1000,-1,10])
     plt.show()
 
 # normalize data by extracting range from source data
-def NormalizeByData(X):
+def NormalizeData(X):
     X_new = np.zeros(X.shape)
     n = X.shape[0]
     x_range = np.zeros((1,n))
@@ -117,8 +128,9 @@ def NormalizeByData(X):
         X_new[i,:] = x_new
     return X_new, x_range, x_min
 
+
 # normalize data by specified range and min_value
-def NormalizeByRange(X, x_range, x_min):
+def NormalizeDataByRange(X, x_range, x_min):
     X_new = np.zeros(X.shape)
     n = X.shape[0]
     for i in range(n):
@@ -126,15 +138,6 @@ def NormalizeByRange(X, x_range, x_min):
         x_new = (x-x_min[0,i])/x_range[0,i]
         X_new[i,:] = x_new
     return X_new
-
-def NormalizeXY(XData, YData, flag):
-    if flag=='x_only':
-        X, X_range, X_min = NormalizeByData(XData)
-        return X, X_range, X_min, YData, -1, -1
-    elif flag=='x_and_y':
-        X, X_range, X_min = NormalizeByData(XData)
-        Y, Y_range, Y_min = NormalizeByData(YData)
-        return X, X_range, X_min, Y, Y_range, Y_min
 
 # get real weights
 def DeNormalizeWeights(X_range, XData, n):
@@ -147,31 +150,65 @@ def DeNormalizeWeights(X_range, XData, n):
     num_sample = XData.shape[1]
     for i in range(num_sample):
         xm = XData[0:n,i].reshape(n,1)
-        zm = ForwardCalculation(xm, W_real, 0)
+        zm = ForwardCalculationBatch(xm, W_real, 0)
         ym = Y[0,i].reshape(1,1)
         B_real = B_real + (ym - zm)
     B_real = B_real / num_sample
     print("B_real=", B_real)
     return W_real, B_real
 
-# try to give the answer for the price of 朝西(2)，五环(5)，93平米的房子
-def PredicateTest(W_real, B_real, W, B, flag):
-    xt = np.array([2,5,93]).reshape(3,1)
-    z1 = ForwardCalculation(xt, W_real, B_real)
-
-    xt_new = NormalizeByRange(xt, X_range, X_min)
-    z2 = ForwardCalculation(xt_new, W, B)
-
-    if flag == 'x_only':
-        print("xt,W_real,B_real:",z1)
-        print("xt_new,W,B:",z2)
-    elif flag == 'x_and_y':
-        print("xt,W_real,B_real:", z1*Y_range+Y_min)
-        print("xt_new,W,B:", z2*Y_range+Y_min)
-    
 
 if __name__ == '__main__':
+    # hyper parameters
+    # SGD, MiniBatch, FullBatch
+    method = "MiniBatch"
 
+    eta, max_epoch,batch_size = InitializeHyperParameters(method)
+    
+    # W size is 3x1, B is 1x1
+    W, B = InitialWeights(3,1,2)
+    # calculate loss to decide the stop condition
+    loss = 5
+    dict_loss = {}
+    # read data
+    raw_X, Y = ReadData()
+    X,X_range,X_min = NormalizeData(raw_X)
+    # count of samples
+    num_example = X.shape[1]
+    num_feature = X.shape[0]
+
+
+    # if num_example=200, batch_size=10, then iteration=200/10=20
+    max_iteration = (int)(num_example / batch_size)
+    for epoch in range(max_epoch):
+        print("epoch=%d" %epoch)
+        for iteration in range(max_iteration):
+            # get x and y value for one sample
+            batch_x, batch_y = GetBatchSamples(X,Y,batch_size,iteration)
+            # get z from x,y
+            batch_z = ForwardCalculationBatch(W, B, batch_x)
+            # calculate gradient of w and b
+            dW, dB = BackPropagationBatch(batch_x, batch_y, batch_z)
+            # update w,b
+            W, B = UpdateWeights(W, B, dW, dB, eta)
+            
+            # calculate loss for this batch
+            loss = CheckLoss(W,B,X,Y)
+            print(epoch,iteration,loss,W,B)
+            prev_loss = loss
+
+            dict_loss[loss] = CData(loss, W, B, epoch, iteration)            
+
+    ShowLossHistory(dict_loss, method)
+    w,b,cdata = GetMinimalLossData(dict_loss)
+    print(cdata.w, cdata.b)
+    print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
+    W_real, B_real = DeNormalizeWeights(X_range, raw_X, num_feature)
+    print(W_real, B_real)
+
+
+
+'''
 flag = 'x_only'
 XData, YData = ReadData()
 X, X_range, X_min, Y, Y_range, Y_min = NormalizeXY(XData, YData, flag)
@@ -207,7 +244,4 @@ print("W=", W)
 print("B=", B)
 W_real, B_real = DeNormalizeWeights(X_range, XData, n)
 PredicateTest(W_real, B_real, W, B, flag)
-
-
-
-
+'''

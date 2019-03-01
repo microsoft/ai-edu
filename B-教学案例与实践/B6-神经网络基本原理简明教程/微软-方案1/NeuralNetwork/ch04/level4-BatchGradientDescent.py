@@ -11,7 +11,7 @@ y_data_name = "TemperatureControlYData.dat"
 
 
 class CData(object):
-    def __init__(self, loss, w, b, epoch, iteraion):
+    def __init__(self, loss, w, b, epoch, iteration):
         self.loss = loss
         self.w = w
         self.b = b

@@ -162,7 +162,7 @@ def test_2d(x,y,n):
                         Y.append(B[j])
                         LOSS[i,j] = 0
                         is_first = False
-                    elif LOSS[i,j] == loss:
+                    elif (LOSS[i,j] == loss) or (abs(loss / LOSS[i,j] -  1) < 0.02):
                         X.append(W[i])
                         Y.append(B[j])
                         LOSS[i,j] = 0

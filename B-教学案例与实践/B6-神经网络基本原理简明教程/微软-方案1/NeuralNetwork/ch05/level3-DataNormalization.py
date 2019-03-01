@@ -203,6 +203,10 @@ if __name__ == '__main__':
     w,b,cdata = GetMinimalLossData(dict_loss)
     print(cdata.w, cdata.b)
     print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
+
+
+
+
     W_real, B_real = DeNormalizeWeights(X_range, raw_X, num_feature)
     print(W_real, B_real)
 

@@ -36,10 +36,6 @@ def UpdateWeights(w, b, dW, dB, eta):
     b = b - eta*dB
     return w,b
 
-def Inference(w,b,x):
-    z = ForwardCalculation(w,b,x)
-    return z
-
 def GetSample(X,Y,i):
     x = X[0,i]
     y = Y[0,i]
@@ -82,5 +78,5 @@ if __name__ == '__main__':
 
     ShowResult(X, Y, w, b, 1, num_example)
 
-    result = Inference(w,b,0.346)
+    result = ForwardCalculation(w,b,0.346)
     print("result=", result)

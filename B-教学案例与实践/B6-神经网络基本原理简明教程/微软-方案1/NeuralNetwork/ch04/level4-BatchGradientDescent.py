@@ -63,11 +63,6 @@ def InitialWeights(num_input, num_output, flag):
     B = np.zeros((num_output, 1))
     return W,B
 
-
-def Inference(w,b,x):
-    z = ForwardCalculationBatch(w,b,x)
-    return z
-
 def ShowResult(X, Y, w, b, iteration):
     # draw sample data
     plt.plot(X, Y, "b.")
@@ -93,8 +88,8 @@ def GetBatchSamples(X,Y,batch_size,iteration):
     num_feature = X.shape[0]
     start = iteration * batch_size
     end = start + batch_size
-    batch_x = X[0,start:end].reshape(num_feature,batch_size)
-    batch_y = Y[0,start:end].reshape(num_feature,batch_size)
+    batch_x = X[0:num_feature,start:end].reshape(num_feature,batch_size)
+    batch_y = Y[0,start:end].reshape(1,batch_size)
     return batch_x, batch_y
 
 def GetMinimalLossData(dict_loss):
@@ -191,9 +186,10 @@ def InitializeHyperParameters(method):
     return eta, max_epoch, batch_size
 
 if __name__ == '__main__':
-    # hyper parameters
+    
+    # 修改method分别为下面三个参数，运行程序，对比不同的运行结果
     # SGD, MiniBatch, FullBatch
-    method = "MiniBatch"
+    method = "FullBatch"
 
     eta, max_epoch,batch_size = InitializeHyperParameters(method)
     
@@ -238,7 +234,7 @@ if __name__ == '__main__':
     print(w,b)
 
     x = 346/1000
-    result = Inference(w, b, x)
+    result = ForwardCalculationBatch(w, b, x)
     print(result)
     
     loss_2d(X,Y,200,dict_loss,method,cdata)

@@ -69,4 +69,10 @@ Copyright © Microsoft Corporation. All rights reserved.
 |多入<br>单出<br>两层|<img src="./Images/9/NN.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> A2 = Sigmoid(Z2) <br> 代价函数：交叉熵|多元非线性二分类<br>可以做任意复杂边界的二分类<br>例：果树虫控决策|
 |多入<br>多出<br>两层|<img src="./Images/10/SetupNN.jpg"/>|Layer1 <br> Z1 = W1 * X + B1 <br> A1 = Sigmoid(Z1) <br> Layer2 <br> Z2 = W2 * A1 + B2 <br> A2 = Softmax(Z2) <br> 代价函数：交叉熵|多元非线性多分类<br>例：MNIST手写数字识别（分类）|
 
+## 人物设定
 
+“铁柱”是一名老师，在神经网络中穿梭多年，挂了满身的蜘蛛网。
+
+“木头”是一名刚入门者，木头木脑的，有问题经常向铁柱请教。
+
+其实木头就是笔者本人的笔名，铁柱是我请教过的多位老师的合集。

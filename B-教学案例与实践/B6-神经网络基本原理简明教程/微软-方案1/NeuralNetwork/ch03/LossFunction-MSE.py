@@ -118,7 +118,6 @@ def show_all_4b(x,y,n):
 
         
 def show_3d_surface():
-
     fig = plt.figure()
     ax = Axes3D(fig)
 

@@ -33,6 +33,18 @@ def NormalizeDataByRange(X, x_range, x_min):
         X_new[i,:] = x_new
     return X_new
 
+# get real weights
+def DeNormalizeWeights(X_range, x_min, w, b):
+    n = w.shape[1]
+    W_real = np.zeros((n,))
+    for i in range(n):
+        W_real[i] = w[0,i] / X_range[0,i]
+
+    B_real = b
+    for i in range(n):
+        tmp = w[0,i] * x_min[0,i] / X_range[0,i]
+        B_real = B_real - tmp
+    return W_real, B_real
 
 # 主程序
 if __name__ == '__main__':
@@ -81,4 +93,8 @@ if __name__ == '__main__':
     print("w=", cdata.w)
     print("b=", cdata.b)
     print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
+
+    W_real, B_real = DeNormalizeWeights(X_range, X_min, w, b)
+    print("W_real=", W_real)
+    print("B_real=", B_real)
 

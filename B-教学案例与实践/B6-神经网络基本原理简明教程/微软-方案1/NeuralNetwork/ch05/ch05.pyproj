@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5f7fe492-b5f7-44be-8a73-23ecf7163a93</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level4_DeNormalization.py</StartupFile>
+    <StartupFile>level6_NormalizeLabelData.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="level6_NormalizeLabelData.py" />
+    <Compile Include="level5_NormalizePredicateData.py" />
     <Compile Include="level4_DeNormalization.py" />
     <Compile Include="level3_DataNormalization.py" />
     <Compile Include="level2_NeuralNetwork.py" />

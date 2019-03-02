@@ -24,4 +24,10 @@ if __name__ == '__main__':
     d = np.dot(c, x.T)
     e = np.dot(d, y)
     print(e)
-    print("w1=%f,w2=%f,w3=%f,b=%f"%(e[1],e[2],e[3],e[0]))
+    w1=e[1]
+    w2=e[2]
+    w3=e[3]
+    b=e[0]
+    print("w1=%f,w2=%f,w3=%f,b=%f"%(w1,w2,w3,b))
+    z = w1 * 2 + w2 * 5 + w3 * 93 + b
+    print("z=",z)

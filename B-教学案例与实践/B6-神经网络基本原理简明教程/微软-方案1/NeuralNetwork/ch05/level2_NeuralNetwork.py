@@ -6,6 +6,7 @@
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
+import math
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class CData(object):
@@ -119,22 +120,15 @@ def ShowLossHistory(dict_loss, method):
     plt.ylabel("loss")
     plt.show()
 
-
-# 主程序
-if __name__ == '__main__':
+def train(method,X,Y):
     # hyper parameters
-    # SGD, MiniBatch, FullBatch
-    method = "SGD"
-
     eta, max_epoch,batch_size = InitializeHyperParameters(method)
-    
     # W size is 3x1, B is 1x1
     W, B = InitialWeights(3,1,2)
     # calculate loss to decide the stop condition
     loss = 5
+    error = 1e-5
     dict_loss = {}
-    # read data
-    X, Y = ReadData()
     # count of samples
     num_example = X.shape[1]
     num_feature = X.shape[0]
@@ -156,11 +150,25 @@ if __name__ == '__main__':
             # calculate loss for this batch
             loss = CheckLoss(W,B,X,Y)
             print(epoch,iteration,loss,W,B)
-            prev_loss = loss
-
             dict_loss[loss] = CData(loss, W, B, epoch, iteration)            
+        # end for
+        if math.isnan(loss):
+            break
+        if loss < error:
+            break
+    # end for
 
     ShowLossHistory(dict_loss, method)
     w,b,cdata = GetMinimalLossData(dict_loss)
     print(cdata.w, cdata.b)
     print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
+    return w,b
+
+# 主程序
+if __name__ == '__main__':
+    # SGD, MiniBatch, FullBatch
+    method = "SGD"
+    # read data
+    X,Y = ReadData()
+    w,b = train(method,X,Y)
+

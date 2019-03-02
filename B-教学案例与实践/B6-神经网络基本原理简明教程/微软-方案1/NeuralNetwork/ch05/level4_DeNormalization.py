@@ -4,45 +4,18 @@
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
-from level2_NeuralNetwork import *
-
-# normalize data by extracting range from source data
-def NormalizeData(X):
-    X_new = np.zeros(X.shape)
-    n = X.shape[0]
-    x_range = np.zeros((1,n))
-    x_min = np.zeros((1,n))
-    for i in range(n):
-        x = X[i,:]
-        max_value = np.max(x)
-        min_value = np.min(x)
-        x_min[0,i] = min_value
-        x_range[0,i] = max_value - min_value
-        x_new = (x - x_min[0,i])/(x_range[0,i])
-        X_new[i,:] = x_new
-    return X_new, x_range, x_min
-
-
-# normalize data by specified range and min_value
-def NormalizeDataByRange(X, x_range, x_min):
-    X_new = np.zeros(X.shape)
-    n = X.shape[0]
-    for i in range(n):
-        x = X[i,:]
-        x_new = (x-x_min[0,i])/x_range[0,i]
-        X_new[i,:] = x_new
-    return X_new
+from level3_DataNormalization import *
 
 # get real weights
-def DeNormalizeWeights(X_range, x_min, w, b):
+def DeNormalizeWeights(X_norm, w, b):
     n = w.shape[1]
     W_real = np.zeros((n,))
     for i in range(n):
-        W_real[i] = w[0,i] / X_range[0,i]
+        W_real[i] = w[0,i] / X_norm[1,i]
 
     B_real = b
     for i in range(n):
-        tmp = w[0,i] * x_min[0,i] / X_range[0,i]
+        tmp = w[0,i] * X_norm[0,i] / X_norm[1,i]
         B_real = B_real - tmp
     return W_real, B_real
 
@@ -50,51 +23,12 @@ def DeNormalizeWeights(X_range, x_min, w, b):
 if __name__ == '__main__':
     # hyper parameters
     # SGD, MiniBatch, FullBatch
-    method = "MiniBatch"
-
-    eta, max_epoch,batch_size = InitializeHyperParameters(method)
-    
-    # W size is 3x1, B is 1x1
-    W, B = InitialWeights(3,1,2)
-    # calculate loss to decide the stop condition
-    error = 1e-5
-    loss = 10 # set to any number bigger than error value
-    dict_loss = {}
+    method = "SGD"
     # read data
     raw_X, Y = ReadData()
-    X,X_range,X_min = NormalizeData(raw_X)
-    # count of samples
-    num_example = X.shape[1]
-    num_feature = X.shape[0]
-
-    # if num_example=200, batch_size=10, then iteration=200/10=20
-    max_iteration = (int)(num_example / batch_size)
-    for epoch in range(max_epoch):
-        print("epoch=%d" %epoch)
-        for iteration in range(max_iteration):
-            # get x and y value for one sample
-            batch_x, batch_y = GetBatchSamples(X,Y,batch_size,iteration)
-            # get z from x,y
-            batch_z = ForwardCalculationBatch(W, B, batch_x)
-            # calculate gradient of w and b
-            dW, dB = BackPropagationBatch(batch_x, batch_y, batch_z)
-            # update w,b
-            W, B = UpdateWeights(W, B, dW, dB, eta)
-            
-            # calculate loss for this batch
-            loss = CheckLoss(W,B,X,Y)
-            print(epoch,iteration,loss,W,B)
-            dict_loss[loss] = CData(loss, W, B, epoch, iteration)            
-        if loss < error:
-            break
-
-    ShowLossHistory(dict_loss, method)
-    w,b,cdata = GetMinimalLossData(dict_loss)
-    print("w=", cdata.w)
-    print("b=", cdata.b)
-    print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
-
-    W_real, B_real = DeNormalizeWeights(X_range, X_min, w, b)
+    X,X_norm = NormalizeData(raw_X)
+    w, b = train(method,X,Y)
+    W_real, B_real = DeNormalizeWeights(X_norm, w, b)
     print("W_real=", W_real)
     print("B_real=", B_real)
 

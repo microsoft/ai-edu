@@ -122,17 +122,17 @@ def show_3d_surface():
     ax = Axes3D(fig)
 
     s = 200
-    W = np.linspace(1,5,s)
-    B = np.linspace(-2,3,s)
-    X,Y = np.meshgrid(W,B)
-    LOSS = np.zeros((len(W),len(B)))
+    W = np.linspace(1, 5, s)
+    B = np.linspace(-2, 3, s)
+    X, Y = np.meshgrid(W, B)
+    LOSS = np.zeros((len(W), len(B)))
     for i in range(len(W)):
         for j in range(len(B)):
             a = W[i] * x + B[j]
-            LOSS[i,j] = CostFunction(x,y,a,n)
+            LOSS[i, j] = CostFunction(x, y, a, n)
 
-    ax.plot_surface(X,Y,LOSS,cmap='rainbow')
-    ax.contour(X,Y,LOSS,zdir='z',levels=20,offset=0)
+    ax.plot_surface(X, Y, LOSS, cmap='rainbow')
+    ax.contour(X, Y, LOSS, zdir = 'z', levels = 20, offset = 0)
     plt.show()
 
 

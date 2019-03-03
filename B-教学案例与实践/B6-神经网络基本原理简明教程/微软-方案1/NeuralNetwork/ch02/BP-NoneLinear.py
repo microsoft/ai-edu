@@ -24,7 +24,7 @@ def forward(x):
     c = np.sqrt(b)
     return a,b,c
 
-def backward(c,y):
+def backward(x,a,b,c,y):
     loss = c - y
     delta_c = loss
     delta_b = delta_c * 2 * np.sqrt(b)
@@ -63,7 +63,7 @@ if __name__ == '__main__':
         Y.append(c)
         # backward
         print("backward...")
-        loss, delta_x, delta_a, delta_b, delta_c = backward(c,y)
+        loss, delta_x, delta_a, delta_b, delta_c = backward(x,a,b,c,y)
         if abs(loss) < error:
             print("done!")
             break

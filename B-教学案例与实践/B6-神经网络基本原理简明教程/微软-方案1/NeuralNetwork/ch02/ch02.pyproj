@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>81d83d89-23e8-428a-b5d7-3f563a3101bf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>GradientDescentLearningRate.py</StartupFile>
+    <StartupFile>BP-NoneLinear.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

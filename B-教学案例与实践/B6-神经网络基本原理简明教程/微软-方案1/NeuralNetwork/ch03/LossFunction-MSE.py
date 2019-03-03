@@ -120,17 +120,19 @@ def show_all_4b(x,y,n):
 def show_3d_surface():
     fig = plt.figure()
     ax = Axes3D(fig)
- 
-    u = np.linspace(0, 5, 100)
-    v = np.linspace(0, 5, 100)
-    X, Y = np.meshgrid(u, v)
-    R = np.zeros((len(u), len(v)))
-    for i in range(len(u)):
-        for j in range(len(v)):
-            R[i, j] = (X[i, j] - 2.5) ** 2 + (Y[i, j] - 2.5) ** 2
- 
-    ax.plot_surface(X, Y, R, cmap='rainbow')
-    ax.contour(X, Y, R, zdir='z', levels=20, offset = 0)
+
+    s = 200
+    W = np.linspace(1, 5, s)
+    B = np.linspace(-2, 3, s)
+    X, Y = np.meshgrid(W, B)
+    LOSS = np.zeros((len(W), len(B)))
+    for i in range(len(W)):
+        for j in range(len(B)):
+            a = W[i] * x + B[j]
+            LOSS[i, j] = CostFunction(x, y, a, n)
+
+    ax.plot_surface(X, Y, LOSS, cmap='rainbow')
+    ax.contour(X, Y, LOSS, zdir = 'z', levels = 20, offset = 0)
     plt.show()
 
 

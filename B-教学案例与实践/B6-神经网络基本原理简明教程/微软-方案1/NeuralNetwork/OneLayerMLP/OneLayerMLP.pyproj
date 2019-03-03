@@ -7,7 +7,7 @@
     <ProjectHome>
     </ProjectHome>
     <ProjectTypeGuids>{888888A0-9F3D-457C-B088-3A5042F75D52}</ProjectTypeGuids>
-    <StartupFile>PollutionCategory\PollutionCategory.py</StartupFile>
+    <StartupFile>PollutionCategory\PollutionCategoryTest.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,6 +31,7 @@
     <Compile Include="HousePrice\HousePriceCreateData.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PollutionCategory\PollutionCategoryTest.py" />
     <Compile Include="PollutionCategory\PollutionCategoryCreateData.py" />
     <Compile Include="PollutionCategory\PollutionCategory.py">
       <SubType>Code</SubType>

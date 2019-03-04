@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-x_data_name = "PollutionCategoryXData.dat"
-y_data_name = "PollutionCategoryYData.dat"
+x_data_name = "Pollution3CategoryX.dat.npy"
+y_data_name = "Pollution3CategoryY.dat.npy"
 
 def TargetFunction(x):
     y1 = 0.52 * x + 50
@@ -25,17 +25,17 @@ def CreateSampleData(range_temperature, range_humidity, count):
         XData = np.zeros((2,count))
         XData[0,:] = X1 
         XData[1,:] = X2
-        YData = np.zeros((3,count))
+        YData = np.zeros((1,count))
         for i in range(count):
-            x = XData[0,i]
-            y = XData[1,i]
-            y1, y2 = TargetFunction(x)
-            if y < y2:
+            x1 = XData[0,i]
+            x2 = XData[1,i]
+            y1, y2 = TargetFunction(x1)
+            if x2 < y2:
                 YData[0,i] = 1
-            elif y > y1:
-                YData[2,i] = 1
+            elif x2 > y1:
+                YData[0,i] = 2
             else:
-                YData[1,i] = 1
+                YData[0,i] = 3
         np.save(x_data_name, XData)
         np.save(y_data_name, YData)
 
@@ -43,9 +43,9 @@ def CreateSampleData(range_temperature, range_humidity, count):
 
 def Show(X,Y):
     for i in range(X.shape[1]):
-        if Y[0,i] == 0 and Y[1,i]==0 and Y[2,i]==1:
+        if Y[0,i] == 1:
             plt.scatter(X[0,i], X[1,i], c='r')
-        elif Y[0,i] == 0 and Y[1,i]==1 and Y[2,i]==0:
+        elif Y[0,i] == 2:
             plt.scatter(X[0,i], X[1,i], c='b')
         else:
             plt.scatter(X[0,i], X[1,i], c='g')
@@ -54,6 +54,7 @@ def Show(X,Y):
     plt.ylabel("Humidity")
     plt.show()
 
-range_temperature, range_humidity = 40, 80
-X, Y = CreateSampleData(range_temperature, range_humidity, 200)
-Show(X,Y)
+if __name__ == '__main__':
+    range_temperature, range_humidity = 40, 80
+    X, Y = CreateSampleData(range_temperature, range_humidity, 200)
+    Show(X,Y)

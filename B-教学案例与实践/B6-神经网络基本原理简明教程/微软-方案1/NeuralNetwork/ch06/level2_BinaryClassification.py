@@ -72,7 +72,7 @@ if __name__ == '__main__':
     # read data
     XData,YData = ReadData(x_data_name, y_data_name)
     X, X_norm = NormalizeData(XData)
-    ShowData(X, YData)
+    ShowData(XData, YData)
     num_category = 2
     Y = ToBool(YData)
     W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)

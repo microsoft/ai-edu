@@ -118,7 +118,7 @@ def InitialWeights(num_input, num_output, method):
 def InitializeHyperParameters(method):
     if method=="SGD":
         eta = 0.1
-        max_epoch = 500
+        max_epoch = 100
         batch_size = 1
     elif method=="MiniBatch":
         eta = 0.1
@@ -193,7 +193,7 @@ def train(method, X, Y, ForwardCalculationBatch, CheckLoss):
     num_category = Y.shape[0]
     # hyper parameters
     eta, max_epoch,batch_size = InitializeHyperParameters(method)
-    # W size is 3x1, B is 1x1
+    # W(num_category, num_feature), B(num_category, 1)
     W, B = InitialWeights(num_feature, num_category, "zero")
     # calculate loss to decide the stop condition
     loss = 5        # initialize loss (larger than 0)

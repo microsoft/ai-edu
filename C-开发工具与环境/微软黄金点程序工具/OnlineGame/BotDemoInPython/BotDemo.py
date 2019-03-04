@@ -1,15 +1,12 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
 
-# Use `pip install bravado` to install bravado
-from bravado.client import SwaggerClient
-from bravado.exception import HTTPBadRequest
+# Use `pip install pyswagger` to install pyswagger
+from pyswagger import App
+from pyswagger.contrib.client.requests import Client
+
 import random
 import time
-
-import warnings
-warnings.filterwarnings("ignore")
-
 
 def GeneratePredictionNumbers(goldenNumberList, numberCount):
     number1 = 0.0
@@ -33,7 +30,8 @@ def main():
     host = 'https://goldennumber.aiedu.msra.cn/'
     jsonpath = '/swagger/v1/swagger.json'
 
-    client = SwaggerClient.from_url(host + jsonpath)
+    app = App._create_(host + jsonpath)
+    client = Client()
 
     roomId = input("Input room id: ")
     try:
@@ -42,58 +40,81 @@ def main():
         roomId = 0
         print('Parse room id failed, default join in to room 0')
 
-    try:
-        user = client.Default.Default_NewUser(nickName='AI Player ' + str(random.randint(0, 9999))).response().result
-        userId = user.userId
+    userResp = client.request(
+        app.op['Default_NewUser'](
+            nickName='AI Player ' + str(random.randint(0, 9999))
+        ))
+    assert userResp.status == 200
+    user = userResp.data
+    userId = user.userId
 
-        print('Player: ' + user.nickName + '  Id: ' + userId)
-        print('Room id: ' + str(roomId))
+    print('Player: ' + user.nickName + '  Id: ' + userId)
+    print('Room id: ' + str(roomId))
 
-        while True:
-            state = client.Default.Default_GetState(uid=userId, roomid=roomId).response().result
+    while True:
+        stateResp = client.request(
+            app.op['Default_GetState'](
+                uid=userId,
+                roomid=roomId
+            ))
+        assert stateResp.status == 200
+        state = stateResp.data
     
-            if state.state == 2:
-                print('The game has finished')
-                break
+        if state.state == 2:
+            print('The game has finished')
+            break
 
-            if state.state == 1:
-                print('The game has not started, query again after 1 second')
+        if state.state == 1:
+            print('The game has not started, query again after 1 second')
+            time.sleep(1)
+            continue
+
+        if state.hasSubmitted:
+            print('Already submitted this round, wait for next round')
+            if state.maxUserCount == 0:
+                time.sleep(state.leftTime + 1)
+            else:
+                # One round can be finished when all players submitted their numbers if the room have set the max count of users, need to check the state every second.
                 time.sleep(1)
-                continue
+            continue
 
-            if state.hasSubmitted:
-                print('Already submitted this round, wait for next round')
-                if state.maxUserCount == 0:
-                    time.sleep(state.leftTime + 1)
-                else:
-                    # One round can be finished when all players submitted their numbers if the room have set the max count of users, need to check the state every second.
-                    time.sleep(1)
-                continue
+        print('This is round ' + str(state.finishedRoundCount + 1))
 
-            print('This is round ' + str(state.finishedRoundCount + 1))
+        todayGoldenListResp = client.request(
+            app.op['Default_GetTodayGoldenList'](
+                roomid=roomId
+            ))
+        assert todayGoldenListResp.status == 200
+        todayGoldenList = todayGoldenListResp.data
+        if len(todayGoldenList.goldenNumberList) != 0:
+            print('Last golden number is: ' + str(todayGoldenList.goldenNumberList[-1]))
 
-            todayGoldenList = client.Default.Default_GetTodayGoldenList(roomid=roomId).response().result
-            if len(todayGoldenList.goldenNumberList) != 0:
-                print('Last golden number is: ' + str(todayGoldenList.goldenNumberList[-1]))
+        number1, number2 = GeneratePredictionNumbers(todayGoldenList.goldenNumberList, state.numbers)
 
-            number1, number2 = GeneratePredictionNumbers(todayGoldenList.goldenNumberList, state.numbers)
+        if (state.numbers == 2):
+            submitRsp = client.request(
+                app.op['Default_Submit'](
+                    uid=userId,
+                    rid=state.roundId,
+                    n1=str(number1),
+                    n2=str(number2)
+                ))
+            if submitRsp.status == 200:
+                print('You submit numbers: ' + str(number1) + ', ' + str(number2))
+            else:
+                print('Error: ' + submitRsp.data.message)
 
-            try:
-                if (state.numbers == 2):
-                    client.Default.Default_Submit(uid=userId, rid=state.roundId, n1=str(number1), n2=str(number2)).response()
-                    print('You submit numbers: ' + str(number1) + ', ' + str(number2))
-                else:
-                    client.Default.Default_Submit(uid=userId, rid=state.roundId, n1=str(number1), n2='0').response()
-                    print('You submit number: ' + str(number1))
-            except HTTPBadRequest as args:
-                print('Error: ' + args.swagger_result.message)
-            except Exception as args:
-                print('Error: ' + str(args))
-
-    except HTTPBadRequest as args:
-        print('Error: ' + args.swagger_result.message)
-    except Exception as args:
-        print('Error: ' + str(args))
+        else:
+            submitRsp = client.request(
+                app.op['Default_Submit'](
+                    uid=userId,
+                    rid=state.roundId,
+                    n1=str(number1)
+                ))
+            if submitRsp.status == 200:
+                print('You submit number: ' + str(number1))
+            else:
+                print('Error: ' + submitRsp.data.message)
 
 
 if __name__ == '__main__':

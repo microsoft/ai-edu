@@ -62,7 +62,7 @@ def ShowResult(X,Y,W,B):
 #    plt.title(title)
     
     plt.xlabel("Temperature")
-    plt.ylabel("Humidity")
+    plt.ylabel("Altitude")
     plt.show()
 
 # 主程序

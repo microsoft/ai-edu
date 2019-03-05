@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>3e352160-720d-4d68-a4ea-d847ad9b2af1</ProjectGuid>
+    <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>LogicOr.py</StartupFile>
+    <StartupFile>level2_BinaryClassification.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>LogicGate</Name>
-    <RootNamespace>LogicGate</RootNamespace>
+    <Name>ch06</Name>
+    <RootNamespace>ch06</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,9 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="LogicAnd.py" />
-    <Compile Include="LogicNot.py" />
-    <Compile Include="LogicOr.py" />
+    <Compile Include="BaseClassification.py" />
+    <Compile Include="level3_MultipleClassification.py" />
+    <Compile Include="level2_BinaryClassification.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

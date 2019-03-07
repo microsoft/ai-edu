@@ -42,6 +42,7 @@ def CheckLoss(W, B, X, Y):
     loss = LOSS / m
     return loss
 
+
 def ShowResult(X,Y,W,B):
     for i in range(X.shape[1]):
         if Y[0,i] == 1:

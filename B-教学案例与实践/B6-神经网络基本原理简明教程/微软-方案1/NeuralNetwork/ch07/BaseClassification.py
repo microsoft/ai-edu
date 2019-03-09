@@ -161,7 +161,7 @@ def ShowData(X,Y):
         # end if
     # end for
     plt.xlabel("Temperature")
-    plt.ylabel("Humidity")
+    plt.ylabel("Altitude")
     plt.show()
 
 def ShowResult(X,Y,W,B):

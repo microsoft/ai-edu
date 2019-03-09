@@ -53,23 +53,11 @@ def NormalizeData(X):
 # normalize data by specified range and min_value
 def NormalizePredicateData(X_raw, X_norm):
     X_new = np.zeros(X_raw.shape)
-    n = X_raw.shape[0]
-    for i in range(n):
+    num_feature = X_raw.shape[0]
+    for i in range(num_feature):
         x = X_raw[i,:]
         X_new[i,:] = (x-X_norm[0,i])/X_norm[1,i]
     return X_new
-
-def ToBool(YData):
-    num_example = YData.shape[1]
-    Y = np.zeros((1, num_example))
-    for i in range(num_example):
-        if YData[0,i] == 1:     # 第一类的标签设为0
-            Y[0,i] = 0
-        elif YData[0,i] == 2:   # 第二类的标签设为1
-            Y[0,i] = 1
-        # end if
-    # end for
-    return Y
 
 # 反向计算
 # X:input example, Y:lable example, Z:predicated value
@@ -164,28 +152,6 @@ def ShowData(X,Y):
     plt.ylabel("Altitude")
     plt.show()
 
-def ShowResult(X,Y,W,B):
-    for i in range(X.shape[1]):
-        if Y[0,i] == 1:
-            plt.scatter(X[0,i], X[1,i], c='b')
-        elif Y[0,i] == 2:
-            plt.scatter(X[0,i], X[1,i], c='g')
-        # end if
-    # end for
-
-    b12 = -B[0,0]/W[0,1]
-    w12 = -W[0,0]/W[0,1]
-
-    x = np.linspace(0,1,10)
-    y = w12 * x + b12
-    plt.plot(x,y)
-
-#    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
-#    plt.title(title)
-    
-    plt.xlabel("Temperature")
-    plt.ylabel("Humidity")
-    plt.show()
 
 def train(method, X, Y, ForwardCalculationBatch, CheckLoss):
     num_example = X.shape[1]

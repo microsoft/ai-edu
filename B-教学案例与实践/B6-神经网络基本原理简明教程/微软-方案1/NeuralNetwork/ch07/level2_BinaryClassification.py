@@ -36,14 +36,20 @@ def ForwardCalculationBatch(W, B, batch_X):
 def CheckLoss(W, B, X, Y):
     m = X.shape[1]
     A = ForwardCalculationBatch(W,B,X)
-    p1 = (1-Y) * np.log(1-A)   #binary classification
-    p2 =  Y * np.log(A)          # binary/multiple classification
-    LOSS = np.sum(-(p1 + p2))  #binary classification
+    
+    p1 = 1 - Y
+    p2 = np.log(1-A)
+    p3 = np.log(A)
+
+    p4 = np.multiply(p1 ,p2)
+    p5 = np.multiply(Y, p3)
+
+    LOSS = np.sum(-(p4 + p5))  #binary classification
     loss = LOSS / m
     return loss
 
 
-def ShowResult(X,Y,W,B):
+def ShowResult(X,Y,W,B,xt):
     for i in range(X.shape[1]):
         if Y[0,i] == 1:
             plt.scatter(X[0,i], X[1,i], c='b')
@@ -59,12 +65,21 @@ def ShowResult(X,Y,W,B):
     y = w12 * x + b12
     plt.plot(x,y)
 
+    for i in range(xt.shape[1]):
+        plt.plot(xt[0,i], xt[1,i], 'x')
+
+
 #    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
 #    plt.title(title)
     
     plt.xlabel("Temperature")
     plt.ylabel("Altitude")
     plt.show()
+
+def Inference(W,B,X_norm,xt):
+    xt_normalized = NormalizePredicateData(xt, X_norm)
+    A = ForwardCalculationBatch(W,B,xt_normalized)
+    return A, xt_normalized
 
 # 主程序
 if __name__ == '__main__':
@@ -74,11 +89,14 @@ if __name__ == '__main__':
     XData,YData = ReadData(x_data_name, y_data_name)
     X, X_norm = NormalizeData(XData)
     ShowData(XData, YData)
-    num_category = 2
     Y = ToBool(YData)
     W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
-    print(W, B)
-    ShowResult(X,YData,W,B)
+    print("W=",W)
+    print("B=",B)
+    xt = np.array([5.1,12.7,25.3,42.1,34.3,82.2]).reshape(2,3,order='F')
+    result, xt_norm = Inference(W,B,X_norm,xt)
+    print(result)
+    ShowResult(X,YData,W,B,xt_norm)
 
 
 

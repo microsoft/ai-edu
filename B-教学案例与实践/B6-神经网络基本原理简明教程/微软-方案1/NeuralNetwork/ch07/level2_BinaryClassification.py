@@ -73,7 +73,7 @@ def ShowResult(X,Y,W,B,xt):
 #    plt.title(title)
     
     plt.xlabel("Temperature")
-    plt.ylabel("Altitude")
+    plt.ylabel("Humidity")
     plt.show()
 
 def Inference(W,B,X_norm,xt):

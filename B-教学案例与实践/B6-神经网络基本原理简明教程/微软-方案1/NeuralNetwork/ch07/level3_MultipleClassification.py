@@ -40,12 +40,19 @@ def ForwardCalculationBatch(W, B, batch_X):
 def CheckLoss(W, B, X, Y):
     m = X.shape[1]
     A = ForwardCalculationBatch(W,B,X)
-    p2 =  Y * np.log(A)          # multiple classification
-    LOSS = np.sum(-p2)          # multiple classification
+    p1 = np.log(A)
+    p2 =  np.multiply(Y, p1)
+    LOSS = np.sum(-p2) 
     loss = LOSS / m
     return loss
 
-def ShowResult(X,Y,W,B):
+def Inference(W,B,X_norm,xt):
+    xt_normalized = NormalizePredicateData(xt, X_norm)
+    A = ForwardCalculationBatch(W,B,xt_normalized)
+    r = np.argmax(A,axis=0)+1
+    return A, xt_normalized, r
+
+def ShowResult(X,Y,W,B,xt):
     for i in range(X.shape[1]):
         if Y[0,i] == 1:
             plt.scatter(X[0,i], X[1,i], c='b')
@@ -73,8 +80,12 @@ def ShowResult(X,Y,W,B):
 #    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
 #    plt.title(title)
     
+    for i in range(xt.shape[1]):
+        plt.plot(xt[0,i], xt[1,i], 'x')
+
+
     plt.xlabel("Temperature")
-    plt.ylabel("Altitude")
+    plt.ylabel("Humidity")
     plt.show()
 
 # 主程序
@@ -88,8 +99,13 @@ if __name__ == '__main__':
     num_category = 3
     Y = ToOneHot(YData, num_category)
     W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
-    print(W, B)
-    ShowResult(X,YData,W,B)
 
+    print("W=",W)
+    print("B=",B)
+    xt = np.array([5.1,12.7,25.3,42.1,34.3,82.2]).reshape(2,3,order='F')
+    a, xt_norm, r = Inference(W,B,X_norm,xt)
+    print("Probility=", a)
+    print("Result=",r)
+    ShowResult(X,YData,W,B,xt_norm)
 
 

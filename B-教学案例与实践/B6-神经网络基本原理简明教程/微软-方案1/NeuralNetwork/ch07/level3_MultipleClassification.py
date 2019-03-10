@@ -7,8 +7,22 @@ from pathlib import Path
 import math
 from BaseClassification import *
 
-x_data_name = "Pollution3CategoryX.dat"
-y_data_name = "Pollution3CategoryY.dat"
+#x_data_name = "Pollution3CategoryX.dat"
+#y_data_name = "Pollution3CategoryY.dat"
+x_data_name = "X3.dat"
+y_data_name = "Y3.dat"
+
+def ShowData(X,Y):
+    for i in range(X.shape[1]):
+        if Y[0,i] == 1:
+            plt.plot(X[0,i], X[1,i], '.', c='r')
+        elif Y[0,i] == 2:
+            plt.plot(X[0,i], X[1,i], 'x', c='g')
+        elif Y[0,i] == 3:
+            plt.plot(X[0,i], X[1,i], '^', c='b')
+        # end if
+    # end for
+    plt.show()
 
 def ToOneHot(YData, num_category):
     num_example = YData.shape[1]
@@ -55,11 +69,11 @@ def Inference(W,B,X_norm,xt):
 def ShowResult(X,Y,W,B,xt):
     for i in range(X.shape[1]):
         if Y[0,i] == 1:
-            plt.scatter(X[0,i], X[1,i], c='b')
+            plt.plot(X[0,i], X[1,i], '.', c='r')
         elif Y[0,i] == 2:
-            plt.scatter(X[0,i], X[1,i], c='g')
+            plt.plot(X[0,i], X[1,i], 'x', c='g')
         elif Y[0,i] == 3:
-            plt.scatter(X[0,i], X[1,i], c='r')
+            plt.plot(X[0,i], X[1,i], '^', c='b')
         # end if
     # end for
 
@@ -69,13 +83,21 @@ def ShowResult(X,Y,W,B,xt):
     b23 = (B[2,0] - B[1,0])/(W[1,1] - W[2,1])
     w23 = (W[2,0] - W[1,0])/(W[1,1] - W[2,1])
 
-    x = np.linspace(0,1,10)
+    b12 = (B[1,0] - B[0,0])/(W[0,1] - W[1,1])
+    w12 = (W[1,0] - W[0,0])/(W[0,1] - W[1,1])
+
+    x = np.linspace(0,1,2)
     y = w13 * x + b13
     plt.plot(x,y)
 
-    x = np.linspace(0,1,10)
+    x = np.linspace(0,1,2)
     y = w23 * x + b23
     plt.plot(x,y)
+
+    x = np.linspace(0,1,2)
+    y = w12 * x + b12
+    plt.plot(x,y)
+
 
 #    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
 #    plt.title(title)
@@ -83,9 +105,7 @@ def ShowResult(X,Y,W,B,xt):
     for i in range(xt.shape[1]):
         plt.plot(xt[0,i], xt[1,i], 'x')
 
-
-    plt.xlabel("Temperature")
-    plt.ylabel("Humidity")
+    plt.axis([-0.1,1.1,-0.1,1.1])
     plt.show()
 
 # 主程序

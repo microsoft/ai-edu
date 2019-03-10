@@ -140,16 +140,14 @@ def ShowLossHistory(dict_loss, method):
 
 def ShowData(X,Y):
     for i in range(X.shape[1]):
-        if Y[0,i] == 1:
-            plt.scatter(X[0,i], X[1,i], c='b')
+        if Y[0,i] == 0:
+            plt.plot(X[0,i], X[1,i], '.', c='r')
+        elif Y[0,i] == 1:
+            plt.plot(X[0,i], X[1,i], 'x', c='g')
         elif Y[0,i] == 2:
-            plt.scatter(X[0,i], X[1,i], c='g')
-        elif Y[0,i] == 3:
-            plt.scatter(X[0,i], X[1,i], c='r')
+            plt.plot(X[0,i], X[1,i], '^', c='b')
         # end if
     # end for
-    plt.xlabel("Temperature")
-    plt.ylabel("Altitude")
     plt.show()
 
 

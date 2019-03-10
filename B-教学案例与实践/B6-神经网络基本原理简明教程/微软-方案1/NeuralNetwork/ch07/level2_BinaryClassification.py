@@ -7,16 +7,28 @@ from pathlib import Path
 import math
 from BaseClassification import *
 
-x_data_name = "Pollution2CategoryX.dat"
-y_data_name = "Pollution2CategoryY.dat"
+#x_data_name = "Pollution2CategoryX.dat"
+#y_data_name = "Pollution2CategoryY.dat"
+x_data_name = "X2.dat"
+y_data_name = "Y2.dat"
+
+def ShowData(X,Y):
+    for i in range(X.shape[1]):
+        if Y[0,i] == 0:
+            plt.plot(X[0,i], X[1,i], '.', c='r')
+        elif Y[0,i] == 1:
+            plt.plot(X[0,i], X[1,i], 'x', c='g')
+        # end if
+    # end for
+    plt.show()
 
 def ToBool(YData):
     num_example = YData.shape[1]
     Y = np.zeros((1, num_example))
     for i in range(num_example):
-        if YData[0,i] == 1:     # 第一类的标签设为0
+        if YData[0,i] == 0:     # 第一类的标签设为0
             Y[0,i] = 0
-        elif YData[0,i] == 2:   # 第二类的标签设为1
+        elif YData[0,i] == 1:   # 第二类的标签设为1
             Y[0,i] = 1
         # end if
     # end for
@@ -51,10 +63,10 @@ def CheckLoss(W, B, X, Y):
 
 def ShowResult(X,Y,W,B,xt):
     for i in range(X.shape[1]):
-        if Y[0,i] == 1:
-            plt.scatter(X[0,i], X[1,i], c='b')
-        elif Y[0,i] == 2:
-            plt.scatter(X[0,i], X[1,i], c='g')
+        if Y[0,i] == 0:
+            plt.plot(X[0,i], X[1,i], '.', c='r')
+        elif Y[0,i] == 1:
+            plt.plot(X[0,i], X[1,i], 'x', c='g')
         # end if
     # end for
 
@@ -68,12 +80,9 @@ def ShowResult(X,Y,W,B,xt):
     for i in range(xt.shape[1]):
         plt.plot(xt[0,i], xt[1,i], 'x')
 
-
 #    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
 #    plt.title(title)
-    
-    plt.xlabel("Temperature")
-    plt.ylabel("Humidity")
+    plt.axis([-0.1,1.1,-0.1,1.1])
     plt.show()
 
 def Inference(W,B,X_norm,xt):

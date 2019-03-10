@@ -24,6 +24,7 @@
     <Compile Include="BaseClassification.py" />
     <Compile Include="level3_MultipleClassification.py" />
     <Compile Include="level2_BinaryClassification.py" />
+    <Compile Include="Softmax.py" />
     <Compile Include="Sigmoid.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

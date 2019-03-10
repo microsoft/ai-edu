@@ -86,16 +86,17 @@ def ShowResult(X,Y,W,B,xt):
 
     x = np.linspace(0,1,2)
     y = w13 * x + b13
-    plt.plot(x,y)
+    p13, = plt.plot(x,y)
 
     x = np.linspace(0,1,2)
     y = w23 * x + b23
-    plt.plot(x,y)
+    p23, = plt.plot(x,y)
 
     x = np.linspace(0,1,2)
     y = w12 * x + b12
-    plt.plot(x,y)
+    p12, = plt.plot(x,y)
 
+    plt.legend([p13,p23,p12], ["13","23","12"])
 
 #    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
 #    plt.title(title)
@@ -105,6 +106,11 @@ def ShowResult(X,Y,W,B,xt):
 
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.show()
+
+def test(X,Y,W,B):
+    Z = np.dot(W, X) + B
+    print(Z)
+
 
 # 主程序
 if __name__ == '__main__':
@@ -126,4 +132,5 @@ if __name__ == '__main__':
     print("Result=",r)
     ShowResult(X,YData,W,B,xt_norm)
 
+    test(X, Y, W, B)
 

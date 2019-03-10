@@ -7,8 +7,6 @@ from pathlib import Path
 import math
 from BaseClassification import *
 
-#x_data_name = "Pollution3CategoryX.dat"
-#y_data_name = "Pollution3CategoryY.dat"
 x_data_name = "X3.dat"
 y_data_name = "Y3.dat"
 

@@ -103,7 +103,7 @@ def InitialWeights(num_input, num_output, method):
     return W,B
 
 # 初始化参数
-def InitializeHyperParameters(method):
+def InitializeHyperParameters(method, num_example):
     if method=="SGD":
         eta = 0.1
         max_epoch = 100
@@ -115,7 +115,7 @@ def InitializeHyperParameters(method):
     elif method=="FullBatch":
         eta = 0.5
         max_epoch = 100
-        batch_size = 200
+        batch_size = num_example
     return eta, max_epoch, batch_size
 
 # 从历史记录中获得最小损失值得训练权重值
@@ -156,7 +156,7 @@ def train(method, X, Y, ForwardCalculationBatch, CheckLoss):
     num_feature = X.shape[0]
     num_category = Y.shape[0]
     # hyper parameters
-    eta, max_epoch,batch_size = InitializeHyperParameters(method)
+    eta, max_epoch,batch_size = InitializeHyperParameters(method,num_example)
     # W(num_category, num_feature), B(num_category, 1)
     W, B = InitialWeights(num_feature, num_category, "zero")
     # calculate loss to decide the stop condition

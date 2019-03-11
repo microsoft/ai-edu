@@ -76,10 +76,8 @@ def ShowResult(X,Y,W,B,xt):
     plt.plot(x,y)
 
     for i in range(xt.shape[1]):
-        plt.plot(xt[0,i], xt[1,i], 'x')
+        plt.plot(xt[0,i], xt[1,i], '^', c='b')
 
-#    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
-#    plt.title(title)
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.show()
 
@@ -91,7 +89,7 @@ def Inference(W,B,X_norm,xt):
 # 主程序
 if __name__ == '__main__':
     # SGD, MiniBatch, FullBatch
-    method = "SGD"
+    method = "FullBatch"
     # read data
     XData,YData = ReadData(x_data_name, y_data_name)
     X, X_norm = NormalizeData(XData)
@@ -100,9 +98,10 @@ if __name__ == '__main__':
     W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
     print("W=",W)
     print("B=",B)
-    xt = np.array([5.1,12.7,25.3,42.1,34.3,82.2]).reshape(2,3,order='F')
+    xt = np.array([5,1,6,9,5,5]).reshape(2,3,order='F')
     result, xt_norm = Inference(W,B,X_norm,xt)
-    print(result)
+    print("result=",result)
+    print(np.around(result))
     ShowResult(X,YData,W,B,xt_norm)
 
 

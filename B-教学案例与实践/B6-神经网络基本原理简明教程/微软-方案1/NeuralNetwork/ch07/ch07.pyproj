@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level3_MultipleClassification.py</StartupFile>
+    <StartupFile>level4_ShowMultipleResult.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,8 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BaseClassification.py" />
+    <Compile Include="level2_ShowBinaryResult.py" />
+    <Compile Include="level4_ShowMultipleResult.py" />
     <Compile Include="level3_MultipleClassification.py" />
-    <Compile Include="level2_BinaryClassification.py" />
+    <Compile Include="level1_BinaryClassification.py" />
     <Compile Include="Softmax.py" />
     <Compile Include="Sigmoid.py" />
   </ItemGroup>

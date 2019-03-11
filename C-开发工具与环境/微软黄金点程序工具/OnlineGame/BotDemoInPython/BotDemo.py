@@ -41,7 +41,7 @@ def main():
         print('Parse room id failed, default join in to room 0')
 
     userResp = client.request(
-        app.op['Default_NewUser'](
+        app.op['NewUser'](
             nickName='AI Player ' + str(random.randint(0, 9999))
         ))
     assert userResp.status == 200
@@ -53,7 +53,7 @@ def main():
 
     while True:
         stateResp = client.request(
-            app.op['Default_GetState'](
+            app.op['State'](
                 uid=userId,
                 roomid=roomId
             ))
@@ -81,7 +81,7 @@ def main():
         print('This is round ' + str(state.finishedRoundCount + 1))
 
         todayGoldenListResp = client.request(
-            app.op['Default_GetTodayGoldenList'](
+            app.op['TodayGoldenList'](
                 roomid=roomId
             ))
         assert todayGoldenListResp.status == 200
@@ -93,7 +93,7 @@ def main():
 
         if (state.numbers == 2):
             submitRsp = client.request(
-                app.op['Default_Submit'](
+                app.op['Submit'](
                     uid=userId,
                     rid=state.roundId,
                     n1=str(number1),
@@ -106,7 +106,7 @@ def main():
 
         else:
             submitRsp = client.request(
-                app.op['Default_Submit'](
+                app.op['Submit'](
                     uid=userId,
                     rid=state.roundId,
                     n1=str(number1)

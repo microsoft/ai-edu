@@ -57,7 +57,7 @@ namespace BotDemo
         static async Task RunBot(int roomId)
         {
             GoldenNumberService service = new GoldenNumberService(new HttpClient());
-            service.BaseUrl = "https://goldennumber.aiedu.msra.cn/";
+            service.BaseUrl = "https://goldennumber.aiedu.msra.cn";
 
             try
             {
@@ -71,7 +71,7 @@ namespace BotDemo
                 while (true)
                 {
                     // Get the room state
-                    var state = await service.GetStateAsync(userId, roomId);
+                    var state = await service.StateAsync(userId, roomId);
 
                     if (state.State == 2)
                     {
@@ -104,7 +104,7 @@ namespace BotDemo
                     Console.WriteLine($"This is round {state.FinishedRoundCount + 1}");
 
                     // Get history of golden numbers
-                    var todayGoldenList = await service.GetTodayGoldenListAsync(roomId);
+                    var todayGoldenList = await service.TodayGoldenListAsync(roomId);
 
                     if (todayGoldenList.GoldenNumberList.Count != 0)
                     {

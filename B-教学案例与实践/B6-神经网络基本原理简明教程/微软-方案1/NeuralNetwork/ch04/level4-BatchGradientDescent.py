@@ -127,6 +127,8 @@ def loss_2d(x,y,n,dict_loss,method,cdata):
             a = w * x + b
             loss = CheckLoss(w,b,x,y)
             LOSS[i,j] = np.round(loss, 2)
+        # end for j
+    # end for i
     print("please wait for 20 seconds...")
     while(True):
         X = []
@@ -146,9 +148,14 @@ def loss_2d(x,y,n,dict_loss,method,cdata):
                         X.append(W[i])
                         Y.append(B[j])
                         LOSS[i,j] = 0
+                    # end if
+                # end if
+            # end for j
+        # end for i
         if is_first == True:
             break
         plt.plot(X,Y,'.')
+    # end while
 
     # show w,b trace
     w_history = []
@@ -160,8 +167,10 @@ def loss_2d(x,y,n,dict_loss,method,cdata):
             continue
         if key == cdata.loss:
             break
+        # end if
         w_history.append(w)
         b_history.append(b)
+    # end for
     plt.plot(w_history,b_history)
 
     plt.xlabel("w")
@@ -224,7 +233,8 @@ if __name__ == '__main__':
             prev_loss = loss
 
             dict_loss[loss] = CData(loss, W, B, epoch, iteration)            
-
+        # end for
+    # end for
     ShowLossHistory(dict_loss, method)
     w,b,cdata = GetMinimalLossData(dict_loss)
     print(cdata.w, cdata.b)

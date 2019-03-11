@@ -102,15 +102,10 @@ def ShowResult(X,Y,W,B,xt):
 #    plt.title(title)
     
     for i in range(xt.shape[1]):
-        plt.plot(xt[0,i], xt[1,i], 'x')
+        plt.plot(xt[0,i], xt[1,i], 'o')
 
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.show()
-
-def test(X,Y,W,B):
-    Z = np.dot(W, X) + B
-    print(Z)
-
 
 # 主程序
 if __name__ == '__main__':
@@ -119,18 +114,15 @@ if __name__ == '__main__':
     # read data
     XData,YData = ReadData(x_data_name, y_data_name)
     X, X_norm = NormalizeData(XData)
-    ShowData(XData, YData)
     num_category = 3
     Y = ToOneHot(YData, num_category)
     W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
 
     print("W=",W)
     print("B=",B)
-    xt = np.array([5.1,12.7,25.3,42.1,34.3,82.2]).reshape(2,3,order='F')
+    xt = np.array([5,1,7,6,5,6,2,7]).reshape(2,4,order='F')
     a, xt_norm, r = Inference(W,B,X_norm,xt)
     print("Probility=", a)
     print("Result=",r)
-    ShowResult(X,YData,W,B,xt_norm)
 
-    test(X, Y, W, B)
 

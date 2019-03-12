@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
+    <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level2_ShowBinaryResult.py</StartupFile>
+    <StartupFile>MiniBatch.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch06</Name>
-    <RootNamespace>ch06</RootNamespace>
+    <Name>ch08</Name>
+    <RootNamespace>ch08</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,13 +21,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaseClassification.py" />
-    <Compile Include="level2_ShowBinaryResult.py" />
-    <Compile Include="level4_ShowMultipleResult.py" />
-    <Compile Include="level3_MultipleClassification.py" />
-    <Compile Include="level1_BinaryClassification.py" />
-    <Compile Include="Softmax.py" />
-    <Compile Include="Sigmoid.py" />
+    <Compile Include="loss_history.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MiniBatch.py" />
+    <Compile Include="SGD.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

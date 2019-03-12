@@ -18,18 +18,16 @@ def ShowData(X,Y):
             plt.plot(X[0,i], X[1,i], '^', c='b')
         # end if
     # end for
+
+def ShowRawData(X,Y):
+    ShowData(X,Y)
     plt.show()
 
-def ShowResult(X,Y,W,B,xt):
-    for i in range(X.shape[1]):
-        if Y[0,i] == 1:
-            plt.plot(X[0,i], X[1,i], '.', c='r')
-        elif Y[0,i] == 2:
-            plt.plot(X[0,i], X[1,i], 'x', c='g')
-        elif Y[0,i] == 3:
-            plt.plot(X[0,i], X[1,i], '^', c='b')
-        # end if
-    # end for
+def ShowLineResult(X,Y,W,B,xt):
+
+#    ShowAreaResult(X,Y,W,B)
+
+    ShowData(X,Y)
 
     b12 = (B[1,0] - B[0,0])/(W[0,1] - W[1,1])
     w12 = (W[1,0] - W[0,0])/(W[0,1] - W[1,1])
@@ -61,14 +59,34 @@ def ShowResult(X,Y,W,B,xt):
     plt.show()
 
 
+def ShowAreaResult(X,Y,W,B):
+    count = 20
+    x1 = np.linspace(0,1,count)
+    x2 = np.linspace(0,1,count)
+    for i in range(count):
+        for j in range(count):
+            x = np.array([x1[i],x2[j]]).reshape(2,1)
+            A = ForwardCalculationBatch(W,B,x)
+            r = np.argmax(A,axis=0)
+            if r == 0:
+                plt.plot(x[0,0], x[1,0], 's', c='y')
+            elif r == 1:
+                plt.plot(x[0,0], x[1,0], 's', c='k')
+            elif r == 2:
+                plt.plot(x[0,0], x[1,0], 's', c='w')
+            # end if
+        # end for
+    # end for
+
+
 # 主程序
 if __name__ == '__main__':
     # SGD, MiniBatch, FullBatch
-    method = "FullBatch"
+    method = "SGD"
     # read data
     XData,YData = ReadData(x_data_name, y_data_name)
     X, X_norm = NormalizeData(XData)
-    ShowData(XData, YData)
+    ShowRawData(XData, YData)
     num_category = 3
     Y = ToOneHot(YData, num_category)
     W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
@@ -79,6 +97,5 @@ if __name__ == '__main__':
     a, xt_norm, r = Inference(W,B,X_norm,xt)
     print("Probility=", a)
     print("Result=",r)
-    ShowResult(X,YData,W,B,xt_norm)
-
+    ShowLineResult(X,YData,W,B,xt_norm)
 

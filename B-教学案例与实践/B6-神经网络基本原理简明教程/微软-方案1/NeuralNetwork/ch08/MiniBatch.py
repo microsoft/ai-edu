@@ -34,20 +34,23 @@ def ForwardCalculationBatch(batch_x, dict_weights):
     return dict_cache
 
 def BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights):
+
+    m = batch_x.shape[1]
+
     A1 = dict_cache["A1"]
     A2 = dict_cache["A2"]
     W2 = dict_weights["W2"]
 
     dLoss_Z2 = A2 - batch_y
-    dW2 = np.dot(dLoss_Z2, A1.T)
-    dB2 = np.sum(dLoss_Z2, axis=1, keepdims=True)
+    dW2 = np.dot(dLoss_Z2, A1.T)/m
+    dB2 = np.sum(dLoss_Z2, axis=1, keepdims=True)/m
 
     dLoss_A1 = np.dot(W2.T, dLoss_Z2)
     dA1_Z1 = np.multiply(A1, 1 - A1)
     
     dLoss_Z1 = np.multiply(dLoss_A1, dA1_Z1)
-    dW1 = np.dot(dLoss_Z1, batch_x.T)
-    dB1 = np.sum(dLoss_Z1, axis=1, keepdims=True)
+    dW1 = np.dot(dLoss_Z1, batch_x.T)/m
+    dB1 = np.sum(dLoss_Z1, axis=1, keepdims=True)/m
 
     dict_grads = {"dW1":dW1, "dB1":dB1, "dW2":dW2, "dB2":dB2}
     return dict_grads
@@ -127,18 +130,21 @@ def GetBatchSamples(X,Y,batch_size,iteration):
 # 初始化参数
 def InitializeHyperParameters(method, num_example):
     if method=="SGD":
-        eta = 0.1
-        max_epoch = 1000
+        eta = 0.2
+        max_epoch = 50000
         batch_size = 1
+        num_hidden = 2
     elif method=="MiniBatch":
-        eta = 0.1
-        max_epoch = 100
+        eta = 0.2
+        max_epoch = 50000
         batch_size = 10
-    elif method=="FullBatch":
-        eta = 0.5
-        max_epoch = 100
-        batch_size = num_example
-    return eta, max_epoch, batch_size
+        num_hidden = 8
+    # end if
+#    elif method=="FullBatch":
+#        eta = 0.1
+#        max_epoch = 10000
+#        batch_size = num_example
+    return eta, max_epoch, batch_size, num_hidden
 
 # 图形显示损失函数值历史记录
 def ShowLossHistory(dict_loss, method):
@@ -160,24 +166,23 @@ def GetMinimalLossData(dict_loss):
     return dict_weights, dict_loss[key]
 
 
-def train(method, X, Y, num_input, num_hidden, num_output):
+def train(method, X, Y, num_input, num_output):
     num_example = X.shape[1]
     num_feature = X.shape[0]
     num_category = Y.shape[0]
     # hyper parameters
-    eta, max_epoch,batch_size = InitializeHyperParameters(method,num_example)
+    eta, max_epoch,batch_size, num_hidden = InitializeHyperParameters(method,num_example)
     # W(num_category, num_feature), B(num_category, 1)
-    dict_weights = InitialParameters(num_input, num_hidden, num_output, 1)
+    dict_weights = InitialParameters(num_input, num_hidden, num_output, 2)
 
     # calculate loss to decide the stop condition
     loss = 0        # initialize loss (larger than 0)
-    error = 0.002    # stop condition
+    error = 0.001    # stop condition
     dict_loss = {}  # loss history
 
     # if num_example=200, batch_size=10, then iteration=200/10=20
     max_iteration = (int)(num_example / batch_size)
     for epoch in range(max_epoch):
-        print("epoch=%d" %epoch)
         for iteration in range(max_iteration):
             # get x and y value for one sample
             batch_x, batch_y = GetBatchSamples(X,Y,batch_size,iteration)
@@ -190,7 +195,7 @@ def train(method, X, Y, num_input, num_hidden, num_output):
         # end for            
         # calculate loss for this batch
         loss = CheckLoss(X, Y, dict_weights)
-        print(epoch,loss)
+        print("epoch=%d, loss=%f" %(epoch,loss))
         dict_loss[loss] = CData(loss, dict_weights, epoch, iteration)            
         if math.isnan(loss):
             break
@@ -201,15 +206,19 @@ def train(method, X, Y, num_input, num_hidden, num_output):
     ShowLossHistory(dict_loss, method)
     dict_weights,cdata = GetMinimalLossData(dict_loss)
     print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
-    return dict_weights
+    return dict_weights, num_hidden
 
 if __name__ == '__main__':
     # SGD, MiniBatch, FullBatch
-    method = "SGD"
+    method = "MiniBatch"
     TrainData = ReadData()
     num_samples = TrainData.shape[1]
     X = TrainData[0,:].reshape(1, num_samples)
     Y = TrainData[1,:].reshape(1, num_samples)
-    n_input, n_hidden, n_output = 1, 128, 1
-    dictWeights = train(method, X, Y, n_input, n_hidden, n_output)
+    n_input, n_output = 1, 1
+    dictWeights, n_hidden = train(method, X, Y, n_input, n_output)
     ShowResult(1, n_hidden, 1, 1, dictWeights)
+    print(dictWeights["W1"])
+    print(dictWeights["B2"])
+    print(dictWeights["W2"])
+    print(dictWeights["B1"])

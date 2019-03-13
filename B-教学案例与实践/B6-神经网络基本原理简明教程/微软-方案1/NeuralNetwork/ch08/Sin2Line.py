@@ -5,15 +5,16 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-train_data_name = "CurveFittingTrainData.npy"
+
 
 def ReadData():
-    Trainfile = Path(train_data_name)
-    if Trainfile.exists():
-        TrainData = np.load(Trainfile)
-        return TrainData
-    
-    return None
+    x1 = np.random.random((1,100)) * 2 * 3.14
+    x2 = np.sin(x1)
+    X = np.zeros((2,100))
+    X[0] = x1
+    X[1] = x2
+    Y = 0.2 * x1 + 1
+    return X,Y
 
 def ForwardCalculation(X, dictWeights):
     W1 = dictWeights["W1"]
@@ -49,12 +50,11 @@ def BackPropagation(X, Y, dictCache, dictWeights):
     dictGrads = {"dW1":dW1, "dB1":dB1, "dW2":dW2, "dB2":dB2}
     return dictGrads
 
-def LossCalculation(X, Y, dictWeights, prev_loss, count):
+def LossCalculation(X, Y, dictWeights, count):
     A2, dict_Cache = ForwardCalculation(X, dictWeights)
     LOSS = (A2 - Y)**2
     loss = LOSS.sum()/count/2
-    diff_loss = abs(loss - prev_loss)
-    return loss, diff_loss
+    return loss
 
 def UpdateWeights(dictWeights, dictGrads, learningRate):
     W1 = dictWeights["W1"]
@@ -99,29 +99,27 @@ def InitialParameters(num_input, num_hidden, num_output, flag):
     dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2}
     return dict_Param
 
-def ShowResult(iteration, neuron, loss, sample_count):
-    # draw train data
-    plt.scatter(TrainData[0,:],TrainData[1,:], s=1)
-    # create and draw visualized validation data
-    TX = np.linspace(0,1,100).reshape(1,100)
-    TY, cache = ForwardCalculation(TX, dictWeights)
-    plt.scatter(TX, TY, c='r', s=2)
-    plt.title(str.format("neuron={0},example={1},loss={2},iteraion={3}", neuron, sample_count, loss, iteration))
+def ShowResult(X,dict):
+    plt.plot(X[0,:], X[1,:], '.')
+    a2, cache = ForwardCalculation(X, dict)
+    plt.plot(X[0,:].reshape(1,-1), a2, 'x', c='r')
     plt.show()
 
-TrainData = ReadData()
-num_samples = TrainData.shape[1]
-X = TrainData[0,:].reshape(1, num_samples)
-Y = TrainData[1,:].reshape(1, num_samples)
+X, Y = ReadData()
+num_samples = X.shape[1]
 
-n_input, n_hidden, n_output = 1, 128, 1
+n_input, n_hidden, n_output = 2, 4, 1
 learning_rate = 0.1
 eps = 1e-10
-dictWeights = InitialParameters(n_input, n_hidden, n_output, 1)
-max_iteration = 10000
-min_loss = 0.002
-loss, prev_loss, diff_loss = 0, 0, 10
+dictWeights = InitialParameters(n_input, n_hidden, n_output, 2)
+max_iteration = 1000
+min_loss = 0.001
+loss = 0
 loop = num_samples
+
+wb_min = dictWeights
+loss_min = 10
+
 for iteration in range(max_iteration):
     for i in range(loop):
         x = X[0,i]
@@ -130,14 +128,32 @@ for iteration in range(max_iteration):
         dictGrads = BackPropagation(x, y, dictCache, dictWeights)
         dictWeights = UpdateWeights(dictWeights, dictGrads, learning_rate)
    
-    loss, diff_loss = LossCalculation(X, Y, dictWeights, prev_loss, num_samples)
-    print(iteration,loss,diff_loss)
-    if diff_loss < eps:
-        break
+    loss = LossCalculation(X, Y, dictWeights, num_samples)
+    print(iteration,loss)
+#    if diff_loss < eps:
+#        break
     if loss < min_loss:
         break
-    prev_loss = loss
+    if loss < loss_min:
+        loss_min = loss
+        wb_min = dictWeights
 
-print(loss, diff_loss)
-ShowResult(iteration+1, n_hidden, min_loss, loop)
+print(loss)
+
+print(dictWeights["W1"])
+print(dictWeights["B1"])
+print(dictWeights["W2"])
+print(dictWeights["B2"])
+
+print(loss_min)
+
+print(wb_min["W1"])
+print(wb_min["B1"])
+print(wb_min["W2"])
+print(wb_min["B2"])
+
+
+
+ShowResult(X,wb_min)
+
 

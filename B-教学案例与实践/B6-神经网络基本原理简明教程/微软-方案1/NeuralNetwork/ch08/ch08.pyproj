@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MiniBatch.py</StartupFile>
+    <StartupFile>Sin2Line.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,11 +21,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="loss_history.py">
+    <Compile Include="LossHistory.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniBatch.py" />
-    <Compile Include="SGD.py" />
+    <Compile Include="DataNormalizer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sin2Line.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

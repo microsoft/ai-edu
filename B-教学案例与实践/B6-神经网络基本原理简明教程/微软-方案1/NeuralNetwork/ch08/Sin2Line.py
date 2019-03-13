@@ -18,8 +18,8 @@ def ReadData():
 
 def ShowResult(X,dict):
     plt.plot(X[0,:], X[1,:], '.')
-    a2, cache = ForwardCalculationBatch(X, dict)
-    plt.plot(X[0,:].reshape(1,-1), a2, 'x', c='r')
+    cache = ForwardCalculationBatch(X, dict)
+    plt.plot(X[0,:].reshape(1,-1), cache["A2"], 'x', c='r')
     plt.show()
 
 if __name__ == '__main__':

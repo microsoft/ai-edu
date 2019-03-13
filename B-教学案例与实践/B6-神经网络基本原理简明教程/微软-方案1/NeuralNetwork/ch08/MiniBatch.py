@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 import math
-from loss_history import * 
+from LossHistory import * 
 
 train_data_name = "CurveFittingTrainData.npy"
 
@@ -133,52 +133,30 @@ def InitializeHyperParameters(method, num_example):
         eta = 0.2
         max_epoch = 50000
         batch_size = 1
-        num_hidden = 2
     elif method=="MiniBatch":
         eta = 0.2
         max_epoch = 50000
         batch_size = 10
-        num_hidden = 8
     # end if
 #    elif method=="FullBatch":
 #        eta = 0.1
 #        max_epoch = 10000
 #        batch_size = num_example
-    return eta, max_epoch, batch_size, num_hidden
-
-# 图形显示损失函数值历史记录
-def ShowLossHistory(dict_loss, method):
-    loss = []
-    for key in dict_loss:
-        loss.append(key)
-
-    #plt.plot(loss)
-    plt.plot(loss)
-    plt.title(method)
-    plt.xlabel("iteration")
-    plt.ylabel("loss")
-    plt.show()
-
-    # 从历史记录中获得最小损失值得训练权重值
-def GetMinimalLossData(dict_loss):
-    key = sorted(dict_loss.keys())[0]
-    dict_weights = dict_loss[key].dict_weights
-    return dict_weights, dict_loss[key]
+    return eta, max_epoch, batch_size
 
 
-def train(method, X, Y, num_input, num_output):
+def train(method, X, Y, num_input, num_hidden, num_output, loss_history):
     num_example = X.shape[1]
     num_feature = X.shape[0]
     num_category = Y.shape[0]
     # hyper parameters
-    eta, max_epoch,batch_size, num_hidden = InitializeHyperParameters(method,num_example)
+    eta, max_epoch,batch_size = InitializeHyperParameters(method,num_example)
     # W(num_category, num_feature), B(num_category, 1)
     dict_weights = InitialParameters(num_input, num_hidden, num_output, 2)
 
     # calculate loss to decide the stop condition
     loss = 0        # initialize loss (larger than 0)
     error = 0.001    # stop condition
-    dict_loss = {}  # loss history
 
     # if num_example=200, batch_size=10, then iteration=200/10=20
     max_iteration = (int)(num_example / batch_size)
@@ -196,29 +174,34 @@ def train(method, X, Y, num_input, num_output):
         # calculate loss for this batch
         loss = CheckLoss(X, Y, dict_weights)
         print("epoch=%d, loss=%f" %(epoch,loss))
-        dict_loss[loss] = CData(loss, dict_weights, epoch, iteration)            
+        loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)            
         if math.isnan(loss):
             break
+        # end if
         if loss < error:
             break
+        # end if
     # end for
 
-    ShowLossHistory(dict_loss, method)
-    dict_weights,cdata = GetMinimalLossData(dict_loss)
-    print("epoch=%d, iteration=%d, loss=%f" %(cdata.epoch, cdata.iteration, cdata.loss))
-    return dict_weights, num_hidden
-
 if __name__ == '__main__':
+    loss_history = CLossHistory()
     # SGD, MiniBatch, FullBatch
     method = "MiniBatch"
+    n_input, n_hidden, n_output = 1, 8, 1
+
     TrainData = ReadData()
     num_samples = TrainData.shape[1]
     X = TrainData[0,:].reshape(1, num_samples)
     Y = TrainData[1,:].reshape(1, num_samples)
-    n_input, n_output = 1, 1
-    dictWeights, n_hidden = train(method, X, Y, n_input, n_output)
-    ShowResult(1, n_hidden, 1, 1, dictWeights)
-    print(dictWeights["W1"])
-    print(dictWeights["B2"])
-    print(dictWeights["W2"])
-    print(dictWeights["B1"])
+    
+    train(method, X, Y, n_input, n_hidden, n_output, loss_history)
+
+    bookmark = loss_history.GetMinimalLossData()
+    print("epoch=%d, iteration=%d, loss=%f" %(bookmark.epoch, bookmark.iteration, bookmark.loss))
+    loss_history.ShowLossHistory(method)
+
+    ShowResult(1, n_hidden, 1, 1, bookmark.weights)
+    print(bookmark.weights["W1"])
+    print(bookmark.weights["B1"])
+    print(bookmark.weights["W2"])
+    print(bookmark.weights["B2"])

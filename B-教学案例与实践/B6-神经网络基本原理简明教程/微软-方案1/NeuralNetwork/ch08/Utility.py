@@ -33,16 +33,16 @@ def GetBatchSamples(X,Y,batch_size,iteration):
     batch_Y = Y[:, start:end].reshape(-1, batch_size)
     return batch_X, batch_Y
 
-train_data_name = "CurveFittingTrainData.npy"
 
-
-def ReadData():
-    Trainfile = Path(train_data_name)
-    if Trainfile.exists():
-        TrainData = np.load(Trainfile)
-        return TrainData
-    
-    return None
+def ReadData(x_data_name, y_data_name):
+    Xfile = Path(x_data_name)
+    Yfile = Path(y_data_name)
+    if Xfile.exists() & Yfile.exists():
+        XRawData = np.load(Xfile)
+        YRawData = np.load(Yfile)
+        return XRawData,YRawData
+    # end if
+    return None,None
 
 if __name__ == '__main__':
 

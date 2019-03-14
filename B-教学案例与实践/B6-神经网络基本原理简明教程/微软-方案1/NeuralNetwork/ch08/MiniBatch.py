@@ -121,15 +121,6 @@ def ShowResult(iteration, neuron, loss, sample_count, dict_weights):
     plt.title(str.format("neuron={0},example={1},loss={2},iteraion={3}", neuron, sample_count, loss, iteration))
     plt.show()
 
-# 获得批样本数据
-def GetBatchSamples(X,Y,batch_size,iteration):
-    num_feature = X.shape[0]
-    start = iteration * batch_size
-    end = start + batch_size
-    batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
-    batch_Y = Y[:, start:end].reshape(-1, batch_size)
-    return batch_X, batch_Y
-
 # 初始化参数
 def InitializeHyperParameters(method, num_example):
     if method=="SGD":

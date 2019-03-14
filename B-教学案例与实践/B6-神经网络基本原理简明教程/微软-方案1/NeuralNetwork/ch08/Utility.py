@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import numpy as np
+from pathlib import Path
 
 def InitialParameters(num_input, num_hidden, num_output, flag):
     if flag == 0:
@@ -30,3 +32,24 @@ def GetBatchSamples(X,Y,batch_size,iteration):
     batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
     batch_Y = Y[:, start:end].reshape(-1, batch_size)
     return batch_X, batch_Y
+
+train_data_name = "CurveFittingTrainData.npy"
+
+
+def ReadData():
+    Trainfile = Path(train_data_name)
+    if Trainfile.exists():
+        TrainData = np.load(Trainfile)
+        return TrainData
+    
+    return None
+
+if __name__ == '__main__':
+
+    TrainData = ReadData()
+    num_samples = TrainData.shape[1]
+    X = TrainData[0,:].reshape(1, num_samples)
+    Y = TrainData[1,:].reshape(1, num_samples)
+    
+    np.save("X.npy", X)
+    np.save("Y.npy", Y)

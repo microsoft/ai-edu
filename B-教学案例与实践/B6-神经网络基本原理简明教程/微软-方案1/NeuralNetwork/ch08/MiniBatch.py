@@ -18,6 +18,26 @@ def ReadData():
     
     return None
 
+def InitialParameters(num_input, num_hidden, num_output, flag):
+    if flag == 0:
+        # zero
+        W1 = np.zeros((num_hidden, num_input))
+        W2 = np.zeros((num_output, num_hidden))
+    elif flag == 1:
+        # normalize
+        W1 = np.random.normal(size=(num_hidden, num_input))
+        W2 = np.random.normal(size=(num_output, num_hidden))
+    elif flag == 2:
+        #
+        W1=np.random.uniform(-np.sqrt(6)/np.sqrt(num_input+num_hidden),np.sqrt(6)/np.sqrt(num_hidden+num_input),size=(num_hidden,num_input))
+        W2=np.random.uniform(-np.sqrt(6)/np.sqrt(num_output+num_hidden),np.sqrt(6)/np.sqrt(num_output+num_hidden),size=(num_output,num_hidden))
+
+    B1 = np.zeros((num_hidden, 1))
+    B2 = np.zeros((num_output, 1))
+    dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2}
+    return dict_Param
+
+
 def ForwardCalculationBatch(batch_x, dict_weights):
     W1 = dict_weights["W1"]
     B1 = dict_weights["B1"]
@@ -34,35 +54,27 @@ def ForwardCalculationBatch(batch_x, dict_weights):
     return dict_cache
 
 def BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights):
-
+    # 批量下降，需要除以样本数量，否则会造成梯度爆炸
     m = batch_x.shape[1]
-
+    # 取出缓存值
     A1 = dict_cache["A1"]
     A2 = dict_cache["A2"]
     W2 = dict_weights["W2"]
-
-    dLoss_Z2 = A2 - batch_y
-    dW2 = np.dot(dLoss_Z2, A1.T)/m
-    dB2 = np.sum(dLoss_Z2, axis=1, keepdims=True)/m
-
-    dLoss_A1 = np.dot(W2.T, dLoss_Z2)
+    # 第二层的梯度
+    dZ2 = A2 - batch_y
+    # 第二层的权重和偏移
+    dW2 = np.dot(dZ2, A1.T)/m
+    dB2 = np.sum(dZ2, axis=1, keepdims=True)/m
+    # 第一层的梯度
+    dA1 = np.dot(W2.T, dZ2)
     dA1_Z1 = np.multiply(A1, 1 - A1)
-    
-    dLoss_Z1 = np.multiply(dLoss_A1, dA1_Z1)
-    dW1 = np.dot(dLoss_Z1, batch_x.T)/m
-    dB1 = np.sum(dLoss_Z1, axis=1, keepdims=True)/m
-
+    dZ1 = np.multiply(dA1, dA1_Z1)
+    # 第一层的权重和偏移
+    dW1 = np.dot(dZ1, batch_x.T)/m
+    dB1 = np.sum(dZ1, axis=1, keepdims=True)/m
+    # 保存到词典中返回
     dict_grads = {"dW1":dW1, "dB1":dB1, "dW2":dW2, "dB2":dB2}
     return dict_grads
-
-def CheckLoss(X, Y, dict_weights):
-    m = X.shape[1]
-    dict_cache = ForwardCalculationBatch(X, dict_weights)
-    A2 = dict_cache["A2"]
-    p1 = A2 - Y
-    LOSS = np.multiply(p1, p1)
-    loss = LOSS.sum()/m/2
-    return loss
 
 def UpdateWeights(dict_weights, dict_grads, learningRate):
     W1 = dict_weights["W1"]
@@ -84,28 +96,19 @@ def UpdateWeights(dict_weights, dict_grads, learningRate):
 
     return dict_weights
 
+def CheckLoss(X, Y, dict_weights):
+    m = X.shape[1]
+    dict_cache = ForwardCalculationBatch(X, dict_weights)
+    A2 = dict_cache["A2"]
+    p1 = A2 - Y
+    LOSS = np.multiply(p1, p1)
+    loss = LOSS.sum()/m/2
+    return loss
+
 def Sigmoid(z):
     a = 1 / (1 + np.exp(-z))
     return a
 
-def InitialParameters(num_input, num_hidden, num_output, flag):
-    if flag == 0:
-        # zero
-        W1 = np.zeros((num_hidden, num_input))
-        W2 = np.zeros((num_output, num_hidden))
-    elif flag == 1:
-        # normalize
-        W1 = np.random.normal(size=(num_hidden, num_input))
-        W2 = np.random.normal(size=(num_output, num_hidden))
-    elif flag == 2:
-        #
-        W1=np.random.uniform(-np.sqrt(6)/np.sqrt(num_input+num_hidden),np.sqrt(6)/np.sqrt(num_hidden+num_input),size=(num_hidden,num_input))
-        W2=np.random.uniform(-np.sqrt(6)/np.sqrt(num_output+num_hidden),np.sqrt(6)/np.sqrt(num_output+num_hidden),size=(num_output,num_hidden))
-
-    B1 = np.zeros((num_hidden, 1))
-    B2 = np.zeros((num_output, 1))
-    dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2}
-    return dict_Param
 
 def ShowResult(iteration, neuron, loss, sample_count, dict_weights):
     # draw train data
@@ -138,10 +141,10 @@ def InitializeHyperParameters(method, num_example):
         max_epoch = 50000
         batch_size = 10
     # end if
-#    elif method=="FullBatch":
-#        eta = 0.1
-#        max_epoch = 10000
-#        batch_size = num_example
+    elif method=="FullBatch":
+        eta = 0.1
+        max_epoch = 50000
+        batch_size = num_example
     return eta, max_epoch, batch_size
 
 
@@ -187,7 +190,7 @@ if __name__ == '__main__':
     loss_history = CLossHistory()
     # SGD, MiniBatch, FullBatch
     method = "MiniBatch"
-    n_input, n_hidden, n_output = 1, 8, 1
+    n_input, n_hidden, n_output = 1, 64, 1
 
     TrainData = ReadData()
     num_samples = TrainData.shape[1]

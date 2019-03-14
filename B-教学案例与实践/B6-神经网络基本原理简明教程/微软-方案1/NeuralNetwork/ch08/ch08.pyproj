@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>81d83d89-23e8-428a-b5d7-3f563a3101bf</ProjectGuid>
+    <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>BP-NoneLinear.py</StartupFile>
+    <StartupFile>Utility.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch02</Name>
-    <RootNamespace>ch02</RootNamespace>
+    <Name>ch08</Name>
+    <RootNamespace>ch08</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,15 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BP-Linear.py">
+    <Compile Include="LossHistory.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BP-NoneLinear.py" />
-    <Compile Include="GradientDescentLearningRate.py">
+    <Compile Include="MiniBatch.py" />
+    <Compile Include="DataNormalizer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GradientDescent-DoubleVariable.py" />
-    <Compile Include="GradientDescent-SingleVariable.py">
+    <Compile Include="Sin2Line.py" />
+    <Compile Include="Utility.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

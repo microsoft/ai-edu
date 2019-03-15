@@ -11,6 +11,10 @@ class CBookmark(object):
         self.epoch = epoch
         self.iteration = iteration
     # end def
+
+    def print_info(self):
+        print("epoch=%d, iteration=%d, loss=%f" %(self.epoch, self.iteration, self.loss))
+
 # end class
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
@@ -29,8 +33,11 @@ class CLossHistory(object):
         # end if
 
     # 图形显示损失函数值历史记录
-    def ShowLossHistory(self, title):
+    def ShowLossHistory(self, params):
         plt.plot(self.loss_history)
+        title = str.format("los:{0:.5f} ep:{1} ite:{2} bz:{3} eta:{4} ne:{5}", 
+                           self.min_bookmark.loss, self.min_bookmark.epoch, self.min_bookmark.iteration, 
+                           params.batch_size, params.eta, params.num_hidden)
         plt.title(title)
         plt.xlabel("iteration")
         plt.ylabel("loss")
@@ -47,17 +54,19 @@ class CLossFunction(object):
         self.func_type = funcType
     # end def
 
-    def CheckLoss(self, X, Y, fcFunc, dict_weights):
+    # fcFunc: feed forward calculation
+    def CheckLoss(self, X, Y, dict_weights, ffcFunc):
         m = X.shape[1]
-        dict_cache = fcFunc(X, dict_weights)
+        dict_cache = ffcFunc(X, dict_weights)
         output = dict_cache["Output"]
         if self.func_type == "MSE":
             loss = self.MSE(output, Y, m)
         elif self.func_type == "CE2":
-            self.CE2(output, Y, m)
+            loss = self.CE2(output, Y, m)
         elif self.func_type == "CE3":
-            self.CE3(output, Y, m)
+            loss = self.CE3(output, Y, m)
         #end if
+        return loss
     # end def
 
     def MSE(self, A, Y, count):
@@ -67,6 +76,7 @@ class CLossFunction(object):
         return loss
     # end def
 
+    # for binary classifier
     def CE2(self, A, Y, count):
         p1 = 1 - Y
         p2 = np.log(1 - A)
@@ -80,6 +90,7 @@ class CLossFunction(object):
         return loss
     # end def
 
+    # for multiple classifier
     def CE3(self, A, Y, count):
         p1 = np.log(A)
         p2 =  np.multiply(Y, p1)

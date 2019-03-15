@@ -4,24 +4,38 @@
 import numpy as np
 from pathlib import Path
 
-def InitialParameters(num_input, num_hidden, num_output, flag):
+class CParameters(object):
+    def __init__(self, n_example, n_input=1, n_output=1, n_hidden=4, eta=0.1, max_epoch=10000, batch_size=5, lossFunType="MSE", eps=0.001):
+        self.num_example = n_example
+        self.num_input = n_input
+        self.num_output = n_output
+        self.num_hidden = n_hidden
+        self.eta = eta
+        self.max_epoch = max_epoch
+        # if batch_size == -1, it is FullBatch
+        if batch_size == -1:
+            self.batch_size = self.num_example
+        else:
+            self.batch_size = batch_size
+        # end if
+        self.loss_func_type = lossFunType
+        self.eps = eps
+
+def InitialParameters(num_input, num_output, flag):
     if flag == 0:
         # zero
-        W1 = np.zeros((num_hidden, num_input))
-        W2 = np.zeros((num_output, num_hidden))
+        W = np.zeros((num_output, num_input))
     elif flag == 1:
         # normalize
-        W1 = np.random.normal(size=(num_hidden, num_input))
-        W2 = np.random.normal(size=(num_output, num_hidden))
+        W = np.random.normal(size=(num_output, num_input))
     elif flag == 2:
-        #
-        W1=np.random.uniform(-np.sqrt(6)/np.sqrt(num_input+num_hidden),np.sqrt(6)/np.sqrt(num_hidden+num_input),size=(num_hidden,num_input))
-        W2=np.random.uniform(-np.sqrt(6)/np.sqrt(num_output+num_hidden),np.sqrt(6)/np.sqrt(num_output+num_hidden),size=(num_output,num_hidden))
-
-    B1 = np.zeros((num_hidden, 1))
-    B2 = np.zeros((num_output, 1))
-    dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2}
-    return dict_Param
+        # xavier
+        W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
+                              np.sqrt(6/(num_output+num_input)),
+                              size=(num_output,num_input))
+    # end if
+    B = np.zeros((num_output, 1))
+    return W, B
 
 
 # 获得批样本数据
@@ -44,12 +58,3 @@ def ReadData(x_data_name, y_data_name):
     # end if
     return None,None
 
-if __name__ == '__main__':
-
-    TrainData = ReadData()
-    num_samples = TrainData.shape[1]
-    X = TrainData[0,:].reshape(1, num_samples)
-    Y = TrainData[1,:].reshape(1, num_samples)
-    
-    np.save("X.npy", X)
-    np.save("Y.npy", Y)

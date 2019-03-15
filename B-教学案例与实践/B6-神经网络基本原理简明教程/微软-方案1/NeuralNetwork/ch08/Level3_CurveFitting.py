@@ -71,108 +71,75 @@ def UpdateWeights(dict_weights, dict_grads, learningRate):
 
     return dict_weights
 
-
-def ShowResult(iteration, neuron, loss, sample_count, dict_weights):
+def ShowResult(X, Y, dict_weights):
     # draw train data
-    plt.scatter(TrainData[0,:],TrainData[1,:], s=1)
+    plt.plot(X[0,:], Y[0,:], '.', c='b')
     # create and draw visualized validation data
     TX = np.linspace(0,1,100).reshape(1,100)
     dict_cache = ForwardCalculationBatch(TX, dict_weights)
-    TY = dict_cache["A2"]
+    TY = dict_cache["Output"]
     plt.plot(TX, TY, 'x', c='r')
-    plt.title(str.format("neuron={0},example={1},loss={2},iteraion={3}", neuron, sample_count, loss, iteration))
     plt.show()
 
-def train(method, X, Y, dict_params, loss_history):
+def train(X, Y, params, loss_history):
     num_example = X.shape[1]
     num_feature = X.shape[0]
     num_category = Y.shape[0]
-    num_input = dict_params["num_input"]
-    num_hidden = dict_params["num_hidden"]
-    num_output = dict_params["num_output"]
-    batch_size = dict_params["batch_size"]
-    max_epoch = dict_params["max_epoch"]
-    eta = dict_params["eta"]
 
     # W(num_category, num_feature), B(num_category, 1)
-    dict_weights = InitialParameters(num_input, num_hidden, num_output, 2)
+    W1, B1 = InitialParameters(params.num_input, params.num_hidden, 2)
+    W2, B2 = InitialParameters(params.num_hidden, params.num_output, 2)
+    dict_weights = {"W1":W1, "B1":B1, "W2":W2, "B2":B2}
 
     # calculate loss to decide the stop condition
     loss = 0        # initialize loss (larger than 0)
-    error = 0.001    # stop condition
-
-    lossFunc = CLossFunction("MSE")
+    lossFunc = CLossFunction(params.loss_func_type)
 
     # if num_example=200, batch_size=10, then iteration=200/10=20
-    max_iteration = (int)(num_example / batch_size)
-    for epoch in range(max_epoch):
+    max_iteration = (int)(params.num_example / params.batch_size)
+    for epoch in range(params.max_epoch):
         for iteration in range(max_iteration):
             # get x and y value for one sample
-            batch_x, batch_y = GetBatchSamples(X,Y,batch_size,iteration)
+            batch_x, batch_y = GetBatchSamples(X,Y,params.batch_size,iteration)
             # get z from x,y
             dict_cache = ForwardCalculationBatch(batch_x, dict_weights)
             # calculate gradient of w and b
             dict_grads = BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
             # update w,b
-            dict_weights = UpdateWeights(dict_weights, dict_grads, eta)
+            dict_weights = UpdateWeights(dict_weights, dict_grads, params.eta)
         # end for            
         # calculate loss for this batch
-        loss = lossFunc.CheckLoss(X, Y, dict_weights)
+        loss = lossFunc.CheckLoss(X, Y, dict_weights, ForwardCalculationBatch)
         print("epoch=%d, loss=%f" %(epoch,loss))
         loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)            
         if math.isnan(loss):
             break
         # end if
-        if loss < error:
+        if loss < params.eps:
             break
         # end if
     # end for
 
-# 初始化参数
-def InitializeHyperParameters(method, lossFuncType, num_example, num_input, num_hidden, num_output):
-    if method=="SGD":
-        eta = 0.2
-        max_epoch = 50000
-        batch_size = 1
-    elif method=="MiniBatch":
-        eta = 0.2
-        max_epoch = 50000
-        batch_size = 10
-    # end if
-    elif method=="FullBatch":
-        eta = 0.1
-        max_epoch = 50000
-        batch_size = num_example
-    
-    dict_params = {
-        "eta": eta, 
-        "max_epoch": max_epoch,
-        "batch_size": batch_size,
-        "num_input": num_input,
-        "num_hidden": num_hidden,
-        "num_output": num_output,
-        "loss_func_type": lossFuncType
-    }
-
-    return dict_params
 
 if __name__ == '__main__':
 
     X,Y = ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
-    n_input, n_hidden, n_output = 1, 64, 1
+    n_input, n_hidden, n_output = 1, 2, 1
+    eta, batch_size, max_epoch = 0.1, 10, 50000
+    eps = 0.001
+
+    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, "MSE", eps)
+
     # SGD, MiniBatch, FullBatch
-    method = "MiniBatch"
-    lossFuncType = "MSE"
-    dict_params = InitializeHyperParameters(method, lossFuncType, num_example, n_input, n_hidden, n_output)
     loss_history = CLossHistory()
-    train(method, X, Y, dict_params, loss_history)
+    train(X, Y, params, loss_history)
 
     bookmark = loss_history.GetMinimalLossData()
-    print("epoch=%d, iteration=%d, loss=%f" %(bookmark.epoch, bookmark.iteration, bookmark.loss))
-    loss_history.ShowLossHistory(method)
+    bookmark.print_info()
+    loss_history.ShowLossHistory(params)
 
-    ShowResult(1, n_hidden, 1, 1, bookmark.weights)
+    ShowResult(X, Y, bookmark.weights)
     print(bookmark.weights["W1"])
     print(bookmark.weights["B1"])
     print(bookmark.weights["W2"])

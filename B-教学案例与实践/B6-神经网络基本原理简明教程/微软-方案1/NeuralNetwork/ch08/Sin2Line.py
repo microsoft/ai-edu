@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-from MiniBatch import *
+from Level3_CurveFitting import *
 
 def ReadData():
     x1 = np.random.random((1,100)) * 2 * 3.14
@@ -23,24 +23,23 @@ def ShowResult(X,dict):
     plt.show()
 
 if __name__ == '__main__':
-    loss_history = CLossHistory()
-    # SGD, MiniBatch, FullBatch
-    method = "SGD"
-
-    n_input, n_hidden, n_output = 2, 4, 1
-
+    
     X,Y = ReadData()
-    num_samples = X.shape[1]
-    train(method, X, Y, n_input, n_hidden, n_output, loss_history)
+    num_example = X.shape[1]
+    n_input, n_hidden, n_output = 2, 4, 1
+    eta, batch_size, max_epoch = 0.2, 10, 1000
+    eps = 0.001
+    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, "MSE", eps)
+    loss_history = CLossHistory()
+    train(X, Y, params, loss_history)
 
     bookmark = loss_history.GetMinimalLossData()
-    print("epoch=%d, iteration=%d, loss=%f" %(bookmark.epoch, bookmark.iteration, bookmark.loss))
-    loss_history.ShowLossHistory(method)
+    bookmark.print_info()
+    loss_history.ShowLossHistory(params)
 
     ShowResult(X, bookmark.weights)
     print(bookmark.weights["W1"])
     print(bookmark.weights["B1"])
     print(bookmark.weights["W2"])
     print(bookmark.weights["B2"])
-
 

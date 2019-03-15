@@ -8,6 +8,7 @@ import math
 from LossFunction import * 
 from Utility import *
 from Activations import *
+from GDOptimization import *
 
 x_data_name = "CurveX.dat"
 y_data_name = "CurveY.dat"
@@ -51,7 +52,7 @@ def BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights):
     dict_grads = {"dW1":dW1, "dB1":dB1, "dW2":dW2, "dB2":dB2}
     return dict_grads
 
-def UpdateWeights(dict_weights, dict_grads, learningRate):
+def UpdateWeights(dict_weights, dict_grads, dict_momentum):
     W1 = dict_weights["W1"]
     B1 = dict_weights["B1"]
     W2 = dict_weights["W2"]
@@ -62,10 +63,10 @@ def UpdateWeights(dict_weights, dict_grads, learningRate):
     dW2 = dict_grads["dW2"]
     dB2 = dict_grads["dB2"]
 
-    W1 = W1 - learningRate * dW1
-    W2 = W2 - learningRate * dW2
-    B1 = B1 - learningRate * dB1
-    B2 = B2 - learningRate * dB2
+    W1 = dict_momentum["W1"].step(W1, dW1)
+    B1 = dict_momentum["B1"].step(B1, dB1)
+    W2 = dict_momentum["W2"].step(W2, dW2)
+    B2 = dict_momentum["B2"].step(B2, dB2)
 
     dict_weights = {"W1": W1,"B1": B1,"W2": W2,"B2": B2}
 
@@ -90,6 +91,7 @@ def train(X, Y, params, loss_history):
     W1, B1 = InitialParameters(params.num_input, params.num_hidden, params.init_method)
     W2, B2 = InitialParameters(params.num_hidden, params.num_output, params.init_method)
     dict_weights = {"W1":W1, "B1":B1, "W2":W2, "B2":B2}
+    dict_momentum = {"W1":CMomentum(params.eta), "B1":CMomentum(params.eta), "W2":CMomentum(params.eta), "B2":CMomentum(params.eta)}
 
     # calculate loss to decide the stop condition
     loss = 0 
@@ -106,7 +108,7 @@ def train(X, Y, params, loss_history):
             # calculate gradient of w and b
             dict_grads = BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
             # update w,b
-            dict_weights = UpdateWeights(dict_weights, dict_grads, params.eta)
+            dict_weights = UpdateWeights(dict_weights, dict_grads, dict_momentum)
         # end for            
         # calculate loss for this batch
         loss = lossFunc.CheckLoss(X, Y, dict_weights, ForwardCalculationBatch)
@@ -126,7 +128,7 @@ if __name__ == '__main__':
     X,Y = ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
     n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.1, 10, 50000
+    eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.001
     init_method = 2
 

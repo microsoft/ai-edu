@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 
 class CParameters(object):
-    def __init__(self, n_example, n_input=1, n_output=1, n_hidden=4, eta=0.1, max_epoch=10000, batch_size=5, lossFunType="MSE", eps=0.001):
+    def __init__(self, n_example, n_input=1, n_output=1, n_hidden=4, eta=0.1, max_epoch=10000, batch_size=5, lossFunType="MSE", eps=0.001, initMethod=0):
         self.num_example = n_example
         self.num_input = n_input
         self.num_output = n_output
@@ -20,6 +20,7 @@ class CParameters(object):
         # end if
         self.loss_func_type = lossFunType
         self.eps = eps
+        self.init_method = initMethod
 
 def InitialParameters(num_input, num_output, flag):
     if flag == 0:

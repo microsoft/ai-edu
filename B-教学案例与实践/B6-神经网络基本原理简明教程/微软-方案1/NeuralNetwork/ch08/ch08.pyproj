@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Sin2Line.py</StartupFile>
+    <StartupFile>Level4_Momentum.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,6 +24,10 @@
     <Compile Include="Activations.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GDOptimization.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level4_Momentum.py" />
     <Compile Include="LossFunction.py">
       <SubType>Code</SubType>
     </Compile>
@@ -31,7 +35,8 @@
     <Compile Include="DataNormalizer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Sin2Line.py" />
+    <Compile Include="Sin2Line2D.py" />
+    <Compile Include="Sin2Line3D.py" />
     <Compile Include="Utility.py">
       <SubType>Code</SubType>
     </Compile>

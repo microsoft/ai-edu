@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-class CBookmark(object):
+class CTrace(object):
     def __init__(self, loss, weights, epoch, iteration):
         self.loss = loss
         self.weights = weights
@@ -23,12 +23,12 @@ class CLossHistory(object):
         # loss history
         self.loss_history = []
         self.min_loss_index = -1
-        self.min_bookmark = CBookmark(100000, None, -1, -1)
+        self.min_trace = CTrace(100000, None, -1, -1)
 
     def AddLossHistory(self, loss, weights, epoch, iteration):
         self.loss_history.append(loss)
-        if loss < self.min_bookmark.loss:
-            self.min_bookmark = CBookmark(loss, weights, epoch, iteration)
+        if loss < self.min_trace.loss:
+            self.min_trace = CTrace(loss, weights, epoch, iteration)
             self.minimal_loss_index = len(self.loss_history) - 1
         # end if
 
@@ -36,7 +36,7 @@ class CLossHistory(object):
     def ShowLossHistory(self, params):
         plt.plot(self.loss_history)
         title = str.format("los:{0:.5f} ep:{1} ite:{2} bz:{3} eta:{4} ne:{5}", 
-                           self.min_bookmark.loss, self.min_bookmark.epoch, self.min_bookmark.iteration, 
+                           self.min_trace.loss, self.min_trace.epoch, self.min_trace.iteration, 
                            params.batch_size, params.eta, params.num_hidden)
         plt.title(title)
         plt.xlabel("iteration")
@@ -45,7 +45,7 @@ class CLossHistory(object):
 
         # 从历史记录中获得最小损失值得训练权重值
     def GetMinimalLossData(self):
-        return self.min_bookmark
+        return self.min_trace
 
 # end class
 

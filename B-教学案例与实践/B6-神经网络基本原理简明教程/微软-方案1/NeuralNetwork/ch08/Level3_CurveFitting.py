@@ -126,7 +126,7 @@ if __name__ == '__main__':
     X,Y = ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
     n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.1, 10, 50000
+    eta, batch_size, max_epoch = 0.8, 10, 50000
     eps = 0.001
     init_method = 2
 

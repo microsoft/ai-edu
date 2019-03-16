@@ -52,7 +52,23 @@ def BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights):
     dict_grads = {"dW1":dW1, "dB1":dB1, "dW2":dW2, "dB2":dB2}
     return dict_grads
 
-def UpdateWeights(dict_weights, dict_grads, dict_momentum):
+
+def UpdateWeights_1(dict_weights, dict_nag):
+    W1 = dict_weights["W1"]
+    B1 = dict_weights["B1"]
+    W2 = dict_weights["W2"]
+    B2 = dict_weights["B2"]
+
+    W1 = dict_nag["W1"].step1(W1)
+    B1 = dict_nag["B1"].step1(B1)
+    W2 = dict_nag["W2"].step1(W2)
+    B2 = dict_nag["B2"].step1(B2)
+
+    dict_weights = {"W1": W1,"B1": B1,"W2": W2,"B2": B2}
+
+    return dict_weights
+
+def UpdateWeights_2(dict_weights, dict_grads, dict_nag):
     W1 = dict_weights["W1"]
     B1 = dict_weights["B1"]
     W2 = dict_weights["W2"]
@@ -63,10 +79,10 @@ def UpdateWeights(dict_weights, dict_grads, dict_momentum):
     dW2 = dict_grads["dW2"]
     dB2 = dict_grads["dB2"]
 
-    W1 = dict_momentum["W1"].step(W1, dW1)
-    B1 = dict_momentum["B1"].step(B1, dB1)
-    W2 = dict_momentum["W2"].step(W2, dW2)
-    B2 = dict_momentum["B2"].step(B2, dB2)
+    W1 = dict_nag["W1"].step2(W1, dW1)
+    B1 = dict_nag["B1"].step2(B1, dB1)
+    W2 = dict_nag["W2"].step2(W2, dW2)
+    B2 = dict_nag["B2"].step2(B2, dB2)
 
     dict_weights = {"W1": W1,"B1": B1,"W2": W2,"B2": B2}
 
@@ -91,7 +107,7 @@ def train(X, Y, params, loss_history):
     W1, B1 = InitialParameters(params.num_input, params.num_hidden, params.init_method)
     W2, B2 = InitialParameters(params.num_hidden, params.num_output, params.init_method)
     dict_weights = {"W1":W1, "B1":B1, "W2":W2, "B2":B2}
-    dict_momentum = {"W1":CMomentum(params.eta), "B1":CMomentum(params.eta), "W2":CMomentum(params.eta), "B2":CMomentum(params.eta)}
+    dict_nag = {"W1":CNag(params.eta), "B1":CNag(params.eta), "W2":CNag(params.eta), "B2":CNag(params.eta)}
 
     # calculate loss to decide the stop condition
     loss = 0 
@@ -103,12 +119,17 @@ def train(X, Y, params, loss_history):
         for iteration in range(max_iteration):
             # get x and y value for one sample
             batch_x, batch_y = GetBatchSamples(X,Y,params.batch_size,iteration)
+
+            # nag
+            dict_weights = UpdateWeights_1(dict_weights, dict_nag)
+
             # get z from x,y
             dict_cache = ForwardCalculationBatch(batch_x, dict_weights)
+
             # calculate gradient of w and b
             dict_grads = BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
             # update w,b
-            dict_weights = UpdateWeights(dict_weights, dict_grads, dict_momentum)
+            dict_weights = UpdateWeights_2(dict_weights, dict_grads, dict_nag)
         # end for            
         # calculate loss for this batch
         loss = lossFunc.CheckLoss(X, Y, dict_weights, ForwardCalculationBatch)

@@ -55,10 +55,12 @@ if __name__ == '__main__':
     A = CSigmoid().forward(Z)
     # for n_hidden = 2
     Z2 = np.dot(W2, A) + B2
+    Z3 = np.dot(W2, Z) + B2
 
     # source
     plt.plot(X[0,:], X[1,:], '.', c='r')
     plt.plot(Z[0,:], Z[1,:], '.', c='g')
     plt.plot(X[0,:], Z2[0,:], '.', c='b')
+    plt.plot(X[0,:], Z3[0,:], '.', c='y')
      
     plt.show()

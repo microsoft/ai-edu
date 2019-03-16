@@ -8,7 +8,7 @@ import math
 from LossFunction import * 
 from Utility import *
 from Activations import *
-from GDOptimization import *
+from GDOptimizer import *
 
 x_data_name = "CurveX.dat"
 y_data_name = "CurveY.dat"
@@ -128,7 +128,7 @@ if __name__ == '__main__':
     X,Y = ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
     n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.2, 10, 10000
+    eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.001
     init_method = 2
 

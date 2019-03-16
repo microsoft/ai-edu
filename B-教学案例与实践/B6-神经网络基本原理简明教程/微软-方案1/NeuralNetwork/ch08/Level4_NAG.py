@@ -8,7 +8,7 @@ import math
 from LossFunction import * 
 from Utility import *
 from Activations import *
-from GDOptimization import *
+from GDOptimizer import *
 
 x_data_name = "CurveX.dat"
 y_data_name = "CurveY.dat"
@@ -149,7 +149,7 @@ if __name__ == '__main__':
     X,Y = ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
     n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.2, 10, 10000
+    eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.001
     init_method = 2
 
@@ -169,3 +169,24 @@ if __name__ == '__main__':
     print(bookmark.weights["W2"])
     print(bookmark.weights["B2"])
 
+    W1 = bookmark.weights["W1"]
+    B1 = bookmark.weights["B1"]
+    W2 = bookmark.weights["W2"]
+    B2 = bookmark.weights["B2"]
+    Z1 = np.dot(W1, X) + B1
+    A1 = CSigmoid().forward(Z1)
+    # for n_hidden = 2
+    Z2 = np.dot(W2, A1) + B2
+    Z3 = np.dot(W2, Z1) + B2
+
+    # source
+    plt.plot(X[0,:], Y[0,:], '.', c='r')
+#    plt.plot(X[0,:], Z1[0,:], '.', c='g')
+#    plt.plot(X[0,:], Z1[1,:], '.', c='g')
+#    plt.plot(X[0,:], Z1[2,:], '.', c='g')
+#    plt.plot(X[0,:], Z1[3,:], '.', c='g')
+    plt.plot(X[0,:], A1[0,:], '.', c='g')
+    plt.plot(X[0,:], Z2[0,:], '.', c='b')
+#    plt.plot(X[0,:], Z3[0,:], '.', c='y')
+     
+    plt.show()

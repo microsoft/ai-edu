@@ -24,7 +24,7 @@
     <Compile Include="Activations.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GDOptimization.py">
+    <Compile Include="GDOptimizer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level4_NAG.py" />

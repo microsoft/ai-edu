@@ -21,10 +21,12 @@ class CNag(object):
         self.eta = eta
         self.gamma = 0.9
 
+    # 先用预测的梯度来更新W,b
     def step1(self, theta):
         theta = theta + self.gamma * self.vt_1
         return theta
 
+    # 再用动量法更新W,b
     def step2(self, theta, grad):
         vt = self.gamma * self.vt_1 - self.eta * grad
         theta = theta + vt

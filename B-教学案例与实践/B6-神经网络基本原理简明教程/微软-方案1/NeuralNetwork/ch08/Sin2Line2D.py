@@ -31,7 +31,7 @@ if __name__ == '__main__':
     # 0.1, 10, 50000
     # 0.01, 20, 50000
     eta, batch_size, max_epoch = 0.05, 10, 50000
-    eps = 0.00001
+    eps = 0.0001
     init_method = 2
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, "MSE", eps, init_method)
     loss_history = CLossHistory()

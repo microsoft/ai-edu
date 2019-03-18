@@ -95,9 +95,6 @@ def train(X, Y, params, loss_history):
     loss = 0 
     lossFunc = CLossFunction(params.loss_func_type)
 
-    lrs = []
-    losses = []
-
     # if num_example=200, batch_size=10, then iteration=200/10=20
     max_iteration = (int)(params.num_example / params.batch_size)
     for epoch in range(params.max_epoch):
@@ -112,17 +109,9 @@ def train(X, Y, params, loss_history):
             dict_weights = UpdateWeights(dict_weights, dict_grads, params.eta)
         # end for            
         # calculate loss for this batch
-        if epoch % 100 == 0:
-            params.eta = params.eta * 1.1
         loss = lossFunc.CheckLoss(X, Y, dict_weights, ForwardCalculationBatch)
-        print("epoch=%d, loss=%f, eta=%f" %(epoch,loss,params.eta))
-        loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)     
-        
-        lrs.append(params.eta)
-        losses.append(loss)
-
-        if params.eta >= 1:
-            break
+        print("epoch=%d, loss=%f" %(epoch,loss))
+        loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)            
         if math.isnan(loss):
             break
         # end if
@@ -130,10 +119,6 @@ def train(X, Y, params, loss_history):
             break
         # end if
     # end for
-    
-    plt.plot(np.log10(lrs), losses)
-    plt.show()
-
     return dict_weights
 
 if __name__ == '__main__':
@@ -141,10 +126,9 @@ if __name__ == '__main__':
     X,Y = ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
     n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.0001, 10, 50000
+    eta, batch_size, max_epoch = 0.1, 10, 50000
     eps = 0.001
     init_method = 2
-
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, "MSE", eps, init_method)
 
@@ -154,11 +138,11 @@ if __name__ == '__main__':
 
     bookmark = loss_history.GetMinimalLossData()
     bookmark.print_info()
-
-
     loss_history.ShowLossHistory(params)
 
     ShowResult(X, Y, bookmark.weights)
-
-
+    print(bookmark.weights["W1"])
+    print(bookmark.weights["B1"])
+    print(bookmark.weights["W2"])
+    print(bookmark.weights["B2"])
 

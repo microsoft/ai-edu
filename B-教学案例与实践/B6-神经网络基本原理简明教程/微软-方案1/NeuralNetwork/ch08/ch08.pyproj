@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_NAG.py</StartupFile>
+    <StartupFile>Sin2Line2D.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

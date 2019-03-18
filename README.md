@@ -38,7 +38,7 @@
 - 内容：人工智能学习中的常见问题及微软团队或者共建者的回答。
 - 适用人群：一线教学教师及有意进行人工智能应用开发的学习者。
 
-<font size=3>[E:等你来战](./E-等你来战/README.md) </font>
+<font size=3>[E:等你来战](./E-Challenge/README.md) </font>
 - 内容：人工智能相关课程的作业以及人工智能应用开发中需要共建者贡献代码解决的问题与挑战。
 - 适用人群：
   - 发布者：人工智能教学者，可发布作业及习题；人工智能应用开发者、学习者，可发布需要应战者贡献代码解决的问题。
@@ -80,7 +80,8 @@
   
 - [D:答疑与交流](./D-答疑与交流)
   
-- [E:等你来战](./E-等你来战)
-  - [挑战黄金点](./E-等你来战/README.md#挑战黄金点)
-
+- [E:等你来战](./E-Challenge)
+  - [挑战黄金点](./E-Challenge/GoldenNumberGame)
+  - [北京航空航天大学2019春季](./E-Challenge/BeihangUniversity2019Spring)
+  - [山东大学2019春季](./E-Challenge/ShandongUniversity2019Spring)
 

@@ -9,10 +9,6 @@ from LossFunction import *
 from Utility import *
 from Activations import *
 
-x_data_name = "CurveX.dat"
-y_data_name = "CurveY.dat"
-
-
 def ForwardCalculationBatch(batch_x, dict_weights):
     W1 = dict_weights["W1"]
     B1 = dict_weights["B1"]
@@ -120,29 +116,3 @@ def train(X, Y, params, loss_history):
         # end if
     # end for
     return dict_weights
-
-if __name__ == '__main__':
-
-    X,Y = ReadData(x_data_name, y_data_name)
-    num_example = X.shape[1]
-    n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.8, 10, 50000
-    eps = 0.001
-    init_method = 2
-
-    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, "MSE", eps, init_method)
-
-    # SGD, MiniBatch, FullBatch
-    loss_history = CLossHistory()
-    dict_weights = train(X, Y, params, loss_history)
-
-    bookmark = loss_history.GetMinimalLossData()
-    bookmark.print_info()
-    loss_history.ShowLossHistory(params)
-
-    ShowResult(X, Y, bookmark.weights)
-    print(bookmark.weights["W1"])
-    print(bookmark.weights["B1"])
-    print(bookmark.weights["W2"])
-    print(bookmark.weights["B2"])
-

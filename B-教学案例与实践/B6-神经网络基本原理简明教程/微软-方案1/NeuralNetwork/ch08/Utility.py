@@ -22,14 +22,25 @@ class CParameters(object):
         self.eps = eps
         self.init_method = initMethod
 
-def InitialParameters(num_input, num_output, flag):
-    if flag == 0:
+def InitialParameters(num_input, num_output, method, loadExist=False):
+
+    if loadExist == True:
+        dict_exist = np.load("weights_bias.npy")
+        # assume there have W1,W2,B1,B2 in this dictionary
+        W1 = dict_exist["W1"]
+        W2 = dict_exist["W2"]
+        B1 = dict_exist["B1"]
+        B2 = dict_exist["B2"]
+
+    # end if
+
+    if method == 0:
         # zero
         W = np.zeros((num_output, num_input))
-    elif flag == 1:
+    elif method == 1:
         # normalize
         W = np.random.normal(size=(num_output, num_input))
-    elif flag == 2:
+    elif method == 2:
         # xavier
         W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
                               np.sqrt(6/(num_output+num_input)),
@@ -38,24 +49,4 @@ def InitialParameters(num_input, num_output, flag):
     B = np.zeros((num_output, 1))
     return W, B
 
-
-# 获得批样本数据
-def GetBatchSamples(X,Y,batch_size,iteration):
-    num_feature = X.shape[0]
-    start = iteration * batch_size
-    end = start + batch_size
-    batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
-    batch_Y = Y[:, start:end].reshape(-1, batch_size)
-    return batch_X, batch_Y
-
-
-def ReadData(x_data_name, y_data_name):
-    Xfile = Path(x_data_name)
-    Yfile = Path(y_data_name)
-    if Xfile.exists() & Yfile.exists():
-        XRawData = np.load(Xfile)
-        YRawData = np.load(Yfile)
-        return XRawData,YRawData
-    # end if
-    return None,None
 

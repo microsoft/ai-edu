@@ -16,7 +16,7 @@ def NormalizePredicateData(X_raw, X_norm):
     return X_new
 
 # try to give the answer for the price of west(2)，5th ring(5)，93m2
-def PredicateTest(W, B, X_norm):
+def Inference(W, B, X_norm):
     xt = np.array([2,5,93]).reshape(3,1)
     xt_new = NormalizePredicateData(xt, X_norm)
     z = ForwardCalculationBatch(W, B, xt_new)
@@ -31,5 +31,5 @@ if __name__ == '__main__':
     raw_X, Y = ReadData()
     X,X_norm = NormalizeData(raw_X)
     w, b = train(method,X,Y)
-    z = PredicateTest(w,b,X_norm)
+    z = Inference(w,b,X_norm)
     print("z=", z)

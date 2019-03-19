@@ -112,7 +112,7 @@ def train(X, Y, params, loss_history):
             dict_weights = UpdateWeights(dict_weights, dict_grads, params.eta)
         # end for            
         # calculate loss for this batch
-        if epoch % 100 == 0:
+        if epoch % 50 == 0:
             params.eta = params.eta * 1.1
         loss = lossFunc.CheckLoss(X, Y, dict_weights, ForwardCalculationBatch)
         print("epoch=%d, loss=%f, eta=%f" %(epoch,loss,params.eta))
@@ -132,16 +132,19 @@ def train(X, Y, params, loss_history):
     # end for
     
     plt.plot(np.log10(lrs), losses)
+    plt.axis([-4.0,0,0,0.04])
     plt.show()
 
     return dict_weights
+
+
 
 if __name__ == '__main__':
 
     X,Y = ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
     n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.0001, 10, 50000
+    eta, batch_size, max_epoch = 0.001, 10, 50000
     eps = 0.001
     init_method = 2
 

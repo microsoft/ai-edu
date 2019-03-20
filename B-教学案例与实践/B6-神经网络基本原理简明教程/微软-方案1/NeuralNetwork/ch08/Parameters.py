@@ -22,18 +22,7 @@ class CParameters(object):
         self.eps = eps
         self.init_method = initMethod
 
-def InitialParameters(num_input, num_output, method, loadExist=False):
-
-    if loadExist == True:
-        dict_exist = np.load("weights_bias.npy")
-        # assume there have W1,W2,B1,B2 in this dictionary
-        W1 = dict_exist["W1"]
-        W2 = dict_exist["W2"]
-        B1 = dict_exist["B1"]
-        B2 = dict_exist["B2"]
-
-    # end if
-
+def InitialParameters(num_input, num_output, method):
     if method == 0:
         # zero
         W = np.zeros((num_output, num_input))

@@ -6,12 +6,13 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
-from Utility import *
+from Parameters import *
 from Activations import *
+from LearningRateSearcher import *
+from DataNormalizer import *
 
 x_data_name = "CurveX.dat"
 y_data_name = "CurveY.dat"
-
 
 def ForwardCalculationBatch(batch_x, dict_weights):
     W1 = dict_weights["W1"]
@@ -81,7 +82,7 @@ def ShowResult(X, Y, dict_weights):
     plt.plot(TX, TY, 'x', c='r')
     plt.show()
 
-def train(X, Y, params, loss_history):
+def train(X, Y, params, loss_history, lr_searcher):
     num_example = X.shape[1]
     num_feature = X.shape[0]
     num_category = Y.shape[0]
@@ -95,8 +96,7 @@ def train(X, Y, params, loss_history):
     loss = 0 
     lossFunc = CLossFunction(params.loss_func_type)
 
-    lrs = []
-    losses = []
+    lr, loop = lr_searcher.getNextLearningRate()
 
     # if num_example=200, batch_size=10, then iteration=200/10=20
     max_iteration = (int)(params.num_example / params.batch_size)
@@ -109,17 +109,16 @@ def train(X, Y, params, loss_history):
             # calculate gradient of w and b
             dict_grads = BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
             # update w,b
-            dict_weights = UpdateWeights(dict_weights, dict_grads, params.eta)
+            dict_weights = UpdateWeights(dict_weights, dict_grads, lr)
         # end for            
         # calculate loss for this batch
-        if epoch % 100 == 0:
-            params.eta = params.eta * 1.1
+        if epoch % loop == 0:
+            lr, loop = lr_searcher.getNextLearningRate()
         loss = lossFunc.CheckLoss(X, Y, dict_weights, ForwardCalculationBatch)
         print("epoch=%d, loss=%f, eta=%f" %(epoch,loss,params.eta))
         loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)     
         
-        lrs.append(params.eta)
-        losses.append(loss)
+        lr_searcher.addHistory(loss, lr)
 
         if params.eta >= 1:
             break
@@ -144,13 +143,22 @@ if __name__ == '__main__':
     eta, batch_size, max_epoch = 0.0001, 10, 50000
     eps = 0.001
     init_method = 2
+    lr_Searcher = CLearningRateSearcher()
+    looper = CLooper(0.0001,0.0001,100)
+    lr_Searcher.addLooper(looper)
+    looper = CLooper(0.001,0.001,100)
+    lr_Searcher.addLooper(looper)
+    looper = CLooper(0.01,0.01,100)
+    lr_Searcher.addLooper(looper)
+    looper = CLooper(0.1,0.1,100)
+    lr_Searcher.addLooper(looper)
 
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, "MSE", eps, init_method)
 
     # SGD, MiniBatch, FullBatch
     loss_history = CLossHistory()
-    dict_weights = train(X, Y, params, loss_history)
+    dict_weights = train(X, Y, params, loss_history, lr_Searcher)
 
     bookmark = loss_history.GetMinimalLossData()
     bookmark.print_info()

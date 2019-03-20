@@ -2,6 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
+from pathlib import Path
 
 class DataNormalizer(object):
     def __init__(self, method):
@@ -49,7 +50,6 @@ def GetBatchSamples(X,Y,batch_size,iteration):
     batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
     batch_Y = Y[:, start:end].reshape(-1, batch_size)
     return batch_X, batch_Y
-
 
 def ReadData(x_data_name, y_data_name):
     Xfile = Path(x_data_name)

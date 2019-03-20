@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-class DataNormalizer(object):
+class DataOperator(object):
     def __init__(self, method):
         assert(method == "min_max")
         self.method = method
@@ -42,22 +42,24 @@ class DataNormalizer(object):
             X_new[i,:] = (x-self.X_norm[0,i])/self.X_norm[1,i]
         return X_new
 
-# 获得批样本数据
-def GetBatchSamples(X,Y,batch_size,iteration):
-    num_feature = X.shape[0]
-    start = iteration * batch_size
-    end = start + batch_size
-    batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
-    batch_Y = Y[:, start:end].reshape(-1, batch_size)
-    return batch_X, batch_Y
+    @staticmethod
+    # read data from file
+    def ReadData(x_data_name, y_data_name):
+        Xfile = Path(x_data_name)
+        Yfile = Path(y_data_name)
+        if Xfile.exists() and Yfile.exists():
+            XRawData = np.load(Xfile)
+            YRawData = np.load(Yfile)
+            return XRawData,YRawData
+        # end if
+        return None,None
 
-def ReadData(x_data_name, y_data_name):
-    Xfile = Path(x_data_name)
-    Yfile = Path(y_data_name)
-    if Xfile.exists() & Yfile.exists():
-        XRawData = np.load(Xfile)
-        YRawData = np.load(Yfile)
-        return XRawData,YRawData
-    # end if
-    return None,None
-
+    @staticmethod
+    # 获得批样本数据
+    def GetBatchSamples(X,Y,batch_size,iteration):
+        num_feature = X.shape[0]
+        start = iteration * batch_size
+        end = start + batch_size
+        batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
+        batch_Y = Y[:, start:end].reshape(-1, batch_size)
+        return batch_X, batch_Y

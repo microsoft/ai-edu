@@ -46,6 +46,14 @@ class CLearningRateSearcher(object):
         self.learningRates.extend(lrs)
         self.loopCount.extend(loops)
 
+    def getFirstLearningRate(self):
+        self.searchIndex = 0
+        lr = self.learningRates[self.searchIndex]
+        loop = self.loopCount[self.searchIndex]
+        self.searchIndex = self.searchIndex + 1
+        return lr, loop
+
+
     def getNextLearningRate(self):
         if self.searchIndex == -1 or self.searchIndex >= len(self.learningRates):
             return None,None
@@ -59,6 +67,9 @@ class CLearningRateSearcher(object):
     def addHistory(self, loss, lr):
         self.loss_history.append(loss)
         self.lr_history.append(lr)
+
+    def getLrLossHistory(self):
+        return self.lr_history, self.loss_history
 
 # unit test
 if __name__ == '__main__':

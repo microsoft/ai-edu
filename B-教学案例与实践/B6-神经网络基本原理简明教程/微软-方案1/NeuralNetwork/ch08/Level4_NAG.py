@@ -6,7 +6,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
-from Utility import *
+from Parameters import *
 from Activations import *
 from GDOptimizer import *
 

@@ -28,8 +28,8 @@ if __name__ == '__main__':
 
     X,Y = DataOperator.ReadData(x_data_name, y_data_name)
     num_example = X.shape[1]
-    n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.1, 10, 50000
+    n_input, n_hidden, n_output = 1, 10, 1
+    eta, batch_size, max_epoch = 0.5, 5, 50000
     eps = 0.001
     init_method = InitialMethod.xavier
 
@@ -45,8 +45,5 @@ if __name__ == '__main__':
     loss_history.ShowLossHistory(params)
 
     ShowResult(net, X, Y, bookmark.weights)
-    print(bookmark.weights["W1"])
-    print(bookmark.weights["B1"])
-    print(bookmark.weights["W2"])
-    print(bookmark.weights["B2"])
+
 

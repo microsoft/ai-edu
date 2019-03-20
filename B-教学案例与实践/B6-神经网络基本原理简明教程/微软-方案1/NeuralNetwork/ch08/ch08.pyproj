@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_CurveFitting.py</StartupFile>
+    <StartupFile>Level3_TuneParams.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,6 +31,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level1_TwoLayer.py" />
+    <Compile Include="Level3_TuneParams.py" />
     <Compile Include="Level5_FindLearningRate.py" />
     <Compile Include="Level4_NAG.py" />
     <Compile Include="Level5_Decay.py" />

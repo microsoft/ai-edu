@@ -24,7 +24,7 @@ class CTwoLayerNet(object):
         Z2 = np.dot(W2, A1) + B2
         A2 = Z2
         # keep cache for backward
-        dict_cache ={"A1": A1, "A2": A2, "Output": A2}
+        dict_cache ={"Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
         return dict_cache
 
     def BackPropagationBatch(self, batch_x, batch_y, dict_cache, dict_weights):

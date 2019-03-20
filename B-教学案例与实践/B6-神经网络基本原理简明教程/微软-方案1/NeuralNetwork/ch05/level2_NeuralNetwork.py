@@ -85,7 +85,7 @@ def InitialWeights(num_input, num_output, flag):
     return W,B
 
 # 初始化参数
-def InitializeHyperParameters(method):
+def InitializeHyperParameters(method, num_example):
     if method=="SGD":
         eta = 0.1
         max_epoch = 50
@@ -97,7 +97,7 @@ def InitializeHyperParameters(method):
     elif method=="FullBatch":
         eta = 0.5
         max_epoch = 100
-        batch_size = 200
+        batch_size = num_example
     return eta, max_epoch, batch_size
 
 # 从历史记录中获得最小损失值得训练权重值
@@ -114,24 +114,24 @@ def ShowLossHistory(dict_loss, method):
         loss.append(key)
 
     #plt.plot(loss)
-    plt.plot(loss[30:800])
+    plt.plot(loss[30:1000])
     plt.title(method)
     plt.xlabel("epoch")
     plt.ylabel("loss")
     plt.show()
 
 def train(method,X,Y):
+    # count of samples
+    num_example = X.shape[1]
+    num_feature = X.shape[0]
     # hyper parameters
-    eta, max_epoch,batch_size = InitializeHyperParameters(method)
+    eta, max_epoch,batch_size = InitializeHyperParameters(method, num_example)
     # W size is 3x1, B is 1x1
     W, B = InitialWeights(3,1,2)
     # calculate loss to decide the stop condition
     loss = 5
     error = 1e-5
     dict_loss = {}
-    # count of samples
-    num_example = X.shape[1]
-    num_feature = X.shape[0]
 
     # if num_example=200, batch_size=10, then iteration=200/10=20
     max_iteration = (int)(num_example / batch_size)

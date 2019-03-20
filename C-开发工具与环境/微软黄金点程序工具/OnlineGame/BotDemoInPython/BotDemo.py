@@ -7,6 +7,7 @@ from pyswagger.contrib.client.requests import Client
 
 import random
 import time
+import argparse
 
 def GeneratePredictionNumbers(goldenNumberList, numberCount):
     number1 = 0.0
@@ -26,34 +27,50 @@ def GeneratePredictionNumbers(goldenNumberList, numberCount):
     return number1, number2
 
 
-def main():
+def main(roomId):
     host = 'https://goldennumber.aiedu.msra.cn/'
     jsonpath = '/swagger/v1/swagger.json'
 
     app = App._create_(host + jsonpath)
     client = Client()
 
-    roomId = input("Input room id: ")
+    if not roomId:
+        # Input the roomid if there is no roomid in args
+        roomId = input("Input room id: ")
+        try:
+            roomId = int(roomId)
+        except:
+            roomId = 0
+            print('Parse room id failed, default join in to room 0')
+
+    userInfoFile = "userinfo.txt"
+    userId = None
+    nickName = None
     try:
-        roomId = int(roomId)
+        # Use an exist player
+        with open(userInfoFile) as f:
+            userId, nickName = f.read().split(',')[:2]
+        print('Use an exist player: ' + nickName + '  Id: ' + userId)
     except:
-        roomId = 0
-        print('Parse room id failed, default join in to room 0')
+        # Create a new player
+        userResp = client.request(
+            app.op['NewUser'](
+                nickName='AI Player ' + str(random.randint(0, 9999))
+            ))
+        assert userResp.status == 200
+        user = userResp.data
+        userId = user.userId
+        nickName = user.nickName
+        print('Create a new player: ' + nickName + '  Id: ' + userId)
 
-    userResp = client.request(
-        app.op['Default_NewUser'](
-            nickName='AI Player ' + str(random.randint(0, 9999))
-        ))
-    assert userResp.status == 200
-    user = userResp.data
-    userId = user.userId
+        with open(userInfoFile, "w") as f:
+            f.write("%s,%s" % (userId, nickName))
 
-    print('Player: ' + user.nickName + '  Id: ' + userId)
     print('Room id: ' + str(roomId))
 
     while True:
         stateResp = client.request(
-            app.op['Default_GetState'](
+            app.op['State'](
                 uid=userId,
                 roomid=roomId
             ))
@@ -78,10 +95,10 @@ def main():
                 time.sleep(1)
             continue
 
-        print('This is round ' + str(state.finishedRoundCount + 1))
+        print('\r\nThis is round ' + str(state.finishedRoundCount + 1))
 
         todayGoldenListResp = client.request(
-            app.op['Default_GetTodayGoldenList'](
+            app.op['TodayGoldenList'](
                 roomid=roomId
             ))
         assert todayGoldenListResp.status == 200
@@ -93,7 +110,7 @@ def main():
 
         if (state.numbers == 2):
             submitRsp = client.request(
-                app.op['Default_Submit'](
+                app.op['Submit'](
                     uid=userId,
                     rid=state.roundId,
                     n1=str(number1),
@@ -106,7 +123,7 @@ def main():
 
         else:
             submitRsp = client.request(
-                app.op['Default_Submit'](
+                app.op['Submit'](
                     uid=userId,
                     rid=state.roundId,
                     n1=str(number1)
@@ -118,4 +135,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--room', type=int, help='Room ID', required=False)
+    args = parser.parse_args()
+
+    main(args.room)

@@ -23,7 +23,7 @@ def PredicateTest(W, B, X_norm, Y_norm):
 if __name__ == '__main__':
     # hyper parameters
     # SGD, MiniBatch, FullBatch
-    method = "SGD"
+    method = "MiniBatch"
     # read data
     raw_X, raw_Y = ReadData()
     X, X_norm, Y, Y_norm = NormalizeXYData(raw_X, raw_Y)

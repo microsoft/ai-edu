@@ -114,7 +114,8 @@ def ShowLossHistory(dict_loss, method):
         loss.append(key)
 
     #plt.plot(loss)
-    plt.plot(loss[30:1000])
+    plt.plot(loss[30:])
+
     plt.title(method)
     plt.xlabel("epoch")
     plt.ylabel("loss")

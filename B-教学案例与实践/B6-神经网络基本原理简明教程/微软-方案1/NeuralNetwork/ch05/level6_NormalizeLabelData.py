@@ -12,21 +12,25 @@ def NormalizeXYData(XData, YData):
     return X, X_norm, Y, Y_norm
 
 # try to give the answer for the price of west(2)，5th ring(5)，93m2
-def PredicateTest(W, B, X_norm, Y_norm):
+def Inference(W, B, X_norm, Y_norm):
     xt = np.array([2,5,93]).reshape(3,1)
     xt_new = NormalizePredicateData(xt, X_norm)
     z = ForwardCalculationBatch(W, B, xt_new)
+    # 根据公式2
     zz = z * Y_norm[1,0] + Y_norm[0,0]
-    return zz
+    return z, zz
 
 # main
 if __name__ == '__main__':
     # hyper parameters
     # SGD, MiniBatch, FullBatch
-    method = "MiniBatch"
+
+    method = "SGD"
+
     # read data
     raw_X, raw_Y = ReadData()
     X, X_norm, Y, Y_norm = NormalizeXYData(raw_X, raw_Y)
     w, b = train(method, X, Y)
-    z = PredicateTest(w, b, X_norm, Y_norm)
+    z,zz = Inference(w, b, X_norm, Y_norm)
     print("z=", z)
+    print("zz=", zz)

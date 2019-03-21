@@ -38,13 +38,13 @@ class CFindLearningRate(CTwoLayerNet):
                 # get x and y value for one sample
                 batch_x, batch_y = DataOperator.GetBatchSamples(X,Y,params.batch_size,iteration)
                 # get z from x,y
-                dict_cache = ForwardCalculationBatch(batch_x, dict_weights)
+                dict_cache = self.ForwardCalculationBatch(batch_x, dict_weights)
                 # calculate gradient of w and b
-                dict_grads = BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
+                dict_grads = self.BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
                 # update w,b
-                dict_weights = UpdateWeights(dict_weights, dict_grads, lr)
+                dict_weights = self.UpdateWeights(dict_weights, dict_grads, lr)
             # end for            
-            loss = lossFunc.CheckLoss(X, Y, dict_weights, ForwardCalculationBatch)
+            loss = lossFunc.CheckLoss(X, Y, dict_weights, self.ForwardCalculationBatch)
             print("epoch=%d, loss=%f, eta=%f" %(epoch,loss,lr))
             loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)     
 
@@ -54,10 +54,10 @@ class CFindLearningRate(CTwoLayerNet):
         
             lr_searcher.addHistory(loss, lr)
 
-            if lr >= 1:
+            if lr == None:
                 break
-            if math.isnan(loss):
-                break
+#            if math.isnan(loss):
+#                break
             # end if
         # end for
         return dict_weights
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     lr_Searcher.addLooper(looper)
     looper = CLooper(0.01,0.01,100)
     lr_Searcher.addLooper(looper)
-    looper = CLooper(0.8,0.001,100)
+    looper = CLooper(0.1,0.1,100)
     lr_Searcher.addLooper(looper)
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.MSE, eps, init_method)

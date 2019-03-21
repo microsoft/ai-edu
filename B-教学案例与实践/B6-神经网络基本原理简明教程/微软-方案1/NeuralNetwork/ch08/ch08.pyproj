@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_TuneParams.py</StartupFile>
+    <StartupFile>Level4_FindLearningRate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -32,10 +32,9 @@
     </Compile>
     <Compile Include="Level1_TwoLayer.py" />
     <Compile Include="Level3_TuneParams.py" />
-    <Compile Include="Level5_FindLearningRate.py" />
-    <Compile Include="Level4_NAG.py" />
-    <Compile Include="Level5_Decay.py" />
-    <Compile Include="Level3_Momentum.py" />
+    <Compile Include="Level4_FindLearningRate.py" />
+    <Compile Include="Level6_NAG.py" />
+    <Compile Include="Level5_Momentum.py" />
     <Compile Include="LossFunction.py">
       <SubType>Code</SubType>
     </Compile>

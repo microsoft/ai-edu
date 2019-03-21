@@ -7,9 +7,12 @@ import numpy as np
 class CLooper(object):
     # e.g. (0.01, 0.005, 100) means start from 0.01, every 100 iteration will add 0.005 until 0.01*10 (=0.1)
     # in another word: 0.01,0.015,0.02,0.025,...0.09,0.095,0.1 (stop)
-    def __init__(self, start, step, loop):
+    def __init__(self, start, step, loop, stop=-1):
         self.start = start
-        self.stop = start * 10
+        if stop == -1:
+            self.stop = start * 10
+        else:
+            self.stop = stop
         self.step = step
         self.loop = loop
 

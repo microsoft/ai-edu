@@ -15,7 +15,7 @@ from Level1_TwoLayer import *
 x_data_name = "CurveX.dat"
 y_data_name = "CurveY.dat"
 
-class CFindLearningRate(CTwoLayerNet):
+class CBestLRSearcher(CTwoLayerNet):
     def train(self, X, Y, params, loss_history, lr_searcher):
         num_example = X.shape[1]
         num_feature = X.shape[0]
@@ -48,12 +48,10 @@ class CFindLearningRate(CTwoLayerNet):
             print("epoch=%d, loss=%f, eta=%f" %(epoch,loss,lr))
             loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)     
 
+            lr_searcher.addHistory(loss, lr)
             if (epoch+1) % loop == 0:   # avoid when epoch==0
                 lr, loop = lr_searcher.getNextLearningRate()
             # end if
-        
-            lr_searcher.addHistory(loss, lr)
-
             if lr == None:
                 break
 #            if math.isnan(loss):
@@ -73,20 +71,29 @@ if __name__ == '__main__':
     eps = 0.001
     init_method = InitialMethod.xavier
     lr_Searcher = CLearningRateSearcher()
-    looper = CLooper(0.0001,0.0001,100)
+    # try 1    
+    looper = CLooper(0.0001,0.0001,10)
     lr_Searcher.addLooper(looper)
-    looper = CLooper(0.001,0.001,100)
+    looper = CLooper(0.001,0.001,10)
     lr_Searcher.addLooper(looper)
-    looper = CLooper(0.01,0.01,100)
+    looper = CLooper(0.01,0.01,10)
     lr_Searcher.addLooper(looper)
     looper = CLooper(0.1,0.1,100)
     lr_Searcher.addLooper(looper)
+    # try 2
+    #looper = CLooper(0.1,0.1,100)
+    #lr_Searcher.addLooper(looper)
+    #looper = CLooper(1.0,0.01,100,1.1)
+    #lr_Searcher.addLooper(looper)
+    # try 3
+    #looper = CLooper(0.63,0.01,200,1.1)
+    #lr_Searcher.addLooper(looper)
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.MSE, eps, init_method)
 
     # SGD, MiniBatch, FullBatch
     loss_history = CLossHistory()
-    net = CFindLearningRate()
+    net = CBestLRSearcher()
     dict_weights = net.train(X, Y, params, loss_history, lr_Searcher)
 
     lrs, losses = lr_Searcher.getLrLossHistory()

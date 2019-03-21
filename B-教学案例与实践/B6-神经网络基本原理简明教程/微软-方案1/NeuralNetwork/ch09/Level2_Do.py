@@ -11,8 +11,8 @@ from Activations import *
 from Level1_TwoLayer import *
 from DataOperator import * 
 
-x_data_name = "X3.dat"
-y_data_name = "Y3.dat"
+x_data_name = "X3.npy"
+y_data_name = "Y3.npy"
 
 if __name__ == '__main__':
 
@@ -26,8 +26,8 @@ if __name__ == '__main__':
     num_feature = X.shape[0]
     
     n_input, n_hidden, n_output = num_feature, 4, num_category
-    eta, batch_size, max_epoch = 0.1, 1, 1000
-    eps = 0.001
+    eta, batch_size, max_epoch = 0.2, 10, 20000
+    eps = 0.05
     init_method = InitialMethod.xavier
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.CrossEntropy3, eps, init_method)

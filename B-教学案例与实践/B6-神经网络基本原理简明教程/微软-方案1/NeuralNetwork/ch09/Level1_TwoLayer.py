@@ -122,11 +122,11 @@ class CTwoLayerNet(object):
                 output = dict_cache["Output"]
                 r = np.argmax(output, axis=0)
                 if r == 0:
-                    plt.plot(x[0,0], x[1,0], 's', c='r')
+                    plt.plot(x[0,0], x[1,0], 's', c='y')
                 elif r == 1:
-                    plt.plot(x[0,0], x[1,0], 's', c='g')
+                    plt.plot(x[0,0], x[1,0], 's', c='m')
                 elif r == 2:
-                    plt.plot(x[0,0], x[1,0], 's', c='b')
+                    plt.plot(x[0,0], x[1,0], 's', c='w')
                 # end if
             # end for
         # end for

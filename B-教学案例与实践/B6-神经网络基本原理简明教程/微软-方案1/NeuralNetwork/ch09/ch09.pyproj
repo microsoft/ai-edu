@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_Do.py</StartupFile>
+    <StartupFile>Level5_Momentum.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,8 +23,12 @@
   <ItemGroup>
     <Compile Include="Activations.py" />
     <Compile Include="DataOperator.py" />
+    <Compile Include="LearningRateSearcher.py" />
     <Compile Include="Level2_Do.py" />
     <Compile Include="Level1_TwoLayer.py" />
+    <Compile Include="Level4_BestLRSearcher.py" />
+    <Compile Include="Level5_Momentum.py" />
+    <Compile Include="Level6_NAG.py" />
     <Compile Include="LossFunction.py" />
     <Compile Include="Parameters.py" />
   </ItemGroup>

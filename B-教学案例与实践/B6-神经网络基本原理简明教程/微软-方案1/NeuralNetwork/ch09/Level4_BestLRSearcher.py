@@ -8,82 +8,12 @@ import math
 from LossFunction import * 
 from Parameters import *
 from Activations import *
+from LearningRateSearcher import *
 from DataOperator import *
 from Level1_TwoLayer import *
 
-x_data_name = "CurveX.dat"
-y_data_name = "CurveY.dat"
-
-class CLooper(object):
-    # e.g. (0.01, 0.005, 100) means start from 0.01, every 100 iteration will add 0.005 until 0.01*10 (=0.1)
-    # in another word: 0.01,0.015,0.02,0.025,...0.09,0.095,0.1 (stop)
-    def __init__(self, start, step, loop, stop=-1):
-        self.start = start
-        if stop == -1:
-            self.stop = start * 10
-        else:
-            self.stop = stop
-        self.step = step
-        self.loop = loop
-
-    # 把Looper展开成两个一维数组,后面便于计算
-    def to_array(self):
-        lrs = []
-        loops = []
-        i = 0
-        while(True):
-            lr = self.start + i * self.step
-            if lr > self.stop:
-                break
-            else:
-                lrs.append(lr)
-                loops.append(self.loop)
-                i = i + 1
-            # end if
-        #end while
-        return lrs, loops
-
-class CLearningRateSearcher(object):
-    def __init__(self):
-        self.learningRates = []
-        self.loopCount = []
-        self.searchIndex = -1
-        
-        # 记录训练过程中当前的lr对应的loss值
-        self.loss_history = []
-        self.lr_history = []
-
-    def addLooper(self,looper):
-        self.searchIndex = 0
-        lrs, loops = looper.to_array()
-        self.learningRates.extend(lrs)
-        self.loopCount.extend(loops)
-
-    def getFirstLearningRate(self):
-        self.searchIndex = 0
-        lr = self.learningRates[self.searchIndex]
-        loop = self.loopCount[self.searchIndex]
-        self.searchIndex = self.searchIndex + 1
-        return lr, loop
-
-
-    def getNextLearningRate(self):
-        if self.searchIndex == -1 or self.searchIndex >= len(self.learningRates):
-            return None,None
-        #end if
-        
-        lr = self.learningRates[self.searchIndex]
-        loop = self.loopCount[self.searchIndex]
-        self.searchIndex = self.searchIndex + 1
-        return lr, loop
-
-    def addHistory(self, loss, lr):
-        self.loss_history.append(loss)
-        self.lr_history.append(lr)
-
-    def getLrLossHistory(self):
-        return self.lr_history, self.loss_history
-
+x_data_name = "X3.npy"
+y_data_name = "Y3.npy"
 
 class CBestLRSearcher(CTwoLayerNet):
     def train(self, X, Y, params, loss_history, lr_searcher):
@@ -134,34 +64,41 @@ class CBestLRSearcher(CTwoLayerNet):
 
 if __name__ == '__main__':
 
-    X,Y = DataOperator.ReadData(x_data_name, y_data_name)
+
+    XData,YData = DataOperator.ReadData(x_data_name, y_data_name)
+    norm = DataOperator("min_max")
+    X = norm.NormalizeData(XData)
+    num_category = 3
+    Y = DataOperator.ToOneHot(YData, num_category)
+
     num_example = X.shape[1]
-    n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.0001, 10, 50000
+    num_feature = X.shape[0]
+    
+    n_input, n_hidden, n_output = num_feature, 4, num_category
+    eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.001
     init_method = InitialMethod.xavier
     lr_Searcher = CLearningRateSearcher()
     # try 1    
-    looper = CLooper(0.0001,0.0001,10)
-    lr_Searcher.addLooper(looper)
-    looper = CLooper(0.001,0.001,10)
-    lr_Searcher.addLooper(looper)
-    looper = CLooper(0.01,0.01,10)
-    lr_Searcher.addLooper(looper)
-    looper = CLooper(0.1,0.1,100)
-    lr_Searcher.addLooper(looper)
+    #looper = CLooper(0.0001,0.0001,10)
+    #lr_Searcher.addLooper(looper)
+    #looper = CLooper(0.001,0.001,10)
+    #lr_Searcher.addLooper(looper)
+    #looper = CLooper(0.01,0.01,10)
+    #lr_Searcher.addLooper(looper)
+    #looper = CLooper(0.1,0.1,100)
+    #lr_Searcher.addLooper(looper)
     # try 2
     #looper = CLooper(0.1,0.1,100)
     #lr_Searcher.addLooper(looper)
     #looper = CLooper(1.0,0.01,100,1.1)
     #lr_Searcher.addLooper(looper)
     # try 3
-    #looper = CLooper(0.63,0.01,200,1.1)
-    #lr_Searcher.addLooper(looper)
+    looper = CLooper(0.33,0.01,200,1.1)
+    lr_Searcher.addLooper(looper)
 
-    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.MSE, eps, init_method)
+    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.CrossEntropy3, eps, init_method)
 
-    # SGD, MiniBatch, FullBatch
     loss_history = CLossHistory()
     net = CBestLRSearcher()
     dict_weights = net.train(X, Y, params, loss_history, lr_Searcher)
@@ -169,6 +106,8 @@ if __name__ == '__main__':
     lrs, losses = lr_Searcher.getLrLossHistory()
     plt.plot(np.log10(lrs), losses)
     plt.show()
+
+
 
 
 

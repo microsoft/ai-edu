@@ -110,4 +110,16 @@ class CTwoLayerNet(object):
         # end for
         return dict_weights
     # end def
+
+    def ShowResult(self, X, Y, dict_weights):
+        # draw train data
+        plt.plot(X[0,:], Y[0,:], '.', c='b')
+        # create and draw visualized validation data
+        TX = np.linspace(0,1,100).reshape(1,100)
+        dict_cache = self.ForwardCalculationBatch(TX, dict_weights)
+        TY = dict_cache["Output"]
+        plt.plot(TX, TY, 'x', c='r')
+        plt.show()
+    #end def
+
 # end class

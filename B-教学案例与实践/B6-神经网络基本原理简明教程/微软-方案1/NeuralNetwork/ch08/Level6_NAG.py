@@ -8,49 +8,47 @@ import math
 from LossFunction import * 
 from Parameters import *
 from Activations import *
-from DataOperator import * 
+from Level1_TwoLayer import *
 
-class CTwoLayerNet(object):
+x_data_name = "CurveX.dat"
+y_data_name = "CurveY.dat"
 
-    def ForwardCalculationBatch(self, batch_x, dict_weights):
+class CNag(object):
+    def __init__(self, eta):
+        self.vt_1 = 0
+        self.eta = eta
+        self.gamma = 0.9
+
+    # 先用预测的梯度来更新W,b
+    def step1(self, theta):
+        theta = theta + self.gamma * self.vt_1
+        return theta
+
+    # 再用动量法更新W,b
+    def step2(self, theta, grad):
+        vt = self.gamma * self.vt_1 - self.eta * grad
+        theta = theta + vt
+        self.vt_1 = vt
+        return theta
+
+
+class CNagOptimizer(CTwoLayerNet):
+    def UpdateWeights_1(self, dict_weights, dict_nag):
         W1 = dict_weights["W1"]
         B1 = dict_weights["B1"]
         W2 = dict_weights["W2"]
         B2 = dict_weights["B2"]
-        # layer 1
-        Z1 = np.dot(W1, batch_x) + B1
-        A1 = CSigmoid().forward(Z1)
-        # layer 2
-        Z2 = np.dot(W2, A1) + B2
-        A2 = Z2
-        # keep cache for backward
-        dict_cache ={"Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
-        return dict_cache
 
-    def BackPropagationBatch(self, batch_x, batch_y, dict_cache, dict_weights):
-        # 批量下降，需要除以样本数量，否则会造成梯度爆炸
-        m = batch_x.shape[1]
-        # 取出缓存值
-        A1 = dict_cache["A1"]
-        A2 = dict_cache["A2"]
-        W2 = dict_weights["W2"]
-        # 第二层的梯度输入
-        dZ2 = A2 - batch_y
-        # 第二层的权重和偏移
-        dW2 = np.dot(dZ2, A1.T)/m
-        dB2 = np.sum(dZ2, axis=1, keepdims=True)/m
-        # 第一层的梯度输入
-        dA1 = np.dot(W2.T, dZ2)
-        dA1_Z1 = np.multiply(A1, 1 - A1)
-        dZ1 = np.multiply(dA1, dA1_Z1)
-        # 第一层的权重和偏移
-        dW1 = np.dot(dZ1, batch_x.T)/m
-        dB1 = np.sum(dZ1, axis=1, keepdims=True)/m
-        # 保存到词典中返回
-        dict_grads = {"dW1":dW1, "dB1":dB1, "dW2":dW2, "dB2":dB2}
-        return dict_grads
+        W1 = dict_nag["W1"].step1(W1)
+        B1 = dict_nag["B1"].step1(B1)
+        W2 = dict_nag["W2"].step1(W2)
+        B2 = dict_nag["B2"].step1(B2)
 
-    def UpdateWeights(self, dict_weights, dict_grads, learningRate):
+        dict_weights = {"W1": W1,"B1": B1,"W2": W2,"B2": B2}
+
+        return dict_weights
+
+    def UpdateWeights_2(self, dict_weights, dict_grads, dict_nag):
         W1 = dict_weights["W1"]
         B1 = dict_weights["B1"]
         W2 = dict_weights["W2"]
@@ -61,13 +59,15 @@ class CTwoLayerNet(object):
         dW2 = dict_grads["dW2"]
         dB2 = dict_grads["dB2"]
 
-        W1 = W1 - learningRate * dW1
-        W2 = W2 - learningRate * dW2
-        B1 = B1 - learningRate * dB1
-        B2 = B2 - learningRate * dB2
+        W1 = dict_nag["W1"].step2(W1, dW1)
+        B1 = dict_nag["B1"].step2(B1, dB1)
+        W2 = dict_nag["W2"].step2(W2, dW2)
+        B2 = dict_nag["B2"].step2(B2, dB2)
 
         dict_weights = {"W1": W1,"B1": B1,"W2": W2,"B2": B2}
+
         return dict_weights
+
 
     def train(self, X, Y, params, loss_history):
         num_example = X.shape[1]
@@ -76,9 +76,8 @@ class CTwoLayerNet(object):
 
         # W(num_category, num_feature), B(num_category, 1)
         W1, B1, W2, B2 = params.LoadSameInitialParameters()
-    #    W1, B1 = InitialParameters(params.num_input, params.num_hidden, params.init_method)
-    #    W2, B2 = InitialParameters(params.num_hidden, params.num_output, params.init_method)
         dict_weights = {"W1":W1, "B1":B1, "W2":W2, "B2":B2}
+        dict_nag = {"W1":CNag(params.eta), "B1":CNag(params.eta), "W2":CNag(params.eta), "B2":CNag(params.eta)}
 
         # calculate loss to decide the stop condition
         loss = 0 
@@ -90,12 +89,17 @@ class CTwoLayerNet(object):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = DataOperator.GetBatchSamples(X,Y,params.batch_size,iteration)
+
+                # nag
+                dict_weights = self.UpdateWeights_1(dict_weights, dict_nag)
+
                 # get z from x,y
                 dict_cache = self.ForwardCalculationBatch(batch_x, dict_weights)
+
                 # calculate gradient of w and b
                 dict_grads = self.BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
                 # update w,b
-                dict_weights = self.UpdateWeights(dict_weights, dict_grads, params.eta)
+                dict_weights = self.UpdateWeights_2(dict_weights, dict_grads, dict_nag)
             # end for            
             # calculate loss for this batch
             loss = lossFunc.CheckLoss(X, Y, dict_weights, self.ForwardCalculationBatch)
@@ -109,17 +113,26 @@ class CTwoLayerNet(object):
             # end if
         # end for
         return dict_weights
-    # end def
 
-    def ShowResult(self, X, Y, dict_weights):
-        # draw train data
-        plt.plot(X[0,:], Y[0,:], '.', c='b')
-        # create and draw visualized validation data
-        TX = np.linspace(0,1,100).reshape(1,100)
-        dict_cache = self.ForwardCalculationBatch(TX, dict_weights)
-        TY = dict_cache["Output"]
-        plt.plot(TX, TY, 'x', c='r')
-        plt.show()
-    #end def
+if __name__ == '__main__':
 
-# end class
+    X,Y = DataOperator.ReadData(x_data_name, y_data_name)
+    num_example = X.shape[1]
+    n_input, n_hidden, n_output = 1, 4, 1
+    eta, batch_size, max_epoch = 0.1, 10, 10000
+    eps = 0.001
+    init_method = InitialMethod.xavier
+
+    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.MSE, eps, init_method)
+
+    # SGD, MiniBatch, FullBatch
+    loss_history = CLossHistory()
+    optimizer = CNagOptimizer()
+    dict_weights = optimizer.train(X, Y, params, loss_history)
+
+    bookmark = loss_history.GetMinimalLossData()
+    bookmark.print_info()
+    loss_history.ShowLossHistory(params)
+
+    optimizer.ShowResult(X, Y, bookmark.weights)
+

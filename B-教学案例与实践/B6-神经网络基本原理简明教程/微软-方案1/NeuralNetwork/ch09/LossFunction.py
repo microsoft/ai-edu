@@ -67,9 +67,9 @@ class CLossFunction(object):
         output = dict_cache["Output"]
         if self.func_name == LossFunctionName.MSE:
             loss = self.MSE(output, Y, m)
-        elif self.func_name == LossFunctionName.CE2:
+        elif self.func_name == LossFunctionName.CrossEntropy2:
             loss = self.CE2(output, Y, m)
-        elif self.func_name == LossFunctionName.CE3:
+        elif self.func_name == LossFunctionName.CrossEntropy3:
             loss = self.CE3(output, Y, m)
         #end if
         return loss

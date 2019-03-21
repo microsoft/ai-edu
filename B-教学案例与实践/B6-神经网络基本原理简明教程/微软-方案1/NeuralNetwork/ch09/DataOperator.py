@@ -25,7 +25,7 @@ class DataOperator(object):
             max_value = np.max(x)
             min_value = np.min(x)
             # min value
-            X_norm[0,i] = min_value 
+            self.X_norm[0,i] = min_value 
             # range value
             self.X_norm[1,i] = max_value - min_value 
             x_new = (x - self.X_norm[0,i]) / self.X_norm[1,i]
@@ -63,3 +63,18 @@ class DataOperator(object):
         batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
         batch_Y = Y[:, start:end].reshape(-1, batch_size)
         return batch_X, batch_Y
+
+    @staticmethod
+    def ToOneHot(YData, num_category):
+        num_example = YData.shape[1]
+        Y = np.zeros((num_category, num_example))
+        for i in range(num_example):
+            if YData[0,i] == 1:
+                Y[0,i] = 1
+            elif YData[0,i] == 2:
+                Y[1,i] = 1
+            elif YData[0,i] == 3:
+                Y[2,i] = 1
+            # end if
+        # end for
+        return Y

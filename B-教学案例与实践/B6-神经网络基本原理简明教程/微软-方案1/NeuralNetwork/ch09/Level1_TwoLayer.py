@@ -22,7 +22,7 @@ class CTwoLayerNet(object):
         A1 = CSigmoid().forward(Z1)
         # layer 2
         Z2 = np.dot(W2, A1) + B2
-        A2 = Z2
+        A2 = CSoftmax().forward(Z2)
         # keep cache for backward
         dict_cache ={"Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
         return dict_cache
@@ -41,7 +41,7 @@ class CTwoLayerNet(object):
         dB2 = np.sum(dZ2, axis=1, keepdims=True)/m
         # 第一层的梯度输入
         dA1 = np.dot(W2.T, dZ2)
-        dA1_Z1 = np.multiply(A1, 1 - A1)
+        dA1_Z1 = np.multiply(A1, 1 - A1)    # for Sigmoid derivative
         dZ1 = np.multiply(dA1, dA1_Z1)
         # 第一层的权重和偏移
         dW1 = np.dot(dZ1, batch_x.T)/m
@@ -111,15 +111,37 @@ class CTwoLayerNet(object):
         return dict_weights
     # end def
 
-    def ShowResult(self, X, Y, dict_weights):
-        # draw train data
-        plt.plot(X[0,:], Y[0,:], '.', c='b')
-        # create and draw visualized validation data
-        TX = np.linspace(0,1,100).reshape(1,100)
-        dict_cache = self.ForwardCalculationBatch(TX, dict_weights)
-        TY = dict_cache["Output"]
-        plt.plot(TX, TY, 'x', c='r')
-        plt.show()
+    def ShowAreaResult(self, X, dict_weights):
+        count = 50
+        x1 = np.linspace(0,1,count)
+        x2 = np.linspace(0,1,count)
+        for i in range(count):
+            for j in range(count):
+                x = np.array([x1[i],x2[j]]).reshape(2,1)
+                dict_cache = self.ForwardCalculationBatch(x, dict_weights)
+                output = dict_cache["Output"]
+                r = np.argmax(output, axis=0)
+                if r == 0:
+                    plt.plot(x[0,0], x[1,0], 's', c='r')
+                elif r == 1:
+                    plt.plot(x[0,0], x[1,0], 's', c='g')
+                elif r == 2:
+                    plt.plot(x[0,0], x[1,0], 's', c='b')
+                # end if
+            # end for
+        # end for
     #end def
+
+    def ShowData(self, X, Y):
+        for i in range(X.shape[1]):
+            if Y[0,i] == 1:
+                plt.plot(X[0,i], X[1,i], '.', c='g')
+            elif Y[0,i] == 2:
+                plt.plot(X[0,i], X[1,i], 'x', c='b')
+            elif Y[0,i] == 3:
+                plt.plot(X[0,i], X[1,i], '^', c='r')
+            # end if
+        # end for
+        plt.show()
 
 # end class

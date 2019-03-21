@@ -11,21 +11,27 @@ from Activations import *
 from Level1_TwoLayer import *
 from DataOperator import * 
 
-x_data_name = "CurveX.dat"
-y_data_name = "CurveY.dat"
+x_data_name = "X3.dat"
+y_data_name = "Y3.dat"
 
 if __name__ == '__main__':
 
-    X,Y = DataOperator.ReadData(x_data_name, y_data_name)
+    XData,YData = DataOperator.ReadData(x_data_name, y_data_name)
+    norm = DataOperator("min_max")
+    X = norm.NormalizeData(XData)
+    num_category = 3
+    Y = DataOperator.ToOneHot(YData, num_category)
+
     num_example = X.shape[1]
-    n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.1, 10, 50000
+    num_feature = X.shape[0]
+    
+    n_input, n_hidden, n_output = num_feature, 4, num_category
+    eta, batch_size, max_epoch = 0.1, 1, 1000
     eps = 0.001
     init_method = InitialMethod.xavier
 
-    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.MSE, eps, init_method)
+    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.CrossEntropy3, eps, init_method)
 
-    # SGD, MiniBatch, FullBatch
     loss_history = CLossHistory()
     net = CTwoLayerNet()
     dict_weights = net.train(X, Y, params, loss_history)
@@ -34,9 +40,6 @@ if __name__ == '__main__':
     bookmark.print_info()
     loss_history.ShowLossHistory(params)
 
-    net.ShowResult(net, X, Y, bookmark.weights)
-    print(bookmark.weights["W1"])
-    print(bookmark.weights["B1"])
-    print(bookmark.weights["W2"])
-    print(bookmark.weights["B2"])
-
+    net.ShowAreaResult(X, bookmark.weights)
+    net.ShowData(X, YData)
+    

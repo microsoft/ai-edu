@@ -94,7 +94,7 @@ if __name__ == '__main__':
     #looper = CLooper(1.0,0.01,100,1.1)
     #lr_Searcher.addLooper(looper)
     # try 3
-    looper = CLooper(0.33,0.01,200,1.1)
+    looper = CLooper(0.33,0.01,100,1.1)
     lr_Searcher.addLooper(looper)
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.CrossEntropy3, eps, init_method)

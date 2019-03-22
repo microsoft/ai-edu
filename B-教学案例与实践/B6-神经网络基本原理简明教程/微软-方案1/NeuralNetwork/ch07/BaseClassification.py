@@ -1,4 +1,4 @@
-# Copyright (c) Microsoft. All rights reserved.
+﻿# Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
@@ -111,7 +111,7 @@ def InitializeHyperParameters(method, num_example):
     elif method=="MiniBatch":
         eta = 0.1
         max_epoch = 50
-        batch_size = 10
+        batch_size = 5
     elif method=="FullBatch":
         eta = 0.5
         max_epoch = 100

@@ -127,7 +127,7 @@ if __name__ == '__main__':
     
     n_input, n_hidden, n_output = num_feature, 8, num_category
     eta, batch_size, max_epoch = 0.5, 500, 80000
-    eps = 0.05
+    eps = 0.02
     init_method = InitialMethod.xavier
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.CrossEntropy3, eps, init_method)

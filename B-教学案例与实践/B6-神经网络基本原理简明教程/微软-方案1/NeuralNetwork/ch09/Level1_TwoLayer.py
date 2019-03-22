@@ -142,6 +142,8 @@ class CTwoLayerNet(object):
                 plt.plot(X[0,i], X[1,i], '^', c='r')
             # end if
         # end for
+        plt.xlabel("x1")
+        plt.ylabel("x2")
         plt.show()
 
 # end class

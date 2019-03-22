@@ -25,7 +25,7 @@ if __name__ == '__main__':
     num_example = X.shape[1]
     num_feature = X.shape[0]
     
-    n_input, n_hidden, n_output = num_feature, 4, num_category
+    n_input, n_hidden, n_output = num_feature, 8, num_category
     eta, batch_size, max_epoch = 0.2, 10, 20000
     eps = 0.05
     init_method = InitialMethod.xavier
@@ -34,6 +34,9 @@ if __name__ == '__main__':
 
     loss_history = CLossHistory()
     net = CTwoLayerNet()
+
+    net.ShowData(XData, YData)
+
     dict_weights = net.train(X, Y, params, loss_history)
 
     bookmark = loss_history.GetMinimalLossData()

@@ -111,7 +111,7 @@ def InitializeHyperParameters(method, num_example):
     elif method=="MiniBatch":
         eta = 0.1
         max_epoch = 50
-        batch_size = 10
+        batch_size = 2
     elif method=="FullBatch":
         eta = 0.5
         max_epoch = 100

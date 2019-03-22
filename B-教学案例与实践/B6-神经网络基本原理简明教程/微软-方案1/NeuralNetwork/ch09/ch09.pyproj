@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
+    <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level2_ShowBinaryResult.py</StartupFile>
+    <StartupFile>Level6_NAG.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch06</Name>
-    <RootNamespace>ch06</RootNamespace>
+    <Name>ch09</Name>
+    <RootNamespace>ch09</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,11 +21,16 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaseClassification.py" />
-    <Compile Include="level2_ShowBinaryResult.py" />
-    <Compile Include="level4_ShowMultipleResult.py" />
-    <Compile Include="level3_MultipleClassification.py" />
-    <Compile Include="level1_BinaryClassification.py" />
+    <Compile Include="Activations.py" />
+    <Compile Include="DataOperator.py" />
+    <Compile Include="LearningRateSearcher.py" />
+    <Compile Include="Level2_Do.py" />
+    <Compile Include="Level1_TwoLayer.py" />
+    <Compile Include="Level4_BestLRSearcher.py" />
+    <Compile Include="Level5_Momentum.py" />
+    <Compile Include="Level6_NAG.py" />
+    <Compile Include="LossFunction.py" />
+    <Compile Include="Parameters.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -2,7 +2,6 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 class CSigmoid(object):
     def forward(self, z):
@@ -14,19 +13,10 @@ class CSigmoid(object):
         dz = np.multiply(delta, da)
         return da, dz
 
-def Draw(start,end,func):
-    z = np.linspace(start, end, 200)
-    a = func.forward(z)
-    plt.plot(z,a)
-    plt.grid()
-    plt.xlabel("input : z")
-    plt.ylabel("output : a")
-    plt.title("Sigmoid")
+class CSoftmax(object):
+    def forward(self, Z):
+        shift_z = Z - np.max(Z, axis=0)
+        exp_z = np.exp(shift_z)
+        A = exp_z / np.sum(exp_z, axis=0)
+        return A
 
-    plt.plot([-7,7],[0.5,0.5],'-')
-
-    plt.show()
-
-
-if __name__ == '__main__':
-    Draw(-7,7,CSigmoid())

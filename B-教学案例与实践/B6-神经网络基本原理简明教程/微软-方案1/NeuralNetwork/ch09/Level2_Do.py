@@ -11,8 +11,8 @@ from Activations import *
 from Level1_TwoLayer import *
 from DataOperator import * 
 
-x_data_name = "X3.npy"
-y_data_name = "Y3.npy"
+x_data_name = "X9_3.npy"
+y_data_name = "Y9_3.npy"
 
 if __name__ == '__main__':
 
@@ -25,8 +25,8 @@ if __name__ == '__main__':
     num_example = X.shape[1]
     num_feature = X.shape[0]
     
-    n_input, n_hidden, n_output = num_feature, 8, num_category
-    eta, batch_size, max_epoch = 0.2, 10, 20000
+    n_input, n_hidden, n_output = num_feature, 4, num_category
+    eta, batch_size, max_epoch = 0.01, 10, 10000
     eps = 0.05
     init_method = InitialMethod.xavier
 

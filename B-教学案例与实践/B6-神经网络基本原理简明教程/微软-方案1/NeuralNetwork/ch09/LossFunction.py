@@ -98,7 +98,7 @@ class CLossFunction(object):
 
     # for multiple classifier
     def CE3(self, A, Y, count):
-        p1 = np.log(A)
+        p1 = np.log(A+1e-7)
         p2 =  np.multiply(Y, p1)
         LOSS = np.sum(-p2) 
         loss = LOSS / count

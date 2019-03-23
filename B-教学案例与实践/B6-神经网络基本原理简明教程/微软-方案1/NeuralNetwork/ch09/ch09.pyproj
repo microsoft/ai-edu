@@ -31,6 +31,9 @@
     <Compile Include="Level5_Momentum.py" />
     <Compile Include="Level6_NAG.py" />
     <Compile Include="LossFunction.py" />
+    <Compile Include="GDOptimizer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Parameters.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

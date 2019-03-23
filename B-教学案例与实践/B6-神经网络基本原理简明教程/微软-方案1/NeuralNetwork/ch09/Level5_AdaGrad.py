@@ -136,7 +136,7 @@ if __name__ == '__main__':
     num_feature = X.shape[0]
     
     n_input, n_hidden, n_output = num_feature, 8, num_category
-    eta, batch_size, max_epoch = 0.001, 10, 10000
+    eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.05
     init_method = InitialMethod.xavier
 

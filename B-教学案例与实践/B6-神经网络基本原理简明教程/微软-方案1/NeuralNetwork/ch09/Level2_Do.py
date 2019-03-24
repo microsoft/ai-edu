@@ -6,43 +6,49 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
-from Parameters import *
 from Activations import *
-from Level1_TwoLayer import *
-from DataOperator import * 
+from Level1_TwoLayerNN import *
+from DataReader import * 
+from GDOptimizer import *
+from WeightsBias import *
 
-x_data_name = "X3.npy"
-y_data_name = "Y3.npy"
+x_data_name = "X9_3.npy"
+y_data_name = "Y9_3.npy"
 
 if __name__ == '__main__':
 
-    XData,YData = DataOperator.ReadData(x_data_name, y_data_name)
-    norm = DataOperator("min_max")
-    X = norm.NormalizeData(XData)
-    num_category = 3
-    Y = DataOperator.ToOneHot(YData, num_category)
-
-    num_example = X.shape[1]
-    num_feature = X.shape[0]
+    dataReader = DataReader(x_data_name, y_data_name)
+    XData,YData = dataReader.ReadData()
+    X = dataReader.NormalizeX()
+    Y = dataReader.ToOneHot()
     
-    n_input, n_hidden, n_output = num_feature, 8, num_category
-    eta, batch_size, max_epoch = 0.2, 10, 20000
+    n_input, n_output = dataReader.num_feature, dataReader.num_category
+    n_hidden = 4
+    eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.05
-    init_method = InitialMethod.xavier
 
-    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.CrossEntropy3, eps, init_method)
+    params = CParameters(n_input, n_output, n_hidden,
+                         eta, max_epoch, batch_size, eps, 
+                         LossFunctionName.CrossEntropy3, 
+                         InitialMethod.xavier,
+                         OptimizerName.O_Adam)
 
     loss_history = CLossHistory()
     net = CTwoLayerNet()
 
-    net.ShowData(XData, YData)
+    #net.ShowData(XData, YData)
 
-    dict_weights = net.train(X, Y, params, loss_history)
+    wbs = net.train(dataReader, params, loss_history)
 
-    bookmark = loss_history.GetMinimalLossData()
-    bookmark.print_info()
+    trace = loss_history.GetMinimalLossData()
+    trace.print_info()
     loss_history.ShowLossHistory(params)
 
-    net.ShowAreaResult(X, bookmark.weights)
+    wbs_min = WeightsBias(params)
+    wbs_min.W1 = trace.dict_weights["W1"]
+    wbs_min.W2 = trace.dict_weights["W2"]
+    wbs_min.B1 = trace.dict_weights["B1"]
+    wbs_min.B2 = trace.dict_weights["B2"]
+    net.ShowAreaResult(X, wbs_min)
     net.ShowData(X, YData)
     

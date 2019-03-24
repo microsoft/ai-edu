@@ -5,10 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from enum import Enum
 
+from WeightsBias import *
+
 class CTrace(object):
-    def __init__(self, loss, weights, epoch, iteration):
+    def __init__(self, loss, dict_weights, epoch, iteration):
         self.loss = loss
-        self.weights = weights
+        self.dict_weights = dict_weights
         self.epoch = epoch
         self.iteration = iteration
     # end def
@@ -26,10 +28,10 @@ class CLossHistory(object):
         self.min_loss_index = -1
         self.min_trace = CTrace(100000, None, -1, -1)
 
-    def AddLossHistory(self, loss, weights, epoch, iteration):
+    def AddLossHistory(self, loss, dict_weights, epoch, iteration):
         self.loss_history.append(loss)
         if loss < self.min_trace.loss:
-            self.min_trace = CTrace(loss, weights, epoch, iteration)
+            self.min_trace = CTrace(loss, dict_weights, epoch, iteration)
             self.minimal_loss_index = len(self.loss_history) - 1
         # end if
 
@@ -61,9 +63,9 @@ class CLossFunction(object):
     # end def
 
     # fcFunc: feed forward calculation
-    def CheckLoss(self, X, Y, dict_weights, ffcFunc):
+    def CheckLoss(self, X, Y, wbs, ffcFunc):
         m = X.shape[1]
-        dict_cache = ffcFunc(X, dict_weights)
+        dict_cache = ffcFunc(X, wbs)
         output = dict_cache["Output"]
         if self.func_name == LossFunctionName.MSE:
             loss = self.MSE(output, Y, m)
@@ -98,7 +100,7 @@ class CLossFunction(object):
 
     # for multiple classifier
     def CE3(self, A, Y, count):
-        p1 = np.log(A)
+        p1 = np.log(A+1e-7)
         p2 =  np.multiply(Y, p1)
         LOSS = np.sum(-p2) 
         loss = LOSS / count

@@ -10,45 +10,59 @@ from Parameters import *
 from Activations import *
 from Level1_TwoLayer import *
 
-x_data_name = "X3.npy"
-y_data_name = "Y3.npy"
+x_data_name = "X9_3.npy"
+y_data_name = "Y9_3.npy"
 
-class CNag(object):
+class CAdaGrad(object):
     def __init__(self, eta):
-        self.vt_1 = 0
+        self.delta = 1e-7
         self.eta = eta
-        self.gamma = 0.9
+        self.r = 0
 
-    # 先用预测的梯度来更新W,b
-    def step1(self, theta):
-        theta = theta + self.gamma * self.vt_1
+    def step(self, theta, grad):
+        self.r = self.r + np.multiply(grad, grad)
+        alpha = self.eta / (np.sqrt(self.r) + self.delta)
+        #print("alpha=",alpha)
+        d_theta = -np.multiply(alpha, grad)
+        theta = theta + d_theta
         return theta
 
-    # 再用动量法更新W,b
-    def update(self, theta, grad):
-        vt = self.gamma * self.vt_1 - self.eta * grad
-        theta = theta + vt
-        self.vt_1 = vt
+class CRMSProp(object):
+    def __init__(self, eta):
+        self.eta = eta
+        self.p = 0.9
+        self.delta = 1e-6
+        self.r = 0
+
+    def step(self, theta, grad):
+        grad2 = np.multiply(grad, grad)
+        self.r = self.p * self.r + (1-self.p) * grad2
+        alpha = self.eta / np.sqrt(self.delta + self.r)
+        theta = theta - np.multiply(alpha, grad)
         return theta
 
+class CAdam(object):
+    def __init__(self, shape):
+        self.eta = 0.1
+        self.p1 = 0.9
+        self.p2 = 0.999
+        self.delta = 1e-8
+        self.s = np.zeros(shape)
+        self.r = np.zeros(shape)
+        self.t = 0
 
-class CNagOptimizer(CTwoLayerNet):
-    def UpdateWeights_1(self, dict_weights, dict_nag):
-        W1 = dict_weights["W1"]
-        B1 = dict_weights["B1"]
-        W2 = dict_weights["W2"]
-        B2 = dict_weights["B2"]
+    def step(self, theta, grad):
+        self.t = self.t + 1
+        self.s = self.p1 * self.s + (1-self.p1) * grad
+        self.r = self.p2 * self.r + (1-self.p2) * np.multiply(grad, grad)
+        s1 = self.s / (1 - self.p1 ** self.t)
+        r1 = self.r / (1 - self.p2 ** self.t)
+        alpha = self.eta * s1 / (self.delta + np.sqrt(r1))
+        theta = theta - alpha
+        return theta
 
-        W1 = dict_nag["W1"].step1(W1)
-        B1 = dict_nag["B1"].step1(B1)
-        W2 = dict_nag["W2"].step1(W2)
-        B2 = dict_nag["B2"].step1(B2)
-
-        dict_weights = {"W1": W1,"B1": B1,"W2": W2,"B2": B2}
-
-        return dict_weights
-
-    def UpdateWeights_2(self, dict_weights, dict_grads, dict_nag):
+class COptimizer(CTwoLayerNet):
+    def UpdateWeights(self, dict_weights, dict_grads, dict_optimizer):
         W1 = dict_weights["W1"]
         B1 = dict_weights["B1"]
         W2 = dict_weights["W2"]
@@ -59,15 +73,14 @@ class CNagOptimizer(CTwoLayerNet):
         dW2 = dict_grads["dW2"]
         dB2 = dict_grads["dB2"]
 
-        W1 = dict_nag["W1"].step2(W1, dW1)
-        B1 = dict_nag["B1"].step2(B1, dB1)
-        W2 = dict_nag["W2"].step2(W2, dW2)
-        B2 = dict_nag["B2"].step2(B2, dB2)
+        W1 = dict_optimizer["W1"].step(W1, dW1)
+        B1 = dict_optimizer["B1"].step(B1, dB1)
+        W2 = dict_optimizer["W2"].step(W2, dW2)
+        B2 = dict_optimizer["B2"].step(B2, dB2)
 
         dict_weights = {"W1": W1,"B1": B1,"W2": W2,"B2": B2}
 
         return dict_weights
-
 
     def train(self, X, Y, params, loss_history):
         num_example = X.shape[1]
@@ -77,7 +90,9 @@ class CNagOptimizer(CTwoLayerNet):
         # W(num_category, num_feature), B(num_category, 1)
         W1, B1, W2, B2 = params.LoadSameInitialParameters()
         dict_weights = {"W1":W1, "B1":B1, "W2":W2, "B2":B2}
-        dict_nag = {"W1":CNag(params.eta), "B1":CNag(params.eta), "W2":CNag(params.eta), "B2":CNag(params.eta)}
+        #dict_optimizer = {"W1":CAdaGrad(params.eta), "B1":CAdaGrad(params.eta), "W2":CAdaGrad(params.eta), "B2":CAdaGrad(params.eta)}
+        #dict_optimizer = {"W1":CRMSProp(params.eta), "B1":CRMSProp(params.eta), "W2":CRMSProp(params.eta), "B2":CRMSProp(params.eta)}
+        dict_optimizer = {"W1":CAdam(W1.shape), "B1":CAdam(B1.shape), "W2":CAdam(W2.shape), "B2":CAdam(B2.shape)}
 
         # calculate loss to decide the stop condition
         loss = 0 
@@ -89,17 +104,12 @@ class CNagOptimizer(CTwoLayerNet):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = DataOperator.GetBatchSamples(X,Y,params.batch_size,iteration)
-
-                # nag
-                dict_weights = self.UpdateWeights_1(dict_weights, dict_nag)
-
                 # get z from x,y
                 dict_cache = self.ForwardCalculationBatch(batch_x, dict_weights)
-
                 # calculate gradient of w and b
                 dict_grads = self.BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
                 # update w,b
-                dict_weights = self.UpdateWeights_2(dict_weights, dict_grads, dict_nag)
+                dict_weights = self.UpdateWeights(dict_weights, dict_grads, dict_optimizer)
             # end for            
             # calculate loss for this batch
             loss = lossFunc.CheckLoss(X, Y, dict_weights, self.ForwardCalculationBatch)
@@ -126,14 +136,14 @@ if __name__ == '__main__':
     num_feature = X.shape[0]
     
     n_input, n_hidden, n_output = num_feature, 8, num_category
-    eta, batch_size, max_epoch = 0.5, 500, 80000
-    eps = 0.02
+    eta, batch_size, max_epoch = 0.1, 10, 10000
+    eps = 0.05
     init_method = InitialMethod.xavier
 
     params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.CrossEntropy3, eps, init_method)
 
     loss_history = CLossHistory()
-    optimizer = CNagOptimizer()
+    optimizer = COptimizer()
     dict_weights = optimizer.train(X, Y, params, loss_history)
 
     bookmark = loss_history.GetMinimalLossData()
@@ -142,4 +152,3 @@ if __name__ == '__main__':
 
     optimizer.ShowAreaResult(X, bookmark.weights)
     optimizer.ShowData(X, YData)
-

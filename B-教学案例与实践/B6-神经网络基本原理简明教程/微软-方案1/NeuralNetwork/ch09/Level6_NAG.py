@@ -25,7 +25,7 @@ class CNag(object):
         return theta
 
     # 再用动量法更新W,b
-    def step2(self, theta, grad):
+    def update(self, theta, grad):
         vt = self.gamma * self.vt_1 - self.eta * grad
         theta = theta + vt
         self.vt_1 = vt

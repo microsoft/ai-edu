@@ -9,6 +9,7 @@ from LossFunction import *
 from Parameters import *
 from Activations import *
 from DataOperator import * 
+from GDOptimizer import *
 
 class CTwoLayerNet(object):
 
@@ -70,12 +71,13 @@ class CTwoLayerNet(object):
         return dict_weights
 
     def train(self, X, Y, params, loss_history):
+        optimizer = GDOptimizerFactory.CreateOptimizer(params.optimizer_name)
         num_example = X.shape[1]
         num_feature = X.shape[0]
         num_category = Y.shape[0]
 
         # W(num_category, num_feature), B(num_category, 1)
-        W1, B1, W2, B2 = params.LoadSameInitialParameters()
+        W1, B1, W2, B2 = params.LoadSameInitialParameters(True)
     #    W1, B1 = InitialParameters(params.num_input, params.num_hidden, params.init_method)
     #    W2, B2 = InitialParameters(params.num_hidden, params.num_output, params.init_method)
         dict_weights = {"W1":W1, "B1":B1, "W2":W2, "B2":B2}

@@ -4,7 +4,9 @@
 import numpy as np
 from pathlib import Path
 from enum import Enum
+import os
 from LossFunction import LossFunctionName
+from GDOptimizer import OptimizerName
 
 class InitialMethod(Enum):
     zero = 0,
@@ -13,7 +15,12 @@ class InitialMethod(Enum):
 
 # this class is for two-layer NN only
 class CParameters(object):
-    def __init__(self, n_example, n_input=1, n_output=1, n_hidden=4, eta=0.1, max_epoch=10000, batch_size=5, lossFuncName=LossFunctionName.MSE, eps=0.001, initMethod=InitialMethod.zero):
+    def __init__(self, n_example, n_input=1, n_output=1, n_hidden=4, 
+                 eta=0.1, max_epoch=10000, batch_size=5, eps=0.001,
+                 lossFuncName=LossFunctionName.MSE, 
+                 initMethod=InitialMethod.zero, 
+                 optimizerName=OptimizerName.O_SGD):
+
         self.num_example = n_example
         self.num_input = n_input
         self.num_output = n_output
@@ -29,6 +36,7 @@ class CParameters(object):
         self.loss_func_name = lossFuncName
         self.eps = eps
         self.init_method = initMethod
+        self.optimizer_name = optimizerName
 
     def GenerateWeightsArrayFileName(self):
         self.w1_name = str.format("w1_{0}_{1}_{2}.npy", self.num_hidden, self.num_input, self.init_method.name)
@@ -36,10 +44,16 @@ class CParameters(object):
 
     # load exist initial weights which has same parameters
     # if not found, create new, then save
-    def LoadSameInitialParameters(self):
+    def LoadSameInitialParameters(self, create_new = False):
         self.GenerateWeightsArrayFileName()
         w1_file = Path(self.w1_name)
         w2_file = Path(self.w2_name)
+        if create_new == True:
+            if w1_file.exists() and w2_file.exists():
+                os.remove(w1_file)
+                os.remove(w2_file)
+            #end if
+        #end if
         if w1_file.exists() and w2_file.exists():
             W1 = np.load(w1_file)
             W2 = np.load(w2_file)

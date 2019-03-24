@@ -1,6 +1,36 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import numpy as np
+from enum import Enum
+
+class OptimizerName(Enum):
+    O_SGD = 0,
+    O_Momentum = 1,
+    O_Nag = 2,
+    O_AdaGrad = 3,
+    O_RMSProp = 4
+    O_Adam = 5
+
+
+class GDOptimizerFactory(object):
+    @staticmethod
+    def CreateOptimizer(eta, name = OptimizerName.O_SGD):
+        if name == OptimizerName.O_SGD:
+            optimizer = SGD(eta)
+        elif name == OptimizerName.O_Adam:
+            optimizer = Adam(eta)
+        elif name == OptimizerName.O_AdaGrad:
+            optimizer = AdaGrad(eta)
+        elif name == OptimizerName.O_Momentum:
+            optimizer = Momentum(eta)
+        elif name == OptimizerName.O_Nag:
+            optimizer = Nag(eta)
+        elif name == OptimizerName.O_RMSProp:
+            optimizer = RMSProp(eta)
+
+        return optimizer
+
 class GDOptimizer(object):
     def __init__(self):
         Pass
@@ -40,7 +70,7 @@ class AdaGrad(GDOptimizer):
         theta = theta - alpha * grad
         return theta
   
-class CRMSProp(GDOptimizer):
+class RMSProp(GDOptimizer):
     def __init__(self, eta):
         self.eta = eta
         self.p = 0.9
@@ -54,7 +84,7 @@ class CRMSProp(GDOptimizer):
         theta = theta - alpha * grad
         return theta
 
-class CAdam(GDOptimizer):
+class Adam(GDOptimizer):
     def __init__(self, eta=0.001):
         self.eta = eta
         self.p1 = 0.9
@@ -72,4 +102,22 @@ class CAdam(GDOptimizer):
         v_hat = self.v / (1 - self.p2 ** self.t)
         d_theta = self.eta * m_hat / (self.delta + np.sqrt(v_hat))
         theta = theta - d_theta
+        return theta
+
+# 本算法要求在训练过程中两次介入：1. 在前向计算之前，先更新一次临时梯度 pre_update()；2. 在反向传播之后，再更新一次梯度 final_update()
+class Nag(GDOptimizer):
+    def __init__(self, eta):
+        self.vt = 0
+        self.eta = eta
+        self.alpha = 0.9
+
+    # 先用预测的梯度来更新W,b
+    def pre_update(self, theta):
+        theta_hat = theta + self.alpha * self.vt
+        return theta_hat
+
+    # 再用动量法更新W,b
+    def final_update(self, theta, grad):
+        self.vt = self.alpha * self.vt + self.eta * grad
+        theta = theta - vt
         return theta

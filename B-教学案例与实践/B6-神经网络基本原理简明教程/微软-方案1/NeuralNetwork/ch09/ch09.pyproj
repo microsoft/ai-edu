@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DataOperator.py</StartupFile>
+    <StartupFile>Level2_Do.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,7 +25,7 @@
     <Compile Include="DataOperator.py" />
     <Compile Include="LearningRateSearcher.py" />
     <Compile Include="Level2_Do.py" />
-    <Compile Include="Level1_TwoLayer.py" />
+    <Compile Include="Level1_TwoLayerNN.py" />
     <Compile Include="Level4_BestLRSearcher.py" />
     <Compile Include="Level5_AdaGrad.py" />
     <Compile Include="Level5_Momentum.py" />
@@ -35,6 +35,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Parameters.py" />
+    <Compile Include="WeightsBias.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

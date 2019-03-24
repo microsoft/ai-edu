@@ -18,10 +18,13 @@ class DataNormalization(Enum):
     NormalizeY = 2,
     NormalizePredicate = 3
 
-class DataOperator(object):
+class DataReader(object):
     def __init__(self, x_file_name, y_file_name):
         self.x_file_name = x_file_name
         self.y_file_name = y_file_name
+        self.num_example = -1
+        self.num_feature = -1
+        self.num_category = -1
 
     # read data from file
     def ReadData(self):
@@ -30,6 +33,11 @@ class DataOperator(object):
         if Xfile.exists() and Yfile.exists():
             self.XRawData = np.load(Xfile)
             self.YRawData = np.load(Yfile)
+
+            self.num_example = self.XRawData.shape[1]
+            self.num_feature = self.XRawData.shape[0]
+            self.num_category = len(np.unique(self.YRawData))
+
             return self.XRawData, self.YRawData
         # end if
         return None,None
@@ -41,7 +49,7 @@ class DataOperator(object):
     #                [range1, range2, range3...]]
 
     def NormalizeX(self):
-        self.XNormlizedData = np.zeros(self.XRawData.shape)
+        self.X = np.zeros(self.XRawData.shape)
         num_feature = self.XRawData.shape[0]
         self.X_norm = np.zeros((2,num_feature))
         # 按行归一化,即所有样本的同一特征值分别做归一化
@@ -55,33 +63,30 @@ class DataOperator(object):
             # range value
             self.X_norm[1,i] = max_value - min_value 
             x_new = (x - self.X_norm[0,i]) / self.X_norm[1,i]
-            self.XNormlizedData[i,:] = x_new
+            self.X[i,:] = x_new
         # end for
-        return self.XNormlizedData
+        return self.X
 
     # normalize data by specified range and min_value
     def NormalizePredicateData(self, X_predicate):
         X_new = np.zeros(X_predicate.shape)
-        num_feature = X_predicate.shape[0]
-        for i in range(num_feature):
+        n_feature = X_predicate.shape[0]
+        for i in range(n_feature):
             x = X_predicate[i,:]
             X_new[i,:] = (x-self.X_norm[0,i])/self.X_norm[1,i]
         return X_new
 
-
     # 获得批样本数据
-    def GetBatchSamples(X,Y,batch_size,iteration):
-        num_feature = X.shape[0]
+    def GetBatchSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
-        batch_Y = Y[:, start:end].reshape(-1, batch_size)
+        batch_X = self.X[0:self.num_feature, start:end].reshape(self.num_feature, batch_size)
+        batch_Y = self.Y[:, start:end].reshape(-1, batch_size)
         return batch_X, batch_Y
 
-    def ToOneHot(self, num_category):
-        num_example = self.YRawData.shape[1]
-        self.Y = np.zeros((num_category, num_example))
-        for i in range(num_example):
+    def ToOneHot(self):
+        self.Y = np.zeros((self.num_category, self.num_example))
+        for i in range(self.num_example):
             if self.YRawData[0,i] == 1:
                 self.Y[0,i] = 1
             elif self.YRawData[0,i] == 2:
@@ -94,26 +99,27 @@ class DataOperator(object):
 
     # if use tanh function, need to set negative_value = -1
     def ToZeroOne(YData, positive_label, negative_label, positiva_value = 1, negative_value = 0):
-        num_example = YData.shape[1]
-        Y = np.zeros((1, num_example))
-        for i in range(num_example):
+        self.Y = np.zeros((1, self.num_example))
+        for i in range(self.num_example):
             if YData[0,i] == negative_label:     # 负类的标签设为0
-                Y[0,i] = negative_value
+                self.Y[0,i] = negative_value
             elif YData[0,i] == positive_label:   # 正类的标签设为1
-                Y[0,i] = positiva_value
+                self.Y[0,i] = positiva_value
             # end if
         # end for
-        return Y
+        return self.Y
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format
-    def Shuffle(self,X,Y):
+    def Shuffle(self):
         seed = np.random.randint(0,100)
         np.random.seed(seed)
-        XP = np.random.permutation(X.T)
+        XP = np.random.permutation(self.X.T)
         np.random.seed(seed)
-        YP = np.random.permutation(Y.T)
-        return XP.T,YP.T
+        YP = np.random.permutation(self.Y.T)
+        self.X = XP
+        self.Y = YP
+        return self.X, self.Y
 
 # unit test
 if __name__ == '__main__':

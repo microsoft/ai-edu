@@ -22,7 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Activations.py" />
-    <Compile Include="DataOperator.py" />
+    <Compile Include="DataReader.py" />
     <Compile Include="LearningRateSearcher.py" />
     <Compile Include="Level2_Do.py" />
     <Compile Include="Level1_TwoLayerNN.py" />
@@ -34,7 +34,6 @@
     <Compile Include="GDOptimizer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Parameters.py" />
     <Compile Include="WeightsBias.py">
       <SubType>Code</SubType>
     </Compile>

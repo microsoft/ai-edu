@@ -116,8 +116,8 @@ class Nag(GDOptimizer):
         theta_hat = theta + self.alpha * self.vt
         return theta_hat
 
-    # 再用动量法更新W,b
-    def final_update(self, theta, grad):
+    # 再用动量法更新W,b do final update
+    def update(self, theta, grad):
         self.vt = self.alpha * self.vt + self.eta * grad
         theta = theta - vt
         return theta

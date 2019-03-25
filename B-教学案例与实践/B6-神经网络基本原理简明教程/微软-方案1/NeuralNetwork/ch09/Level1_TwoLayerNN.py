@@ -59,7 +59,7 @@ class CTwoLayerNet(object):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size, iteration)
-
+                # for optimizers which need pre-update weights
                 if params.optimizer_name == OptimizerName.O_Nag:
                     wbs.pre_Update()
 
@@ -67,7 +67,7 @@ class CTwoLayerNet(object):
                 dict_cache = self.ForwardCalculationBatch(batch_x, wbs)
                 # calculate gradient of w and b
                 self.BackPropagationBatch(batch_x, batch_y, dict_cache, wbs)
-                # update w,b
+                # final update w,b
                 wbs.Update()
             # end for            
             # calculate loss for this batch

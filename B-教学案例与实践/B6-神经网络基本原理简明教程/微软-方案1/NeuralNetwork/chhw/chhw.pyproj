@@ -2,15 +2,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
+    <ProjectGuid>338c6a70-0b1a-45ac-a264-0bca34b87eee</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level2_ShowBinaryResult.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch06</Name>
-    <RootNamespace>ch06</RootNamespace>
+    <Name>chhw</Name>
+    <RootNamespace>chhw</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,11 +22,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaseClassification.py" />
-    <Compile Include="level2_ShowBinaryResult.py" />
-    <Compile Include="level4_ShowMultipleResult.py" />
-    <Compile Include="level3_MultipleClassification.py" />
-    <Compile Include="level1_BinaryClassification.py" />
+    <Compile Include="ch701_LogicOrGate.py" />
+    <Compile Include="ch702_LogicAndGate.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ch4_LogicNotGate.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

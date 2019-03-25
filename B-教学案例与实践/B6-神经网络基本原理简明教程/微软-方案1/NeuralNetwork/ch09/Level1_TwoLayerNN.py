@@ -47,7 +47,7 @@ class CTwoLayerNet(object):
     def train(self, dataReader, params, loss_history):
         optimizer = GDOptimizerFactory.CreateOptimizer(params.optimizer_name)
         wbs = WeightsBias(params)
-        wbs.LoadExistingParameters()
+        wbs.InitializeWeights(False)
 
         # calculate loss to decide the stop condition
         loss = 0 
@@ -59,11 +59,15 @@ class CTwoLayerNet(object):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size, iteration)
+                # for optimizers which need pre-update weights
+                if params.optimizer_name == OptimizerName.O_Nag:
+                    wbs.pre_Update()
+
                 # get z from x,y
                 dict_cache = self.ForwardCalculationBatch(batch_x, wbs)
                 # calculate gradient of w and b
                 self.BackPropagationBatch(batch_x, batch_y, dict_cache, wbs)
-                # update w,b
+                # final update w,b
                 wbs.Update()
             # end for            
             # calculate loss for this batch
@@ -91,11 +95,9 @@ class CTwoLayerNet(object):
                 output = dict_cache["Output"]
                 r = np.argmax(output, axis=0)
                 if r == 0:
-                    plt.plot(x[0,0], x[1,0], 's', c='y')
-                elif r == 1:
                     plt.plot(x[0,0], x[1,0], 's', c='m')
-                elif r == 2:
-                    plt.plot(x[0,0], x[1,0], 's', c='w')
+                elif r == 1:
+                    plt.plot(x[0,0], x[1,0], 's', c='y')
                 # end if
             # end for
         # end for
@@ -104,11 +106,11 @@ class CTwoLayerNet(object):
     def ShowData(self, X, Y):
         for i in range(X.shape[1]):
             if Y[0,i] == 1:
-                plt.plot(X[0,i], X[1,i], '.', c='g')
+                plt.plot(X[0,i], X[1,i], '^', c='g')
             elif Y[0,i] == 2:
-                plt.plot(X[0,i], X[1,i], 'x', c='b')
+                plt.plot(X[0,i], X[1,i], 'x', c='r')
             elif Y[0,i] == 3:
-                plt.plot(X[0,i], X[1,i], '^', c='r')
+                plt.plot(X[0,i], X[1,i], '.', c='b')
             # end if
         # end for
         plt.xlabel("x1")
@@ -122,7 +124,7 @@ class CParameters(object):
     def __init__(self, n_input=1, n_output=1, n_hidden=4, 
                  eta=0.1, max_epoch=10000, batch_size=5, eps=0.001,
                  lossFuncName=LossFunctionName.MSE, 
-                 initMethod=InitialMethod.zero, 
+                 initMethod=InitialMethod.Zero, 
                  optimizerName=OptimizerName.O_SGD):
 
         self.num_input = n_input
@@ -140,3 +142,7 @@ class CParameters(object):
         self.eps = eps
         self.init_method = initMethod
         self.optimizer_name = optimizerName
+
+    def toString(self):
+        title = str.format("bz:{0} eta:{1} ne:{2}", self.batch_size, self.eta, self.num_hidden)
+        return title

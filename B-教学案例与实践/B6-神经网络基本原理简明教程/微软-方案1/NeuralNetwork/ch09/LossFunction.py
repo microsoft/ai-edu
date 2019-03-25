@@ -15,8 +15,9 @@ class CTrace(object):
         self.iteration = iteration
     # end def
 
-    def print_info(self):
-        print("epoch=%d, iteration=%d, loss=%f" %(self.epoch, self.iteration, self.loss))
+    def toString(self):
+        info = str.format("epc={0}, ite={1}, los={2:.4f}", self.epoch, self.iteration, self.loss)
+        return info
 
 # end class
 
@@ -26,6 +27,7 @@ class CLossHistory(object):
         # loss history
         self.loss_history = []
         self.min_loss_index = -1
+        # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
         self.min_trace = CTrace(100000, None, -1, -1)
 
     def AddLossHistory(self, loss, dict_weights, epoch, iteration):
@@ -38,17 +40,20 @@ class CLossHistory(object):
     # 图形显示损失函数值历史记录
     def ShowLossHistory(self, params):
         plt.plot(self.loss_history)
-        title = str.format("los:{0:.5f} ep:{1} ite:{2} bz:{3} eta:{4} ne:{5}", 
-                           self.min_trace.loss, self.min_trace.epoch, self.min_trace.iteration, 
-                           params.batch_size, params.eta, params.num_hidden)
+        title = self.min_trace.toString() + params.toString()
         plt.title(title)
-        plt.xlabel("iteration")
+        plt.xlabel("epoch")
         plt.ylabel("loss")
         plt.show()
 
         # 从历史记录中获得最小损失值得训练权重值
     def GetMinimalLossData(self):
         return self.min_trace
+
+    def toString(self):
+        title = str.format("los:{0:.4f} ep:{1} ir:{2}", self.min_trace.loss, self.min_trace.epoch, self.min_trace.iteration)
+        return title
+
 
 # end class
 

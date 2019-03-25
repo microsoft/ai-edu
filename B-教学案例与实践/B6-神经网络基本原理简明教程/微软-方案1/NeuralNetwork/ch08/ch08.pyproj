@@ -27,8 +27,6 @@
     <Compile Include="Level1_TwoLayer.py" />
     <Compile Include="Level3_TuneParams.py" />
     <Compile Include="Level4_BestLRSearcher.py" />
-    <Compile Include="Level6_NAG.py" />
-    <Compile Include="Level5_Momentum.py" />
     <Compile Include="LossFunction.py">
       <SubType>Code</SubType>
     </Compile>

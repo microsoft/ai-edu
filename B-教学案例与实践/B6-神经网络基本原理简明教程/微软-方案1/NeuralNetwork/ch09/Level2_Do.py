@@ -30,13 +30,13 @@ if __name__ == '__main__':
     params = CParameters(n_input, n_output, n_hidden,
                          eta, max_epoch, batch_size, eps, 
                          LossFunctionName.CrossEntropy3, 
-                         InitialMethod.xavier,
-                         OptimizerName.O_Adam)
+                         InitialMethod.Xavier,
+                         OptimizerName.O_SGD)
 
     loss_history = CLossHistory()
     net = CTwoLayerNet()
 
-    #net.ShowData(XData, YData)
+    net.ShowData(XData, YData)
 
     wbs = net.train(dataReader, params, loss_history)
 

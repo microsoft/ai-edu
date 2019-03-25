@@ -65,7 +65,7 @@ class WeightsBias(object):
         self.oB2 = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
 
     def pre_Update(self):
-        if self.optimizer_name == OptimizerName.O_Nag:
+        if self.optimizer_name == OptimizerName.Nag:
             self.W1 = self.oW1.pre_update(self.W1)
             self.B1 = self.oB1.pre_update(self.B1)
             self.W2 = self.oW2.pre_update(self.W2)

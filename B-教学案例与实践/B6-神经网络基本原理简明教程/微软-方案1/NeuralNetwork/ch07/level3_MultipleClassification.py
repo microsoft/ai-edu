@@ -110,7 +110,7 @@ def ShowResult(X,Y,W,B,xt):
 # 主程序
 if __name__ == '__main__':
     # SGD, MiniBatch, FullBatch
-    method = "SGD"
+    method = "MiniBatch"
     # read data
     XData,YData = ReadData(x_data_name, y_data_name)
     X, X_norm = NormalizeData(XData)

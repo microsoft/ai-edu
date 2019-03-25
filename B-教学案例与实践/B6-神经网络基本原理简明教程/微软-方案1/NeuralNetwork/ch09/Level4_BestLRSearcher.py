@@ -77,7 +77,7 @@ if __name__ == '__main__':
     n_input, n_hidden, n_output = num_feature, 4, num_category
     eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.001
-    init_method = InitialMethod.xavier
+    init_method = InitialMethod.Xavier
     lr_Searcher = CLearningRateSearcher()
     # try 1    
     #looper = CLooper(0.0001,0.0001,10)

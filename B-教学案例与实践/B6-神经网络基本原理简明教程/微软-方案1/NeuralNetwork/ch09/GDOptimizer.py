@@ -93,6 +93,8 @@ class Adam(GDOptimizer):
         #self.s = np.zeros(shape)
         #self.r = np.zeros(shape)
         self.t = 0
+        self.m = 0
+        self.v = 0
 
     def update(self, theta, grad):
         self.t = self.t + 1
@@ -119,5 +121,5 @@ class Nag(GDOptimizer):
     # 再用动量法更新W,b do final update
     def update(self, theta, grad):
         self.vt = self.alpha * self.vt + self.eta * grad
-        theta = theta - vt
+        theta = theta - self.vt
         return theta

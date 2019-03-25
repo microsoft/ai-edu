@@ -142,3 +142,7 @@ class CParameters(object):
         self.eps = eps
         self.init_method = initMethod
         self.optimizer_name = optimizerName
+
+    def toString(self):
+        title = str.format("bz:{0} eta:{1} ne:{2}", self.batch_size, self.eta, self.num_hidden)
+        return title

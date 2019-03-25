@@ -45,7 +45,6 @@ class CTwoLayerNet(object):
         wbs.dB1 = np.sum(dZ1, axis=1, keepdims=True)/m
 
     def train(self, dataReader, params, loss_history):
-        optimizer = GDOptimizerFactory.CreateOptimizer(params.optimizer_name)
         wbs = WeightsBias(params)
         wbs.InitializeWeights(False)
 

@@ -55,7 +55,7 @@ class WeightsBias(object):
             self.B1 = np.zeros((self.num_hidden, 1))
             self.B2 = np.zeros((self.num_output, 1))
         else:
-            self.CreateNew()
+            self.__CreateNew()
         # end if
 
     def __CreateOptimizers(self):

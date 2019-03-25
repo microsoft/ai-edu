@@ -57,7 +57,7 @@ def WalkThroughAllOptimizers(optname):
     Y = dataReader.ToOneHot()
     
     n_input, n_output = dataReader.num_feature, dataReader.num_category
-    n_hidden = 8
+    n_hidden = 16
     eta, batch_size, max_epoch = 0.1, 10, 20000
     eps = 0.06
 

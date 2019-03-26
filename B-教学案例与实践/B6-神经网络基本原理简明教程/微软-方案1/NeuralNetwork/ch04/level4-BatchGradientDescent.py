@@ -23,6 +23,8 @@ class CData(object):
 def ReadData():
     Xfile = Path(x_data_name)
     Yfile = Path(y_data_name)
+    print(Xfile)
+    print(Xfile.exists())
     if Xfile.exists() & Yfile.exists():
         X = np.load(Xfile)
         Y = np.load(Yfile)

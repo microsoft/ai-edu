@@ -59,7 +59,7 @@ if __name__ == '__main__':
     
     n_input, n_output = dataReader.num_feature, dataReader.num_category
     n_hidden = 8
-    eta, batch_size, max_epoch = 0.1, 10, 50000
+    eta, batch_size, max_epoch = 0.1, 10, 500
     eps = 0.06
 
     params = CParameters(n_input, n_output, n_hidden,

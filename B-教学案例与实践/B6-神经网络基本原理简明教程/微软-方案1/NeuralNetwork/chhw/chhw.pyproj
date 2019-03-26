@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>338c6a70-0b1a-45ac-a264-0bca34b87eee</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level2_ShowBinaryResult.py</StartupFile>
+    <StartupFile>Try_TanhAsBinaryClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,14 +21,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaseClassification.py" />
     <Compile Include="ch701_LogicOrGate.py" />
     <Compile Include="ch702_LogicAndGate.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ch4_LogicNotGate.py" />
-    <Compile Include="level1_BinaryClassification.py" />
-    <Compile Include="level2_ShowBinaryResult.py" />
+    <Compile Include="Try_TanhAsBinaryClassifier.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

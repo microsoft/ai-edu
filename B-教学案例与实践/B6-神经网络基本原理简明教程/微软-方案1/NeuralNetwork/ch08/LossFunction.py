@@ -3,6 +3,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from enum import Enum
 
 class CTrace(object):
     def __init__(self, loss, weights, epoch, iteration):
@@ -49,9 +50,14 @@ class CLossHistory(object):
 
 # end class
 
+class LossFunctionName(Enum):
+    MSE = 1,
+    CrossEntropy2 = 2,
+    CrossEntropy3 = 3,
+
 class CLossFunction(object):
-    def __init__(self, funcType):
-        self.func_type = funcType
+    def __init__(self, func_name):
+        self.func_name = func_name
     # end def
 
     # fcFunc: feed forward calculation
@@ -59,11 +65,11 @@ class CLossFunction(object):
         m = X.shape[1]
         dict_cache = ffcFunc(X, dict_weights)
         output = dict_cache["Output"]
-        if self.func_type == "MSE":
+        if self.func_name == LossFunctionName.MSE:
             loss = self.MSE(output, Y, m)
-        elif self.func_type == "CE2":
+        elif self.func_name == LossFunctionName.CE2:
             loss = self.CE2(output, Y, m)
-        elif self.func_type == "CE3":
+        elif self.func_name == LossFunctionName.CE3:
             loss = self.CE3(output, Y, m)
         #end if
         return loss

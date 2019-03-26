@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
 from Activations import *
-from Level0_TwoLayerNN import *
+from Level0_TwoLayerClassificationNet import *
 from DataReader import * 
 from GDOptimizer import *
 from WeightsBias import *
@@ -49,11 +49,11 @@ if __name__ == '__main__':
                          OptimizerName.SGD)
 
     loss_history = CLossHistory()
-    net = CTwoLayerNet()
+    net = TwoLayerClassificationNet()
 
     ShowData(XData, YData)
 
-    wbs = net.train(dataReader, params, loss_history)
+    net.train(dataReader, params, loss_history)
 
     trace = loss_history.GetMinimalLossData()
     trace.toString()

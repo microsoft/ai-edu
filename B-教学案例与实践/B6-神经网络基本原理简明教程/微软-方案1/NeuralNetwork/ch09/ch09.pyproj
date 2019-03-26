@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_Optimizer.py</StartupFile>
+    <StartupFile>Level2_ShowResult.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,12 +23,16 @@
   <ItemGroup>
     <Compile Include="Activations.py" />
     <Compile Include="DataReader.py" />
+    <Compile Include="Level0_TwoLayerFittingNet.py" />
     <Compile Include="Level1_Train.py" />
     <Compile Include="Level3_Optimizer.py" />
     <Compile Include="Level2_ShowResult.py" />
-    <Compile Include="Level0_TwoLayerNN.py" />
+    <Compile Include="Level0_TwoLayerClassificationNet.py" />
     <Compile Include="LossFunction.py" />
     <Compile Include="GDOptimizer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parameters.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WeightsBias.py">

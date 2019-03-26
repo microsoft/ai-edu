@@ -13,7 +13,7 @@ Notes: we will use ch02 as example. Other example code can be executed in the sa
 3. (Optional) Choose an appropriate python environment, if you have several python environments in youe system
     1. right click on the python environment
 
-    ![](./Images/3.PNG)
+    ![](./Images/3.png)
 
     2. choose the first entry to change your python environment or create another virtual environment
 
@@ -53,4 +53,4 @@ or, you can enter ```Ctrl + Shift + ` ``` to start the terminal, and use this to
 
 Note: please make sure now your opened folder is ch02, a simple method to examine this is to check the path, as shown in the red box.
 
-![](./Images/11.PNG)
+![](./Images/11.png)

@@ -5,28 +5,28 @@ import numpy as np
 from enum import Enum
 
 class OptimizerName(Enum):
-    O_SGD = 0,
-    O_Momentum = 1,
-    O_Nag = 2,
-    O_AdaGrad = 3,
-    O_RMSProp = 4
-    O_Adam = 5
+    SGD = 0,
+    Momentum = 1,
+    Nag = 2,
+    AdaGrad = 3,
+    RMSProp = 4
+    Adam = 5
 
 
 class GDOptimizerFactory(object):
     @staticmethod
-    def CreateOptimizer(eta, name = OptimizerName.O_SGD):
-        if name == OptimizerName.O_SGD:
+    def CreateOptimizer(eta, name = OptimizerName.SGD):
+        if name == OptimizerName.SGD:
             optimizer = SGD(eta)
-        elif name == OptimizerName.O_Adam:
+        elif name == OptimizerName.Adam:
             optimizer = Adam(eta)
-        elif name == OptimizerName.O_AdaGrad:
+        elif name == OptimizerName.AdaGrad:
             optimizer = AdaGrad(eta)
-        elif name == OptimizerName.O_Momentum:
+        elif name == OptimizerName.Momentum:
             optimizer = Momentum(eta)
-        elif name == OptimizerName.O_Nag:
+        elif name == OptimizerName.Nag:
             optimizer = Nag(eta)
-        elif name == OptimizerName.O_RMSProp:
+        elif name == OptimizerName.RMSProp:
             optimizer = RMSProp(eta)
 
         return optimizer

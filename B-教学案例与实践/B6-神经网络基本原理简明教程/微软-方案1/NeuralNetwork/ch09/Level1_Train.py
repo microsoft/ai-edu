@@ -7,13 +7,28 @@ import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
 from Activations import *
-from Level1_TwoLayerNN import *
+from Level0_TwoLayerNN import *
 from DataReader import * 
 from GDOptimizer import *
 from WeightsBias import *
 
 x_data_name = "X9_3.npy"
 y_data_name = "Y9_3.npy"
+
+def ShowData(X, Y):
+    for i in range(X.shape[1]):
+        if Y[0,i] == 1:
+            plt.plot(X[0,i], X[1,i], '^', c='g')
+        elif Y[0,i] == 2:
+            plt.plot(X[0,i], X[1,i], 'x', c='r')
+        elif Y[0,i] == 3:
+            plt.plot(X[0,i], X[1,i], '.', c='b')
+        # end if
+    # end for
+    plt.xlabel("x1")
+    plt.ylabel("x2")
+    plt.show()
+
 
 if __name__ == '__main__':
 
@@ -23,7 +38,7 @@ if __name__ == '__main__':
     Y = dataReader.ToOneHot()
     
     n_input, n_output = dataReader.num_feature, dataReader.num_category
-    n_hidden = 4
+    n_hidden = 8
     eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.05
 
@@ -31,24 +46,16 @@ if __name__ == '__main__':
                          eta, max_epoch, batch_size, eps, 
                          LossFunctionName.CrossEntropy3, 
                          InitialMethod.Xavier,
-                         OptimizerName.O_SGD)
+                         OptimizerName.SGD)
 
     loss_history = CLossHistory()
     net = CTwoLayerNet()
 
-    net.ShowData(XData, YData)
+    ShowData(XData, YData)
 
     wbs = net.train(dataReader, params, loss_history)
 
     trace = loss_history.GetMinimalLossData()
-    trace.print_info()
+    trace.toString()
     loss_history.ShowLossHistory(params)
-
-    wbs_min = WeightsBias(params)
-    wbs_min.W1 = trace.dict_weights["W1"]
-    wbs_min.W2 = trace.dict_weights["W2"]
-    wbs_min.B1 = trace.dict_weights["B1"]
-    wbs_min.B2 = trace.dict_weights["B2"]
-    net.ShowAreaResult(X, wbs_min)
-    net.ShowData(X, YData)
     

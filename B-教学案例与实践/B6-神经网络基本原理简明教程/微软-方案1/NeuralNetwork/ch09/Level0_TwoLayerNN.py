@@ -45,7 +45,6 @@ class CTwoLayerNet(object):
         wbs.dB1 = np.sum(dZ1, axis=1, keepdims=True)/m
 
     def train(self, dataReader, params, loss_history):
-        optimizer = GDOptimizerFactory.CreateOptimizer(params.optimizer_name)
         wbs = WeightsBias(params)
         wbs.InitializeWeights(False)
 
@@ -60,7 +59,7 @@ class CTwoLayerNet(object):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size, iteration)
                 # for optimizers which need pre-update weights
-                if params.optimizer_name == OptimizerName.O_Nag:
+                if params.optimizer_name == OptimizerName.Nag:
                     wbs.pre_Update()
 
                 # get z from x,y
@@ -83,40 +82,6 @@ class CTwoLayerNet(object):
         # end for
         return wbs
     # end def
-
-    def ShowAreaResult(self, X, dict_weights):
-        count = 50
-        x1 = np.linspace(0,1,count)
-        x2 = np.linspace(0,1,count)
-        for i in range(count):
-            for j in range(count):
-                x = np.array([x1[i],x2[j]]).reshape(2,1)
-                dict_cache = self.ForwardCalculationBatch(x, dict_weights)
-                output = dict_cache["Output"]
-                r = np.argmax(output, axis=0)
-                if r == 0:
-                    plt.plot(x[0,0], x[1,0], 's', c='m')
-                elif r == 1:
-                    plt.plot(x[0,0], x[1,0], 's', c='y')
-                # end if
-            # end for
-        # end for
-    #end def
-
-    def ShowData(self, X, Y):
-        for i in range(X.shape[1]):
-            if Y[0,i] == 1:
-                plt.plot(X[0,i], X[1,i], '^', c='g')
-            elif Y[0,i] == 2:
-                plt.plot(X[0,i], X[1,i], 'x', c='r')
-            elif Y[0,i] == 3:
-                plt.plot(X[0,i], X[1,i], '.', c='b')
-            # end if
-        # end for
-        plt.xlabel("x1")
-        plt.ylabel("x2")
-        plt.show()
-
 # end class
 
 # this class is for two-layer NN only
@@ -125,7 +90,7 @@ class CParameters(object):
                  eta=0.1, max_epoch=10000, batch_size=5, eps=0.001,
                  lossFuncName=LossFunctionName.MSE, 
                  initMethod=InitialMethod.Zero, 
-                 optimizerName=OptimizerName.O_SGD):
+                 optimizerName=OptimizerName.SGD):
 
         self.num_input = n_input
         self.num_output = n_output
@@ -144,5 +109,5 @@ class CParameters(object):
         self.optimizer_name = optimizerName
 
     def toString(self):
-        title = str.format("bz:{0} eta:{1} ne:{2}", self.batch_size, self.eta, self.num_hidden)
+        title = str.format("bz:{0},eta:{1},ne:{2},op:{3}", self.batch_size, self.eta, self.num_hidden, self.optimizer_name.name)
         return title

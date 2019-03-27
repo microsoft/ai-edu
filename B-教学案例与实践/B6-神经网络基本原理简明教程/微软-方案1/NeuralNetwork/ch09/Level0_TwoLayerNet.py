@@ -68,7 +68,7 @@ class TwoLayerNet(object):
             if loss < params.eps:
                 break
             # end if
-            dataReader.Shuffle()
+            #dataReader.Shuffle()
         # end for
         return wbs
     # end def

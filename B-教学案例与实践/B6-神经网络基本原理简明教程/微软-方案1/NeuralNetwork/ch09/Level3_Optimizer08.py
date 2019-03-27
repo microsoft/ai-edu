@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
 from Activations import *
-from Level0_TwoLayerFittingNet import *
+from Level1_TwoLayerFittingNet import *
 from DataReader import * 
 from GDOptimizer import *
 from WeightsBias import *
@@ -36,8 +36,8 @@ def WalkThroughAllOptimizers(optname):
     Y = dataReader.NormalizeY()
     
     n_input, n_output = dataReader.num_feature, 1
-    n_hidden = 6
-    eta, batch_size, max_epoch = 0.5, 10, 20000
+    n_hidden = 4
+    eta, batch_size, max_epoch = 0.005, 10, 20000
     eps = 0.001
 
     params = CParameters(n_input, n_output, n_hidden,
@@ -68,12 +68,14 @@ def WalkThroughAllOptimizers(optname):
    
 if __name__ == '__main__':
 
-    list_name = [OptimizerName.SGD, 
-                 OptimizerName.Momentum,
-                 OptimizerName.Nag,
-                 OptimizerName.AdaGrad,
-                 OptimizerName.RMSProp,
-                 OptimizerName.Adam]
+    list_name = [OptimizerName.Adam]
+
+#        list_name = [OptimizerName.SGD, 
+#                 OptimizerName.Momentum,
+#                 OptimizerName.Nag,
+#                 OptimizerName.AdaGrad,
+#                 OptimizerName.RMSProp,
+#                 OptimizerName.Adam]
 
     for name in list_name:
         WalkThroughAllOptimizers(name)

@@ -6,7 +6,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
-from Activations import *
 from DataReader import * 
 from GDOptimizer import *
 from WeightsBias import *
@@ -69,6 +68,7 @@ class TwoLayerNet(object):
             if loss < params.eps:
                 break
             # end if
+            dataReader.Shuffle()
         # end for
         return wbs
     # end def

@@ -36,8 +36,8 @@ def WalkThroughAllOptimizers(optname):
     Y = dataReader.NormalizeY()
     
     n_input, n_output = dataReader.num_feature, 1
-    n_hidden = 4
-    eta, batch_size, max_epoch = 0.1, 10, 20000
+    n_hidden = 6
+    eta, batch_size, max_epoch = 0.5, 10, 20000
     eps = 0.001
 
     params = CParameters(n_input, n_output, n_hidden,

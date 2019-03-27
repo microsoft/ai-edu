@@ -37,8 +37,8 @@ def CheckLoss(W, B, X, Y):
     A = ForwardCalculationBatch(W,B,X)
     
     p1 = 1 - Y
-    p2 = np.log(1-A)
-    p3 = np.log(1+A)
+    p2 = np.log((1-A)/2)
+    p3 = np.log((1+A)/2)
 
     p4 = np.multiply(p1 ,p2)
     p5 = np.multiply(1+Y, p3)

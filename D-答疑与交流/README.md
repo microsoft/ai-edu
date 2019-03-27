@@ -55,7 +55,7 @@
         3. 利用子账户和对应密码登录[portal.azure.cn](https://portal.azure.cn)，并创建所需资源
     
     2. 使用全球版：
-        1. 登录[Azure 全球版](https://azure.microsoft.com/zh-cn/free/students/)，点击立即激活
+        1. 登录[Azure 全球版学生入口](https://azure.microsoft.com/zh-cn/free/students/)，点击立即激活
 
         ![](./Images/3.PNG)
 

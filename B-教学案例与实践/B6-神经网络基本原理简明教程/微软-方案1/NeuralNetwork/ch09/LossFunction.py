@@ -5,8 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from enum import Enum
 
-from WeightsBias import *
-
 class CTrace(object):
     def __init__(self, loss, dict_weights, epoch, iteration):
         self.loss = loss
@@ -51,7 +49,6 @@ class CLossHistory(object):
     def GetMinimalLossData(self):
         return self.min_trace
 
-
 # end class
 
 class LossFunctionName(Enum):
@@ -65,16 +62,14 @@ class CLossFunction(object):
     # end def
 
     # fcFunc: feed forward calculation
-    def CheckLoss(self, X, Y, wbs, ffcFunc):
-        m = X.shape[1]
-        dict_cache = ffcFunc(X, wbs)
-        output = dict_cache["Output"]
+    def CheckLoss(self, Y, A):
+        m = Y.shape[1]
         if self.func_name == LossFunctionName.MSE:
-            loss = self.MSE(output, Y, m)
+            loss = self.MSE(A, Y, m)
         elif self.func_name == LossFunctionName.CrossEntropy2:
-            loss = self.CE2(output, Y, m)
+            loss = self.CE2(A, Y, m)
         elif self.func_name == LossFunctionName.CrossEntropy3:
-            loss = self.CE3(output, Y, m)
+            loss = self.CE3(A, Y, m)
         #end if
         return loss
     # end def

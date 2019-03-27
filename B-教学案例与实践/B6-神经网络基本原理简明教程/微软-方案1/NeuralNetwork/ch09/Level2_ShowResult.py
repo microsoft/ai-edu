@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
 from Activations import *
-from Level0_TwoLayerNN import *
+from Level0_TwoLayerClassificationNet import *
 from DataReader import * 
 from GDOptimizer import *
 from WeightsBias import *
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     
     n_input, n_output = dataReader.num_feature, dataReader.num_category
     n_hidden = 8
-    eta, batch_size, max_epoch = 0.1, 10, 50000
+    eta, batch_size, max_epoch = 0.1, 10, 500
     eps = 0.06
 
     params = CParameters(n_input, n_output, n_hidden,
@@ -69,11 +69,11 @@ if __name__ == '__main__':
                          OptimizerName.Nag)
 
     loss_history = CLossHistory()
-    net = CTwoLayerNet()
+    net = TwoLayerClassificationNet()
 
     ShowData(XData, YData)
 
-    wbs = net.train(dataReader, params, loss_history)
+    net.train(dataReader, params, loss_history)
 
     trace = loss_history.GetMinimalLossData()
     print(trace.toString())

@@ -23,12 +23,17 @@
   <ItemGroup>
     <Compile Include="Activations.py" />
     <Compile Include="DataReader.py" />
+    <Compile Include="Level0_TwoLayerNet.py" />
+    <Compile Include="Level0_TwoLayerFittingNet.py" />
     <Compile Include="Level1_Train.py" />
     <Compile Include="Level3_Optimizer.py" />
     <Compile Include="Level2_ShowResult.py" />
-    <Compile Include="Level0_TwoLayerNN.py" />
+    <Compile Include="Level0_TwoLayerClassificationNet.py" />
     <Compile Include="LossFunction.py" />
     <Compile Include="GDOptimizer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parameters.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WeightsBias.py">

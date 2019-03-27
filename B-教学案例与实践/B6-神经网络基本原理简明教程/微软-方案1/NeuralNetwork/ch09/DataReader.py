@@ -121,8 +121,8 @@ class DataReader(object):
         XP = np.random.permutation(self.X.T)
         np.random.seed(seed)
         YP = np.random.permutation(self.Y.T)
-        self.X = XP
-        self.Y = YP
+        self.X = XP.T
+        self.Y = YP.T
         return self.X, self.Y
 
 # unit test
@@ -130,6 +130,6 @@ if __name__ == '__main__':
     X = np.array([1,2,3,4,5,6,7,8]).reshape(2,4)
     Y = np.array([7,8,9,0])
     print(X,Y)
-    dp = DataOperator()
+    dp = DataReader()
     X,Y=dp.Shuffle(X,Y)
     print(X,Y)

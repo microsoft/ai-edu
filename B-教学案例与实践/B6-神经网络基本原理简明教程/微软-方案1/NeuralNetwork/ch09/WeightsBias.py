@@ -21,11 +21,12 @@ class WeightsBias(object):
         self.optimizer_name = params.optimizer_name
         self.eta = params.eta
 
-    def GenerateWeightsArrayFileName(self):
+    def __GenerateWeightsArrayFileName(self):
         self.w1_filename = str.format("w1_{0}_{1}_{2}.npy", self.num_hidden, self.num_input, self.init_method.name)
         self.w2_filename = str.format("w2_{0}_{1}_{2}.npy", self.num_output, self.num_hidden, self.init_method.name)
 
     def InitializeWeights(self, create_new = False):
+        self.__GenerateWeightsArrayFileName()
         if create_new:
             self.__CreateNew()
         else:
@@ -40,13 +41,10 @@ class WeightsBias(object):
         self.dB1 = np.zeros(self.B1.shape)
         self.dW2 = np.zeros(self.W2.shape)
         self.dB2 = np.zeros(self.B2.shape)
-        self.GenerateWeightsArrayFileName()
         np.save(self.w1_filename, self.W1)
         np.save(self.w2_filename, self.W2)
         
-
     def __LoadExistingParameters(self):
-        self.GenerateWeightsArrayFileName()
         w1_file = Path(self.w1_filename)
         w2_file = Path(self.w2_filename)
         if w1_file.exists() and w2_file.exists():

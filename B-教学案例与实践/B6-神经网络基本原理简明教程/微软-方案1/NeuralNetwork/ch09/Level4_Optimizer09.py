@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
 from Activations import *
-from Level1_TwoLayerClassificationNet import *
+from Level0_TwoLayerClassificationNet import *
 from DataReader import * 
 from GDOptimizer import *
 from WeightsBias import *
@@ -50,14 +50,14 @@ def ShowData(X, Y):
     plt.show()
 
 
-if __name__ == '__main__':
+def WalkThroughAllOptimizers(optname):
 
     dataReader = DataReader(x_data_name, y_data_name)
     XData,YData = dataReader.ReadData()
     X = dataReader.NormalizeX()
     Y = dataReader.ToOneHot()
     
-    n_input, n_output = dataReader.num_feature, dataReader.num_category
+    n_input, n_output = dataReader.num_feature,  dataReader.num_category
     n_hidden = 8
     eta, batch_size, max_epoch = 0.1, 10, 10000
     eps = 0.06
@@ -66,12 +66,12 @@ if __name__ == '__main__':
                          eta, max_epoch, batch_size, eps, 
                          LossFunctionName.CrossEntropy3, 
                          InitialMethod.Xavier,
-                         OptimizerName.SGD)
+                         optname)
 
     loss_history = CLossHistory()
     net = TwoLayerClassificationNet()
 
-    ShowData(XData, YData)
+    #ShowData(XData, YData)
 
     net.train(dataReader, params, loss_history)
 
@@ -88,4 +88,16 @@ if __name__ == '__main__':
     wbs_min.B2 = trace.dict_weights["B2"]
     ShowAreaResult(X, wbs_min, net, title)
     ShowData(X, YData)
-    
+
+   
+if __name__ == '__main__':
+
+    list_name = [OptimizerName.SGD, 
+                 OptimizerName.Momentum,
+                 OptimizerName.Nag,
+                 OptimizerName.AdaGrad,
+                 OptimizerName.RMSProp,
+                 OptimizerName.Adam]
+
+    for name in list_name:
+        WalkThroughAllOptimizers(name)

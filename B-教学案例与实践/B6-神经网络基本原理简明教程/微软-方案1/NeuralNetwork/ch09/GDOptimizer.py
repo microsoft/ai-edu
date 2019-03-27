@@ -33,10 +33,13 @@ class GDOptimizerFactory(object):
 
 class GDOptimizer(object):
     def __init__(self):
-        Pass
+        pass
+
+    def pre_update(self, theta):
+        pass 
 
     def update(self, theta, grad):
-        Pass
+        pass
 
 class SGD(GDOptimizer):
     def __init__(self, eta):
@@ -115,7 +118,7 @@ class Nag(GDOptimizer):
 
     # 先用预测的梯度来更新W,b
     def pre_update(self, theta):
-        theta_hat = theta + self.alpha * self.vt
+        theta_hat = theta - self.alpha * self.vt
         return theta_hat
 
     # 再用动量法更新W,b do final update

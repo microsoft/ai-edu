@@ -67,6 +67,10 @@ class DataReader(object):
         # end for
         return self.X
 
+    def NormalizeY(self):
+        self.Y = self.YRawData
+        return self.Y
+
     # normalize data by specified range and min_value
     def NormalizePredicateData(self, X_predicate):
         X_new = np.zeros(X_predicate.shape)

@@ -28,7 +28,7 @@ def ShowResult(X, Y, net, wbs, title):
 #end def
 
 
-def WalkThroughAllOptimizers(optname):
+def WalkThroughAllOptimizers(option):
 
     dataReader = DataReader(x_data_name, y_data_name)
     XData,YData = dataReader.ReadData()
@@ -37,14 +37,14 @@ def WalkThroughAllOptimizers(optname):
     
     n_input, n_output = dataReader.num_feature, 1
     n_hidden = 4
-    eta, batch_size, max_epoch = 0.005, 10, 20000
+    eta, batch_size, max_epoch = option[1], 10, 10000
     eps = 0.001
 
     params = CParameters(n_input, n_output, n_hidden,
                          eta, max_epoch, batch_size, eps, 
                          LossFunctionName.MSE, 
                          InitialMethod.Xavier,
-                         optname)
+                         option[0])
 
     loss_history = CLossHistory()
     net = TwoLayerFittingNet()
@@ -68,14 +68,13 @@ def WalkThroughAllOptimizers(optname):
    
 if __name__ == '__main__':
 
-    list_name = [OptimizerName.Adam]
-
-#        list_name = [OptimizerName.SGD, 
-#                 OptimizerName.Momentum,
-#                 OptimizerName.Nag,
-#                 OptimizerName.AdaGrad,
-#                 OptimizerName.RMSProp,
-#                 OptimizerName.Adam]
+    list_name = [(OptimizerName.SGD,0.1),
+                 (OptimizerName.Momentum,0.1),
+                 (OptimizerName.Nag,0.1),
+                 (OptimizerName.AdaGrad,0.3),
+                 (OptimizerName.AdaDelta,0.1),
+                 (OptimizerName.RMSProp,0.01),
+                 (OptimizerName.Adam,0.005)]
 
     for name in list_name:
         WalkThroughAllOptimizers(name)

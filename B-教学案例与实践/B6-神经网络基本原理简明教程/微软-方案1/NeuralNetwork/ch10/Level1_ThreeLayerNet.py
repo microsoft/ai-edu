@@ -122,15 +122,17 @@ def BackPropagation(dict_Param,cache,X,Y):
     Z2=cache["Z2"]
     Z3=cache["Z3"]
 
-    dZ2= A2 - Y
+    dZ3= A3 - Y
+    dW3 = np.dot(dZ3, A2.T)
+    dB3 = np.sum(dZ3, axis=1, keepdims=True)
+
+    # dZ2 = W3T * dZ3 * dA3
+    dZ2 = np.dot(W3.T, dZ3) * (1-A2*A2) # tanh
     dW2 = np.dot(dZ2, A1.T)
     dB2 = np.sum(dZ2, axis=1, keepdims=True)
 
-    dLoss_A1 = np.dot(W2.T, dZ2)
-    dA1_Z1 = A1 * (1 - A1)     # sigmoid
-    #dA1_Z1 = 1-np.power(A1,2)   # tanh
-    dZ1 = dLoss_A1 * dA1_Z1
-    
+    # dZ1 = W2T * dZ2 * dA2
+    dZ1 = np.dot(W2.T, dZ2) * A1 * (1-A1)   #sigmoid
     dW1 = np.dot(dZ1, X.T)
     dB1 = np.sum(dZ1, axis=1, keepdims=True)
 
@@ -159,13 +161,13 @@ def UpdateParam(dict_Param, dict_Grads, learning_rate):
     W3 = W3 - learning_rate * dW3
     B3 = B3 - learning_rate * dB3
 
-    dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2}
+    dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2, "W3": W3, "B3": B3}
     return dict_Param
 
 # cross entropy: -Y*lnA
 def CalculateLoss(dict_Param, X, Y, count):
-    A2, dict_Cache = ForwardCalculation(X, dict_Param)
-    p = Y * np.log(A2)
+    A3, dict_Cache = ForwardCalculation(X, dict_Param)
+    p = Y * np.log(A3)
     Loss = -np.sum(p) / count
     return Loss
 
@@ -177,17 +179,24 @@ def InitialParameters(num_input, num_hidden1, num_hidden2, num_output, flag):
         W3 = np.zeros((num_output, num_hidden2))
     elif flag == 1:
         # normalize
-        W1 = np.random.normal(size=(num_hidden, num_input))
-        W2 = np.random.normal(size=(num_hidden, num_input))
-        W3 = np.random.normal(size=(num_output, num_hidden))
+        W1 = np.random.normal(size=(num_hidden1, num_input))
+        W2 = np.random.normal(size=(num_hidden2, num_hidden1))
+        W3 = np.random.normal(size=(num_output, num_hidden2))
     elif flag == 2:
         #
-        W1=np.random.uniform(-np.sqrt(6)/np.sqrt(num_input+num_hidden),np.sqrt(6)/np.sqrt(num_hidden+num_input),size=(num_hidden,num_input))
-        W2=np.random.uniform(-np.sqrt(6)/np.sqrt(num_output+num_hidden),np.sqrt(6)/np.sqrt(num_output+num_hidden),size=(num_output,num_hidden))
+        t1 = np.sqrt(6/(num_input + num_hidden1))
+        W1 = np.random.uniform(-t1, t1, size=(num_hidden1, num_input))
 
-    B1 = np.zeros((num_hidden, 1))
-    B2 = np.zeros((num_output, 1))
-    dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2}
+        t2 = np.sqrt(6/(num_hidden2 + num_hidden1))
+        W2 = np.random.uniform(-t2, t2, size=(num_hidden2, num_hidden1))
+
+        t3 = np.sqrt(6/(num_output + num_hidden2))
+        W3 = np.random.uniform(-t3, t3, size=(num_output, num_hidden2))
+
+    B1 = np.zeros((num_hidden1, 1))
+    B2 = np.zeros((num_hidden2, 1))
+    B3 = np.zeros((num_output, 1))
+    dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2, "W3": W3, "B3": B3}
     return dict_Param
 
 def Test(num_output, dict_Param, num_input):
@@ -204,45 +213,53 @@ def Test(num_output, dict_Param, num_input):
             correct += 1
     return correct, num_images
 
-print("Loading...")
-learning_rate = 0.1
-num_hidden = 32
-num_output = 10
+if __name__ == '__main__':
 
-raw_data = ReadImageFile(train_image_file)
-X = NormalizeData(raw_data)
-Y = ReadLabelFile(train_label_file, num_output)
+    print("Loading...")
+    learning_rate = 0.1
+    num_hidden1 = 32
+    num_hidden2 = 16
+    num_output = 10
 
-num_images = X.shape[1]
-num_input = X.shape[0]
-max_iteration = 1
+    raw_data = ReadImageFile(train_image_file)
+    X = NormalizeData(raw_data)
+    Y = ReadLabelFile(train_label_file, num_output)
 
-dict_Param = InitialParameters(num_input, num_hidden, num_output, 2)
-w = dict_Param["W1"]
-print(np.var(w))
+    num_images = X.shape[1]
+    num_input = X.shape[0]
+    max_iteration = 10
 
-loss_history = list()
+    dict_Param = InitialParameters(num_input, num_hidden1, num_hidden2, num_output, 2)
 
-print("Training...")
-for iteration in range(max_iteration):
-    for item in range(num_images):
-        x = X[:,item].reshape(num_input,1)
-        y = Y[:,item].reshape(num_output,1)
-        A2, dict_Cache = ForwardCalculation(x, dict_Param)
-        dict_Grads = BackPropagation(dict_Param, dict_Cache, x, y)
-        dict_Param = UpdateParam(dict_Param, dict_Grads, learning_rate)
-        if item % 1000 == 0:
-            Loss = CalculateLoss(dict_Param, X, Y, num_images)
-            print(item, Loss)
-            loss_history = np.append(loss_history, Loss)
-    print(iteration)
+    loss_history = list()
+    eps = 1e-1
+    print("Training...")
+    for iteration in range(max_iteration):
+        for item in range(num_images):
+            x = X[:,item].reshape(num_input,1)
+            y = Y[:,item].reshape(num_output,1)
+            A2, dict_Cache = ForwardCalculation(x, dict_Param)
+            dict_Grads = BackPropagation(dict_Param, dict_Cache, x, y)
+            dict_Param = UpdateParam(dict_Param, dict_Grads, learning_rate)
+            if item % 1000 == 0:
+                Loss = CalculateLoss(dict_Param, X, Y, num_images)
+                print(item, Loss)
+                loss_history = np.append(loss_history, Loss)
+                if Loss < eps:
+                    break
+                #end if
+            #end if
+        #end for
+        if Loss < eps:
+            break
+        print(iteration)
 
-print("Testing...")
-correct, count = Test(num_output, dict_Param, num_input)
-print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
+    print("Testing...")
+    correct, count = Test(num_output, dict_Param, num_input)
+    print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
 
-plt.plot(loss_history, "r")
-plt.title("Xavier Initilization")
-plt.xlabel("Iteration(x1000)")
-plt.ylabel("Loss")
-plt.show()
+    plt.plot(loss_history, "r")
+    plt.title("Xavier Initilization")
+    plt.xlabel("Iteration(x1000)")
+    plt.ylabel("Loss")
+    plt.show()

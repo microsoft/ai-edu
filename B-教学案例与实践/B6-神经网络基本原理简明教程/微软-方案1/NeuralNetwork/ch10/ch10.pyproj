@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level0_TwoLayerNet.py</StartupFile>
+    <StartupFile>Level1_ThreeLayerNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,6 +24,7 @@
     <Compile Include="Activations.py" />
     <Compile Include="DataReader.py" />
     <Compile Include="GDOptimizer.py" />
+    <Compile Include="Level1_ThreeLayerNet.py" />
     <Compile Include="Level0_TwoLayerNet.py" />
     <Compile Include="LossFunction.py" />
     <Compile Include="MnistData.py">

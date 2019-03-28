@@ -216,7 +216,7 @@ def Test(num_output, dict_Param, num_input):
 if __name__ == '__main__':
 
     print("Loading...")
-    learning_rate = 0.01
+    learning_rate = 0.05
     num_hidden1 = 64
     num_hidden2 = 16
     num_output = 10

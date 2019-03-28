@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ch10.py</StartupFile>
+    <StartupFile>Level1_ThreeLayerNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ch10.py" />
+    <Compile Include="Activations.py" />
+    <Compile Include="DataReader.py" />
+    <Compile Include="GDOptimizer.py" />
+    <Compile Include="Level1_ThreeLayerNet.py" />
+    <Compile Include="Level0_TwoLayerNet.py" />
+    <Compile Include="LossFunction.py" />
+    <Compile Include="MnistData.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Parameters.py" />
+    <Compile Include="WeightsBias.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

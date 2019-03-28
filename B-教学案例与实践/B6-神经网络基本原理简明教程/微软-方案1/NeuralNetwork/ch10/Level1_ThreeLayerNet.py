@@ -216,8 +216,8 @@ def Test(num_output, dict_Param, num_input):
 if __name__ == '__main__':
 
     print("Loading...")
-    learning_rate = 0.1
-    num_hidden1 = 32
+    learning_rate = 0.01
+    num_hidden1 = 64
     num_hidden2 = 16
     num_output = 10
 
@@ -238,7 +238,7 @@ if __name__ == '__main__':
         for item in range(num_images):
             x = X[:,item].reshape(num_input,1)
             y = Y[:,item].reshape(num_output,1)
-            A2, dict_Cache = ForwardCalculation(x, dict_Param)
+            A3, dict_Cache = ForwardCalculation(x, dict_Param)
             dict_Grads = BackPropagation(dict_Param, dict_Cache, x, y)
             dict_Param = UpdateParam(dict_Param, dict_Grads, learning_rate)
             if item % 1000 == 0:

@@ -187,45 +187,47 @@ def Test(num_output, dict_Param, num_input):
             correct += 1
     return correct, num_images
 
-print("Loading...")
-learning_rate = 0.1
-num_hidden = 32
-num_output = 10
+if __name__ == '__main__':
 
-raw_data = ReadImageFile(train_image_file)
-X = NormalizeData(raw_data)
-Y = ReadLabelFile(train_label_file, num_output)
+    print("Loading...")
+    learning_rate = 0.1
+    num_hidden = 32
+    num_output = 10
 
-num_images = X.shape[1]
-num_input = X.shape[0]
-max_iteration = 1
+    raw_data = ReadImageFile(train_image_file)
+    X = NormalizeData(raw_data)
+    Y = ReadLabelFile(train_label_file, num_output)
 
-dict_Param = InitialParameters(num_input, num_hidden, num_output, 2)
-w = dict_Param["W1"]
-print(np.var(w))
+    num_images = X.shape[1]
+    num_input = X.shape[0]
+    max_iteration = 1
 
-loss_history = list()
+    dict_Param = InitialParameters(num_input, num_hidden, num_output, 2)
+    w = dict_Param["W1"]
+    print(np.var(w))
 
-print("Training...")
-for iteration in range(max_iteration):
-    for item in range(num_images):
-        x = X[:,item].reshape(num_input,1)
-        y = Y[:,item].reshape(num_output,1)
-        A2, dict_Cache = ForwardCalculation(x, dict_Param)
-        dict_Grads = BackPropagation(dict_Param, dict_Cache, x, y)
-        dict_Param = UpdateParam(dict_Param, dict_Grads, learning_rate)
-        if item % 1000 == 0:
-            Loss = CalculateLoss(dict_Param, X, Y, num_images)
-            print(item, Loss)
-            loss_history = np.append(loss_history, Loss)
-    print(iteration)
+    loss_history = list()
 
-print("Testing...")
-correct, count = Test(num_output, dict_Param, num_input)
-print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
+    print("Training...")
+    for iteration in range(max_iteration):
+        for item in range(num_images):
+            x = X[:,item].reshape(num_input,1)
+            y = Y[:,item].reshape(num_output,1)
+            A2, dict_Cache = ForwardCalculation(x, dict_Param)
+            dict_Grads = BackPropagation(dict_Param, dict_Cache, x, y)
+            dict_Param = UpdateParam(dict_Param, dict_Grads, learning_rate)
+            if item % 1000 == 0:
+                Loss = CalculateLoss(dict_Param, X, Y, num_images)
+                print(item, Loss)
+                loss_history = np.append(loss_history, Loss)
+        print(iteration)
 
-plt.plot(loss_history, "r")
-plt.title("Xavier Initilization")
-plt.xlabel("Iteration(x1000)")
-plt.ylabel("Loss")
-plt.show()
+    print("Testing...")
+    correct, count = Test(num_output, dict_Param, num_input)
+    print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
+
+    plt.plot(loss_history, "r")
+    plt.title("Xavier Initilization")
+    plt.xlabel("Iteration(x1000)")
+    plt.ylabel("Loss")
+    plt.show()

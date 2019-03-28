@@ -9,8 +9,9 @@ class OptimizerName(Enum):
     Momentum = 1,
     Nag = 2,
     AdaGrad = 3,
-    RMSProp = 4
-    Adam = 5
+    AdaDelta = 4,
+    RMSProp = 5,
+    Adam = 6
 
 
 class GDOptimizerFactory(object):
@@ -28,6 +29,8 @@ class GDOptimizerFactory(object):
             optimizer = Nag(eta)
         elif name == OptimizerName.RMSProp:
             optimizer = RMSProp(eta)
+        elif name == OptimizerName.AdaDelta:
+            optimizer = AdaDelta(eta)
 
         return optimizer
 
@@ -63,27 +66,43 @@ class Momentum(GDOptimizer):
 
 class AdaGrad(GDOptimizer):
     def __init__(self, eta):
-        self.delta = 1e-7
+        self.eps = 1e-6
         self.eta = eta
         self.r = 0
 
     def update(self, theta, grad):
         self.r = self.r + np.multiply(grad, grad)
-        alpha = self.eta / (self.delta + np.sqrt(self.r))
+        alpha = self.eta / (self.eps + np.sqrt(self.r))
         theta = theta - alpha * grad
         return theta
-  
+
+class AdaDelta(GDOptimizer):
+    def __init__(self, eta):
+        self.eps = 1e-5
+        self.r = 0
+        self.s = 0
+        self.alpha = 0.9
+
+    def update(self, theta, grad):
+        grad2 = np.multiply(grad, grad)
+        self.s = self.alpha * self.s + (1-self.alpha)*grad2
+        d_theta = np.sqrt((self.eps + self.r)/(self.eps + self.s)) * grad
+        theta = theta - d_theta
+        d_theta2 = np.multiply(d_theta, d_theta)
+        self.r = self.alpha * self.r + (1-self.alpha) * d_theta2
+        return theta
+
 class RMSProp(GDOptimizer):
     def __init__(self, eta):
         self.eta = eta
         self.p = 0.9
-        self.delta = 1e-6
+        self.eps = 1e-6
         self.r = 0
 
     def update(self, theta, grad):
         grad2 = np.multiply(grad, grad)
         self.r = self.p * self.r + (1-self.p) * grad2
-        alpha = self.eta / np.sqrt(self.delta + self.r)
+        alpha = self.eta / np.sqrt(self.eps + self.r)
         theta = theta - alpha * grad
         return theta
 
@@ -92,7 +111,7 @@ class Adam(GDOptimizer):
         self.eta = eta
         self.p1 = 0.9
         self.p2 = 0.999
-        self.delta = 1e-8
+        self.eps = 1e-8
         #self.s = np.zeros(shape)
         #self.r = np.zeros(shape)
         self.t = 0
@@ -105,7 +124,7 @@ class Adam(GDOptimizer):
         self.v = self.p2 * self.v + (1-self.p2) * np.multiply(grad, grad)
         m_hat = self.m / (1 - self.p1 ** self.t)
         v_hat = self.v / (1 - self.p2 ** self.t)
-        d_theta = self.eta * m_hat / (self.delta + np.sqrt(v_hat))
+        d_theta = self.eta * m_hat / (self.eps + np.sqrt(v_hat))
         theta = theta - d_theta
         return theta
 

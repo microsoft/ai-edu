@@ -190,7 +190,7 @@ def Test(num_output, dict_Param, num_input):
 if __name__ == '__main__':
 
     print("Loading...")
-    learning_rate = 0.1
+    learning_rate = 0.05
     num_hidden = 32
     num_output = 10
 

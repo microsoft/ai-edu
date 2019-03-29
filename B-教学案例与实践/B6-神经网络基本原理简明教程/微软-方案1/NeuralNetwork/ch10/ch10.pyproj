@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_ThreeLayerNet.py</StartupFile>
+    <StartupFile>Level4\Level4_main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,30 +21,33 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level0_Base.py" />
-    <Compile Include="Level2\Activators.py" />
-    <Compile Include="Level2\DataReader.py" />
-    <Compile Include="Level2\FCLayer.py">
+    <Compile Include="Level1_Base.py" />
+    <Compile Include="Level4\Activators.py" />
+    <Compile Include="Level4\DataReader.py" />
+    <Compile Include="Level4\FCLayer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2\GDOptimizer.py" />
-    <Compile Include="Level1_ThreeLayerNet.py" />
-    <Compile Include="Level0_TwoLayerNet.py" />
-    <Compile Include="Level2\Layer.py">
+    <Compile Include="Level4\GDOptimizer.py" />
+    <Compile Include="Level3_ThreeLayerNet.py" />
+    <Compile Include="Level2_TwoLayerNet.py" />
+    <Compile Include="Level4\Layer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2\LossFunction.py" />
-    <Compile Include="Level2\Net.py">
+    <Compile Include="Level4\Level4_main.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MnistData.py">
+    <Compile Include="Level4\LossFunction.py" />
+    <Compile Include="Level4\NeuralNet.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2\Parameters.py" />
-    <Compile Include="Level2\WeightsBias.py" />
+    <Compile Include="MnistDataReader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level4\Parameters.py" />
+    <Compile Include="Level4\WeightsBias.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Level2\" />
+    <Folder Include="Level4\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

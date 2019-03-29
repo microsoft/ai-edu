@@ -5,17 +5,18 @@ import numpy as np
 
 from Layer import *
 from Activators import *
+from WeightsBias import *
+from Parameters import *
 
 class FcLayer(CLayer):
     def __init__(self, input_size, output_size, activator):
         self.input_size = input_size
         self.output_size = output_size
-        self.weights = init_array((output_size, input_size), "norm")
-        self.bias = np.zeros((output_size, 1))
         self.activator = activator
-        #self.x = np.zeros()    # input from lower layer
-        #self.z = np.zeros()    # weights multiply for current layer
-        #self.a = np.zeros()    # outpu to upper layer
+
+    def Initialize(self, param):
+        self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer_name, param.eta)
+        self.weights.InitializeWeights()
 
     def forward(self, input):
         self.input_shape = input.shape
@@ -23,7 +24,7 @@ class FcLayer(CLayer):
             self.x = input.reshape(input.size, 1)
         else:
             self.x = input
-        self.z = np.dot(self.weights, self.x) + self.bias
+        self.z = np.dot(self.weights.W, self.x) + self.weights.B
         self.a = self.activator.forward(self.z)
         return self.a
 
@@ -33,25 +34,27 @@ class FcLayer(CLayer):
             dZ = delta_in
         else:
             #dZ = delta_in * self.activator.backward(self.a)
-            dZ = self.activator.backward(self.a, delta_in)
+            dZ,_ = self.activator.backward(self.z, self.a, delta_in)
 
-        delta_out = np.dot(self.weights.T, dZ)
-        self.dW = np.dot(dZ, self.x.T)
-        self.dB = np.sum(dZ, axis=1, keepdims=True)
+        delta_out = np.dot(self.weights.W.T, dZ)
+        self.weights.dW = np.dot(dZ, self.x.T)
+        self.weights.dB = np.sum(dZ, axis=1, keepdims=True)
 
         if len(self.input_shape) > 2:
             return delta_out.reshape(self.input_shape)
         else:
             return delta_out
 
-    def update(self, learning_rate):
-        self.weights = self.weights - learning_rate * self.dW
-        self.bias = self.bias - learning_rate * self.dB
+    def pre_update(self):
+        self.weights.pre_Update()
+
+    def update(self):
+        self.weights.Update()
         
     def save_parameters(self, name):
-        np.save(name+"_w", self.weights)
-        np.save(name+"_b", self.bias)
+        np.save(name+"_w", self.weights.W)
+        np.save(name+"_b", self.weights.B)
 
     def load_parameters(self, name):
-        self.weights = np.load(name+"_w.npy")
-        self.bias = np.load(name+"_b.npy")
+        self.weights.W = np.load(name+"_w.npy")
+        self.weights.B = np.load(name+"_b.npy")

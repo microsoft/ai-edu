@@ -5,14 +5,14 @@ import numpy as np
 import struct
 import matplotlib.pyplot as plt
 
-from Level0_TwoLayerNet import *
+from Level2_TwoLayerNet import *
 
 
 def Tanh(z):
     a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
     return a
 
-def forward(X, dict_Param):
+def forward3(X, dict_Param):
     W1 = dict_Param["W1"]
     B1 = dict_Param["B1"]
     W2 = dict_Param["W2"]
@@ -32,7 +32,7 @@ def forward(X, dict_Param):
     dict_Cache = {"Z1": Z1, "A1": A1, "Z2": Z2, "A2": A2, "Z3": Z3, "A3": A3}
     return A3, dict_Cache
 
-def backward(dict_Param,cache,X,Y):
+def backward3(dict_Param,cache,X,Y):
     W1=dict_Param["W1"]
     W2=dict_Param["W2"]
     W3=dict_Param["W3"]
@@ -60,7 +60,7 @@ def backward(dict_Param,cache,X,Y):
     dict_Grads = {"dW1": dW1, "dB1": dB1, "dW2": dW2, "dB2": dB2, "dW3": dW3, "dB3": dB3}
     return dict_Grads
 
-def update(dict_Param, dict_Grads, learning_rate):
+def update3(dict_Param, dict_Grads, learning_rate):
     W1 = dict_Param["W1"]
     B1 = dict_Param["B1"]
     W2 = dict_Param["W2"]
@@ -86,7 +86,7 @@ def update(dict_Param, dict_Grads, learning_rate):
     return dict_Param
 
 
-def InitialParameters(num_input, num_hidden1, num_hidden2, num_output, flag):
+def InitialParameters3(num_input, num_hidden1, num_hidden2, num_output, flag):
     if flag == 0:
         # zero
         W1 = np.zeros((num_hidden1, num_input))
@@ -121,10 +121,11 @@ if __name__ == '__main__':
     n_hidden1 = 64
     n_hidden2 = 16
     n_output = 10
-    X,Y = LoadData(n_output)
-    n_images = X.shape[1]
-    n_input = X.shape[0]
+    dataReader = LoadData(n_output)
+    n_images = dataReader.num_example
+    n_input = dataReader.num_feature
     m_epoch = 1
-    dict_Param = InitialParameters(n_input, n_hidden1, n_hidden2, n_output, 2)
-    Train(X, Y, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward, backward, update)
+    dict_Param = InitialParameters3(n_input, n_hidden1, n_hidden2, n_output, 2)
+    dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward3, backward3, update3)
+    Test(dataReader, n_output, dict_Param, n_input, forward3)
 

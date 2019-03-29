@@ -5,7 +5,7 @@ import numpy as np
 import struct
 import matplotlib.pyplot as plt
 
-from Level0_Base import *
+from Level1_Base import *
 
 '''
 train_image_file = 'train-images-01'
@@ -103,10 +103,11 @@ if __name__ == '__main__':
     learning_rate = 0.05
     n_hidden = 32
     n_output = 10
-    X,Y = LoadData(n_output)
-    n_images = X.shape[1]
-    n_input = X.shape[0]
+    dataReader = LoadData(n_output)
+    n_images = dataReader.num_example
+    n_input = dataReader.num_feature
     m_epoch = 1
     dict_Param = InitialParameters(n_input, n_hidden, n_output, 2)
-    Train(X, Y, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, Forward, Backward, Update)
-
+    dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, Forward, Backward, Update)
+    Test(dataReader, n_output, dict_Param, n_input, Forward)
+    

@@ -26,7 +26,7 @@ class Identity(CActivator):
 
 class Sigmoid(CActivator):
     def forward(self, z):
-        a = 1.0 / (1.0 + np.exp(-Z))
+        a = 1.0 / (1.0 + np.exp(-z))
         return a
 
     def backward(self, z, a, delta):
@@ -56,7 +56,7 @@ class Relu(CActivator):
         da = np.zeros(z.shape)
         da[z>0] = 1
         dz = da * delta
-        return dz, mem
+        return dz, da
 
 
 class Softmax(CActivator):

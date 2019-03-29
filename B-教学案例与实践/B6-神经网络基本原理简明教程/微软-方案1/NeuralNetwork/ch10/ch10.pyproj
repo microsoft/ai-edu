@@ -21,17 +21,30 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activations.py" />
-    <Compile Include="DataReader.py" />
-    <Compile Include="GDOptimizer.py" />
+    <Compile Include="Level0_Base.py" />
+    <Compile Include="Level2\Activators.py" />
+    <Compile Include="Level2\DataReader.py" />
+    <Compile Include="Level2\FCLayer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level2\GDOptimizer.py" />
     <Compile Include="Level1_ThreeLayerNet.py" />
     <Compile Include="Level0_TwoLayerNet.py" />
-    <Compile Include="LossFunction.py" />
+    <Compile Include="Level2\Layer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level2\LossFunction.py" />
+    <Compile Include="Level2\Net.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MnistData.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Parameters.py" />
-    <Compile Include="WeightsBias.py" />
+    <Compile Include="Level2\Parameters.py" />
+    <Compile Include="Level2\WeightsBias.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Level2\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

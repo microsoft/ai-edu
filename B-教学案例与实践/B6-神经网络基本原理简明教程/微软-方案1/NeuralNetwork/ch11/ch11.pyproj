@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
+    <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_CurveFitting.py</StartupFile>
+    <StartupFile>Level4\Level4_main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch08</Name>
-    <RootNamespace>ch08</RootNamespace>
+    <Name>ch10</Name>
+    <RootNamespace>ch10</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,19 +21,33 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py">
+    <Compile Include="Level1_Base.py" />
+    <Compile Include="Level4\Activators.py" />
+    <Compile Include="Level4\DataReader.py" />
+    <Compile Include="Level4\FCLayer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataReader.py" />
-    <Compile Include="Level1_TwoLayerFitting.py" />
-    <Compile Include="LossFunction.py">
+    <Compile Include="Level4\GDOptimizer.py" />
+    <Compile Include="Level3_ThreeLayerNet.py" />
+    <Compile Include="Level2_TwoLayerNet.py" />
+    <Compile Include="Level4\Layer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2_CurveFitting.py" />
-    <Compile Include="Parameters.py">
+    <Compile Include="Level4\Level4_main.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="WeightsBias.py" />
+    <Compile Include="Level4\LossFunction.py" />
+    <Compile Include="Level4\NeuralNet.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MnistDataReader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level4\Parameters.py" />
+    <Compile Include="Level4\WeightsBias.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Level4\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

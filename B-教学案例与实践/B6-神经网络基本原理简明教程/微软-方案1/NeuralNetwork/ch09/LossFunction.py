@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 from enum import Enum
 
 class CTrace(object):
-    def __init__(self, loss, dict_weights, epoch, iteration):
+    def __init__(self, loss, epoch, iteration, wb1, wb2):
         self.loss = loss
-        self.dict_weights = dict_weights
         self.epoch = epoch
         self.iteration = iteration
+        self.wb1 = wb1
+        self.wb2 = wb2
     # end def
 
     def toString(self):
@@ -26,22 +27,26 @@ class CLossHistory(object):
         self.loss_history = []
         self.min_loss_index = -1
         # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
-        self.min_trace = CTrace(100000, None, -1, -1)
+        self.min_trace = CTrace(100000, -1, -1, None, None)
 
-    def AddLossHistory(self, loss, dict_weights, epoch, iteration):
+    def AddLossHistory(self, loss, epoch, iteration, wb1, wb2):
         self.loss_history.append(loss)
         if loss < self.min_trace.loss:
-            self.min_trace = CTrace(loss, dict_weights, epoch, iteration)
+            self.min_trace = CTrace(loss, epoch, iteration, wb1, wb2)
             self.minimal_loss_index = len(self.loss_history) - 1
+            return True
         # end if
+        return False
 
     # 图形显示损失函数值历史记录
-    def ShowLossHistory(self, params):
+    def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
         plt.plot(self.loss_history)
         title = self.min_trace.toString() + "," + params.toString()
         plt.title(title)
         plt.xlabel("epoch")
         plt.ylabel("loss")
+        if xmin != None and ymin != None:
+            plt.axis([xmin, xmax, ymin, ymax])
         plt.show()
         return title
 

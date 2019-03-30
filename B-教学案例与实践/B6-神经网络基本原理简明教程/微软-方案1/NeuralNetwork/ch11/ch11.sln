@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.539
+VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ch10", "ch10.pyproj", "{EA2E2A33-4A00-430C-82FD-357003B11772}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ch11", "ch11.pyproj", "{A7EEBFEF-E8B3-46A1-92CF-A0D970DE4C9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +11,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EA2E2A33-4A00-430C-82FD-357003B11772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA2E2A33-4A00-430C-82FD-357003B11772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7EEBFEF-E8B3-46A1-92CF-A0D970DE4C9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7EEBFEF-E8B3-46A1-92CF-A0D970DE4C9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {09498BBA-BFF7-4EFE-A446-7DF6724FD9EA}
+		SolutionGuid = {6830C363-3241-407E-867C-0EFF0A8F7AC5}
 	EndGlobalSection
 EndGlobal

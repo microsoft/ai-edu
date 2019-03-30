@@ -4,8 +4,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import DrawCurve
-
 class CRelu(object):
     def forward(self, z):
         # 把所有大于0的单元填充为1,反向是不用再次计算
@@ -19,6 +17,3 @@ class CRelu(object):
         dz = self.mem * delta
         return da, dz
 
-
-if __name__ == '__main__':
-    DrawCurve.Draw(-5,5,CRelu(),"Relu Function","Derivative of Relu")

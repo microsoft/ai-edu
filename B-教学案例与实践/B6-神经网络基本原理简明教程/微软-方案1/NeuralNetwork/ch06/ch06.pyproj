@@ -2,9 +2,9 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>d6d2a726-eb70-4989-b823-7e7373df1b43</ProjectGuid>
+    <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Elu.py</StartupFile>
+    <StartupFile>level4_ShowMultipleResult.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,17 +21,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DrawCurve.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Elu.py" />
-    <Compile Include="LeakyRelu.py" />
-    <Compile Include="BenIdentity.py" />
-    <Compile Include="Softplus.py" />
-    <Compile Include="Relu.py" />
-    <Compile Include="Step.py" />
-    <Compile Include="Tanh.py" />
-    <Compile Include="Sigmoid.py" />
+    <Compile Include="BaseClassification.py" />
+    <Compile Include="level2_ShowBinaryResult.py" />
+    <Compile Include="level4_ShowMultipleResult.py" />
+    <Compile Include="level3_MultipleClassification.py" />
+    <Compile Include="level1_BinaryClassification.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

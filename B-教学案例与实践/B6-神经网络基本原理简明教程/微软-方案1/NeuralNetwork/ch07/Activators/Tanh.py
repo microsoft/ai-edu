@@ -4,19 +4,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import DrawCurve
-
-class CSoftplus(object):
+class CTanh(object):
     def forward(self, z):
-        a = np.log(1 + np.exp(z))
+        a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
         return a
 
     def backward(self, z, a, delta):
-        p = np.exp(z) 
-        da = p / (1 + p)
+        da = 1 - np.multiply(a, a)
         dz = np.multiply(delta, da)
         return da, dz
 
-
-if __name__ == '__main__':
-    DrawCurve.Draw(-5,5,CSoftplus(),"Softplus Function","Derivative of Softplus")

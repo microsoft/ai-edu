@@ -4,18 +4,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import DrawCurve
-
-class CSigmoid(object):
+class CBenIdentity(object):
     def forward(self, z):
-        a = 1.0 / (1.0 + np.exp(-z))
+        p1 = np.multiply(z, z)
+        p2 = np.sqrt(p1 + 1)
+        a = (p2 - 1) / 2 + z
         return a
 
     def backward(self, z, a, delta):
-        da = np.multiply(a, 1-a)
-        dz = np.multiply(delta, da)
+        da = z / (2 * np.sqrt(z ** 2 + 1)) + 1
+        dz = np.multiply(da, delta)
         return da, dz
 
 
-if __name__ == '__main__':
-    DrawCurve.Draw(-7,7,CSigmoid(),"Sigmoid Function","Derivative of Sigmoid")

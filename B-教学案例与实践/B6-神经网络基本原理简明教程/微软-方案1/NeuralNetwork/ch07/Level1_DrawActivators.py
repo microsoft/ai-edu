@@ -4,6 +4,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from Activators.Relu import *
+from Activators.Elu import *
+from Activators.LeakyRelu import *
+from Activators.Sigmoid import *
+from Activators.Softplus import *
+from Activators.Step import *
+from Activators.Tanh import *
+from Activators.BenIdentity import *
+
 def Draw(start,end,func,lable1,lable2):
     z = np.linspace(start, end, 200)
     a = func.forward(z)
@@ -17,3 +26,7 @@ def Draw(start,end,func,lable1,lable2):
     plt.ylabel("output : a")
     plt.title(lable1)
     plt.show()
+
+if __name__ == '__main__':
+    Draw(-7,7,CSigmoid(),"Sigmoid Function","Derivative of Sigmoid")
+    Draw(-5,5,CStep(0.3),"Step Function","Derivative of Step")

@@ -4,17 +4,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import DrawCurve
+class CStep(object):
+    def __init__(self, threshold):
+        self.threshold = threshold
 
-class CTanh(object):
     def forward(self, z):
-        a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
+        a = np.array([1 if x > self.threshold else 0 for x in z])
         return a
 
     def backward(self, z, a, delta):
-        da = 1 - np.multiply(a, a)
-        dz = np.multiply(delta, da)
+        da = np.zeros(a.shape)
+        dz = da
         return da, dz
-
-if __name__ == '__main__':
-    DrawCurve.Draw(-5,5,CTanh(),"Tanh Function","Derivative of Tanh")

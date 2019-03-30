@@ -4,8 +4,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import DrawCurve
-
 class CElu(object):
     def __init__(self, alpha):
         self.alpha = alpha
@@ -19,5 +17,3 @@ class CElu(object):
         dz = np.multiply(delta, da)
         return da, dz
 
-if __name__ == '__main__':
-    DrawCurve.Draw(-4,4,CElu(0.8),"ELU Function","Derivative of ELU")

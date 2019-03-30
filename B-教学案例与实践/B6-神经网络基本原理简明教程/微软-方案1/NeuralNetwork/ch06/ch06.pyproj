@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level4_ShowMultipleResult.py</StartupFile>
+    <StartupFile>Level4_ShowMultipleResult.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,11 +21,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BaseClassification.py" />
-    <Compile Include="level2_ShowBinaryResult.py" />
-    <Compile Include="level4_ShowMultipleResult.py" />
-    <Compile Include="level3_MultipleClassification.py" />
-    <Compile Include="level1_BinaryClassification.py" />
+    <Compile Include="Level0_BaseClassification.py" />
+    <Compile Include="Level2_ShowBinaryResult.py" />
+    <Compile Include="Level4_ShowMultipleResult.py" />
+    <Compile Include="Level3_MultipleClassification.py" />
+    <Compile Include="Level1_BinaryClassification.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

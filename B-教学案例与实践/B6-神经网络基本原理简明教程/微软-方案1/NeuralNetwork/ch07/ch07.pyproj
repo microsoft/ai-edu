@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d6d2a726-eb70-4989-b823-7e7373df1b43</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_TanhWithCrossEntropy_Curve.py</StartupFile>
+    <StartupFile>Level4_LogicAndGate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Level4_LogicGateBase.py" />
+    <Compile Include="Level4_LogicAndGate.py" />
+    <Compile Include="Level4_LogicOrGate.py" />
+    <Compile Include="ch702_LogicAndGate.py" />
     <Compile Include="Level1_DrawActivators.py" />
     <Compile Include="Level2_DrawActivators.py">
       <SubType>Code</SubType>

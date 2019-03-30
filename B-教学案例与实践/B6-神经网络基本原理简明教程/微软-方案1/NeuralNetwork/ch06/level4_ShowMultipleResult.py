@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 import math
-from BaseClassification import *
-from level3_MultipleClassification import *
+from Level0_BaseClassification import *
+from Level3_MultipleClassification import *
 
 def ShowData(X,Y):
     for i in range(X.shape[1]):

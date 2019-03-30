@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 import math
-from BaseClassification import *
+from Level0_BaseClassification import *
 
 x_data_name = "X2.dat"
 y_data_name = "Y2.dat"

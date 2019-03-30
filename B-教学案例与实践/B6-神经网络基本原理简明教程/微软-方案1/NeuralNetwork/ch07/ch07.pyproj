@@ -24,7 +24,6 @@
     <Compile Include="Level4_LogicGateBase.py" />
     <Compile Include="Level4_LogicAndGate.py" />
     <Compile Include="Level4_LogicOrGate.py" />
-    <Compile Include="ch702_LogicAndGate.py" />
     <Compile Include="Level1_DrawActivators.py" />
     <Compile Include="Level2_DrawActivators.py">
       <SubType>Code</SubType>

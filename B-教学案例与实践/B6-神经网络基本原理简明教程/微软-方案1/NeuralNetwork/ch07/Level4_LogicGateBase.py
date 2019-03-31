@@ -99,7 +99,7 @@ def train(X, Y, ForwardCalculationBatch, CheckLoss):
 
     return W,B
 
-def ShowResult(W,B,X,Y):
+def ShowResult(W,B,X,Y,title):
     w = -W[0,0]/W[0,1]
     b = -B[0,0]/W[0,1]
     x = np.array([0,1])
@@ -112,4 +112,5 @@ def ShowResult(W,B,X,Y):
         else:
             plt.scatter(X[0,i],X[1,i],marker="^",c='r',s=64)
     plt.axis([-0.1,1.1,-0.1,1.1])
+    plt.title(title)
     plt.show()

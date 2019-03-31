@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     print("w=",W)
     print("b=",B)
-    ShowResult(W,B,X,Y)
+    ShowResult(W,B,X,Y,"AND")
     # test
     while True:
         Test(W,B)

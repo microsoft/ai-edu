@@ -81,7 +81,14 @@ def Test(dataReader, net, wb1, wb2):
         #end if
     #end for
 
-if __name__ == '__main__':
+def SaveWeights(wb1, wb2):
+    np.save("xor_w1_2_2.npy", wb1.W)
+    np.save("xor_w1_2_1.npy", wb1.B)
+    np.save("xor_w2_1_2.npy", wb2.W)
+    np.save("xor_w2_1_1.npy", wb2.B)
+
+
+def train():
 
     dataReader = XOR_DataReader()
     dataReader.ReadData()
@@ -112,8 +119,39 @@ if __name__ == '__main__':
     ShowAreaResult(net, trace.wb1, trace.wb2, title)
     ShowData(dataReader.X, dataReader.Y)
 
-
     Test(dataReader, net, wb1, wb2)
 
-
+    SaveWeights(wb1, wb2)
     
+def LoadWeights(wb1, wb2):
+    wb1.W = np.load("xor_w1_2_2.npy")
+    wb1.B = np.load("xor_w1_2_1.npy")
+    wb2.W = np.load("xor_w2_1_2.npy")
+    wb2.B = np.load("xor_w2_1_1.npy")
+
+
+if __name__ == '__main__':
+    # train()
+    wb1 = WeightsBias(2,2,0.1,InitialMethod.Xavier)
+    wb2 = WeightsBias(1,2,0.1,InitialMethod.Xavier)
+    LoadWeights(wb1, wb2)
+    print(wb1.toString())    
+    print(wb2.toString())
+
+    dataReader = XOR_DataReader()
+    dataReader.ReadData()
+
+    batch_x, batch_y = dataReader.GetBatchSamples(4, 0)
+    Z1 = np.dot(wb1.W, batch_x) + wb1.B
+    A1 = Sigmoid().forward(Z1)
+    # layer 2
+    Z2 = np.dot(wb2.W, A1) + wb2.B
+    A2 = Sigmoid().forward(Z2)
+    print(Z1)
+    print(A1)
+    print(Z2)
+    print(A2)
+
+    plt.plot(Z1[0,:],Z1[1,:],'.')
+    plt.plot(A1[0,:],A1[1,:],'x')
+    plt.show()

@@ -7,36 +7,46 @@ import matplotlib.pyplot as plt
 import math
 from LossFunction import * 
 from Parameters import *
-from Activations import *
-from Level1_TwoLayer import *
-from DataOperator import * 
+from Activators import *
+from Level1_TwoLayerFitting import *
+from DataReader import *
 
 x_data_name = "CurveX.dat"
 y_data_name = "CurveY.dat"
 
+def ShowResult(net, X, Y, title, wb1, wb2):
+    # draw train data
+    plt.plot(X[0,:], Y[0,:], '.', c='b')
+    # create and draw visualized validation data
+    TX = np.linspace(0,1,100).reshape(1,100)
+    dict_cache = net.ForwardCalculationBatch(TX, wb1, wb2)
+    TY = dict_cache["Output"]
+    plt.plot(TX, TY, 'x', c='r')
+    plt.title(title)
+    plt.show()
+#end def
+
 if __name__ == '__main__':
+    dataReader = DataReader(x_data_name, y_data_name)
+    dataReader.ReadData()
+    dataReader.NormalizeX()
+    dataReader.NormalizeY()
 
-    X,Y = DataOperator.ReadData(x_data_name, y_data_name)
-    num_example = X.shape[1]
     n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.1, 10, 50000
+    eta, batch_size, max_epoch = 0.5, 10, 50000
     eps = 0.001
-    init_method = InitialMethod.xavier
 
-    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.MSE, eps, init_method)
+    params = CParameters(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps)
 
     # SGD, MiniBatch, FullBatch
     loss_history = CLossHistory()
-    net = CTwoLayerNet()
-    dict_weights = net.train(X, Y, params, loss_history)
+    net = TwoLayerFittingNet()
+    wb1, wb2 = net.train(dataReader, params, loss_history)
 
-    bookmark = loss_history.GetMinimalLossData()
-    bookmark.print_info()
-    loss_history.ShowLossHistory(params)
+    trace = loss_history.GetMinimalLossData()
+    print(trace.toString())
+    title = loss_history.ShowLossHistory(params)
 
-    net.ShowResult(net, X, Y, bookmark.weights)
-    print(bookmark.weights["W1"])
-    print(bookmark.weights["B1"])
-    print(bookmark.weights["W2"])
-    print(bookmark.weights["B2"])
+    ShowResult(net, dataReader.X, dataReader.Y, title, trace.wb1, trace.wb2)
+
 

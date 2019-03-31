@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_Optimizer09.py</StartupFile>
+    <StartupFile>Level2_LogicXorGate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,18 +21,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activations.py" />
+    <Compile Include="Activators.py" />
     <Compile Include="DataReader.py" />
-    <Compile Include="Level0_TwoLayerNet.py" />
-    <Compile Include="Level1_TwoLayerFittingNet.py" />
-    <Compile Include="Level4_Optimizer09.py" />
-    <Compile Include="Level3_Optimizer08.py" />
-    <Compile Include="Level2_ShowResult.py" />
-    <Compile Include="Level1_TwoLayerClassificationNet.py" />
+    <Compile Include="Level0_TwoLayerClassificationNet.py" />
+    <Compile Include="Level2_LogicXorGate.py" />
+    <Compile Include="Level2_Classifier.py" />
     <Compile Include="LossFunction.py" />
-    <Compile Include="GDOptimizer.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Parameters.py">
       <SubType>Code</SubType>
     </Compile>

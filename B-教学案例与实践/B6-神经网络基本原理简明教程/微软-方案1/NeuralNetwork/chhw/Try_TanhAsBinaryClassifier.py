@@ -9,6 +9,18 @@ import math
 x_data_name = "X2.dat"
 y_data_name = "Y2.dat"
 
+#def ToBool(YData):
+#    num_example = YData.shape[1]
+#    Y = np.zeros((1, num_example))
+#    for i in range(num_example):
+#        if YData[0,i] == 0:     # 第一类的标签设为0
+#            Y[0,i] = -1
+#        elif YData[0,i] == 1:   # 第二类的标签设为1
+#            Y[0,i] = 1
+#        # end if
+#    # end for
+#    return Y
+
 def ToBool(YData):
     num_example = YData.shape[1]
     Y = np.zeros((1, num_example))
@@ -20,6 +32,7 @@ def ToBool(YData):
         # end if
     # end for
     return Y
+
 
 def Tanh(z):
     a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
@@ -35,27 +48,45 @@ def ForwardCalculationBatch(W, B, batch_X):
 def CheckLoss(W, B, X, Y):
     m = X.shape[1]
     A = ForwardCalculationBatch(W,B,X)
-    
-    p1 = 1 - Y
-    p2 = np.log((1-A)/2)
-    p3 = np.log((1+A)/2)
-
-    p4 = np.multiply(p1 ,p2)
-    p5 = np.multiply(1+Y, p3)
-
-    LOSS = np.sum(-(p4 + p5))  #binary classification
+    p = (1-Y) * np.log((1-A)/2) + (1+Y) * np.log((1+A)/2)
+    LOSS = np.sum(-p)  #binary classification
     loss = LOSS / m
     return loss
 
+#def CheckLoss(W, B, X, Y):
+#    m = X.shape[1]
+#    A = ForwardCalculationBatch(W,B,X)
+    
+#    p1 = 1 - Y
+#    p2 = np.log((1-A)/2)
+#    p3 = np.log((1+A)/2)
+
+#    p4 = np.multiply(p1 ,p2)
+#    p5 = np.multiply(1+Y, p3)
+
+#    LOSS = np.sum(-(p4 + p5))  #binary classification
+#    loss = LOSS / m
+#    return loss
+
+
 # 反向计算
 # X:input example, Y:lable example, Z:predicated value
+#def BackPropagationBatch(batch_X, batch_Y, A):
+#    m = batch_X.shape[1]
+#    dZ = (A - batch_Y)*2
+#    # dZ列相加，即一行内的所有元素相加
+#    dB = dZ.sum(axis=1, keepdims=True)/m
+#    dW = np.dot(dZ, batch_X.T)/m
+#    return dW, dB
+
 def BackPropagationBatch(batch_X, batch_Y, A):
     m = batch_X.shape[1]
-    dZ = (A - batch_Y)*2
+    dZ = 2*(A - batch_Y)
     # dZ列相加，即一行内的所有元素相加
     dB = dZ.sum(axis=1, keepdims=True)/m
     dW = np.dot(dZ, batch_X.T)/m
     return dW, dB
+
 
 
 def Sigmoid(x):
@@ -231,8 +262,8 @@ def train(method, X, Y, ForwardCalculationBatch, CheckLoss):
         # end for
         if math.isnan(loss):
             break
-        if loss < error:
-            break
+        #if loss < error:
+        #    break
     # end for
 
     ShowLossHistory(dict_loss, method)

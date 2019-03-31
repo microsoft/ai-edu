@@ -130,8 +130,7 @@ def LoadWeights(wb1, wb2):
     wb2.B = np.load("xor_w2_1_1.npy")
 
 
-if __name__ == '__main__':
-    # train()
+def ShowZ1A1Z2A2():
     wb1 = WeightsBias(2,2,0.1,InitialMethod.Xavier)
     wb2 = WeightsBias(1,2,0.1,InitialMethod.Xavier)
     LoadWeights(wb1, wb2)
@@ -141,8 +140,8 @@ if __name__ == '__main__':
     dataReader = XOR_DataReader()
     dataReader.ReadData()
 
-    batch_x, batch_y = dataReader.GetBatchSamples(4, 0)
-    Z1 = np.dot(wb1.W, batch_x) + wb1.B
+    
+    Z1 = np.dot(wb1.W, dataReader.X) + wb1.B
     A1 = Sigmoid().forward(Z1)
     # layer 2
     Z2 = np.dot(wb2.W, A1) + wb2.B
@@ -152,6 +151,48 @@ if __name__ == '__main__':
     print(Z2)
     print(A2)
 
-    plt.plot(Z1[0,:],Z1[1,:],'.')
-    plt.plot(A1[0,:],A1[1,:],'x')
+    for i in range(dataReader.num_example):
+        if dataReader.Y[0,i] == 0:
+            plt.plot(dataReader.X[0,i],dataReader.X[1,i],'^',c='r')
+        else:
+            plt.plot(dataReader.X[0,i],dataReader.X[1,i],'o',c='g')
+    plt.grid()
+    plt.title("X1:X2")
     plt.show()
+
+
+    for i in range(dataReader.num_example):
+        if dataReader.Y[0,i] == 0:
+            plt.plot(Z1[0,i],Z1[1,i],'^',c='r')
+        else:
+            plt.plot(Z1[0,i],Z1[1,i],'o',c='g')
+    plt.grid()
+    plt.title("Z1")
+    plt.show()
+
+
+    for i in range(dataReader.num_example):
+        if dataReader.Y[0,i] == 0:
+            plt.plot(A1[0,i],A1[1,i],'^',c='r')
+        else:
+            plt.plot(A1[0,i],A1[1,i],'o',c='g')
+    plt.grid()
+    plt.title("A1")
+    plt.show()
+
+    x = np.linspace(-6,6)
+    a = Sigmoid().forward(x)
+    plt.plot(x,a)
+
+    for i in range(dataReader.num_example):
+        if dataReader.Y[0,i] == 0:
+            plt.plot(Z2[0,i],A2[0,i],'^',c='r')
+        else:
+            plt.plot(Z2[0,i],A2[0,i],'o',c='g')
+    plt.grid()
+    plt.title("Z2:A2")
+    plt.show()
+
+
+if __name__ == '__main__':
+    ShowZ1A1Z2A2()

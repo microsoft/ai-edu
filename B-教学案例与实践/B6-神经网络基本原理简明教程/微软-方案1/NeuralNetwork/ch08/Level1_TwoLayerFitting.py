@@ -30,18 +30,18 @@ class TwoLayerFittingNet(object):
         A1 = dict_cache["A1"]
         A2 = dict_cache["A2"]
         # 第二层的梯度输入
-        dZ2 = A2 - batch_y
+        dZ2 = A2 - batch_y  # 公式1
         # 第二层的权重和偏移
-        wb2.dW = np.dot(dZ2, A1.T)/m
-        wb2.dB = np.sum(dZ2, axis=1, keepdims=True)/m
+        wb2.dW = np.dot(dZ2, A1.T)/m    # 公式2
+        wb2.dB = np.sum(dZ2, axis=1, keepdims=True)/m   # 公式3
         # 第一层的梯度输入
         d1 = np.dot(wb2.W.T, dZ2) 
         # 第一层的dZ
         #dZ1 = d1 * A1 * (1-A1)
-        dZ1,_ = Sigmoid().backward(None, A1, d1)
+        dZ1,_ = Sigmoid().backward(None, A1, d1)    # 公式4
         # 第一层的权重和偏移
-        wb1.dW = np.dot(dZ1, batch_x.T)/m
-        wb1.dB = np.sum(dZ1, axis=1, keepdims=True)/m
+        wb1.dW = np.dot(dZ1, batch_x.T)/m   # 公式5
+        wb1.dB = np.sum(dZ1, axis=1, keepdims=True)/m   # 公式6
 
 
     def UpdateWeights(self, wb1, wb2):
@@ -63,6 +63,7 @@ class TwoLayerFittingNet(object):
         # if num_example=200, batch_size=10, then iteration=200/10=20
         max_iteration = (int)(dataReader.num_example / params.batch_size)
         for epoch in range(params.max_epoch):
+            #dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)

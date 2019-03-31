@@ -62,9 +62,9 @@ class TwoLayerClassificationNet(object):
     def train(self, dataReader, params, loss_history):
         # initialize weights and bias
         wb1 = WeightsBias(params.num_input, params.num_hidden, params.eta)
-        wb1.InitializeWeights(True)
+        wb1.InitializeWeights(False)
         wb2 = WeightsBias(params.num_hidden, params.num_output, params.eta)
-        wb2.InitializeWeights(True)
+        wb2.InitializeWeights(False)
         # calculate loss to decide the stop condition
         loss = 0 
         lossFunc = CLossFunction(params.loss_func_name)

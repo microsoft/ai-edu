@@ -68,11 +68,12 @@ def ShowData(X, Y):
     plt.show()
 
 def Test(dataReader, net, wb1, wb2):
+    print("testing...")
     for i in range(dataReader.num_example):
         x,y = dataReader.GetBatchSamples(1, i)
         dict_output = net.ForwardCalculationBatch2(x, wb1, wb2)
         output = dict_output["Output"]
-        print(output)
+        print(str.format("x={0} y={1} output={2}", x, y, output))
         if np.abs(output - y) < 1e-2:
             print("True")
         else:
@@ -86,9 +87,9 @@ if __name__ == '__main__':
     dataReader.ReadData()
     
     n_input, n_output = dataReader.num_feature, dataReader.num_category
-    n_hidden = 1
+    n_hidden = 2
     eta, batch_size, max_epoch = 0.1, 1, 10000
-    eps = 0.002
+    eps = 0.005
 
     params = CParameters(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, LossFunctionName.CrossEntropy2)
 
@@ -103,10 +104,16 @@ if __name__ == '__main__':
     print(trace.toString())
     title = loss_history.ShowLossHistory(params)
 
+    print(wb1.toString())
+    print(wb2.toString())
+
     print("wait for 10 seconds...")
 
     ShowAreaResult(net, trace.wb1, trace.wb2, title)
     ShowData(dataReader.X, dataReader.Y)
 
+
     Test(dataReader, net, wb1, wb2)
+
+
     

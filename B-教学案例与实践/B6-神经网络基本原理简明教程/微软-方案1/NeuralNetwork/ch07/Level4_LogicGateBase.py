@@ -75,7 +75,6 @@ def train(X, Y, ForwardCalculationBatch, CheckLoss):
 
     # if num_example=200, batch_size=10, then iteration=200/10=20
     for epoch in range(max_epoch):
-        print("epoch=%d" %epoch)
         for i in range(num_example):
             # get x and y value for one sample
             x = X[:,i].reshape(num_feature,1)
@@ -86,20 +85,19 @@ def train(X, Y, ForwardCalculationBatch, CheckLoss):
             dW, dB = BackPropagationBatch(x, y, batch_a)
             # update w,b
             W, B = UpdateWeights(W, B, dW, dB, eta)
-            
-            # calculate loss for this batch
-            loss = CheckLoss(W,B,X,Y)
-            if i % 10 == 0:
-                print(epoch,i,loss,W,B)
             # end if
         # end for
+        # calculate loss for this batch
+        loss = CheckLoss(W,B,X,Y)
+        print(epoch,i,loss,W,B)
+        # end if
         if loss < error:
             break
     # end for
 
     return W,B
 
-def ShowResult(W,B,X,Y):
+def ShowResult(W,B,X,Y,title):
     w = -W[0,0]/W[0,1]
     b = -B[0,0]/W[0,1]
     x = np.array([0,1])
@@ -112,4 +110,5 @@ def ShowResult(W,B,X,Y):
         else:
             plt.scatter(X[0,i],X[1,i],marker="^",c='r',s=64)
     plt.axis([-0.1,1.1,-0.1,1.1])
+    plt.title(title)
     plt.show()

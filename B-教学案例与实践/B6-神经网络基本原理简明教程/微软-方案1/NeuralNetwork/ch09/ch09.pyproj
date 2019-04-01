@@ -4,8 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>Level3_Classifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,12 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activations.py" />
+    <Compile Include="Activators.py" />
     <Compile Include="DataReader.py" />
-    <Compile Include="Level2_Do.py" />
-    <Compile Include="Level1_TwoLayerNN.py" />
+    <Compile Include="Level0_TwoLayerClassificationNet.py" />
+    <Compile Include="Level2_LogicXorGate3D.py" />
+    <Compile Include="Level2_HowXorGateWorks.py" />
+    <Compile Include="Level1_LogicXorGate.py" />
+    <Compile Include="Level3_Classifier.py" />
     <Compile Include="LossFunction.py" />
-    <Compile Include="GDOptimizer.py">
+    <Compile Include="Parameters.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WeightsBias.py">

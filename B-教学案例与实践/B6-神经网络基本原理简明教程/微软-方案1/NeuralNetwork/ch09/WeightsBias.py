@@ -3,84 +3,57 @@
 
 import numpy as np
 from pathlib import Path
-
-from GDOptimizer import *
+from enum import Enum
 
 class InitialMethod(Enum):
     Zero = 0,
     Normal = 1,
     Xavier = 2
 
-# this class is designed for 2 layers
 class WeightsBias(object):
-    def __init__(self, params):
-        self.num_input = params.num_input
-        self.num_hidden = params.num_hidden
-        self.num_output = params.num_output
-        self.init_method = params.init_method
-        self.optimizer_name = params.optimizer_name
-        self.eta = params.eta
+    def __init__(self, n_input, n_output, eta, init_method = InitialMethod.Xavier):
+        self.num_input = n_input
+        self.num_output = n_output
+        self.init_method = init_method
+        self.eta = eta
 
-    def GenerateWeightsArrayFileName(self):
-        self.w1_filename = str.format("w1_{0}_{1}_{2}.npy", self.num_hidden, self.num_input, self.init_method.name)
-        self.w2_filename = str.format("w2_{0}_{1}_{2}.npy", self.num_output, self.num_hidden, self.init_method.name)
+    def __GenerateWeightsArrayFileName(self):
+        self.w_filename = str.format("w1_{0}_{1}_{2}.npy", self.num_output, self.num_input, self.init_method.name)
 
     def InitializeWeights(self, create_new = False):
+        self.__GenerateWeightsArrayFileName()
         if create_new:
             self.__CreateNew()
         else:
             self.__LoadExistingParameters()
         # end if
-        self.__CreateOptimizers()
+        self.dW = np.zeros(self.W.shape)
+        self.dB = np.zeros(self.B.shape)
 
     def __CreateNew(self):
-        self.W1, self.B1 = WeightsBias.InitialParameters(self.num_input, self.num_hidden, self.init_method)
-        self.W2, self.B2 = WeightsBias.InitialParameters(self.num_hidden, self.num_output, self.init_method)
-        self.dW1 = np.zeros(self.W1.shape)
-        self.dB1 = np.zeros(self.B1.shape)
-        self.dW2 = np.zeros(self.W2.shape)
-        self.dB2 = np.zeros(self.B2.shape)
-        self.GenerateWeightsArrayFileName()
-        np.save(self.w1_filename, self.W1)
-        np.save(self.w2_filename, self.W2)
+        self.W, self.B = WeightsBias.InitialParameters(self.num_input, self.num_output, self.init_method)
+        np.save(self.w_filename, self.W)
         
-
     def __LoadExistingParameters(self):
-        self.GenerateWeightsArrayFileName()
-        w1_file = Path(self.w1_filename)
-        w2_file = Path(self.w2_filename)
-        if w1_file.exists() and w2_file.exists():
-            self.W1 = np.load(w1_file)
-            self.W2 = np.load(w2_file)
-            self.B1 = np.zeros((self.num_hidden, 1))
-            self.B2 = np.zeros((self.num_output, 1))
+        w_file = Path(self.w_filename)
+        if w_file.exists() and w_file.exists():
+            self.W = np.load(w_file)
+            self.B = np.zeros((self.num_output, 1))
         else:
-            self.CreateNew()
-        # end if
-
-    def __CreateOptimizers(self):
-        self.oW1 = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oB1 = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oW2 = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oB2 = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-
-    def pre_Update(self):
-        if self.optimizer_name == OptimizerName.O_Nag:
-            self.W1 = self.oW1.pre_update(self.W1)
-            self.B1 = self.oB1.pre_update(self.B1)
-            self.W2 = self.oW2.pre_update(self.W2)
-            self.B2 = self.oB2.pre_update(self.B2)
+            self.__CreateNew()
         # end if
 
     def Update(self):
-        self.W1 = self.oW1.update(self.W1, self.dW1)
-        self.B1 = self.oB1.update(self.B1, self.dB1)
-        self.W2 = self.oW2.update(self.W2, self.dW2)
-        self.B2 = self.oB2.update(self.B2, self.dB2)
+        self.W = self.W - self.eta * self.dW
+        self.B = self.B - self.eta * self.dB
 
     def GetWeightsBiasAsDict(self):
-        dict = {"W1":self.W1, "B1":self.B1, "W2":self.W2, "B2":self.B2}
+        dict = {"W":self.W, "B":self.B}
         return dict
+
+    def toString(self):
+        info = str.format("w={0}\nb={1}\n", self.W, self.B)
+        return info
 
     @staticmethod
     def InitialParameters(num_input, num_output, method):

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_BestLRSearcher.py</StartupFile>
+    <StartupFile>Level2_CurveFitting.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,22 +21,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activations.py">
+    <Compile Include="Activators.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level1_TwoLayer.py" />
-    <Compile Include="Level3_TuneParams.py" />
-    <Compile Include="Level4_BestLRSearcher.py" />
+    <Compile Include="DataReader.py" />
+    <Compile Include="Level1_TwoLayerFitting.py" />
     <Compile Include="LossFunction.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level2_CurveFitting.py" />
-    <Compile Include="DataOperator.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Parameters.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WeightsBias.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

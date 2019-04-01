@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>level4-BatchGradientDescent.py</StartupFile>
+    <StartupFile>Level5_LogicNotGate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,6 +25,9 @@
     <Compile Include="level2-GradientDescent.py" />
     <Compile Include="level4-BatchGradientDescent.py" />
     <Compile Include="level3-NeuralNetwork.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level5_LogicNotGate.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -7,14 +7,27 @@ import matplotlib.pyplot as plt
 import math
 
 from LossFunction import * 
-from Parameters import *
 from Level0_TwoLayerNet import *
 from DataReader import * 
+from WeightsBias import *
+from GDOptimizer import *
 
-x_data_name = "CurveX.dat"
-y_data_name = "CurveY.dat"
+x_data_name = "X8.dat"
+y_data_name = "Y8.dat"
 
-def train(ne, batch, eta):
+def ShowResult(net, X, Y, title, wb1, wb2):
+    # draw train data
+    plt.plot(X[0,:], Y[0,:], '.', c='b')
+    # create and draw visualized validation data
+    TX = np.linspace(0,1,100).reshape(1,100)
+    dict_cache = net.forward(TX, wb1, wb2)
+    TY = dict_cache["Output"]
+    plt.plot(TX, TY, 'x', c='r')
+    plt.title(title)
+    plt.show()
+
+
+def train(init_method):
     dataReader = DataReader(x_data_name, y_data_name)
     XData,YData = dataReader.ReadData()
     X = dataReader.NormalizeX(passthrough=True)
@@ -26,7 +39,7 @@ def train(ne, batch, eta):
 
     params = CParameters(n_input, n_hidden, n_output,
                          eta, max_epoch, batch_size, eps, 
-                         InitialMethod.Xavier,
+                         init_method,
                          OptimizerName.SGD)
 
     loss_history = CLossHistory()
@@ -38,34 +51,8 @@ def train(ne, batch, eta):
     title = loss_history.ShowLossHistory(params)
     ShowResult(net, X, YData, title, trace.wb1, trace.wb2)
 
-
-if __name__ == '__main__':
-
-    ne, batch, eta = 4, 10, 0.1
-    train(ne, batch, eta)
-    ne, batch, eta = 4, 10, 0.3
-    train(ne, batch, eta)
-    ne, batch, eta = 4, 10, 0.5
-    train(ne, batch, eta)
-    ne, batch, eta = 4, 10, 0.7
-    train(ne, batch, eta)
-
-    ne, batch, eta = 4, 1, 0.5
-    train(ne, batch, eta)
-    ne, batch, eta = 4, 5, 0.5
-    train(ne, batch, eta)
-    ne, batch, eta = 4, 10, 0.5
-    train(ne, batch, eta)
-    ne, batch, eta = 4, 20, 0.5
-    train(ne, batch, eta)
-
-    ne, batch, eta = 2, 10, 0.5
-    train(ne, batch, eta)
-    ne, batch, eta = 4, 10, 0.5
-    train(ne, batch, eta)
-    ne, batch, eta = 8, 10, 0.5
-    train(ne, batch, eta)
-    ne, batch, eta = 16, 10, 0.5
-    train(ne, batch, eta)
-
-
+if __name__ == '__main__':    
+    #train(InitialMethod.Zero)
+    #train(InitialMethod.Normal)
+    train(InitialMethod.Xavier)
+    #train(InitialMethod.MSRA)

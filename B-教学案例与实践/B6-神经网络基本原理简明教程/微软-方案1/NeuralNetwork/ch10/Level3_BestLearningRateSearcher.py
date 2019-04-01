@@ -5,14 +5,15 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 import math
+
 from LossFunction import * 
 from Parameters import *
-from Activations import *
-from DataOperator import *
-from Level1_TwoLayer import *
+from Activators import *
+from DataReader import *
+from Level0_TwoLayerNet import *
 
-x_data_name = "CurveX.dat"
-y_data_name = "CurveY.dat"
+x_data_name = "X8.dat"
+y_data_name = "Y8.dat"
 
 class CLooper(object):
     # e.g. (0.01, 0.005, 100) means start from 0.01, every 100 iteration will add 0.005 until 0.01*10 (=0.1)
@@ -43,7 +44,7 @@ class CLooper(object):
         #end while
         return lrs, loops
 
-class CLearningRateSearcher(object):
+class LearningRateSearcher(object):
     def __init__(self):
         self.learningRates = []
         self.loopCount = []
@@ -85,63 +86,56 @@ class CLearningRateSearcher(object):
         return self.lr_history, self.loss_history
 
 
-class CBestLRSearcher(CTwoLayerNet):
-    def train(self, X, Y, params, loss_history, lr_searcher):
-        num_example = X.shape[1]
-        num_feature = X.shape[0]
-        num_category = Y.shape[0]
+class NetFinder(TwoLayerNet):
 
-        # W(num_category, num_feature), B(num_category, 1)
-        W1, B1, W2, B2 = params.LoadSameInitialParameters()
-        dict_weights = {"W1":W1, "B1":B1, "W2":W2, "B2":B2}
+    def UpdateWeights(self, wb1, wb2, lr):
+        wb1.Update(lr)
+        wb2.Update(lr)
 
+    def train(self, dataReader, params, loss_history, lr_searcher):
+        # initialize weights and bias
+        wb1 = WeightsBias(params.num_input, params.num_hidden, params.eta, params.init_method)
+        wb1.InitializeWeights(False)
+        wb2 = WeightsBias(params.num_hidden, params.num_output, params.eta, params.init_method)
+        wb2.InitializeWeights(False)
         # calculate loss to decide the stop condition
         loss = 0 
-        lossFunc = CLossFunction(params.loss_func_name)
+        lossFunc = CLossFunction(self.loss_func_name)
 
         lr, loop = lr_searcher.getFirstLearningRate()
 
         # if num_example=200, batch_size=10, then iteration=200/10=20
-        max_iteration = (int)(params.num_example / params.batch_size)
+        max_iteration = (int)(dataReader.num_example / params.batch_size)
         for epoch in range(params.max_epoch):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
-                batch_x, batch_y = DataOperator.GetBatchSamples(X,Y,params.batch_size,iteration)
+                batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)
                 # get z from x,y
-                dict_cache = self.ForwardCalculationBatch(batch_x, dict_weights)
+                dict_cache = self.forward(batch_x, wb1, wb2)
                 # calculate gradient of w and b
-                dict_grads = self.BackPropagationBatch(batch_x, batch_y, dict_cache, dict_weights)
+                self.BackPropagationBatch(batch_x, batch_y, dict_cache, wb1, wb2)
                 # update w,b
-                dict_weights = self.UpdateWeights(dict_weights, dict_grads, lr)
+                self.UpdateWeights(wb1, wb2, lr)
             # end for            
-            loss = lossFunc.CheckLoss(X, Y, dict_weights, self.ForwardCalculationBatch)
-            print("epoch=%d, loss=%f, eta=%f" %(epoch,loss,lr))
-            loss_history.AddLossHistory(loss, dict_weights, epoch, iteration)     
-
+            # calculate loss for this batch
+            output = self.forward(dataReader.X, wb1, wb2)
+            loss = lossFunc.CheckLoss(dataReader.Y, output["Output"])
+            print("epoch=%d, loss=%f, lr=%f" %(epoch,loss,lr))
+            loss_history.AddLossHistory(loss, epoch, iteration, wb1, wb2)          
+            
             lr_searcher.addHistory(loss, lr)
             if (epoch+1) % loop == 0:   # avoid when epoch==0
                 lr, loop = lr_searcher.getNextLearningRate()
             # end if
             if lr == None:
                 break
-#            if math.isnan(loss):
-#                break
-            # end if
         # end for
-        return dict_weights
+        return wb1, wb2
     # end def
-# end class
 
-if __name__ == '__main__':
-
-    X,Y = DataOperator.ReadData(x_data_name, y_data_name)
-    num_example = X.shape[1]
-    n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.0001, 10, 50000
-    eps = 0.001
-    init_method = InitialMethod.xavier
-    lr_Searcher = CLearningRateSearcher()
+def try_1():
     # try 1    
+    lr_Searcher = LearningRateSearcher()
     looper = CLooper(0.0001,0.0001,10)
     lr_Searcher.addLooper(looper)
     looper = CLooper(0.001,0.001,10)
@@ -149,22 +143,48 @@ if __name__ == '__main__':
     looper = CLooper(0.01,0.01,10)
     lr_Searcher.addLooper(looper)
     looper = CLooper(0.1,0.1,100)
-    lr_Searcher.addLooper(looper)
+    lr_Searcher.addLooper(looper) 
+    return lr_Searcher
+
+def try_2():
     # try 2
-    #looper = CLooper(0.1,0.1,100)
-    #lr_Searcher.addLooper(looper)
-    #looper = CLooper(1.0,0.01,100,1.1)
-    #lr_Searcher.addLooper(looper)
-    # try 3
-    #looper = CLooper(0.63,0.01,200,1.1)
-    #lr_Searcher.addLooper(looper)
+    lr_Searcher = LearningRateSearcher()
+    looper = CLooper(0.1,0.1,100)
+    lr_Searcher.addLooper(looper)
+    looper = CLooper(1.0,0.01,100,1.1)
+    lr_Searcher.addLooper(looper)
+    return lr_Searcher
 
-    params = CParameters(num_example, n_input, n_output, n_hidden, eta, max_epoch, batch_size, LossFunctionName.MSE, eps, init_method)
+def try_3():
+    lr_Searcher = LearningRateSearcher()
+    looper = CLooper(0.63,0.01,200,1.1)
+    lr_Searcher.addLooper(looper)
+    return lr_Searcher
 
-    # SGD, MiniBatch, FullBatch
+if __name__ == '__main__':
+    dataReader = DataReader(x_data_name, y_data_name)
+    XData,YData = dataReader.ReadData()
+    X = dataReader.NormalizeX(passthrough=True)
+    Y = dataReader.NormalizeY()
+    
+    n_input, n_hidden, n_output = 1, 4, 1
+    eta, batch_size, max_epoch = 0.1, 10, 30000
+    eps = 0.001
+
+    params = CParameters(n_input, n_hidden, n_output,
+                         eta, max_epoch, batch_size, eps, 
+                         InitialMethod.Xavier,
+                         OptimizerName.SGD)
+
     loss_history = CLossHistory()
-    net = CBestLRSearcher()
-    dict_weights = net.train(X, Y, params, loss_history, lr_Searcher)
+
+
+    #lr_Searcher = try_1()
+    lr_Searcher = try_2()
+    #lr_Searcher = try_3()
+
+    net = NetFinder(NetType.Fitting)
+    net.train(dataReader, params, loss_history, lr_Searcher)
 
     lrs, losses = lr_Searcher.getLrLossHistory()
     plt.plot(np.log10(lrs), losses)

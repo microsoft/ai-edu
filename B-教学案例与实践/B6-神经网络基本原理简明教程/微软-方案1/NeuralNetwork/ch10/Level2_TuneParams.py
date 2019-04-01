@@ -11,8 +11,20 @@ from Parameters import *
 from Level0_TwoLayerNet import *
 from DataReader import * 
 
-x_data_name = "CurveX.dat"
-y_data_name = "CurveY.dat"
+x_data_name = "X8.dat"
+y_data_name = "Y8.dat"
+
+def ShowResult(net, X, Y, title, wb1, wb2):
+    # draw train data
+    plt.plot(X[0,:], Y[0,:], '.', c='b')
+    # create and draw visualized validation data
+    TX = np.linspace(0,1,100).reshape(1,100)
+    dict_cache = net.forward(TX, wb1, wb2)
+    TY = dict_cache["Output"]
+    plt.plot(TX, TY, 'x', c='r')
+    plt.title(title)
+    plt.show()
+
 
 def train(ne, batch, eta):
     dataReader = DataReader(x_data_name, y_data_name)
@@ -20,8 +32,8 @@ def train(ne, batch, eta):
     X = dataReader.NormalizeX(passthrough=True)
     Y = dataReader.NormalizeY()
     
-    n_input, n_hidden, n_output = 1, 4, 1
-    eta, batch_size, max_epoch = 0.1, 10, 30000
+    n_input, n_hidden, n_output = 1, ne, 1
+    eta, batch_size, max_epoch = eta, batch, 30000
     eps = 0.001
 
     params = CParameters(n_input, n_hidden, n_output,
@@ -40,7 +52,7 @@ def train(ne, batch, eta):
 
 
 if __name__ == '__main__':
-
+    
     ne, batch, eta = 4, 10, 0.1
     train(ne, batch, eta)
     ne, batch, eta = 4, 10, 0.3
@@ -58,7 +70,7 @@ if __name__ == '__main__':
     train(ne, batch, eta)
     ne, batch, eta = 4, 20, 0.5
     train(ne, batch, eta)
-
+    
     ne, batch, eta = 2, 10, 0.5
     train(ne, batch, eta)
     ne, batch, eta = 4, 10, 0.5

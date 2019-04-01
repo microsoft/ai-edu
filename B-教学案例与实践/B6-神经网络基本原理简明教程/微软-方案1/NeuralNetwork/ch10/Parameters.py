@@ -28,6 +28,6 @@ class CParameters(object):
         self.eps = eps
 
     def toString(self):
-        title = str.format("bz:{0},eta:{1},init:{2}", self.batch_size, self.eta, self.init_method.name)
+        title = str.format("bz:{0},eta:{1},ne:{2}", self.batch_size, self.eta, self.num_hidden)
         return title
 

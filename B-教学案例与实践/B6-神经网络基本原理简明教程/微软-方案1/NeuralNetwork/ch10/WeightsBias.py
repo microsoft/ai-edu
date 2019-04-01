@@ -44,9 +44,13 @@ class WeightsBias(object):
             self.__CreateNew()
         # end if
 
-    def Update(self):
-        self.W = self.W - self.eta * self.dW
-        self.B = self.B - self.eta * self.dB
+    def Update(self, lr=None):
+        if lr != None:
+            self.W = self.W - lr * self.dW
+            self.B = self.B - lr * self.dB
+        else:
+            self.W = self.W - self.eta * self.dW
+            self.B = self.B - self.eta * self.dB
 
     def GetWeightsBiasAsDict(self):
         dict = {"W":self.W, "B":self.B}

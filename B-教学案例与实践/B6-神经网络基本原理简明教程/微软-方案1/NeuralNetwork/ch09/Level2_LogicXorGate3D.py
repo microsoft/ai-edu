@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
-import math
+from mpl_toolkits.mplot3d import Axes3D
 
 from LossFunction import * 
 from Activators import *
@@ -94,7 +94,7 @@ def train():
     dataReader.ReadData()
     
     n_input, n_output = dataReader.num_feature, dataReader.num_category
-    n_hidden = 2
+    n_hidden = 3
     eta, batch_size, max_epoch = 0.1, 1, 10000
     eps = 0.005
 
@@ -122,7 +122,7 @@ def train():
     Test(dataReader, net, wb1, wb2)
 
     SaveWeights(wb1, wb2)
-    
+
 def LoadWeights(wb1, wb2):
     wb1.W = np.load("xor_w1_2_2.npy")
     wb1.B = np.load("xor_w1_2_1.npy")
@@ -160,22 +160,28 @@ def ShowZ1A1Z2A2():
     plt.title("X1:X2")
     plt.show()
 
-
+    fig = plt.figure()
+    ax = Axes3D(fig)
     for i in range(dataReader.num_example):
         if dataReader.Y[0,i] == 0:
-            plt.plot(Z1[0,i],Z1[1,i],'^',c='r')
+            ax.scatter(Z1[0,i],Z1[1,i],Z1[2,i],c='r')
+            #ax.plot(Z1[0,i],Z1[1,i],Z1[2,i],c='r')
         else:
-            plt.plot(Z1[0,i],Z1[1,i],'o',c='g')
+            ax.scatter(Z1[0,i],Z1[1,i],Z1[2,i],c='g')
+            #ax.plot(Z1[0,i],Z1[1,i],Z1[2,i],c='g')
     plt.grid()
     plt.title("Z1")
     plt.show()
 
-
+    fig = plt.figure()
+    ax = Axes3D(fig)
     for i in range(dataReader.num_example):
         if dataReader.Y[0,i] == 0:
-            plt.plot(A1[0,i],A1[1,i],'^',c='r')
+            ax.scatter(A1[0,i],A1[1,i],A1[2,i],'^',c='r')
+            #plt.plot(A1[0,i],A1[1,i],A1[2,i],'^',c='r')
         else:
-            plt.plot(A1[0,i],A1[1,i],'o',c='g')
+            ax.scatter(A1[0,i],A1[1,i],A1[2,i],'o',c='g')
+            #plt.plot(A1[0,i],A1[1,i],A1[2,i],'o',c='g')
     plt.grid()
     plt.title("A1")
     plt.show()
@@ -195,4 +201,7 @@ def ShowZ1A1Z2A2():
 
 
 if __name__ == '__main__':
+    train()
+    # 每次运行之前，需要把level1中的Line 98, max_epoch的数字从小改到大，比如200,400,600,800,1000,...，
+    # 每改一次max_epoch，运行一次level1，生成权重值并自动保存，再运行一次本程序绘图
     ShowZ1A1Z2A2()

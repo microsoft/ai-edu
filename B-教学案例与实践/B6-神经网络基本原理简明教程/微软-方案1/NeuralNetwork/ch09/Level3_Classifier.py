@@ -8,7 +8,7 @@ import math
 
 from LossFunction import * 
 from Activators import *
-from Level1_TwoLayerClassificationNet import *
+from Level0_TwoLayerClassificationNet import *
 from DataReader import * 
 from WeightsBias import *
 
@@ -22,7 +22,7 @@ def ShowAreaResult(net, wb1, wb2, title):
     for i in range(count):
         for j in range(count):
             x = np.array([x1[i],x2[j]]).reshape(2,1)
-            dict_cache = net.ForwardCalculationBatch(x, wb1, wb2)
+            dict_cache = net.ForwardCalculationBatch3(x, wb1, wb2)
             output = dict_cache["Output"]
             r = np.argmax(output, axis=0)
             if r == 0:

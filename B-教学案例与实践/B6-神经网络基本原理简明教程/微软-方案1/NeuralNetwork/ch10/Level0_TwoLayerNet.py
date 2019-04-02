@@ -93,9 +93,9 @@ class TwoLayerNet(object):
 
     def train(self, dataReader, params, loss_history):
         # initialize weights and bias
-        wb1 = WeightsBias(params.num_input, params.num_hidden, params.eta, params.init_method)
+        wb1 = WeightsBias(params.num_input, params.num_hidden, params.eta, params.init_method, params.optimizer_name)
         wb1.InitializeWeights(False)
-        wb2 = WeightsBias(params.num_hidden, params.num_output, params.eta, params.init_method)
+        wb2 = WeightsBias(params.num_hidden, params.num_output, params.eta, params.init_method, params.optimizer_name)
         wb2.InitializeWeights(False)
         # calculate loss to decide the stop condition
         loss = 0 
@@ -103,9 +103,16 @@ class TwoLayerNet(object):
         lossFunc = CLossFunction(self.loss_func_name)
 
         # if num_example=200, batch_size=10, then iteration=200/10=20
+        if params.batch_size == -1: # full batch
+            params.batch_size = dataReader.num_example
         max_iteration = (int)(dataReader.num_example / params.batch_size)
         for epoch in range(params.max_epoch):
             for iteration in range(max_iteration):
+
+                if params.optimizer_name == OptimizerName.Nag:
+                    wb1.pre_Update()
+                    wb2.pre_Update()
+
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)
                 # get z from x,y

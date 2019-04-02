@@ -66,7 +66,7 @@ class Momentum(GDOptimizer):
 
 class AdaGrad(GDOptimizer):
     def __init__(self, eta):
-        self.eps = 1e-6
+        self.eps = 1e-5
         self.eta = eta
         self.r = 0
 

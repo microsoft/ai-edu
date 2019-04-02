@@ -21,6 +21,7 @@ class CParameters(object):
         # if batch_size == -1, it is FullBatch
         self.batch_size = batch_size
         # end if
+        self.init_method = initMethod
         self.eps = eps
         self.init_method = initMethod
         self.optimizer_name = optimizerName

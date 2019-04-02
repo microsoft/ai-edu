@@ -19,15 +19,15 @@ class CParameters(object):
         self.eta = eta
         self.max_epoch = max_epoch
         # if batch_size == -1, it is FullBatch
-        if batch_size == -1:
-            self.batch_size = self.num_example
-        else:
-            self.batch_size = batch_size
+        self.batch_size = batch_size
         # end if
         self.init_method = initMethod
         self.eps = eps
+        self.init_method = initMethod
+        self.optimizer_name = optimizerName
+       
 
     def toString(self):
-        title = str.format("bz:{0},eta:{1},ne:{2}", self.batch_size, self.eta, self.num_hidden)
+        title = str.format("bz:{0},eta:{1},ne:{2},init:{3},op:{4}", self.batch_size, self.eta, self.num_hidden, self.init_method.name, self.optimizer_name.name)
         return title
 

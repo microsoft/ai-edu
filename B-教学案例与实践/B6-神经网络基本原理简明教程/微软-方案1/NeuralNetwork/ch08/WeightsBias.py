@@ -36,7 +36,7 @@ class WeightsBias(object):
         
     def __LoadExistingParameters(self):
         w_file = Path(self.w_filename)
-        if w_file.exists() and w_file.exists():
+        if w_file.exists():
             self.W = np.load(w_file)
             self.B = np.zeros((self.num_output, 1))
         else:

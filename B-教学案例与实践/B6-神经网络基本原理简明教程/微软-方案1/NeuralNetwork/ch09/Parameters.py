@@ -18,10 +18,7 @@ class CParameters(object):
         self.eta = eta
         self.max_epoch = max_epoch
         # if batch_size == -1, it is FullBatch
-        if batch_size == -1:
-            self.batch_size = self.num_example
-        else:
-            self.batch_size = batch_size
+        self.batch_size = batch_size
         # end if
         self.loss_func_name = lossFuncName
         self.init_method = initMethod

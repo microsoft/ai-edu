@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>ea2e2a33-4a00-430c-82fd-357003b11772</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_BestLearningRateSearcher.py</StartupFile>
+    <StartupFile>Level4_Optimizer08.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,12 +26,10 @@
     <Compile Include="GDOptimizer.py" />
     <Compile Include="Level0_TwoLayerNet.py" />
     <Compile Include="Level1_InitializeWeights.py" />
-    <Compile Include="Level3_Optimizer08.py" />
-    <Compile Include="Level4_BestLRSearcher.py" />
+    <Compile Include="Level4_Optimizer08.py" />
     <Compile Include="Level4_Optimizer09.py" />
-    <Compile Include="Level4_OptimizerFor08.py" />
     <Compile Include="Level2_TuneParams.py" />
-    <Compile Include="Level3_BestLearningRateSearcher.py" />
+    <Compile Include="Level3_BestLrSeeking.py" />
     <Compile Include="Level5_OptimizerFor09.py" />
     <Compile Include="LossFunction.py" />
     <Compile Include="Parameters.py" />

@@ -25,7 +25,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataReader.py" />
-    <Compile Include="Level1_TwoLayerFitting.py" />
+    <Compile Include="Level1_TwoLayerFittingNet.py" />
     <Compile Include="LossFunction.py">
       <SubType>Code</SubType>
     </Compile>

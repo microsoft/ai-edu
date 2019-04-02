@@ -47,10 +47,6 @@ class WeightsBias(object):
         self.W = self.W - self.eta * self.dW
         self.B = self.B - self.eta * self.dB
 
-    def GetWeightsBiasAsDict(self):
-        dict = {"W":self.W, "B":self.B}
-        return dict
-
     def toString(self):
         info = str.format("w={0}\nb={1}\n", self.W, self.B)
         return info

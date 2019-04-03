@@ -21,7 +21,7 @@ class TwoLayerClassificationNet(object):
         Z2 = np.dot(wb2.W, A1) + wb2.B
         A2 = Softmax().forward(Z2)
         # keep cache for backward
-        dict_cache ={"Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
+        dict_cache ={"Z1":Z1, "Z2":Z2, "A1":A1, "A2":A2, "Output":A2}
         return dict_cache
 
     def ForwardCalculationBatch2(self, batch_x, wb1, wb2):
@@ -32,7 +32,7 @@ class TwoLayerClassificationNet(object):
         Z2 = np.dot(wb2.W, A1) + wb2.B
         A2 = Sigmoid().forward(Z2)
         # keep cache for backward
-        dict_cache ={"Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
+        dict_cache ={"Z1":Z1, "Z2":Z2, "A1":A1, "A2":A2, "Output":A2}
         return dict_cache
 
     def BackPropagationBatch(self, batch_x, batch_y, dict_cache, wb1, wb2):
@@ -59,7 +59,7 @@ class TwoLayerClassificationNet(object):
         wb1.Update()
         wb2.Update()
 
-    def train(self, dataReader, params, loss_history):
+    def train(self, dataReader, params, loss_history, forward):
         # initialize weights and bias
         wb1 = WeightsBias(params.num_input, params.num_hidden, params.eta)
         wb1.InitializeWeights(False)
@@ -79,7 +79,7 @@ class TwoLayerClassificationNet(object):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)
                 # get z from x,y
-                dict_cache = self.ForwardCalculationBatch2(batch_x, wb1, wb2)
+                dict_cache = forward(batch_x, wb1, wb2)
                 # calculate gradient of w and b
                 self.BackPropagationBatch(batch_x, batch_y, dict_cache, wb1, wb2)
                 # update w,b

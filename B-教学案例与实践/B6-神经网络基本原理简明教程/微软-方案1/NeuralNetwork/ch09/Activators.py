@@ -4,18 +4,18 @@
 import numpy as np
 
 class CActivator(object):
-    # z = 本层的wx+b计算值矩阵
+    # z = wx+b
     def forward(self, z):
         pass
 
-    # z = 本层的wx+b计算值矩阵
-    # a = 本层的激活函数输出值矩阵
-    # delta = 上（后）层反传回来的梯度值矩阵
+    # z = wx+b
+    # a = a(z)
+    # delta = delta(error) from upper level
     def backward(self, z, a, delta):
         pass
 
 
-# 直传函数，相当于无激活
+# no activation
 class Identity(CActivator):
     def forward(self, z):
         return z
@@ -51,7 +51,7 @@ class Relu(CActivator):
         a = np.maximum(z, 0)
         return a
 
-    # 注意relu函数判断是否大于1的根据是正向的wx+b=z的值，而不是a值
+    # check if z >0, not a
     def backward(self, z, a, delta):
         da = np.zeros(z.shape)
         da[z>0] = 1

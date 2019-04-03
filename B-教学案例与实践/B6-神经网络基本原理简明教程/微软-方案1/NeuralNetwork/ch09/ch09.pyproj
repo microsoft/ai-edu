@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_HowXorGateWorks.py</StartupFile>
+    <StartupFile>Level5_Result3D.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,10 +24,11 @@
     <Compile Include="Activators.py" />
     <Compile Include="DataReader.py" />
     <Compile Include="Level0_TwoLayerClassificationNet.py" />
-    <Compile Include="Level2_LogicXorGate3D.py" />
-    <Compile Include="Level2_HowXorGateWorks.py" />
+    <Compile Include="Level3_LogicXorGate3D.py" />
+    <Compile Include="Level2_HowXorGateWorks2D.py" />
     <Compile Include="Level1_LogicXorGate.py" />
-    <Compile Include="Level3_Classifier3.py" />
+    <Compile Include="Level5_Result3D.py" />
+    <Compile Include="Level4_Classifier3.py" />
     <Compile Include="LossFunction.py" />
     <Compile Include="Parameters.py">
       <SubType>Code</SubType>

@@ -60,8 +60,8 @@ def WalkThroughAllOptimizers(option):
    
 if __name__ == '__main__':
 
-    WalkThroughAllOptimizers((OptimizerName.Momentum,0.1,4))
-    WalkThroughAllOptimizers((OptimizerName.Nag,0.1,4))
+    WalkThroughAllOptimizers((OptimizerName.AdaDelta,0.1,2))
+    WalkThroughAllOptimizers((OptimizerName.Adam,0.001,2))
 
     '''
     list_name = [(OptimizerName.SGD,0.1,4),

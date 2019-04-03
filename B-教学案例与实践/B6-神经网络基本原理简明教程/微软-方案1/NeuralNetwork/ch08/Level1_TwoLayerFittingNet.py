@@ -20,7 +20,7 @@ class TwoLayerFittingNet(object):
         Z2 = np.dot(wb2.W, A1) + wb2.B
         A2 = Z2
         # keep cache for backward
-        dict_cache ={"Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
+        dict_cache ={"Z1":Z1, "Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
         return dict_cache
 
     def BackPropagationBatch(self, batch_x, batch_y, dict_cache, wb1, wb2):

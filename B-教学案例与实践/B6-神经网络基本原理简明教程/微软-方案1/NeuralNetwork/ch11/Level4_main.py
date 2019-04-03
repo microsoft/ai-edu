@@ -1,12 +1,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from NeuralNet import *
-from GDOptimizer import *
-from LossFunction import *
-from Parameters import *
-from WeightsBias import *
-from Activators import *
+from Level4.NeuralNet import *
+from Level4.GDOptimizer import *
+from Level4.LossFunction import *
+from Level4.Parameters import *
+from Level4.WeightsBias import *
+from Level4.Activators import *
 
 from MnistDataReader import *
 

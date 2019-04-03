@@ -3,10 +3,10 @@
 
 import numpy as np
 
-from Layer import *
-from Activators import *
-from WeightsBias import *
-from Parameters import *
+from Level4.Layer import *
+from Level4.Activators import *
+from Level4.WeightsBias import *
+from Level4.Parameters import *
 
 class FcLayer(CLayer):
     def __init__(self, input_size, output_size, activator):

@@ -5,9 +5,9 @@
 import numpy as np
 from enum import Enum
 
-from Layer import *
-from FCLayer import *
-from Parameters import *
+from Level4.Layer import *
+from Level4.FCLayer import *
+from Level4.Parameters import *
 
 class NeuralNet(object):
     def __init__(self, params):

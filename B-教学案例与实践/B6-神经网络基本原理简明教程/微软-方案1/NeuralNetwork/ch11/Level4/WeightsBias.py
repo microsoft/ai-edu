@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-from GDOptimizer import *
+from Level4.GDOptimizer import *
 
 class InitialMethod(Enum):
     Zero = 0,

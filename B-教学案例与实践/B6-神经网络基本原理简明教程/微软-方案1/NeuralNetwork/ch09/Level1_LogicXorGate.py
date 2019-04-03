@@ -36,7 +36,7 @@ class XOR_DataReader():
         return batch_X, batch_Y
 
 
-def ShowAreaResult(net, wb1, wb2, title):
+def ShowResult2D(net, wb1, wb2, title):
     count = 50
     x1 = np.linspace(0,1,count)
     x2 = np.linspace(0,1,count)
@@ -116,7 +116,7 @@ def train():
 
     print("wait for 10 seconds...")
 
-    ShowAreaResult(net, trace.wb1, trace.wb2, title)
+    ShowResult2D(net, trace.wb1, trace.wb2, title)
     ShowData(dataReader.X, dataReader.Y)
 
     Test(dataReader, net, wb1, wb2)

@@ -5,6 +5,7 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 import math
+from mpl_toolkits.mplot3d import Axes3D
 
 from LossFunction import * 
 from Activators import *
@@ -36,7 +37,7 @@ class XOR_DataReader():
         return batch_X, batch_Y
 
 
-def ShowAreaResult(net, wb1, wb2, title):
+def ShowResult2D(net, wb1, wb2, title):
     count = 50
     x1 = np.linspace(0,1,count)
     x2 = np.linspace(0,1,count)
@@ -74,23 +75,16 @@ def LoadWeights(wb1, wb2):
     wb2.W = np.load("xor_w2_1_2.npy")
     wb2.B = np.load("xor_w2_1_1.npy")
 
-
-def ShowZ1A1Z2A2():
-    wb1 = WeightsBias(2,2,0.1,InitialMethod.Xavier)
-    wb2 = WeightsBias(1,2,0.1,InitialMethod.Xavier)
-    LoadWeights(wb1, wb2)
-    print(wb1.toString())    
-    print(wb2.toString())
-
-    dataReader = XOR_DataReader()
-    dataReader.ReadData()
-
-    
-    Z1 = np.dot(wb1.W, dataReader.X) + wb1.B
+def Forward(x, wb1, wb2):
+    Z1 = np.dot(wb1.W, x) + wb1.B
     A1 = Sigmoid().forward(Z1)
     # layer 2
     Z2 = np.dot(wb2.W, A1) + wb2.B
     A2 = Sigmoid().forward(Z2)
+    return Z1, A1, Z2, A2
+
+def ShowProcess2D(dataReader, wb1, wb2):
+    Z1,A1,Z2,A2 = Forward(dataReader.X, wb1, wb2)
     print(Z1)
     print(A1)
     print(Z2)
@@ -104,7 +98,6 @@ def ShowZ1A1Z2A2():
     plt.grid()
     plt.title("X1:X2")
     plt.show()
-
 
     for i in range(dataReader.num_example):
         if dataReader.Y[0,i] == 0:
@@ -138,8 +131,39 @@ def ShowZ1A1Z2A2():
     plt.title("Z2:A2")
     plt.show()
 
+def ShowResult3D(dataReader, wb1, wb2):
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    count = 50
+    x = np.linspace(0,1,count)
+    y = np.linspace(0,1,count)
+    X, Y = np.meshgrid(x, y)
+    Z = np.zeros((len(x), len(y)))
+
+    for i in range(count):
+        for j in range(count):
+            a = np.array([x[i],y[j]]).reshape(2,1)
+            _,_,_,A2 = Forward(a, wb1, wb2)
+            Z[i,j] = A2[0,0]
+            # end if
+        # end for
+    # end for
+    ax.plot_surface(X,Y,Z,cmap='rainbow')
+    plt.show()
+
 
 if __name__ == '__main__':
     # 每次运行之前，需要把level1中的Line 98, max_epoch的数字从小改到大，比如200,400,600,800,1000,...，
+    # 并保持n_hidden=2不变，运行Level1, 生成结果并保存
     # 每改一次max_epoch，运行一次level1，生成权重值并自动保存，再运行一次本程序绘图
-    ShowZ1A1Z2A2()
+    wb1 = WeightsBias(2,2,0.1,InitialMethod.Xavier)
+    wb2 = WeightsBias(1,2,0.1,InitialMethod.Xavier)
+    LoadWeights(wb1, wb2)
+    print(wb1.toString())    
+    print(wb2.toString())
+
+    dataReader = XOR_DataReader()
+    dataReader.ReadData()
+
+    ShowProcess2D(dataReader, wb1, wb2)
+    ShowResult3D(dataReader, wb1, wb2)

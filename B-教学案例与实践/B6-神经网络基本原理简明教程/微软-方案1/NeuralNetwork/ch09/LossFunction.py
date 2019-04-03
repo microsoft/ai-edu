@@ -20,13 +20,13 @@ class CTrace(object):
 
 # end class
 
-# 帮助类，用于记录损失函数值极其对应的权重/迭代次数
+# help function to record loss history
 class CLossHistory(object):
     def __init__(self):
         # loss history
         self.loss_history = []
         self.min_loss_index = -1
-        # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
+        # initialize with a big number, will be overwriten by real number
         self.min_trace = CTrace(100000, -1, -1, None, None)
 
     def AddLossHistory(self, loss, epoch, iteration, wb1, wb2):
@@ -38,7 +38,7 @@ class CLossHistory(object):
         # end if
         return False
 
-    # 图形显示损失函数值历史记录
+    # 
     def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
         plt.plot(self.loss_history)
         title = self.min_trace.toString() + "," + params.toString()
@@ -50,7 +50,7 @@ class CLossHistory(object):
         plt.show()
         return title
 
-        # 从历史记录中获得最小损失值得训练权重值
+        # get minimal trace
     def GetMinimalLossData(self):
         return self.min_trace
 

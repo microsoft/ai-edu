@@ -36,7 +36,7 @@ class XOR_DataReader():
         return batch_X, batch_Y
 
 
-def ShowAreaResult(net, wb1, wb2, title):
+def ShowResult2D(net, wb1, wb2, title):
     count = 50
     x1 = np.linspace(0,1,count)
     x2 = np.linspace(0,1,count)
@@ -82,10 +82,10 @@ def Test(dataReader, net, wb1, wb2):
     #end for
 
 def SaveWeights(wb1, wb2):
-    np.save("xor_w1_2_2.npy", wb1.W)
-    np.save("xor_w1_2_1.npy", wb1.B)
-    np.save("xor_w2_1_2.npy", wb2.W)
-    np.save("xor_w2_1_1.npy", wb2.B)
+    np.save("xor_2d_w1.npy", wb1.W)
+    np.save("xor_2d_b1.npy", wb1.B)
+    np.save("xor_2d_w2.npy", wb2.W)
+    np.save("xor_2d_b2.npy", wb2.B)
 
 
 def train():
@@ -105,7 +105,7 @@ def train():
 
     #ShowData(XData, YData)
 
-    wb1, wb2 = net.train(dataReader, params, loss_history)
+    wb1, wb2 = net.train(dataReader, params, loss_history, net.ForwardCalculationBatch2)
 
     trace = loss_history.GetMinimalLossData()
     print(trace.toString())
@@ -116,7 +116,7 @@ def train():
 
     print("wait for 10 seconds...")
 
-    ShowAreaResult(net, trace.wb1, trace.wb2, title)
+    ShowResult2D(net, trace.wb1, trace.wb2, title)
     ShowData(dataReader.X, dataReader.Y)
 
     Test(dataReader, net, wb1, wb2)

@@ -55,7 +55,7 @@ class DataReader(object):
             self.X = np.zeros(self.XRawData.shape)
             num_feature = self.XRawData.shape[0]
             self.X_norm = np.zeros((2,num_feature))
-            # 按行归一化,即所有样本的同一特征值分别做归一化
+            # normalize by feature for all the examples
             for i in range(num_feature):
                 # get one feature from all examples
                 x = self.XRawData[i,:]
@@ -83,7 +83,7 @@ class DataReader(object):
             X_new[i,:] = (x-self.X_norm[0,i])/self.X_norm[1,i]
         return X_new
 
-    # 获得批样本数据
+    # 
     def GetBatchSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
@@ -108,9 +108,9 @@ class DataReader(object):
     def ToZeroOne(YData, positive_label, negative_label, positiva_value = 1, negative_value = 0):
         self.Y = np.zeros((1, self.num_example))
         for i in range(self.num_example):
-            if YData[0,i] == negative_label:     # 负类的标签设为0
+            if YData[0,i] == negative_label:     # set negative label to 0
                 self.Y[0,i] = negative_value
-            elif YData[0,i] == positive_label:   # 正类的标签设为1
+            elif YData[0,i] == positive_label:   # set positive label to 1
                 self.Y[0,i] = positiva_value
             # end if
         # end for

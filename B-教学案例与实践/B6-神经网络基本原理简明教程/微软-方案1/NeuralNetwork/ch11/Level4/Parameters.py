@@ -1,9 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from LossFunction import *
-from WeightsBias import *
-from GDOptimizer import *
+from Level4.LossFunction import *
+from Level4.WeightsBias import *
+from Level4.GDOptimizer import *
 
 # this class is for two-layer NN only
 class CParameters(object):

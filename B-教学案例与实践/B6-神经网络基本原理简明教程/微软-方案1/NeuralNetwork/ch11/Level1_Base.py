@@ -40,8 +40,8 @@ def CalculateLoss(dict_Param, X, Y, count, forward):
 def Test(dataReader, num_output, dict_Param, num_input, forward):
     print("Testing...")
 
-    X = dataReader.XTestData
-    Y = dataReader.YTestData
+    X = dataReader.XTestSet
+    Y = dataReader.YTestSet
     count = Y.shape[1]
     num_images = X.shape[1]
     correct = 0
@@ -79,8 +79,8 @@ def Train(dataReader, learning_rate, max_epoch, num_images, num_input, num_outpu
 
 def LoadData(num_output):
     mdr = MnistDataReader(train_image_file, train_label_file, test_image_file, test_label_file)
-    mdr.ReadFile()
-    mdr.NormalizeXData()
+    mdr.ReadData()
+    mdr.Normalize()
     return mdr
 
 def ShowLoss(loss_history):

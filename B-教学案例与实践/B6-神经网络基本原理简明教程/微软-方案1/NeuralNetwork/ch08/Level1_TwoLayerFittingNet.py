@@ -20,7 +20,7 @@ class TwoLayerFittingNet(object):
         Z2 = np.dot(wb2.W, A1) + wb2.B
         A2 = Z2
         # keep cache for backward
-        dict_cache ={"Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
+        dict_cache ={"Z1":Z1, "Z2": Z2, "A1": A1, "A2": A2, "Output": A2}
         return dict_cache
 
     def BackPropagationBatch(self, batch_x, batch_y, dict_cache, wb1, wb2):
@@ -60,7 +60,7 @@ class TwoLayerFittingNet(object):
         loss = 0 
         lossFunc = CLossFunction(params.loss_func_name)
 
-        if params.batch_size == -1: # full batch
+        if params.batch_size == -1 or params.batch_size > dataReader.num_example: # full batch
             params.batch_size = dataReader.num_example
 
         # if num_example=200, batch_size=10, then iteration=200/10=20

@@ -4,7 +4,8 @@
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
-import math
+from mpl_toolkits.mplot3d import Axes3D
+
 from LossFunction import * 
 from Parameters import *
 from Activators import *
@@ -26,7 +27,23 @@ def ShowResult(net, X, Y, title, wb1, wb2):
     plt.show()
 #end def
 
-if __name__ == '__main__':
+def ShowResult3D(net, X, Y, title, wb1, wb2):
+    TX = np.linspace(0,1,10).reshape(1,10)
+    dict_cache = net.ForwardCalculationBatch(TX, wb1, wb2)
+    Z1 = dict_cache["Z1"]
+    A1 = dict_cache["A1"]
+    Z2 = dict_cache["Z2"]
+    '''
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    ax.scatter(Z1[0],Z1[1],Z1[2],c='g')
+    ax.scatter(A1[0],A1[1],A1[2],c='r')
+    plt.show()
+    '''
+    plt.plot(TX[0],Z2[0])
+    plt.show()
+
+def Train():
     dataReader = DataReader(x_data_name, y_data_name)
     dataReader.ReadData()
     dataReader.NormalizeX()
@@ -48,5 +65,42 @@ if __name__ == '__main__':
     title = loss_history.ShowLossHistory(params)
 
     ShowResult(net, dataReader.X, dataReader.Y, title, trace.wb1, trace.wb2)
+    trace.wb1.Save("wb1")
+    trace.wb2.Save("wb2")
 
 
+if __name__ == '__main__':
+    # Train()
+    dataReader = DataReader(x_data_name, y_data_name)
+    dataReader.ReadData()
+    dataReader.NormalizeX()
+    dataReader.NormalizeY()
+
+    n_input, n_hidden, n_output = 1, 3, 1
+    eta, batch_size, max_epoch = 0.5, 10, 50000
+    eps = 0.001
+
+    params = CParameters(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps)
+
+    wb1 = WeightsBias(n_input, n_hidden, eta)
+    wb2 = WeightsBias(n_hidden, n_output, eta)
+    wb1.Load("wb1")
+    wb2.Load("wb2")
+
+
+    Z1 = np.dot(wb1.W, dataReader.Y) + wb2.B
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    for i in range(Z1.shape[1]):
+        ax.scatter(Z1[0],Z1[1],Z1[2],c='g')
+    plt.show()
+
+
+    '''
+    # SGD, MiniBatch, FullBatch
+    loss_history = CLossHistory()
+    net = TwoLayerFittingNet()
+    #ShowResult(net, dataReader.X, dataReader.Y, "title", wb1, wb2)
+    ShowResult3D(net, dataReader.X, dataReader.Y, "title", wb1, wb2)
+    '''

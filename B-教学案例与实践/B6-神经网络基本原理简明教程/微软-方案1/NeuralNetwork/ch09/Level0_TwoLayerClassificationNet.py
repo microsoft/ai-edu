@@ -1,4 +1,4 @@
-# Copyright (c) Microsoft. All rights reserved.
+﻿# Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
@@ -69,7 +69,7 @@ class TwoLayerClassificationNet(object):
         loss = 0 
         lossFunc = CLossFunction(params.loss_func_name)
 
-        if params.batch_size == -1: # full batch
+        if params.batch_size == -1 or params.batch_size > dataReader.num_example: # full batch
             params.batch_size = dataReader.num_example
 
         # if num_example=200, batch_size=10, then iteration=200/10=20

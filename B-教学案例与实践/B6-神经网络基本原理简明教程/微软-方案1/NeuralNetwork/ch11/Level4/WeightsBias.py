@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-from GDOptimizer import *
+from Level4.GDOptimizer import *
 
 class InitialMethod(Enum):
     Zero = 0,
@@ -18,30 +18,28 @@ class WeightsBias(object):
         self.init_method = init_method
         self.optimizer_name = optimizer_name
         self.eta = eta
-
-    def __GenerateWeightsArrayFileName(self):
-        self.w_filename = str.format("w1_{0}_{1}_{2}.npy", self.num_output, self.num_input, self.init_method.name)
+        self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
+        self.result_value_filename = str.format("{0}_{1}_{2}_result", self.num_output, self.num_input, self.init_method.name)
 
     def InitializeWeights(self, create_new = False):
-        self.__GenerateWeightsArrayFileName()
         if create_new:
             self.__CreateNew()
         else:
             self.__LoadExistingParameters()
         # end if
         self.__CreateOptimizers()
+
         self.dW = np.zeros(self.W.shape)
         self.dB = np.zeros(self.B.shape)
 
     def __CreateNew(self):
         self.W, self.B = WeightsBias.InitialParameters(self.num_input, self.num_output, self.init_method)
-        np.save(self.w_filename, self.W)
+        self.__SaveInitialValue()
         
     def __LoadExistingParameters(self):
-        w_file = Path(self.w_filename)
-        if w_file.exists() and w_file.exists():
-            self.W = np.load(w_file)
-            self.B = np.zeros((self.num_output, 1))
+        w_file = Path(self.initial_value_filename)
+        if w_file.exists():
+            self.__LoadInitialValue()
         else:
             self.__CreateNew()
         # end if
@@ -60,9 +58,20 @@ class WeightsBias(object):
         self.W = self.oW.update(self.W, self.dW)
         self.B = self.oB.update(self.B, self.dB)
 
-    def GetWeightsBiasAsDict(self):
-        dict = {"W":self.W, "B":self.B}
-        return dict
+    def __SaveInitialValue(self):
+        np.save(self.initial_value_filename, self.W)
+
+    def __LoadInitialValue(self):
+        self.W = np.load(self.initial_value_filename)
+        self.B = np.zeros((self.num_output, 1))
+
+    def SaveResultValue(self, name):
+        np.save(name + "_w_" + self.result_value_filename + ".npy", self.W)
+        np.save(name + "_b_" + self.result_value_filename + ".npy", self.B)
+
+    def LoadResultValue(self, name):
+        self.W = np.load(name + "_w_" + self.result_value_filename + ".npy")
+        self.B = np.load(name + "_b_" + self.result_value_filename + ".npy")
 
     @staticmethod
     def InitialParameters(num_input, num_output, method):

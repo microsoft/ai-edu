@@ -66,6 +66,8 @@ class NeuralNet(object):
         loss = 0 
         lossFunc = CLossFunction(self.params.loss_func_name)
         # if num_example=200, batch_size=10, then iteration=200/10=20
+        if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_example:
+            self.params.batch_size = dataReader.num_example
         max_iteration = (int)(dataReader.num_example / self.params.batch_size)
         for epoch in range(self.params.max_epoch):
             for iteration in range(max_iteration):

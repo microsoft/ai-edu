@@ -87,8 +87,20 @@ if __name__ == '__main__':
     wb1.Load("wb1")
     wb2.Load("wb2")
 
+
+    Z1 = np.dot(wb1.W, dataReader.Y) + wb2.B
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    for i in range(Z1.shape[1]):
+        ax.scatter(Z1[0],Z1[1],Z1[2],c='g')
+    plt.show()
+
+
+    '''
     # SGD, MiniBatch, FullBatch
     loss_history = CLossHistory()
     net = TwoLayerFittingNet()
     #ShowResult(net, dataReader.X, dataReader.Y, "title", wb1, wb2)
     ShowResult3D(net, dataReader.X, dataReader.Y, "title", wb1, wb2)
+    '''

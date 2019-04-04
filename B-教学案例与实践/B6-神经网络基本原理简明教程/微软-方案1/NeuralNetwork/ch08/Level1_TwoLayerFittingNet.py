@@ -60,7 +60,7 @@ class TwoLayerFittingNet(object):
         loss = 0 
         lossFunc = CLossFunction(params.loss_func_name)
 
-        if params.batch_size == -1: # full batch
+        if params.batch_size == -1 or params.batch_size > dataReader.num_example: # full batch
             params.batch_size = dataReader.num_example
 
         # if num_example=200, batch_size=10, then iteration=200/10=20

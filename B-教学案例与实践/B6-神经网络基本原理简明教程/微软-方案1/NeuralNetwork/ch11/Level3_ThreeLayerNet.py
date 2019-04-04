@@ -117,7 +117,7 @@ def InitialParameters3(num_input, num_hidden1, num_hidden2, num_output, flag):
 if __name__ == '__main__':
 
     print("Loading...")
-    learning_rate = 0.05
+    learning_rate = 0.02
     n_hidden1 = 64
     n_hidden2 = 16
     n_output = 10

@@ -51,6 +51,14 @@ class WeightsBias(object):
         info = str.format("w={0}\nb={1}\n", self.W, self.B)
         return info
 
+    def Save(self, name):
+        np.save(name+"W.npy", self.W)
+        np.save(name+"B.npy", self.B)
+
+    def Load(self, name):
+        self.W = np.load(name+"W.npy")
+        self.B = np.load(name+"B.npy")
+
     @staticmethod
     def InitialParameters(num_input, num_output, method):
         if method == InitialMethod.Zero:

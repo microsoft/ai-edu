@@ -53,9 +53,7 @@ class FcLayer(CLayer):
         self.weights.Update()
         
     def save_parameters(self, name):
-        np.save(name+"_w", self.weights.W)
-        np.save(name+"_b", self.weights.B)
+        self.weights.SaveResultValue(name)
 
     def load_parameters(self, name):
-        self.weights.W = np.load(name+"_w.npy")
-        self.weights.B = np.load(name+"_b.npy")
+        self.weights.LoadResultValue(name)

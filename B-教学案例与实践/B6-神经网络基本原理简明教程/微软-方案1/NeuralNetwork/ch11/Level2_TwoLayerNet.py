@@ -100,7 +100,7 @@ def InitialParameters(num_input, num_hidden, num_output, flag):
 
 if __name__ == '__main__':
     print("Loading...")
-    learning_rate = 0.05
+    learning_rate = 0.02
     n_hidden = 32
     n_output = 10
     dataReader = LoadData(n_output)

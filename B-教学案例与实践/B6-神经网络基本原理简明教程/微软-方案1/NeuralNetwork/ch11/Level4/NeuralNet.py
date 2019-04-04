@@ -99,8 +99,8 @@ class NeuralNet(object):
         # end for
         
     def Test(self, dataReader):
-        X = dataReader.XTestData
-        Y = dataReader.YTestData
+        X = dataReader.XTestSet
+        Y = dataReader.YTestSet
         correct = 0
         count = X.shape[1]
         for i in range(count):
@@ -116,12 +116,14 @@ class NeuralNet(object):
         self.forward(X)
         return self.output
 
+    # save weights value when got low loss than before
     def save_parameters(self):
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
             layer.save_parameters(name)
 
+    # load weights for the most low loss moment
     def load_parameters(self):
         for i in range(self.layer_count):
             layer = self.layer_list[i]

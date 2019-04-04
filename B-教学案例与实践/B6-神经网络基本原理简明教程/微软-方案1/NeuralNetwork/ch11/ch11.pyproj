@@ -43,9 +43,7 @@
     <Compile Include="Level4\NeuralNet.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MnistDataReader.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="MnistDataReader.py" />
     <Compile Include="Level4\Parameters.py" />
     <Compile Include="Level4\WeightsBias.py" />
   </ItemGroup>

@@ -23,7 +23,7 @@ class NeuralNet(object):
         self.layer_name.append(name)
         self.layer_count += 1
 
-    def forward(self, X):
+    def __forward(self, X):
         input = X
         for i in range(self.layer_count):
             layer = self.layer_list[i]
@@ -33,26 +33,26 @@ class NeuralNet(object):
         self.output = output
         return self.output
 
-    def backward(self, X, Y):
+    def __backward(self, X, Y):
         delta_in = self.output - Y
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
-            flag = self.get_layer_index(i)
+            flag = self.__get_layer_index(i)
             delta_out = layer.backward(delta_in, flag)
             # move back to previous layer
             delta_in = delta_out
 
-    def pre_update(self):
+    def __pre_update(self):
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             layer.pre_update()
 
-    def update(self):
+    def __update(self):
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             layer.update()
 
-    def get_layer_index(self, idx):
+    def __get_layer_index(self, idx):
         if self.layer_count == 1:
             return LayerIndexFlags.SingleLayer
         else:
@@ -76,16 +76,16 @@ class NeuralNet(object):
                 batch_x, batch_y = dataReader.GetBatchSamples(self.params.batch_size, iteration)
                 # for optimizers which need pre-update weights
                 if self.params.optimizer_name == OptimizerName.Nag:
-                    self.pre_update()
+                    self.__pre_update()
                 # get z from x,y
-                self.forward(batch_x)
+                self.__forward(batch_x)
                 # calculate gradient of w and b
-                self.backward(batch_x, batch_y)
+                self.__backward(batch_x, batch_y)
                 # final update w,b
-                self.update()
+                self.__update()
 
                 if iteration % 1000 == 0:
-                    self.forward(dataReader.X)
+                    self.__forward(dataReader.X)
                     loss = lossFunc.CheckLoss(dataReader.Y, self.output)
                     print("epoch=%d, iteration=%d, loss=%f" %(epoch,iteration,loss))
                     is_min = loss_history.AddLossHistory(loss, epoch, iteration)                
@@ -96,7 +96,7 @@ class NeuralNet(object):
             if loss < self.params.eps:
                 break
             # end if
-            dataReader.Shuffle()
+            #dataReader.Shuffle()
         # end for
         
     def Test(self, dataReader):
@@ -107,14 +107,14 @@ class NeuralNet(object):
         for i in range(count):
             x = X[:,i].reshape(dataReader.num_feature, 1)
             y = Y[:,i].reshape(dataReader.num_category, 1)
-            self.forward(x)
+            self.__forward(x)
             if np.argmax(self.output) == np.argmax(y):
                 correct += 1
 
         return correct, count
 
     def inference(self, X):
-        self.forward(X)
+        self.__forward(X)
         return self.output
 
     # save weights value when got low loss than before

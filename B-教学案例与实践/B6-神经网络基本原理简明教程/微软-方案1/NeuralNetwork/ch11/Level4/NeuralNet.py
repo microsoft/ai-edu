@@ -43,7 +43,9 @@ class NeuralNet(object):
             delta_in = delta_out
 
     def pre_update(self):
-        pass
+        for i in range(self.layer_count-1,-1,-1):
+            layer = self.layer_list[i]
+            layer.pre_update()
 
     def update(self):
         for i in range(self.layer_count-1,-1,-1):
@@ -60,7 +62,6 @@ class NeuralNet(object):
                 return LayerIndexFlags.FirstLayer
             else:
                 return LayerIndexFlags.MiddleLayer
-
 
     def train(self, dataReader, loss_history):
         loss = 0 

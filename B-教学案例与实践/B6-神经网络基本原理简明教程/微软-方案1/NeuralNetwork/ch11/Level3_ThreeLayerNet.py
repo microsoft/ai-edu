@@ -29,19 +29,16 @@ def forward3(X, dict_Param):
     Z3 = np.dot(W3,A2) + B3
     A3 = Softmax(Z3)
     
-    dict_Cache = {"Z1": Z1, "A1": A1, "Z2": Z2, "A2": A2, "Z3": Z3, "A3": A3}
-    return A3, dict_Cache
+    dict_Cache = {"Z1": Z1, "A1": A1, "Z2": Z2, "A2": A2, "Z3": Z3, "A3": A3, "Output": A3}
+    return dict_Cache
 
 def backward3(dict_Param,cache,X,Y):
-    W1=dict_Param["W1"]
-    W2=dict_Param["W2"]
-    W3=dict_Param["W3"]
+    W1 = dict_Param["W1"]
+    W2 = dict_Param["W2"]
+    W3 = dict_Param["W3"]
     A1 = cache["A1"]
     A2 = cache["A2"]
     A3 = cache["A3"]
-    Z1=cache["Z1"]
-    Z2=cache["Z2"]
-    Z3=cache["Z3"]
 
     dZ3= A3 - Y
     dW3 = np.dot(dZ3, A2.T)

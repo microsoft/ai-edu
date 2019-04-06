@@ -31,18 +31,14 @@ def Forward(X, dict_Param):
     Z2=np.dot(W2,A1)+B2
     A2=Softmax(Z2)
     
-    dict_Cache = {"Z1": Z1,
-             "A1": A1,
-             "Z2": Z2,
-             "A2": A2}
-    return A2, dict_Cache
+    dict_Cache = {"Z1": Z1, "A1": A1, "Z2": Z2, "A2": A2, "Output": A2}
+    return dict_Cache
 
 def Backward(dict_Param,cache,X,Y):
     W1=dict_Param["W1"]
     W2=dict_Param["W2"]
     A1 = cache["A1"]
     A2 = cache["A2"]
-    Z1=cache["Z1"]
 
     dZ2= A2 - Y
     dW2 = np.dot(dZ2, A1.T)

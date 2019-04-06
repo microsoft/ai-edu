@@ -57,40 +57,44 @@ if __name__ == '__main__':
     n_hidden1 = 16
     n_hidden2 = 12
     n_output = 10
-    eps = 1e-6
+    eps = 1e-4
     layer_dims = [n_input, n_hidden1, n_hidden2, n_output]
     dict_Param = InitialParameters3(n_input, n_hidden1, n_hidden2, n_output, 2)
-    x = np.random.randn(n_input, 1)
-    y = np.array([1,0,0,0,0,0,0,0,0,0]).reshape(-1,1)
+    n_example = 1
+    x = np.random.randn(n_input, n_example)
+    #y = np.array([1,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,1,0,0,0,0, 0,0,1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,0,0, 0,0,0,0,0,0,0,0,0,1]).reshape(-1,n_example)
+    #y = np.array([1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0]).reshape(-1,n_example)
+    y = np.array([1,0,0,0,0,0,0,0,0,0]).reshape(-1,n_example)
     
     dict_Cache = forward3(x, dict_Param)
     dict_Grads = backward3(dict_Param, dict_Cache, x, y)
     
-    theta_values, keys = dictionary_to_vector(dict_Param)
-    d_theta_values = gradients_to_vector(dict_Grads)
+    J_theta, keys = dictionary_to_vector(dict_Param)
+    d_theta_real = gradients_to_vector(dict_Grads)
 
-    n = theta_values.shape[0]
+    n = J_theta.shape[0]
     J_plus = np.zeros((n,1))
     J_minus = np.zeros((n,1))
-    grad_approx = np.zeros((n,1))
+    d_theta_approx = np.zeros((n,1))
 
+    # for each of the all parameters in w,b array
     for i in range(n):
-        theta_plus = np.copy(theta_values)
-        theta_plus[i][0] = theta_values[i][0] + eps
-        J_plus[i] = CalculateLoss(vector_to_dictionary(theta_plus, layer_dims), x, y, 1, forward3)
+        J_theta_plus = np.copy(J_theta)
+        J_theta_plus[i][0] = J_theta[i][0] + eps
+        J_plus[i] = CalculateLoss(vector_to_dictionary(J_theta_plus, layer_dims), x, y, n_example, forward3)
 
-        theta_minus = np.copy(theta_values)
-        theta_minus[i][0] = theta_values[i][0] - eps
-        J_minus[i] = CalculateLoss(vector_to_dictionary(theta_minus, layer_dims), x, y, 1, forward3)
+        J_theta_minus = np.copy(J_theta)
+        J_theta_minus[i][0] = J_theta[i][0] - eps
+        J_minus[i] = CalculateLoss(vector_to_dictionary(J_theta_minus, layer_dims), x, y, n_example, forward3)
 
-        grad_approx[i] = (J_plus[i] - J_minus[i]) / (2 * eps)
+        d_theta_approx[i] = (J_plus[i] - J_minus[i]) / (2 * eps)
     # end for
-    numerator = np.linalg.norm(d_theta_values - grad_approx)  ####np.linalg.norm 二范数
-    denominator = np.linalg.norm(grad_approx) + np.linalg.norm(d_theta_values)
+    numerator = np.linalg.norm(d_theta_real - d_theta_approx)  ####np.linalg.norm 二范数
+    denominator = np.linalg.norm(d_theta_approx) + np.linalg.norm(d_theta_real)
     difference = numerator / denominator
     if difference<1e-7:
-        print('diference ={} there is no mistake in the back_propagation'.format(difference))
+        print('diference ={} \n NO mistake.'.format(difference))
     else:
-        print('diference = {} there is a mistake in the back_propagation'.format(difference))
+        print('diference = {} \n HAS A MISTAKE!!!'.format(difference))
     
 

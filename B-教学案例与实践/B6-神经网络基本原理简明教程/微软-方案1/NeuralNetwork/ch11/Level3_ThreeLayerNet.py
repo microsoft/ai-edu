@@ -40,19 +40,21 @@ def backward3(dict_Param,cache,X,Y):
     A2 = cache["A2"]
     A3 = cache["A3"]
 
+    m = X.shape[1]
+
     dZ3= A3 - Y
-    dW3 = np.dot(dZ3, A2.T)
-    dB3 = np.sum(dZ3, axis=1, keepdims=True)
+    dW3 = np.dot(dZ3, A2.T)/m
+    dB3 = np.sum(dZ3, axis=1, keepdims=True)/m
 
     # dZ2 = W3T * dZ3 * dA3
     dZ2 = np.dot(W3.T, dZ3) * (1-A2*A2) # tanh
-    dW2 = np.dot(dZ2, A1.T)
-    dB2 = np.sum(dZ2, axis=1, keepdims=True)
+    dW2 = np.dot(dZ2, A1.T)/m
+    dB2 = np.sum(dZ2, axis=1, keepdims=True)/m
 
     # dZ1 = W2T * dZ2 * dA2
     dZ1 = np.dot(W2.T, dZ2) * A1 * (1-A1)   #sigmoid
-    dW1 = np.dot(dZ1, X.T)
-    dB1 = np.sum(dZ1, axis=1, keepdims=True)
+    dW1 = np.dot(dZ1, X.T)/m
+    dB1 = np.sum(dZ1, axis=1, keepdims=True)/m
 
     dict_Grads = {"dW1": dW1, "dB1": dB1, "dW2": dW2, "dB2": dB2, "dW3": dW3, "dB3": dB3}
     return dict_Grads

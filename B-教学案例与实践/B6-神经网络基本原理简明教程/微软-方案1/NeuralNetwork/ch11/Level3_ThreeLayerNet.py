@@ -113,6 +113,14 @@ def InitialParameters3(num_input, num_hidden1, num_hidden2, num_output, flag):
     dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2, "W3": W3, "B3": B3}
     return dict_Param
 
+def SaveResult(dict_param):
+    np.save("Level3_w1.npy", dict_param["W1"])
+    np.save("Level3_b1.npy", dict_param["B1"])
+    np.save("Level3_w2.npy", dict_param["W2"])
+    np.save("Level3_b2.npy", dict_param["B2"])
+    np.save("Level3_w3.npy", dict_param["W3"])
+    np.save("Level3_b3.npy", dict_param["B3"])
+
 if __name__ == '__main__':
 
     print("Loading...")
@@ -126,5 +134,6 @@ if __name__ == '__main__':
     m_epoch = 1
     dict_Param = InitialParameters3(n_input, n_hidden1, n_hidden2, n_output, 2)
     dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward3, backward3, update3)
+    SaveResult(dict_Param)
     Test(dataReader, n_output, dict_Param, n_input, forward3)
 

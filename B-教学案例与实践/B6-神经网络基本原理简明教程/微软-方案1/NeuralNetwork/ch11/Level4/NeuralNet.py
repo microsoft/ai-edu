@@ -5,9 +5,9 @@
 import numpy as np
 from enum import Enum
 
-from Layer import *
-from FCLayer import *
-from Parameters import *
+from Level4.Layer import *
+from Level4.FCLayer import *
+from Level4.Parameters import *
 
 class NeuralNet(object):
     def __init__(self, params):
@@ -66,6 +66,8 @@ class NeuralNet(object):
         loss = 0 
         lossFunc = CLossFunction(self.params.loss_func_name)
         # if num_example=200, batch_size=10, then iteration=200/10=20
+        if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_example:
+            self.params.batch_size = dataReader.num_example
         max_iteration = (int)(dataReader.num_example / self.params.batch_size)
         for epoch in range(self.params.max_epoch):
             for iteration in range(max_iteration):
@@ -97,8 +99,8 @@ class NeuralNet(object):
         # end for
         
     def Test(self, dataReader):
-        X = dataReader.XTestData
-        Y = dataReader.YTestData
+        X = dataReader.XTestSet
+        Y = dataReader.YTestSet
         correct = 0
         count = X.shape[1]
         for i in range(count):
@@ -114,12 +116,14 @@ class NeuralNet(object):
         self.forward(X)
         return self.output
 
+    # save weights value when got low loss than before
     def save_parameters(self):
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
             layer.save_parameters(name)
 
+    # load weights for the most low loss moment
     def load_parameters(self):
         for i in range(self.layer_count):
             layer = self.layer_list[i]

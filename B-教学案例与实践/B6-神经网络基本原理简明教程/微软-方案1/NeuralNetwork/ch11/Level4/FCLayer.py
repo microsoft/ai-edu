@@ -3,10 +3,10 @@
 
 import numpy as np
 
-from Layer import *
-from Activators import *
-from WeightsBias import *
-from Parameters import *
+from Level4.Layer import *
+from Level4.Activators import *
+from Level4.WeightsBias import *
+from Level4.Parameters import *
 
 class FcLayer(CLayer):
     def __init__(self, input_size, output_size, activator):
@@ -53,9 +53,7 @@ class FcLayer(CLayer):
         self.weights.Update()
         
     def save_parameters(self, name):
-        np.save(name+"_w", self.weights.W)
-        np.save(name+"_b", self.weights.B)
+        self.weights.SaveResultValue(name)
 
     def load_parameters(self, name):
-        self.weights.W = np.load(name+"_w.npy")
-        self.weights.B = np.load(name+"_b.npy")
+        self.weights.LoadResultValue(name)

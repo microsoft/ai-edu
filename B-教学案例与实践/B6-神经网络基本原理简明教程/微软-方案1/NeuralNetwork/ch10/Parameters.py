@@ -3,13 +3,14 @@
 
 from LossFunction import *
 from WeightsBias import *
+from GDOptimizer import *
 
 # this class is for two-layer NN only
 class CParameters(object):
     def __init__(self, n_input, n_hidden, n_output, 
                  eta=0.1, max_epoch=10000, batch_size=5, eps = 0.1, 
-                 lossFuncName = LossFunctionName.MSE,
-                 initMethod = InitialMethod.Xavier):
+                 initMethod = InitialMethod.Xavier,
+                 optimizerName = OptimizerName.SGD):
 
         self.num_input = n_input
         self.num_hidden = n_hidden
@@ -18,16 +19,15 @@ class CParameters(object):
         self.eta = eta
         self.max_epoch = max_epoch
         # if batch_size == -1, it is FullBatch
-        if batch_size == -1:
-            self.batch_size = self.num_example
-        else:
-            self.batch_size = batch_size
+        self.batch_size = batch_size
         # end if
-        self.loss_func_name = lossFuncName
         self.init_method = initMethod
         self.eps = eps
+        self.init_method = initMethod
+        self.optimizer_name = optimizerName
+       
 
     def toString(self):
-        title = str.format("bz:{0},eta:{1}", self.batch_size, self.eta)
+        title = str.format("bz:{0},eta:{1},ne:{2},init:{3},op:{4}", self.batch_size, self.eta, self.num_hidden, self.init_method.name, self.optimizer_name.name)
         return title
 

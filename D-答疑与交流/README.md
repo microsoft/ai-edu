@@ -89,7 +89,7 @@
 11. 如何申请Azure的学生账号？
 
     1. 使用世纪互联中国版：
-        1. 打开[https://mspil.cn](https://mspil.cn)并注册账户，验证学生身份，具体申请流程参考下图
+        1. 打开[https://www.mspil.cn](https://www.mspil.cn)并注册账户，验证学生身份，具体申请流程参考下图
 
         ![](./Images/1.jpg)
 

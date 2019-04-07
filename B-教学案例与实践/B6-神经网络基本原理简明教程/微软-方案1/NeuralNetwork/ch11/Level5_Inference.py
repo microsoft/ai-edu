@@ -63,7 +63,7 @@ def on_mouse_move(event):
         endy = event.ydata        
         x1 = [startx, endx]
         y1 = [starty, endy]
-        ax.plot(x1, y1, color='black', linestyle='-', linewidth='30')
+        ax.plot(x1, y1, color='black', linestyle='-', linewidth='40')
         ax.figure.canvas.draw()
         startx = endx
         starty = endy

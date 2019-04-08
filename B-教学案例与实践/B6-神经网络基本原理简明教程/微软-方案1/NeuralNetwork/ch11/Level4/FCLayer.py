@@ -36,8 +36,9 @@ class FcLayer(CLayer):
             #dZ = delta_in * self.activator.backward(self.a)
             dZ,_ = self.activator.backward(self.z, self.a, delta_in)
 
-        self.weights.dW = np.dot(dZ, self.x.T)
-        self.weights.dB = np.sum(dZ, axis=1, keepdims=True)
+        m = self.x.shape[1]
+        self.weights.dW = np.dot(dZ, self.x.T) / m
+        self.weights.dB = np.sum(dZ, axis=1, keepdims=True) / m
         # calculate delta_out for lower level
         delta_out = np.dot(self.weights.W.T, dZ)
 

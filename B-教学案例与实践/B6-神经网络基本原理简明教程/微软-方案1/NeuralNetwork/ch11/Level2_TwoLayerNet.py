@@ -31,29 +31,27 @@ def Forward(X, dict_Param):
     Z2=np.dot(W2,A1)+B2
     A2=Softmax(Z2)
     
-    dict_Cache = {"Z1": Z1,
-             "A1": A1,
-             "Z2": Z2,
-             "A2": A2}
-    return A2, dict_Cache
+    dict_Cache = {"Z1": Z1, "A1": A1, "Z2": Z2, "A2": A2, "Output": A2}
+    return dict_Cache
 
 def Backward(dict_Param,cache,X,Y):
     W1=dict_Param["W1"]
     W2=dict_Param["W2"]
     A1 = cache["A1"]
     A2 = cache["A2"]
-    Z1=cache["Z1"]
+    
+    m = batch_x.shape[1]
 
     dZ2= A2 - Y
-    dW2 = np.dot(dZ2, A1.T)
-    dB2 = np.sum(dZ2, axis=1, keepdims=True)
+    dW2 = np.dot(dZ2, A1.T)/m
+    dB2 = np.sum(dZ2, axis=1, keepdims=True)/m
 
     dLoss_A1 = np.dot(W2.T, dZ2)
     dA1_Z1 = A1 * (1 - A1)     # sigmoid
     dZ1 = dLoss_A1 * dA1_Z1
     
-    dW1 = np.dot(dZ1, X.T)
-    dB1 = np.sum(dZ1, axis=1, keepdims=True)
+    dW1 = np.dot(dZ1, X.T)/m
+    dB1 = np.sum(dZ1, axis=1, keepdims=True)/m
 
     dict_Grads = {"dW1": dW1, "dB1": dB1, "dW2": dW2, "dB2": dB2}
     return dict_Grads

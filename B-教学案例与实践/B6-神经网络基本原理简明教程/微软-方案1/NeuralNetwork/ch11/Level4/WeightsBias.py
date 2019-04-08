@@ -9,7 +9,8 @@ from Level4.GDOptimizer import *
 class InitialMethod(Enum):
     Zero = 0,
     Normal = 1,
-    Xavier = 2
+    Xavier = 2,
+    MSRA = 3
 
 class WeightsBias(object):
     def __init__(self, n_input, n_output, init_method, optimizer_name, eta):
@@ -81,6 +82,8 @@ class WeightsBias(object):
         elif method == InitialMethod.Normal:
             # normalize
             W = np.random.normal(size=(num_output, num_input))
+        elif method == InitialMethod.MSRA:
+            W = np.random.normal(0, np.sqrt(2/num_input), size=(num_output, num_input))
         elif method == InitialMethod.Xavier:
             # xavier
             W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),

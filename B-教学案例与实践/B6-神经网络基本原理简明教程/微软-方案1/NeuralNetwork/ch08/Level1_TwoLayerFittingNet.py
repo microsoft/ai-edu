@@ -66,7 +66,7 @@ class TwoLayerFittingNet(object):
         # if num_example=200, batch_size=10, then iteration=200/10=20
         max_iteration = (int)(dataReader.num_example / params.batch_size)
         for epoch in range(params.max_epoch):
-            #dataReader.Shuffle()
+            dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)
@@ -78,10 +78,11 @@ class TwoLayerFittingNet(object):
                 self.UpdateWeights(wb1, wb2)
             # end for            
             # calculate loss for this batch
-            output = self.ForwardCalculationBatch(dataReader.X, wb1, wb2)
-            loss = lossFunc.CheckLoss(dataReader.Y, output["Output"])
-            print("epoch=%d, loss=%f" %(epoch,loss))
-            loss_history.AddLossHistory(loss, epoch, iteration, wb1, wb2)            
+            if epoch % 10 == 0:
+                output = self.ForwardCalculationBatch(dataReader.X, wb1, wb2)
+                loss = lossFunc.CheckLoss(dataReader.Y, output["Output"])
+                print("epoch=%d, loss=%f" %(epoch,loss))
+                loss_history.AddLossHistory(loss, epoch, iteration, wb1, wb2)            
             if math.isnan(loss):
                 break
             # end if

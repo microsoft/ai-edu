@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 import math
+
 from Level0_BaseClassification import *
 from Level3_MultipleClassification import *
 
@@ -25,7 +26,7 @@ def ShowRawData(X,Y):
 
 def ShowLineResult(X,Y,W,B,xt):
 
-#    ShowAreaResult(X,Y,W,B)
+    ShowAreaResult(X,Y,W,B)
 
     ShowData(X,Y)
 
@@ -60,7 +61,7 @@ def ShowLineResult(X,Y,W,B,xt):
 
 
 def ShowAreaResult(X,Y,W,B):
-    count = 20
+    count = 50
     x1 = np.linspace(0,1,count)
     x2 = np.linspace(0,1,count)
     for i in range(count):

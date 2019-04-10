@@ -1,0 +1,12 @@
+模拟器代码运行方式：
+ (1) 使用命令git clone https://github.com/named-data-ndnSIM/ndnSIM.git下载模拟器并编译。
+（1）将“ndn-tree-cs-tracers.cpp”复制到ndnSIM\ns-3\src\ndnSIM\examples目录下，覆盖原文件。
+（2）更改ndnSIM\ns-3\src\ndnSIM\apps\ndn-consumer-batches.cpp代码中的第91行。将其改为delay = Seconds(0.001);
+（3）将“topo-tree-25-node.txt”复制到ndnSIM\ns-3\src\ndnSIM\examples\topologies目录下，覆盖原文件。
+使用命令./waf --run=ndn-tree-cs-tracers运行模拟器即可生成数据。
+
+===============================================================================================================================
+
+bp神经网络代码运行方式
+1.将数据文件cs-trace.txt复制到和bpnn.py相同的目录下
+2.使用命令python3 bpnn.py运行代码

@@ -84,7 +84,6 @@ def update3(dict_Param, dict_Grads, learning_rate):
     dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2, "W3": W3, "B3": B3}
     return dict_Param
 
-
 def InitialParameters3(num_input, num_hidden1, num_hidden2, num_output, flag):
     if flag == 0:
         # zero

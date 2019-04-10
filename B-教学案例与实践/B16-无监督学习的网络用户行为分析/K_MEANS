@@ -1,0 +1,169 @@
+import tensorflow as tf
+from random import choice, shuffle
+from numpy import array
+import numpy
+
+DATA_PATH = "D:\\TensorFlowData\\final_data\\data.csv" #未添加label的数据集
+
+data_matrix = numpy.loadtxt(open(DATA_PATH,"rb"),delimiter=",",skiprows=0)
+
+row_data = data_matrix.size/len(data_matrix[0])
+column_data = len(data_matrix[0])
+
+def handle(data_matrix):
+    row_data = data_matrix.size/len(data_matrix[0])
+    column_data = len(data_matrix[0])
+
+    for i in range(int(row_data)):
+        for j in range(column_data):
+            if j==0:
+                data_matrix[i][j]=data_matrix[i][j]*0.001
+            elif j==1:
+                data_matrix[i][j]=data_matrix[i][j]*0.001
+            elif j==27:
+                data_matrix[i][j]=data_matrix[i][j]*0.01
+            elif j==28:
+                data_matrix[i][j]=data_matrix[i][j]*0.01
+    return data_matrix
+
+def TFKMeansCluster(vectors, noofclusters):
+    """
+    基于TensorFlow的K-Means算法
+    传入的vector是一个n*k的二维数组，n是向量的个数，k是向量的维度
+    noofcluster是分簇簇头的个数
+    """
+
+    noofclusters = int(noofclusters)
+    assert noofclusters < len(vectors)
+
+    #获取向量的维度
+    dim = len(vectors[0])
+
+    #Will help select random centroids from among the available vectors
+    #将所有向量存入list中方便随机选取簇头
+    vector_indices = list(range(len(vectors)))
+
+    #############################################################change at 7/10/2018
+    shuffle(vector_indices)
+    #tf.random_shuffle(vector_indices)
+
+    graph = tf.Graph()
+
+    with graph.as_default():
+
+        #SESSION OF COMPUTATION
+
+        sess = tf.Session()
+        
+        centroids = [tf.Variable((vectors[vector_indices[i]]))
+                    for i in range(noofclusters)]
+        
+        centroid_value = tf.placeholder("float64", [dim])
+        cent_assigns = []
+        for centroid in centroids:
+            cent_assigns.append(tf.assign(centroid, centroid_value))
+
+        assignments = [tf.Variable(0) for i in range(len(vectors))]
+
+        assignment_value = tf.placeholder("int32")
+        cluster_assigns = []
+        for assignment in assignments:
+            cluster_assigns.append(tf.assign(assignment,
+                                             assignment_value))
+
+        #创建一个用于计算均值的变量
+        mean_input = tf.placeholder("float", [None, dim])
+        #用于获取输入的向量组，并从0维开始计算平均值
+        mean_op = tf.reduce_mean(mean_input, 0)
+
+        #用于计算欧氏距离的两个变量
+        v1 = tf.placeholder("float", [dim])
+        v2 = tf.placeholder("float", [dim])
+        
+        euclid_dist = tf.sqrt(tf.reduce_sum(tf.pow(tf.subtract(v1,v2), 2)))
+
+        ##构建一个根据欧氏距离分配向量到簇的变量
+        centroid_distances = tf.placeholder("float", [noofclusters])
+        cluster_assignment = tf.argmin(centroid_distances, 0)
+
+        #变量初始化器
+        init_op = tf.initialize_all_variables()
+
+        #初始化所有变量
+        sess.run(init_op)
+
+        noofiterations = 10
+        for iteration_n in range(noofiterations):
+
+            #根据上一次计算得到的簇头计算每个向量应该被分配到哪个簇
+
+            #遍历每个向量
+            for vector_n in range(len(vectors)):
+                vect = vectors[vector_n]
+                #计算这个向量到每个簇头的欧式距离
+                distances = [sess.run(euclid_dist, feed_dict={
+                    v1: vect, v2: sess.run(centroid)})
+                             for centroid in centroids]
+                #将分配节点信息和欧氏距离当做输入
+                assignment = sess.run(cluster_assignment, feed_dict = {
+                    centroid_distances: distances})
+                #
+                #分配适当的状态变量
+                sess.run(cluster_assigns[vector_n], feed_dict={
+                    assignment_value: assignment})
+
+            #根据上面得到的变量，计算质心的位置
+            for cluster_n in range(noofclusters):
+                #Collect all the vectors assigned to this cluster
+                #获取所有属于同簇的向量
+                assigned_vects = [vectors[i] for i in range(len(vectors))
+                                  if sess.run(assignments[i]) == cluster_n]
+                #计算出新的簇头节点坐标
+                new_location = sess.run(mean_op, feed_dict={
+                    mean_input: array(assigned_vects)})
+                #分配适当的变量
+                sess.run(cent_assigns[cluster_n], feed_dict={
+                    centroid_value: new_location})
+
+        centroids = sess.run(centroids)
+        assignments = sess.run(assignments)
+
+        return centroids, assignments
+
+        #saver = tf.train.Saver()
+        #save_path = saver.save(sess,"D:\\TensorFlowData\\Model\\model_success")
+        #print ("Model saved in path :",save_path)
+
+        
+if __name__ == '__main__':
+    row_data = int(row_data)
+
+    data = handle(data_matrix)
+
+    c,a = TFKMeansCluster(data,4)
+    
+    #numpy.savetxt('result.csv', a, delimiter = ',')
+
+    print(c)
+    print(a)
+    cnt1 = 0
+    cnt2 = 0
+    cnt3 = 0
+    cnt4 = 0
+    cnt5 = 0
+    for i in range (len(a)):
+        if a[i] == 0:
+            cnt1+=1
+        elif a[i] == 1:
+            cnt2+=1
+        elif a[i] == 2:
+            cnt3+=1  
+        elif a[i] == 3:
+            cnt4+=1
+        else:
+            cnt5+=1
+    print("quantity of num0 is "+str(cnt1))
+    print("quantity of num1 is "+str(cnt2))
+    print("quantity of num2 is "+str(cnt3))
+    print("quantity of num3 is "+str(cnt4))
+    print("Clustering finish!")

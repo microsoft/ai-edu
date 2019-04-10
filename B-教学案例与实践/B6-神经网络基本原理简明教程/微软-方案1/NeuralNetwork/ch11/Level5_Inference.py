@@ -36,11 +36,11 @@ def on_key_press(event):
         plt.axis('on')
         img_array = ReadImage(img_file_name)
         Inference(img_array)
-
     elif event.key == 'backspace':
         plt.cla()
         plt.axis([0,1,0,1])
         ax.figure.canvas.draw()
+    #end if
 
 def on_mouse_press(event):
     global startx, starty, isdraw
@@ -49,8 +49,7 @@ def on_mouse_press(event):
     startx = event.xdata
     starty = event.ydata
     print("press:{0},{1}", startx, starty)
-
-
+    
 def on_mouse_release(event):
     global isdraw, startx, starty
     print("release:", event.xdata, event.ydata, isdraw)
@@ -67,6 +66,8 @@ def on_mouse_move(event):
         ax.figure.canvas.draw()
         startx = endx
         starty = endy
+    # end if
+
 
 def LoadNet():
     W1 = np.load("Level3_w1.npy")

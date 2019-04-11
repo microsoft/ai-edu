@@ -1,24 +1,24 @@
 import numpy as np
-from utils.conv2d import Cconv2d
-from utils.pool import Cpool
-from utils.relu import Crelu
-from utils.softmax import Csoftmax
-from utils.sigmoid import Csigmoid
-from utils.tanh import Ctanh
-from utils.fc import Cfc
-from utils.dropout import Cdropout
-from utils.save import model_save
-from utils.transfer import ModelTransfer
+from ONNXConverter.conv2d import Cconv2d
+from ONNXConverter.pool import Cpool
+from ONNXConverter.relu import Crelu
+from ONNXConverter.softmax import Csoftmax
+from ONNXConverter.sigmoid import Csigmoid
+from ONNXConverter.tanh import Ctanh
+from ONNXConverter.fc import Cfc
+from ONNXConverter.dropout import Cdropout
+from ONNXConverter.save import model_save
+from ONNXConverter.transfer import ModelTransfer
 
 
 # some configuration
 # these variables records the path for the strored weights
-fc1_w_path = "../fc1_w_64_784_Xavier_result.npy"
-fc1_b_path = "../fc1_b_64_784_Xavier_result.npy"
-fc2_w_path = "../fc2_w_32_64_Xavier_result.npy"
-fc2_b_path = "../fc2_b_32_64_Xavier_result.npy"
-fc3_w_path = "../fc3_w_10_32_Xavier_result.npy"
-fc3_b_path = "../fc3_b_10_32_Xavier_result.npy"
+fc1_w_path = "./fc1_w_64_784_Xavier_result.npy"
+fc1_b_path = "./fc1_b_64_784_Xavier_result.npy"
+fc2_w_path = "./fc2_w_32_64_Xavier_result.npy"
+fc2_b_path = "./fc2_b_32_64_Xavier_result.npy"
+fc3_w_path = "./fc3_w_10_32_Xavier_result.npy"
+fc3_b_path = "./fc3_b_10_32_Xavier_result.npy"
 
 fc1_w = np.load(fc1_w_path)
 fc1_b = np.load(fc1_b_path)
@@ -36,7 +36,8 @@ class Cmodel(object):
     def __init__(self):
         """The Model definition."""
         self.fc1 = Cfc([1, 784], outputshape1, name="fc1", exname="")
-        self.activation1 = Crelu(self.fc1.outputShape, name="activation1", exname="fc1")
+        #self.activation1 = Crelu(self.fc1.outputShape, name="activation1", exname="fc1")
+        self.activation1 = Csigmoid(self.fc1.outputShape, name="activation1", exname="fc1")
         self.fc2 = Cfc(self.fc1.outputShape, outputshape2, name="fc2", exname="activation1")
         self.activation2 = Crelu(self.fc1.outputShape, name="activation2", exname="fc2")
         self.fc3 = Cfc(self.fc2.outputShape, outputshape3, name="fc3", exname="activation2")
@@ -59,6 +60,7 @@ class Cmodel(object):
         model_save(self.model, path) 
         ModelTransfer(model_path, path + "model.onnx")
 
-model = Cmodel()
-model.save_model()
+if __name__ == '__main__':
+    model = Cmodel()
+    model.save_model()
 

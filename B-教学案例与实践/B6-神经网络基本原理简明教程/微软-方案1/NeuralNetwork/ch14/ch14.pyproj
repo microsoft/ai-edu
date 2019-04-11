@@ -4,8 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a8c20644-0b1a-4976-ae2e-81dcfc361a6a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>ConvertToOnnx.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -33,6 +32,7 @@
     <Compile Include="ONNXConverter\softmax.py" />
     <Compile Include="ONNXConverter\tanh.py" />
     <Compile Include="ONNXConverter\transfer.py" />
+    <Compile Include="ONNXConverter\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ONNXConverter\" />

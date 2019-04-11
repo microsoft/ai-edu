@@ -93,6 +93,7 @@ class NeuralNet(object):
                         self.save_parameters()
                 #end if
             # end for            
+            dataReader.Shuffle()
             if loss < self.params.eps:
                 break
             # end if

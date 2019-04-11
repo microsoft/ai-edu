@@ -42,7 +42,7 @@
     <Compile Include="Level5_Inference.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level6_main.py">
+    <Compile Include="Level6_MiniFramework.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level4\LossFunction.py" />

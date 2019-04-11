@@ -128,4 +128,15 @@ class MnistDataReader(DataReader):
             batch_Y = self.YTrainSet[:, start:end].reshape(-1, batch_size)
         return batch_X, batch_Y
 
+        # permutation only affect along the first axis, so we need transpose the array first
+    # see the comment of this class to understand the data format
+    def Shuffle(self):
+        seed = np.random.randint(0,100)
+        np.random.seed(seed)
+        XP = np.random.permutation(self.X.T)
+        np.random.seed(seed)
+        YP = np.random.permutation(self.Y.T)
+        self.X = XP.T
+        self.Y = YP.T
+        return self.X, self.Y
 

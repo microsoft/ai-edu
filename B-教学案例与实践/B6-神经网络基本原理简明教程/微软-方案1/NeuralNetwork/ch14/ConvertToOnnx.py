@@ -13,12 +13,12 @@ from ONNXConverter.transfer import ModelTransfer
 
 # some configuration
 # these variables records the path for the strored weights
-fc1_w_path = "./fc1_w_64_784_Xavier_result.npy"
-fc1_b_path = "./fc1_b_64_784_Xavier_result.npy"
-fc2_w_path = "./fc2_w_32_64_Xavier_result.npy"
-fc2_b_path = "./fc2_b_32_64_Xavier_result.npy"
-fc3_w_path = "./fc3_w_10_32_Xavier_result.npy"
-fc3_b_path = "./fc3_b_10_32_Xavier_result.npy"
+fc1_w_path = "./Level3_w1.npy"
+fc1_b_path = "./Level3_b1.npy"
+fc2_w_path = "./Level3_w2.npy"
+fc2_b_path = "./Level3_b2.npy"
+fc3_w_path = "./Level3_w3.npy"
+fc3_b_path = "./Level3_b3.npy"
 
 fc1_w = np.load(fc1_w_path)
 fc1_b = np.load(fc1_b_path)
@@ -35,11 +35,10 @@ outputshape3 = fc3_w.shape[0]
 class Cmodel(object):
     def __init__(self):
         """The Model definition."""
-        self.fc1 = Cfc([1, 784], outputshape1, name="fc1", exname="")
-        #self.activation1 = Crelu(self.fc1.outputShape, name="activation1", exname="fc1")
+        self.fc1 = Cfc([1,784], outputshape1, name="fc1", exname="")
         self.activation1 = Csigmoid(self.fc1.outputShape, name="activation1", exname="fc1")
         self.fc2 = Cfc(self.fc1.outputShape, outputshape2, name="fc2", exname="activation1")
-        self.activation2 = Crelu(self.fc1.outputShape, name="activation2", exname="fc2")
+        self.activation2 = Ctanh(self.fc1.outputShape, name="activation2", exname="fc2")
         self.fc3 = Cfc(self.fc2.outputShape, outputshape3, name="fc3", exname="activation2")
         self.activation3 = Csoftmax([1, outputshape3], name="activation3", exname="fc3")
 
@@ -52,7 +51,7 @@ class Cmodel(object):
         self.fc2.weights = fc2_w.T
         self.fc2.bias = fc2_b.reshape(self.fc2.bias.shape)
         self.fc3.weights = fc3_w.T
-        self.fc1.bias = fc3_b.reshape(self.fc3.bias.shape)
+        self.fc3.bias = fc3_b.reshape(self.fc3.bias.shape)
 
     def save_model(self, path="./"):
         

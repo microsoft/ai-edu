@@ -42,7 +42,7 @@ def model_save(numpy_model, save_path):
             np.save(os.path.join(save_path, layer.weights_name + ".npy"), layer.weights)
             np.save(os.path.join(save_path, layer.bias_name + ".npy"), layer.bias)
         
-        elif layer.type == "Relu" or layer.type == "Softmax":
+        elif layer.type == "Relu" or layer.type == "Softmax" or layer.type == "Sigmoid" or layer.type == "Tanh":
             model[index] = {
                 "type":layer.type,
                 "input_name":layer.input_name,

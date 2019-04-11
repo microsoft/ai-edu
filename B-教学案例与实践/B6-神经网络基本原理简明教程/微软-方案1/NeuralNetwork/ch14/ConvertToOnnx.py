@@ -36,10 +36,9 @@ class Cmodel(object):
     def __init__(self):
         """The Model definition."""
         self.fc1 = Cfc([1, 784], outputshape1, name="fc1", exname="")
-        #self.activation1 = Crelu(self.fc1.outputShape, name="activation1", exname="fc1")
         self.activation1 = Csigmoid(self.fc1.outputShape, name="activation1", exname="fc1")
         self.fc2 = Cfc(self.fc1.outputShape, outputshape2, name="fc2", exname="activation1")
-        self.activation2 = Crelu(self.fc1.outputShape, name="activation2", exname="fc2")
+        self.activation2 = Ctanh(self.fc1.outputShape, name="activation2", exname="fc2")
         self.fc3 = Cfc(self.fc2.outputShape, outputshape3, name="fc3", exname="activation2")
         self.activation3 = Csoftmax([1, outputshape3], name="activation3", exname="fc3")
 

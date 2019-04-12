@@ -32,7 +32,7 @@ if __name__ == '__main__':
     dataReader.NormalizeX()
     dataReader.NormalizeY()
 
-    n_input, n_hidden, n_output = 1, 3, 1
+    n_input, n_hidden, n_output = 1, 4, 1
     eta, batch_size, max_epoch = 0.5, 10, 50000
     eps = 0.001
 

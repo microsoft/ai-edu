@@ -32,8 +32,8 @@ def Softmax(Z):
 
 # cross entropy: -Y*lnA
 def CalculateLoss(dict_Param, X, Y, count, forward):
-    A2, dict_Cache = forward(X, dict_Param)
-    p = Y * np.log(A2)
+    dict_Cache = forward(X, dict_Param)
+    p = Y * np.log(dict_Cache["Output"])
     Loss = -np.sum(p) / count
     return Loss
 
@@ -48,8 +48,8 @@ def Test(dataReader, num_output, dict_Param, num_input, forward):
     for image_idx in range(num_images):
         x = X[:,image_idx].reshape(num_input, 1)
         y = Y[:,image_idx].reshape(num_output, 1)
-        A2, dict_Cache = forward(x, dict_Param)
-        if np.argmax(A2) == np.argmax(y):
+        dict_Cache = forward(x, dict_Param)
+        if np.argmax(dict_Cache["Output"]) == np.argmax(y):
             correct += 1
 
     print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
@@ -65,13 +65,16 @@ def Train(dataReader, learning_rate, max_epoch, num_images, num_input, num_outpu
         for item in range(num_images):
             x = X[:,item].reshape(num_input,1)
             y = Y[:,item].reshape(num_output,1)
-            A2, dict_Cache = forward(x, dict_param)
+            dict_Cache = forward(x, dict_param)
             dict_Grads = backward(dict_param, dict_Cache, x, y)
             dict_param = update(dict_param, dict_Grads, learning_rate)
             if item % 1000 == 0:
                 Loss = CalculateLoss(dict_param, X, Y, num_images, forward)
                 print(item, Loss)
                 loss_history = np.append(loss_history, Loss)
+            # end if
+        # end for
+        dataReader.Shuffle()
         print(iteration)
 
     ShowLoss(loss_history)

@@ -5,8 +5,7 @@ import numpy as np
 import struct
 import matplotlib.pyplot as plt
 
-from Level2_TwoLayerNet import *
-
+from Level1_Base import *
 
 def Tanh(z):
     a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
@@ -29,33 +28,32 @@ def forward3(X, dict_Param):
     Z3 = np.dot(W3,A2) + B3
     A3 = Softmax(Z3)
     
-    dict_Cache = {"Z1": Z1, "A1": A1, "Z2": Z2, "A2": A2, "Z3": Z3, "A3": A3}
-    return A3, dict_Cache
+    dict_Cache = {"Z1": Z1, "A1": A1, "Z2": Z2, "A2": A2, "Z3": Z3, "A3": A3, "Output": A3}
+    return dict_Cache
 
 def backward3(dict_Param,cache,X,Y):
-    W1=dict_Param["W1"]
-    W2=dict_Param["W2"]
-    W3=dict_Param["W3"]
+    W1 = dict_Param["W1"]
+    W2 = dict_Param["W2"]
+    W3 = dict_Param["W3"]
     A1 = cache["A1"]
     A2 = cache["A2"]
     A3 = cache["A3"]
-    Z1=cache["Z1"]
-    Z2=cache["Z2"]
-    Z3=cache["Z3"]
+
+    m = X.shape[1]
 
     dZ3= A3 - Y
-    dW3 = np.dot(dZ3, A2.T)
-    dB3 = np.sum(dZ3, axis=1, keepdims=True)
+    dW3 = np.dot(dZ3, A2.T)/m
+    dB3 = np.sum(dZ3, axis=1, keepdims=True)/m
 
     # dZ2 = W3T * dZ3 * dA3
     dZ2 = np.dot(W3.T, dZ3) * (1-A2*A2) # tanh
-    dW2 = np.dot(dZ2, A1.T)
-    dB2 = np.sum(dZ2, axis=1, keepdims=True)
+    dW2 = np.dot(dZ2, A1.T)/m
+    dB2 = np.sum(dZ2, axis=1, keepdims=True)/m
 
     # dZ1 = W2T * dZ2 * dA2
     dZ1 = np.dot(W2.T, dZ2) * A1 * (1-A1)   #sigmoid
-    dW1 = np.dot(dZ1, X.T)
-    dB1 = np.sum(dZ1, axis=1, keepdims=True)
+    dW1 = np.dot(dZ1, X.T)/m
+    dB1 = np.sum(dZ1, axis=1, keepdims=True)/m
 
     dict_Grads = {"dW1": dW1, "dB1": dB1, "dW2": dW2, "dB2": dB2, "dW3": dW3, "dB3": dB3}
     return dict_Grads
@@ -85,7 +83,6 @@ def update3(dict_Param, dict_Grads, learning_rate):
     dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2, "W3": W3, "B3": B3}
     return dict_Param
 
-
 def InitialParameters3(num_input, num_hidden1, num_hidden2, num_output, flag):
     if flag == 0:
         # zero
@@ -114,6 +111,14 @@ def InitialParameters3(num_input, num_hidden1, num_hidden2, num_output, flag):
     dict_Param = {"W1": W1, "B1": B1, "W2": W2, "B2": B2, "W3": W3, "B3": B3}
     return dict_Param
 
+def SaveResult(dict_param):
+    np.save("Level3_w1.npy", dict_param["W1"])
+    np.save("Level3_b1.npy", dict_param["B1"])
+    np.save("Level3_w2.npy", dict_param["W2"])
+    np.save("Level3_b2.npy", dict_param["B2"])
+    np.save("Level3_w3.npy", dict_param["W3"])
+    np.save("Level3_b3.npy", dict_param["B3"])
+
 if __name__ == '__main__':
 
     print("Loading...")
@@ -124,8 +129,9 @@ if __name__ == '__main__':
     dataReader = LoadData(n_output)
     n_images = dataReader.num_example
     n_input = dataReader.num_feature
-    m_epoch = 1
+    m_epoch = 5
     dict_Param = InitialParameters3(n_input, n_hidden1, n_hidden2, n_output, 2)
     dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward3, backward3, update3)
+    SaveResult(dict_Param)
     Test(dataReader, n_output, dict_Param, n_input, forward3)
 

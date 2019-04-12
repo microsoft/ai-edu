@@ -72,6 +72,9 @@ def Train(dataReader, learning_rate, max_epoch, num_images, num_input, num_outpu
                 Loss = CalculateLoss(dict_param, X, Y, num_images, forward)
                 print(item, Loss)
                 loss_history = np.append(loss_history, Loss)
+            # end if
+        # end for
+        dataReader.Shuffle()
         print(iteration)
 
     ShowLoss(loss_history)

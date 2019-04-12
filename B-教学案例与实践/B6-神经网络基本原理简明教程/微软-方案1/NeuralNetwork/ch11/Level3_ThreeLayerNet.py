@@ -5,8 +5,7 @@ import numpy as np
 import struct
 import matplotlib.pyplot as plt
 
-from Level2_TwoLayerNet import *
-
+from Level1_Base import *
 
 def Tanh(z):
     a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
@@ -130,7 +129,7 @@ if __name__ == '__main__':
     dataReader = LoadData(n_output)
     n_images = dataReader.num_example
     n_input = dataReader.num_feature
-    m_epoch = 1
+    m_epoch = 5
     dict_Param = InitialParameters3(n_input, n_hidden1, n_hidden2, n_output, 2)
     dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward3, backward3, update3)
     SaveResult(dict_Param)

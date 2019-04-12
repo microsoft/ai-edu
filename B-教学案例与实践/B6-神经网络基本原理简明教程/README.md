@@ -61,7 +61,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 ## 网络结构概览
 
 |网络结构名称|网络结构图|应用领域|
-|:--:|----|----|----|
+|---|----|----|
 |单入<br>单出<br>一层|<img src="./Images/4/Setup.jpg"/>|一元线性回归/拟合<br>一般用于拟合直线，根据单输入值预测单输出值<br>|
 |多入<br>单出<br>一层|<img src="./Images/5/setup.jpg"/>|多元线性回归<br>根据一组输入值预测单输出值<br>|
 |多入<br>多出<br>一层|<img src="./Images/6/MultipleClassifierNN.png"/>|多元线性分类<br>|

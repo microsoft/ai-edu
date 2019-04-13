@@ -21,24 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level4\Activators.py" />
-    <Compile Include="Level4\DataReader.py" />
-    <Compile Include="Level4\FCLayer.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level4\GDOptimizer.py" />
+    <Compile Include="DataReader.py" />
     <Compile Include="Trainer16.py" />
-    <Compile Include="Level4\Layer.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level4\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Inference.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level4\LossFunction.py" />
-    <Compile Include="Level4\NeuralNet.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MergePngToBinary.py">
@@ -47,11 +32,6 @@
     <Compile Include="Mnist16DataReader.py" />
     <Compile Include="Mnist6DataReader.py" />
     <Compile Include="MnistDataReader.py" />
-    <Compile Include="Level4\Parameters.py" />
-    <Compile Include="Level4\WeightsBias.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Level4\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

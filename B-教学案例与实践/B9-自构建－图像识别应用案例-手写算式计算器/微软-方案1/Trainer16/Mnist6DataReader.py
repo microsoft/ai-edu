@@ -3,7 +3,7 @@
 
 import numpy as np
 import struct
-from Level4.DataReader import *
+from DataReader import *
 
 # XTrainRaw - train data, not normalized
 # XTestRaw - test data, not normalized

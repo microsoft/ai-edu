@@ -48,26 +48,23 @@ class DataReader(object):
     #               [[min1, min2, min3...]
     #                [range1, range2, range3...]]
 
-    def NormalizeX(self, passthrough = False):
-        if passthrough:
-            self.X = self.XRawData
-        else:
-            self.X = np.zeros(self.XRawData.shape)
-            num_feature = self.XRawData.shape[0]
-            self.X_norm = np.zeros((2,num_feature))
-            # 按行归一化,即所有样本的同一特征值分别做归一化
-            for i in range(num_feature):
-                # get one feature from all examples
-                x = self.XRawData[i,:]
-                max_value = np.max(x)
-                min_value = np.min(x)
-                # min value
-                self.X_norm[0,i] = min_value 
-                # range value
-                self.X_norm[1,i] = max_value - min_value 
-                x_new = (x - self.X_norm[0,i]) / self.X_norm[1,i]
-                self.X[i,:] = x_new
-            # end for
+    def NormalizeX(self):
+        self.X = np.zeros(self.XRawData.shape)
+        num_feature = self.XRawData.shape[0]
+        self.X_norm = np.zeros((2,num_feature))
+        # 按行归一化,即所有样本的同一特征值分别做归一化
+        for i in range(num_feature):
+            # get one feature from all examples
+            x = self.XRawData[i,:]
+            max_value = np.max(x)
+            min_value = np.min(x)
+            # min value
+            self.X_norm[0,i] = min_value 
+            # range value
+            self.X_norm[1,i] = max_value - min_value 
+            x_new = (x - self.X_norm[0,i]) / self.X_norm[1,i]
+            self.X[i,:] = x_new
+        # end for
         return self.X
 
     def NormalizeY(self):

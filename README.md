@@ -59,6 +59,7 @@
   - [基于Visual_Studio_Tools_for_AI的高级机器学习课程-复旦大学赵卫东](./A-教学课程/基于Visual_Studio_Tools_for_AI的高级机器学习课程-复旦赵卫东.md)
   - [机器学习课程-北京大学蒋严冰](./A-教学课程/机器学习课程-北京大学蒋严冰.md)
   - [人工智能课程大纲(网络专业)-集美大学张敏](./A-教学课程/人工智能课程大纲(网络专业)-集美大学张敏.md)
+  - [车载智能信息处理-湖北汽院龚家元](./A-教学课程/车载智能信息处理-湖北汽院龚家元.md)
 
 - [B:教学案例与实践](./B-教学案例与实践)
   - [预构建－OCR应用案例－漫画翻译](./B-教学案例与实践/B1-预构建－OCR应用案例－漫画翻译/README.md) 
@@ -90,4 +91,3 @@
   - [挑战黄金点](./E-Challenge/GoldenNumberGame)
   - [北京航空航天大学2019春季](./E-Challenge/BeihangUniversity2019Spring)
   - [山东大学2019春季](./E-Challenge/ShandongUniversity2019Spring)
-  - [湖北汽车工业学院2019](./E-Challenge/HUAT2019Challenge)

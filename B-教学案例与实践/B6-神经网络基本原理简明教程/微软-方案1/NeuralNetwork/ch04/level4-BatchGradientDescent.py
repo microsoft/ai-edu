@@ -92,6 +92,14 @@ def GetBatchSamples(X,Y,batch_size,iteration):
     batch_y = Y[0,start:end].reshape(1,batch_size)
     return batch_x, batch_y
 
+def Shuffle(X, Y):
+    seed = np.random.randint(0,100)
+    np.random.seed(seed)
+    XP = np.random.permutation(X.T)
+    np.random.seed(seed)
+    YP = np.random.permutation(Y.T)
+    return XP.T, YP.T
+
 def GetMinimalLossData(dict_loss):
     key = sorted(dict_loss.keys())[0]
     w = dict_loss[key].w
@@ -198,7 +206,7 @@ if __name__ == '__main__':
     
     # 修改method分别为下面三个参数，运行程序，对比不同的运行结果
     # SGD, MiniBatch, FullBatch
-    method = "FullBatch"
+    method = "SGD"
 
     eta, max_epoch,batch_size = InitializeHyperParameters(method)
     
@@ -234,6 +242,7 @@ if __name__ == '__main__':
 
             dict_loss[loss] = CData(loss, W, B, epoch, iteration)            
         # end for
+        #X,Y = Shuffle(X,Y)
     # end for
     ShowLossHistory(dict_loss, method)
     w,b,cdata = GetMinimalLossData(dict_loss)

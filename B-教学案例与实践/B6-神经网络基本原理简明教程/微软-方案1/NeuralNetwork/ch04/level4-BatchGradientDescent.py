@@ -11,7 +11,7 @@ y_data_name = "TemperatureControlYData.dat"
 
 
 class CData(object):
-    def __init__(self, loss, w, b, epoch, iteraion):
+    def __init__(self, loss, w, b, epoch, iteration):
         self.loss = loss
         self.w = w
         self.b = b
@@ -92,6 +92,14 @@ def GetBatchSamples(X,Y,batch_size,iteration):
     batch_y = Y[0,start:end].reshape(1,batch_size)
     return batch_x, batch_y
 
+def Shuffle(X, Y):
+    seed = np.random.randint(0,100)
+    np.random.seed(seed)
+    XP = np.random.permutation(X.T)
+    np.random.seed(seed)
+    YP = np.random.permutation(Y.T)
+    return XP.T, YP.T
+
 def GetMinimalLossData(dict_loss):
     key = sorted(dict_loss.keys())[0]
     w = dict_loss[key].w
@@ -127,6 +135,8 @@ def loss_2d(x,y,n,dict_loss,method,cdata):
             a = w * x + b
             loss = CheckLoss(w,b,x,y)
             LOSS[i,j] = np.round(loss, 2)
+        # end for j
+    # end for i
     print("please wait for 20 seconds...")
     while(True):
         X = []
@@ -146,9 +156,14 @@ def loss_2d(x,y,n,dict_loss,method,cdata):
                         X.append(W[i])
                         Y.append(B[j])
                         LOSS[i,j] = 0
+                    # end if
+                # end if
+            # end for j
+        # end for i
         if is_first == True:
             break
         plt.plot(X,Y,'.')
+    # end while
 
     # show w,b trace
     w_history = []
@@ -160,8 +175,10 @@ def loss_2d(x,y,n,dict_loss,method,cdata):
             continue
         if key == cdata.loss:
             break
+        # end if
         w_history.append(w)
         b_history.append(b)
+    # end for
     plt.plot(w_history,b_history)
 
     plt.xlabel("w")
@@ -189,7 +206,7 @@ if __name__ == '__main__':
     
     # 修改method分别为下面三个参数，运行程序，对比不同的运行结果
     # SGD, MiniBatch, FullBatch
-    method = "FullBatch"
+    method = "SGD"
 
     eta, max_epoch,batch_size = InitializeHyperParameters(method)
     
@@ -224,7 +241,9 @@ if __name__ == '__main__':
             prev_loss = loss
 
             dict_loss[loss] = CData(loss, W, B, epoch, iteration)            
-
+        # end for
+        #X,Y = Shuffle(X,Y)
+    # end for
     ShowLossHistory(dict_loss, method)
     w,b,cdata = GetMinimalLossData(dict_loss)
     print(cdata.w, cdata.b)

@@ -7,17 +7,10 @@ import matplotlib.pyplot as plt
 
 from MnistDataReader import *
 
-'''
-train_image_file = 'train-images-01'
-train_label_file = 'train-labels-01'
-test_image_file = 'test-images-01'
-test_label_file = 'test-labels-01'
-'''
 train_image_file = 'train-images-10'
 train_label_file = 'train-labels-10'
 test_image_file = 'test-images-10'
 test_label_file = 'test-labels-10'
-
 
 def Sigmoid(x):
     s=1/(1+np.exp(-x))

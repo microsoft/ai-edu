@@ -66,7 +66,7 @@ class TwoLayerFittingNet(object):
         # if num_example=200, batch_size=10, then iteration=200/10=20
         max_iteration = (int)(dataReader.num_example / params.batch_size)
         for epoch in range(params.max_epoch):
-            dataReader.Shuffle()
+           # dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)

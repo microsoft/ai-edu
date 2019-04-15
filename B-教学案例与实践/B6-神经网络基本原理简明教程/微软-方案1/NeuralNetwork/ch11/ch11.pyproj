@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
+    <ProjectGuid>a8c20644-0b1a-4976-ae2e-81dcfc361a6a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level5_Inference.py</StartupFile>
+    <StartupFile>ConvertToOnnx.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch10</Name>
-    <RootNamespace>ch10</RootNamespace>
+    <Name>ch14</Name>
+    <RootNamespace>ch14</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,40 +21,21 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level1_Base.py" />
-    <Compile Include="Level4\Activators.py" />
-    <Compile Include="Level4\DataReader.py" />
-    <Compile Include="Level4\FCLayer.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level4\GDOptimizer.py" />
-    <Compile Include="Level3_ThreeLayerNet.py" />
-    <Compile Include="Level2_TwoLayerNet.py" />
-    <Compile Include="Level4\Layer.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level4\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level4_GradientCheck.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level5_Inference.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level6_MiniFramework.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level4\LossFunction.py" />
-    <Compile Include="Level4\NeuralNet.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MnistDataReader.py" />
-    <Compile Include="Level4\Parameters.py" />
-    <Compile Include="Level4\WeightsBias.py" />
+    <Compile Include="ConvertToOnnx.py" />
+    <Compile Include="ONNXConverter\conv2d.py" />
+    <Compile Include="ONNXConverter\dropout.py" />
+    <Compile Include="ONNXConverter\fc.py" />
+    <Compile Include="ONNXConverter\pool.py" />
+    <Compile Include="ONNXConverter\relu.py" />
+    <Compile Include="ONNXConverter\save.py" />
+    <Compile Include="ONNXConverter\sigmoid.py" />
+    <Compile Include="ONNXConverter\softmax.py" />
+    <Compile Include="ONNXConverter\tanh.py" />
+    <Compile Include="ONNXConverter\transfer.py" />
+    <Compile Include="ONNXConverter\__init__.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Level4\" />
+    <Folder Include="ONNXConverter\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -25,6 +25,10 @@ def Sigmoid(x):
     s=1/(1+np.exp(-x))
     return s
 
+def Tanh(z):
+    a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
+    return a
+
 def Softmax(Z):
     shift_z = Z - np.max(Z)
     exp_z = np.exp(shift_z)
@@ -57,27 +61,26 @@ def Test(dataReader, num_output, dict_Param, num_input, forward):
     print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
     return correct, num_images
 
-def Train(dataReader, learning_rate, max_epoch, num_images, num_input, num_output, dict_param, forward, backward, update):
+def Train(dataReader, learning_rate, max_epoch, num_images, num_input, num_output, dict_param, forward, backward, update, batch_size):
     loss_history = list()
     X = dataReader.X
     Y = dataReader.Y
 
     print("Training...")
-    for iteration in range(max_epoch):
-        for item in range(num_images):
-            x = X[:,item].reshape(num_input,1)
-            y = Y[:,item].reshape(num_output,1)
-            dict_Cache = forward(x, dict_param)
-            dict_Grads = backward(dict_param, dict_Cache, x, y)
+    max_iteration = (int)(dataReader.num_example / batch_size)
+    for epoch in range(max_epoch):
+        for iteration in range(max_iteration):
+            batch_x, batch_y = dataReader.GetBatchSamples(batch_size, iteration)
+            dict_Cache = forward(batch_x, dict_param)
+            dict_Grads = backward(dict_param, dict_Cache, batch_x, batch_y)
             dict_param = update(dict_param, dict_Grads, learning_rate)
-            if item % 1000 == 0:
-                Loss = CalculateLoss(dict_param, X, Y, num_images, forward)
-                print(item, Loss)
+            if iteration % 1000 == 0:
+                Loss = CalculateLoss(dict_param, dataReader.X, dataReader.Y, num_images, forward)
+                print(epoch, iteration, Loss)
                 loss_history = np.append(loss_history, Loss)
             # end if
         # end for
         dataReader.Shuffle()
-        print(iteration)
 
     ShowLoss(loss_history)
     return dict_param
@@ -103,10 +106,6 @@ def ShowLoss(loss_history):
     plt.ylabel("Loss")
     plt.show()
 
-
-def Tanh(z):
-    a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0
-    return a
 
 def forward3(X, dict_Param):
     W1 = dict_Param["W1"]
@@ -219,16 +218,17 @@ def SaveResult(dict_param):
 if __name__ == '__main__':
 
     print("Loading...")
-    learning_rate = 0.02
+    learning_rate = 0.1
     n_hidden1 = 64
     n_hidden2 = 20
     dataReader = LoadData()
     n_output = dataReader.num_category
     n_images = dataReader.num_example
     n_input = dataReader.num_feature
-    m_epoch = 1
+    m_epoch = 5
+    batch_size = 5
     dict_Param = InitialParameters3(n_input, n_hidden1, n_hidden2, n_output, 2)
-    dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward3, backward3, update3)
+    dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward3, backward3, update3, batch_size)
     SaveResult(dict_Param)
     Test(dataReader, n_output, dict_Param, n_input, forward3)
 

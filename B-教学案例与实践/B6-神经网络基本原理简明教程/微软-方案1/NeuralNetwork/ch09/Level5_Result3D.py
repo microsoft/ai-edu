@@ -93,7 +93,7 @@ if __name__ == '__main__':
     n_input, n_output = dataReader.num_feature, dataReader.num_category
     n_hidden = 3
     eta, batch_size, max_epoch = 0.1, 10, 10000
-    eps = 0.005
+    eps = 0.01
 
     params = CParameters(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, LossFunctionName.CrossEntropy3)
 

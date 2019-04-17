@@ -67,7 +67,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 |多入<br>多出<br>一层|<img src="./Images/6/MultipleClassifierNN.png"/>|多元线性分类<br>|
 |单入<br>单出<br>两层|<img src="./Images/8/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|
 |多入<br>多出<br>两层|<img src="./Images/9/nn.png"/>|多元非线性分类<br>可以做任意复杂边界的分类|
-|多入<br>多出<br>三层|<img src="./Images/11/nn3.png"/>|多元非线性多分类|
+|多入<br>多出<br>三层|<img src="./Images/10/nn3.png"/>|多元非线性多分类|
 
 ## 人物设定
 

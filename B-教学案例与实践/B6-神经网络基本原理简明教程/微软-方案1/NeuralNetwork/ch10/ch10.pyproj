@@ -2,9 +2,9 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>ea2e2a33-4a00-430c-82fd-357003b11772</ProjectGuid>
+    <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_Optimizer08.py</StartupFile>
+    <StartupFile>Level3_ThreeLayerNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,18 +21,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py" />
     <Compile Include="DataReader.py" />
-    <Compile Include="GDOptimizer.py" />
-    <Compile Include="Level0_TwoLayerNet.py" />
-    <Compile Include="Level1_InitializeWeights.py" />
-    <Compile Include="Level4_Optimizer08.py" />
-    <Compile Include="Level5_Optimizer09.py" />
-    <Compile Include="Level2_TuneParams.py" />
-    <Compile Include="Level3_BestLrSeeking.py" />
-    <Compile Include="LossFunction.py" />
-    <Compile Include="Parameters.py" />
-    <Compile Include="WeightsBias.py" />
+    <Compile Include="Level1_Base.py" />
+    <Compile Include="Level3_ThreeLayerNet.py" />
+    <Compile Include="Level2_TwoLayerNet.py" />
+    <Compile Include="Level4_GradientCheck.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level5_Inference.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MnistDataReader.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

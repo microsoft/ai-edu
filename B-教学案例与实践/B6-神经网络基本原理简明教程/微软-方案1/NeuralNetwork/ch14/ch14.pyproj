@@ -22,6 +22,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ch14.py" />
+    <Compile Include="MiniFramework.py" />
+    <Compile Include="MiniFramework\Activators.py" />
+    <Compile Include="MiniFramework\ConvWeightsBias.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MiniFramework\DataReader.py" />
+    <Compile Include="MiniFramework\FCLayer.py" />
+    <Compile Include="MiniFramework\GDOptimizer.py" />
+    <Compile Include="MiniFramework\Layer.py" />
+    <Compile Include="MiniFramework\LossFunction.py" />
+    <Compile Include="MiniFramework\NeuralNet.py" />
+    <Compile Include="MiniFramework\Parameters.py" />
+    <Compile Include="MiniFramework\WeightsBias.py" />
+    <Compile Include="MiniFramework\__init__.py" />
+    <Compile Include="MnistDataReader.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MiniFramework\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

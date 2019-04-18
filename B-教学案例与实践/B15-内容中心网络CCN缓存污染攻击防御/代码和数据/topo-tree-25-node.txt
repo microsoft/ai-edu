@@ -1,0 +1,58 @@
+#Topology.Scenario3.txt
+
+router
+
+# node   comment  yPos    xPos
+Rtr1     NA        3        9
+Rtr2     NA        9        9
+Rtr3     NA        15       9
+Rtr7     NA        9        15
+Rtr4     NA        3        21
+Rtr5     NA        9        21
+Rtr6     NA        15       21
+Src1     NA        1        3
+Src2     NA        3        3
+Src3     NA        5        3
+Src4     NA        7        3
+Src5     NA        9        3
+Src6     NA        11       3
+Src7     NA        13       3
+Src8     NA        15       3
+Src9     NA        17       3
+Dst1     NA        1        27
+Dst2     NA        3        27
+Dst3     NA        5        27
+Dst4     NA        7        27
+Dst5     NA        9        27
+Dst6     NA        11       27
+Dst7     NA        13       27
+Dst8     NA        15       27
+Dst9     NA        17       27
+
+link
+# srcNode   dstNode     bandwidth   metric    delay   queue
+Src1        Rtr1        1000Mbps      1        10ms     100
+Src2        Rtr1        1000Mbps      1        10ms     100
+Src3        Rtr1        1000Mbps      1        10ms     100
+Src4        Rtr2        1000Mbps      1        10ms     100
+Src5        Rtr2        1000Mbps      1        10ms     100
+Src6        Rtr2        1000Mbps      1        10ms     100
+Src7        Rtr3        1000Mbps      1        10ms     100
+Src8        Rtr3        1000Mbps      1        10ms     100
+Src9        Rtr3        1000Mbps      1        10ms     100
+Rtr1        Rtr7        1000Mbps      1        10ms     100
+Rtr2        Rtr7        1000Mbps      1        10ms     100
+Rtr3        Rtr7        1000Mbps      1        10ms     100
+Rtr4        Rtr7        1000Mbps      1        10ms     100
+Rtr5        Rtr7        1000Mbps      1        10ms     100
+Rtr6        Rtr7        1000Mbps      1        10ms     100
+Dst1        Rtr4        1000Mbps      1        10ms     100
+Dst2        Rtr4        1000Mbps      1        10ms     100
+Dst3        Rtr4        1000Mbps      1        10ms     100
+Dst4        Rtr5        1000Mbps      1        10ms     100
+Dst5        Rtr5        1000Mbps      1        10ms     100
+Dst6        Rtr5        1000Mbps      1        10ms     100
+Dst7        Rtr6        1000Mbps      1        10ms     100
+Dst8        Rtr6        1000Mbps      1        10ms     100
+Dst9        Rtr6        1000Mbps      1        10ms     100
+

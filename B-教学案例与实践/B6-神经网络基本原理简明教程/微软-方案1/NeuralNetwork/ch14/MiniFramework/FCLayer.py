@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+#coding=utf-8
+
 import numpy as np
 
 from MiniFramework.Layer import *
@@ -16,7 +18,7 @@ class FcLayer(CLayer):
 
     def Initialize(self, param):
         self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer_name, param.eta)
-        self.weights.InitializeWeights()
+        self.weights.Initialize()
 
     def forward(self, input):
         self.input_shape = input.shape

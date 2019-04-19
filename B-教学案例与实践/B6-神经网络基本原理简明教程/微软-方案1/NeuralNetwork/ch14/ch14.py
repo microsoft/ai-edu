@@ -8,8 +8,8 @@ from numba import jitclass          # import the decorator
 from numba import int32, float64    # import the types
 
 spec = [
-#    ('value', float64),               # a simple scalar field
-    #('array', float64),          # an array field
+    ('value', float64),               # a simple scalar field
+    ('array', float64[:,:]),          # an array field
 ]
 
 
@@ -17,8 +17,8 @@ spec = [
 class Bag(object):
     def __init__(self):
         pass
- #       self.value = 1
-        #self.array = np.random.random()
+        self.value = 1
+        self.array = np.random.random(size=(10,10))
 
     def increment(self, val1, val2):
         return val1 * val2

@@ -22,7 +22,7 @@ class WeightsBias(object):
         self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
         self.result_value_filename = str.format("{0}_{1}_{2}_result", self.num_output, self.num_input, self.init_method.name)
 
-    def InitializeWeights(self, create_new = False):
+    def Initialize(self, create_new = False):
         if create_new:
             self.__CreateNew()
         else:

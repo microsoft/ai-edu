@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ch14.py</StartupFile>
+    <StartupFile>TestNumba\test_conv.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,8 +28,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniFramework\DataReader.py" />
+    <Compile Include="MiniFramework\ConvLayer.py" />
     <Compile Include="MiniFramework\FCLayer.py" />
     <Compile Include="MiniFramework\GDOptimizer.py" />
+    <Compile Include="MiniFramework\jit_utility.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MiniFramework\Layer.py" />
     <Compile Include="MiniFramework\LossFunction.py" />
     <Compile Include="MiniFramework\NeuralNet.py" />
@@ -37,9 +41,13 @@
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MnistDataReader.py" />
+    <Compile Include="TestNumba\test_conv.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />
+    <Folder Include="TestNumba\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

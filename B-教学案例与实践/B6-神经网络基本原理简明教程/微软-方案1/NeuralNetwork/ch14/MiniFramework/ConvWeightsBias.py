@@ -13,15 +13,15 @@ FH - Filter Height
 FW - Filter Width
 """
 class ConvWeightsBias(object):
-    def __init__(self, num_Kernal, num_Channel, num_Height, num_Width):
-        self.WK = num_Kernal
-        self.WC = num_Channel
-        self.FH = num_Height
-        self.FW = num_Width
+    def __init__(self, output_c, input_c, filter_h, filter_w):
+        self.WK = output_c
+        self.WC = input_c
+        self.FH = filter_h
+        self.FW = filter_w
 
-    def Initialize():
         self.W = np.zeros((self.WK, self.WC, self.FH, self.FW))
-        self.B = np.zeros((self.WK, 1))
+        self.W = np.random.randn(self.WK, self.WC, self.FH, self.FW)
+        self.B = np.zeros((self.WK, 1)) + 0.1
 
 
 if __name__ == '__main__':

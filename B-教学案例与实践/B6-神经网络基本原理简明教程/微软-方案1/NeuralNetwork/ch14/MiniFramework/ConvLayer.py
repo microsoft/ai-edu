@@ -11,17 +11,30 @@ from MiniFramework.ConvWeightsBias import *
 from MiniFramework.Parameters import *
 
 class ConvLayer(CLayer):
-    def __init__(self, num_input_channel, num_output_channel, num_filter_size, stride, padding, activator):
-        self.num_input_channel = num_input_channel
-        self.num_output_channel = num_output_channel
-        self.num_filter_size = num_filter_size
+    # define the number of input and output channel, also the filter size
+    def __init__(self, input_n, output_n, filter_h, filter_w, input_h, input_w, stride, padding, activator):
+        self.num_input_channel = input_n
+        self.num_output_channel = output_n
+        self.filter_height = filter_h
+        self.filter_width = filter_w
+        self.input_height = input_h
+        self.input_width = input_w
         self.stride = stride
         self.padding = padding
         self.activator = activator
 
     def Initialize(self):
-        self.weights = ConvWeightsBias(self.num_output_channel, self.num_input_channel, self.num_filter_size, self.num_filter_size)
-        self.weights.Initialize();
+        self.W = ConvWeightsBias(self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width)
+        self.W.Initialize();
+        
+        self.output_height, self.output_width = calculate_output_size(self.input_height, self.input_width, self.num_filter_size, self.num_filter_size, self.padding, self.stride)
+        self.output_shape = (self.num_output_channel, self.output_height, self.output_width)
+        
+        # output of conv
+        self.z = np.zeros(self.output_shape)
+        # output of activator
+        self.a = np.zeros(self.output_shape)
+
 
     """
     输入数据
@@ -37,6 +50,27 @@ class ConvLayer(CLayer):
         assert(x.ndim == 4)
         self.x = x
 
+        if self.padding > 0:
+            self.padded = np.pad(self.x, ((0,0), (0,0), (self.padding,self.padding), (self.padding,self.padding)), 'constant',  constant_values=(0,0))
+        else:
+            self.padded = self.x
+        #end if
+
+
+
+    def forward_fast(self, x):
+        FN, C, FH, FW = self.W.shape
+        N, C, H, W = x.shape
+        out_h = 1 + int((H + 2*self.pad - FH) / self.stride)
+        out_w = 1 + int((W + 2*self.pad - FW) / self.stride)
+        col_x = im2col(x, FH, FW, self.stride, self.padding)
+        col_W = self.W.reshape(FN, -1).T
+        out = np.dot(col_x, col_W) + self.b
+        out = out.reshape(N, out_h, out_w, -1).transpose(0, 3, 1, 2)
+        self.x = x
+        self.col_x = col_x
+        self.col_W = col_W
+        return out        
 
 
 
@@ -55,3 +89,5 @@ class ConvLayer(CLayer):
 
     def load_parameters(self, name):
         self.weights.LoadResultValue(name)
+
+    def im2col(self):

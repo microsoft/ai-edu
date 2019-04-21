@@ -31,6 +31,61 @@ def jit_conv_kernel2(x, w, rs, batch_size, num_input_channel, input_height, inpu
     return rs
 
 @nb.jit(nopython=True)
+def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
+    z = np.zeros((batch_size, input_c, output_h, output_w))
+    for b in range(batch_size):
+        for c in range(input_c):
+            for i in range(output_h):
+                i_start = i * pool_stride
+                i_end = i_start + pool_h
+                for j in range(output_w):
+                    j_start = j * pool_stride
+                    j_end = j_start + pool_w
+                    target_array = x[b,c,i_start:i_end, j_start:j_end]
+                    z[b,c,i,j] = target_array.max()
+
+                    #end if
+                #end for
+            #end for
+        #end for
+    #end for
+    return z
+
+@nb.jit(nopython=True)
+def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
+    delta_out = np.zeros(x.shape)
+    for b in range(batch_size):
+        for c in range(input_c):
+            for i in range(output_h):
+                i_start = i * pool_stride
+                i_end = i_start + pool_h
+                for j in range(output_w):
+                    j_start = j * pool_stride
+                    j_end = j_start + pool_w
+                    m,n = pool_get_max_index(x[b,c], i_start, i_end, j_start, j_end)
+                    delta_out[b,c,m,n] = delta_in[b,c,i,j]
+                    #end if
+                #end for
+            #end for
+        #end for
+    #end for
+    return delta_out
+
+@nb.jit(nopython=True)
+def pool_get_max_index(input, i_start, i_end, j_start, j_end):
+    assert(input.ndim == 2)
+    max_i = i_start
+    max_j = j_start
+    max_value = input[i_start,j_start]
+    for i in range(i_start,i_end):
+        for j in range(j_start,j_end):
+            if input[i,j] > max_value:
+                max_value = input[i,j]
+                max_i, max_j = i, j
+
+    return max_i, max_j
+
+@nb.jit(nopython=True)
 def conv2d(input_array, kernal, bias, output_array):
     assert(input_array.ndim == 2)
     assert(output_array.ndim == 2)
@@ -83,18 +138,19 @@ def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
     #end bs
     return rs
 
+# 标准卷积后输出尺寸计算公式
 @nb.jit(nopython=True)
-def calculate_output_size(input_h, input_w, filter_h, filter_w, pad=0, stride=1):
-    output_h = (input_h - filter_h + 2 * pad) // stride + 1    
-    output_w = (input_w - filter_w + 2 * pad) // stride + 1
-    return output_h, output_w
+def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=1):
+    output_h = (input_h - filter_h + 2 * padding) // stride + 1    
+    output_w = (input_w - filter_w + 2 * padding) // stride + 1
+    return (output_h, output_w)
 
 # 其实就是calculate_output_size的逆向计算
 @nb.jit(nopython=True)
-def calculate_padding_size(input_h, input_w, filter_h, filter_w, output_h, output_w, stride):
+def calculate_padding_size(input_h, input_w, filter_h, filter_w, output_h, output_w, stride=1):
     pad_h = ((output_h - 1) * stride - input_h + filter_h) // 2
     pad_w = ((output_w - 1) * stride - input_w + filter_w) // 2
-    return pad_h, pad_w
+    return (pad_h, pad_w)
 
 """
 对于stride不是1的情况，delta_in数组会比stride是1的情况要小nxn，梯度值不利于对应到输入矩阵上，所以要先转换成stride=1的情况
@@ -109,17 +165,18 @@ filter_w: 过滤器的宽度
 padding: 设定的填充值
 stride: 设定的步长
 """
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def expand_delta_map(dZ, batch_size, input_c, input_h, input_w, output_h, output_w, filter_h, filter_w, padding, stride):
     assert(dZ.ndim == 4)
-
+    expand_h = 0
+    expand_w = 0
     if stride == 1:
         dZ_stride_1 = dZ
         expand_h = dZ.shape[2]
         expand_w = dZ.shape[3]
     else:
         # 假设如果stride等于1时，卷积后输出的图片大小应该是多少，然后根据这个尺寸调整delta_z的大小
-        expand_h, expand_w = calculate_output_size(input_h, input_w, filter_h, filter_w, pad, 1)
+        (expand_h, expand_w) = calculate_output_size(input_h, input_w, filter_h, filter_w, padding, 1)
         # 初始化一个0数组，四维
         dZ_stride_1 = np.zeros((batch_size, input_c, expand_h, expand_w))
         # 把误差值填到当stride=1时的对应位置上
@@ -135,18 +192,7 @@ def expand_delta_map(dZ, batch_size, input_c, input_h, input_w, output_h, output
             # end ic
         # end bs
     # end else
-
-    """
-    求本层的输出误差矩阵时，应该用本层的输入误差矩阵互相关计算本层的卷积核的旋转
-    由于输出误差矩阵的尺寸必须与本层的输入数据的尺寸一致，所以必须根据卷积核的尺寸，调整本层的输入误差矩阵的尺寸
-    """
-    pad_h, pad_w = calculate_padding_size(input_h, input_w, filter_h, filter_w, expand_h, expand_w, stride)
-    dZ_padded = np.pad(dZ_stride_1, ((0,0),(0,0),(pad_h, pad_h),(pad_w, pad_w)), 'constant')
-
-    return dZ_padded, dZ_stride_1
-
-
-
+    return dZ_stride_1
 
 #@nb.jit(nopython=True)
 def im2col(input_data, filter_h, filter_w, stride=1, pad=0):

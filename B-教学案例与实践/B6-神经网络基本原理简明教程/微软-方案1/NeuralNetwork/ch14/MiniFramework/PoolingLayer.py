@@ -43,34 +43,19 @@ class PoolingLayer(CLayer):
         assert(x.ndim == 4)
         self.x = x
         self.batch_size = self.x.shape[0]
-        
-        self.z = np.zeros((self.batch_size, self.num_input_channel, self.output_height, self.output_width))
-
-        for b in range(self.batch_size):
-            for c in range(self.num_input_channel):
-                for i in range(self.output_height):
-                    i_start = i * self.stride
-                    i_end = i_start + self.pool_height
-                    for j in range(self.output_width):
-                        j_start = j * self.stride
-                        j_end = j_start + self.pool_width
-                        target_array = self.x[b,c,i_start:i_end, j_start:j_end]
-                        if self.pooling_type == PoolingTypes.MAX:
-                            self.z[b,c,i,j] = target_array.max()
-                        elif self.pooling_type == PoolingTypes.MEAN:
-                            self.z[b,c,i,j] = target_array.mean()
-                        #end if
-                    #end for
-                #end for
-            #end for
-        #end for
+        self.z = max_pool_forward(self.x, self.batch_size, self.num_input_channel, self.output_height, self.output_width, self.pool_height, self.pool_width, self.stride)
         return self.z
 
     def backward(self, delta_in, flag):
         assert(delta_in.ndim == 4)
         assert(delta_in.shape == self.z.shape)
+
+        delta_out = max_pool_backward(self.x, delta_in, self.batch_size, self.num_input_channel, self.output_height, self.output_width, self.pool_height, self.pool_width, self.stride)
+        return delta_out
+
+        """
         delta_out = np.zeros(self.x.shape)
-        
+     
         for b in range(self.batch_size):
             for c in range(self.num_input_channel):
                 for i in range(self.output_height):
@@ -82,20 +67,16 @@ class PoolingLayer(CLayer):
                         if self.pooling_type == PoolingTypes.MAX:
                             m,n = PoolingLayer.get_max_index(self.x[b,c], i_start, i_end, j_start, j_end)
                             delta_out[b,c,m,n] = delta_in[b,c,i,j]
-                        else: # == PoolingTypes.MEAN:
+                        else: 
                             delta_out[b,c,i_start:i_end, j_start:j_end] = delta_in[b,c,i,j] / self.pool_size
-                        #end if
-                    #end for
-                #end for
-            #end for
-        #end for
-        return delta_out
+        """
+        
 
     def save_parameters(self, name):
-        np.save(name + "_mode", self.mode)
+        np.save(name + "_type", self.pooling_type)
 
     def load_parameters(self, name):
-        self.mode = np.load(name+"_mode.npy")
+        self.mode = np.load(name+"_type.npy")
     
     @staticmethod
     def get_max_index(input, i_start, i_end, j_start, j_end):

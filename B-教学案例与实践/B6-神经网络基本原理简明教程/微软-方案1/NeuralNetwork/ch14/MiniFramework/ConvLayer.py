@@ -30,7 +30,7 @@ class ConvLayer(CLayer):
         self.activator = activator
 
         self.WeightsBias = ConvWeightsBias(self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width, param.init_method, param.optimizer_name, param.eta)
-        self.output_height, self.output_width = calculate_output_size(
+        (self.output_height, self.output_width) = calculate_output_size(
             self.input_height, self.input_width, 
             self.filter_height, self.filter_width, 
             self.padding, self.stride)
@@ -54,12 +54,11 @@ class ConvLayer(CLayer):
         self.batch_size = self.x.shape[0]
 
         if self.padding > 0:
-            self.padded = np.pad(self.x, ((0,0), (0,0), (self.padding,self.padding), (self.padding,self.padding)), 'constant',  constant_values=(0,0))
+            self.padded = np.pad(self.x, ((0,0), (0,0), (self.padding,self.padding), (self.padding,self.padding)), 'constant')
         else:
             self.padded = self.x
         #end if
 
-        #self.z = np.zeros((self.input_shape[0], self.num_output_channel, self.output_height, self.output_width)
         self.z = jit_conv_4d(self.padded, self.WeightsBias.W, self.WeightsBias.B, self.output_height, self.output_width, self.stride)
         self.a = self.activator.forward(self.z)
         return self.a
@@ -88,8 +87,13 @@ class ConvLayer(CLayer):
         dz,_ = self.activator.backward(self.z, self.a, delta_in)
         
         # 转换误差矩阵尺寸
-        dz_padded, dz_stride_1 = expand_delta_map(dz, self.batch_size, self.num_input_channel, self.input_height, self.input_width, self.output_height, self.output_width, self.filter_height, self.filter_width, self.padding, self.stride)
-        
+        dz_stride_1 = expand_delta_map(dz, self.batch_size, self.num_output_channel, self.input_height, self.input_width, self.output_height, self.output_width, self.filter_height, self.filter_width, self.padding, self.stride)
+
+        # 求本层的输出误差矩阵时，应该用本层的输入误差矩阵互相关计算本层的卷积核的旋转
+        # 由于输出误差矩阵的尺寸必须与本层的输入数据的尺寸一致，所以必须根据卷积核的尺寸，调整本层的输入误差矩阵的尺寸
+        (pad_h, pad_w) = calculate_padding_size(dz_stride_1.shape[2], dz_stride_1.shape[3], self.filter_height, self.filter_width, self.input_height, self.input_width)
+        dz_padded = np.pad(dz_stride_1, ((0,0),(0,0),(pad_h, pad_h),(pad_w, pad_w)), 'constant')
+
         # 计算本层的权重矩阵的梯度
         self._calculate_weightsbias_grad(dz_stride_1)
 
@@ -100,7 +104,7 @@ class ConvLayer(CLayer):
     # 用输入数据乘以回传入的误差矩阵,得到卷积核的梯度矩阵
     def _calculate_weightsbias_grad(self, dz):
         self.WeightsBias.ClearGrads()
-        pad_h, pad_w = calculate_padding_size(self.input_height, self.input_width, dz.shape[2], dz.shape[3], self.filter_height, self.filter_width, 1)
+        (pad_h, pad_w) = calculate_padding_size(self.input_height, self.input_width, dz.shape[2], dz.shape[3], self.filter_height, self.filter_width, 1)
         input_padded = np.pad(self.x, ((0,0),(0,0),(pad_h, pad_h),(pad_w,pad_w)), 'constant')
         for bs in range(self.batch_size):
             for oc in range(self.num_output_channel):   # == kernal count
@@ -139,10 +143,10 @@ class ConvLayer(CLayer):
         self.WeightsBias.Update()
         
     def save_parameters(self, name):
-        self.weights.SaveResultValue(name)
+        self.WeightsBias.Save(name)
 
     def load_parameters(self, name):
-        self.weights.LoadResultValue(name)
+        self.WeightsBias.Load(name)
 
 #end class
 

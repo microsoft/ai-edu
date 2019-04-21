@@ -47,6 +47,13 @@ class ConvWeightsBias(object):
         self.W = self.W - self.eta * self.W_grad
         self.B = self.B - self.eta * self.B_grad
 
+    def Save(self, name):
+        np.save(name+"_w.npy", self.W)
+        np.save(name+"_b.npy", self.B)
+
+    def Load(self, name):
+        self.W = np.load(name+"_w.npy")
+        self.B = np.load(name+"_b.npy")
 
 if __name__ == '__main__':
     wb = ConvWeightsBias(4,2,3,3)

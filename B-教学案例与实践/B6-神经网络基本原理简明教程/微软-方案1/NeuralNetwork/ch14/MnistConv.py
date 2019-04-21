@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import time
+
 from MiniFramework.NeuralNet import *
 from MiniFramework.GDOptimizer import *
 from MiniFramework.LossFunction import *
@@ -28,8 +30,9 @@ def Test(dataReader, model):
     Y = dataReader.YTestSet
     correct = 0
     count = X.shape[1]
+    count = 1000
     for i in range(count):
-        x = X[:,i].reshape(dataReader.num_feature, 1)
+        x = X[:,i].reshape(1, 1, 28, 28)
         y = Y[:,i].reshape(dataReader.num_category, 1)
         model.forward(x)
         if np.argmax(model.output) == np.argmax(y):
@@ -43,7 +46,7 @@ class Model(object):
         # 4x24x24
         self.p1 = PoolingLayer(self.c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
         # 4x12x12
-        self.f1 = FcLayer(self.p1.output_size, 32, Relu(), param)
+        self.f1 = FcLayer(self.p1.output_size, 32, Sigmoid(), param)
         self.f2 = FcLayer(self.f1.output_size, 10, Softmax(), param)
 
     def forward(self, x):
@@ -79,13 +82,15 @@ class Model(object):
         self.f2.load_parameters("f2")
 
 
+
+
 if __name__ == '__main__':
 
     num_output = 10
     dataReader = LoadData(num_output)
-    max_epoch = 1
-    batch_size = 5
-    eta = 0.02
+    max_epoch = 5
+    batch_size = 100
+    eta = 0.1
     eps = 0.01
     max_iteration = dataReader.num_example // batch_size
     params = CParameters(eta, max_epoch, batch_size, eps,
@@ -93,29 +98,59 @@ if __name__ == '__main__':
                     InitialMethod.Xavier, 
                     OptimizerName.SGD)
     model = Model(params)
-    
-    loss = 0 
-    lossFunc = CLossFunction(LossFunctionName.CrossEntropy3)
-
-
-    for epoch in range(max_epoch):
-        print(epoch)
-        for iteration in range(max_iteration):
-            batch_x, batch_y = dataReader.GetBatchSamples(batch_size, iteration)
-            model.forward(batch_x)
-            model.backward(batch_y)
-            model.update(eta)
-
-            if iteration % 100 == 0:
-                print(iteration)
-
-        model.forward(dataReader.X.reshape(60000,1,28,28))
-        loss = lossFunc.CheckLoss(dataReader.Y, model.output)
-        print("epoch=%d, iteration=%d, loss=%f" %(epoch,iteration,loss))
-        is_min = loss_history.AddLossHistory(loss, epoch, iteration)                
-        #end if
-
-    model.save()
+    """
+    model.load()
     print("testing...")
     c,n = Test(dataReader, model)
     print(str.format("rate={0} / {1} = {2}", c, n, c/n))
+    """
+    loss = 0 
+    lossFunc = CLossFunction(LossFunctionName.CrossEntropy3)
+
+    list1 = []
+    list2 = []
+    list3 = []
+    list4 = []
+
+    #max_iteration = 1000
+    for epoch in range(max_epoch):
+        print(epoch)
+        for iteration in range(max_iteration):
+            t0 = time.time()
+            batch_x, batch_y = dataReader.GetBatchSamples(batch_size, iteration)
+            t1 = time.time()
+            model.forward(batch_x)
+            t2 = time.time()
+            model.backward(batch_y)
+            t3 = time.time()
+            model.update(eta)
+            t4 = time.time()
+            """
+            list1.append(t1-t0)
+            list2.append(t2-t1)
+            list3.append(t3-t2)
+            list4.append(t4-t3)
+            """
+            if iteration % 10 == 0:
+                print(iteration*10)
+    """        
+    t1,t2,t3,t4=0,0,0,0
+    for i in range(1000):
+        t1 += list1[i]
+        t2 += list2[i]
+        t3 += list3[i]
+        t4 += list4[i]
+    print(t1,t2,t3,t4)
+    """
+    print("testing...")
+    c,n = Test(dataReader, model)
+    print(str.format("rate={0} / {1} = {2}", c, n, c/n))
+
+    """
+    model.forward(dataReader.X.reshape(60000,1,28,28))
+    loss = lossFunc.CheckLoss(dataReader.Y, model.output)
+    print("epoch=%d, iteration=%d, loss=%f" %(epoch,iteration,loss))
+    is_min = loss_history.AddLossHistory(loss, epoch, iteration)                
+    """
+
+    model.save()

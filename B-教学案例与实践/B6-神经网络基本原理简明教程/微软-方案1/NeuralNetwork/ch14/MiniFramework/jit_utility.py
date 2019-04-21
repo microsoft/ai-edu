@@ -92,8 +92,8 @@ def calculate_output_size(input_h, input_w, filter_h, filter_w, pad=0, stride=1)
 # 其实就是calculate_output_size的逆向计算
 @nb.jit(nopython=True)
 def calculate_padding_size(input_h, input_w, filter_h, filter_w, output_h, output_w, stride):
-    pad_h = ((output_h - 1) * stride - input_h + filter_h) / 2
-    pad_w = ((output_w - 1) * stride - input_w + filter_w) / 2
+    pad_h = ((output_h - 1) * stride - input_h + filter_h) // 2
+    pad_w = ((output_w - 1) * stride - input_w + filter_w) // 2
     return pad_h, pad_w
 
 """
@@ -115,6 +115,8 @@ def expand_delta_map(dZ, batch_size, input_c, input_h, input_w, output_h, output
 
     if stride == 1:
         dZ_stride_1 = dZ
+        expand_h = dZ.shape[2]
+        expand_w = dZ.shape[3]
     else:
         # 假设如果stride等于1时，卷积后输出的图片大小应该是多少，然后根据这个尺寸调整delta_z的大小
         expand_h, expand_w = calculate_output_size(input_h, input_w, filter_h, filter_w, pad, 1)
@@ -139,7 +141,7 @@ def expand_delta_map(dZ, batch_size, input_c, input_h, input_w, output_h, output
     由于输出误差矩阵的尺寸必须与本层的输入数据的尺寸一致，所以必须根据卷积核的尺寸，调整本层的输入误差矩阵的尺寸
     """
     pad_h, pad_w = calculate_padding_size(input_h, input_w, filter_h, filter_w, expand_h, expand_w, stride)
-    dZ_padded = np.pad(dZ_stride_1, ((0,0),(0,0),(pad_h, pad_h),(pad_w, pad_w)))
+    dZ_padded = np.pad(dZ_stride_1, ((0,0),(0,0),(pad_h, pad_h),(pad_w, pad_w)), 'constant')
 
     return dZ_padded, dZ_stride_1
 

@@ -10,27 +10,31 @@ from MiniFramework.Layer import *
 from MiniFramework.Activators import *
 from MiniFramework.ConvWeightsBias import *
 from MiniFramework.Parameters import *
-
 from MiniFramework.jit_utility import *
 
 class ConvLayer(CLayer):
     # define the number of input and output channel, also the filter size
-    def __init__(self, input_c, output_c, filter_h, filter_w, input_h, input_w, stride, padding, activator):
-        self.num_input_channel = input_c
-        self.num_output_channel = output_c
-        self.filter_height = filter_h
-        self.filter_width = filter_w
-        self.input_height = input_h
-        self.input_width = input_w
-        self.stride = stride
-        self.padding = padding
+    def __init__(self, 
+                 input_shape,       # (InputChannelCount, H, W)
+                 kernal_shape,      # (OutputChannelCount, FH, FW)
+                 conv_param,        # (stride, padding)
+                 activator, param):
+        self.num_input_channel = input_shape[0]
+        self.input_height = input_shape[1]
+        self.input_width = input_shape[2]
+        self.num_output_channel = kernal_shape[0]
+        self.filter_height = kernal_shape[1]
+        self.filter_width = kernal_shape[2]
+        self.stride = conv_param[0]
+        self.padding = conv_param[1]
         self.activator = activator
 
-        self.WeightsBias = ConvWeightsBias(self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width)
+        self.WeightsBias = ConvWeightsBias(self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width, param.init_method, param.optimizer_name, param.eta)
         self.output_height, self.output_width = calculate_output_size(
             self.input_height, self.input_width, 
             self.filter_height, self.filter_width, 
             self.padding, self.stride)
+        self.output_shape = (self.num_output_channel, self.output_height, self.output_height)
 
     """
     输入数据
@@ -58,7 +62,7 @@ class ConvLayer(CLayer):
         #self.z = np.zeros((self.input_shape[0], self.num_output_channel, self.output_height, self.output_width)
         self.z = jit_conv_4d(self.padded, self.WeightsBias.W, self.WeightsBias.B, self.output_height, self.output_width, self.stride)
         self.a = self.activator.forward(self.z)
-        return self.z, self.a
+        return self.a
 
     def forward_fast(self, x):
         FN, C, FH, FW = self.WeightsBias.W.shape
@@ -90,29 +94,29 @@ class ConvLayer(CLayer):
         self._calculate_weightsbias_grad(dz_stride_1)
 
         # 计算本层输出到下一层的误差矩阵
-        delta_out = self._calculate_delta_out(dz_padded)
+        delta_out = self._calculate_delta_out(dz_padded, flag)
         return delta_out
 
     # 用输入数据乘以回传入的误差矩阵,得到卷积核的梯度矩阵
-    def _calculate_weightsbias_grad(dz):
+    def _calculate_weightsbias_grad(self, dz):
         self.WeightsBias.ClearGrads()
         pad_h, pad_w = calculate_padding_size(self.input_height, self.input_width, dz.shape[2], dz.shape[3], self.filter_height, self.filter_width, 1)
-        input_padded = np.pad(self.x, ((0,0),(0,0),(pad_h, pad_h),(pad_w,pad_w)))
-        for bs in range(batch_size):
+        input_padded = np.pad(self.x, ((0,0),(0,0),(pad_h, pad_h),(pad_w,pad_w)), 'constant')
+        for bs in range(self.batch_size):
             for oc in range(self.num_output_channel):   # == kernal count
                 for ic in range(self.num_input_channel):    # == filter count
-                    w_grad = np.zeros(self.filter_height, self.filter_width)
+                    w_grad = np.zeros((self.filter_height, self.filter_width))
                     conv2d(input_padded[bs,ic], dz[bs,oc], 0, w_grad)
                     self.WeightsBias.W_grad[oc,ic] += w_grad
                 #end ic
                 self.WeightsBias.B_grad[oc] += dz[bs,oc].sum()
             #end oc
         #end bs
-        self.WeightsBias.MeanGrads(batch_size)
+        self.WeightsBias.MeanGrads(self.batch_size)
 
         
     # 用输入误差矩阵乘以（旋转180度后的）卷积核
-    def _calculate_delta_out(dz, flag):
+    def _calculate_delta_out(self, dz, flag):
         delta_out = np.zeros(self.x.shape)
         if flag != LayerIndexFlags.FirstLayer:
             rot_weights = self.WeightsBias.Rotate180()
@@ -132,7 +136,7 @@ class ConvLayer(CLayer):
         self.weights.pre_Update()
 
     def update(self):
-        self.weights.Update()
+        self.WeightsBias.Update()
         
     def save_parameters(self, name):
         self.weights.SaveResultValue(name)

@@ -13,14 +13,16 @@ FH - Filter Height
 FW - Filter Width
 """
 class ConvWeightsBias(object):
-    def __init__(self, output_c, input_c, filter_h, filter_w):
+    def __init__(self, output_c, input_c, filter_h, filter_w, init_method, optimizer_name, eta):
         self.KernalCount = output_c
         self.FilterCount = input_c
         self.FilterHeight = filter_h
         self.FilterWidth = filter_w
+        self.init_method = init_method
+        self.optimizer_name = optimizer_name
+        self.eta = eta
 
-        self.W = np.zeros((self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth))
-        #self.W = np.random.randn(self.KernalCount, self.FilterCount, self.FH, self.FW)
+        self.W = np.random.normal(0, np.sqrt(2/(self.FilterHeight * self.FilterWidth)), (self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth))
         self.B = np.zeros((self.KernalCount, 1))# + 0.1
 
         self.W_grad = np.zeros(self.W.shape)
@@ -40,6 +42,10 @@ class ConvWeightsBias(object):
     def MeanGrads(self, m):
         self.W_grad = self.W_grad / m
         self.B_grad = self.B_grad / m
+
+    def Update(self):
+        self.W = self.W - self.eta * self.W_grad
+        self.B = self.B - self.eta * self.B_grad
 
 
 if __name__ == '__main__':

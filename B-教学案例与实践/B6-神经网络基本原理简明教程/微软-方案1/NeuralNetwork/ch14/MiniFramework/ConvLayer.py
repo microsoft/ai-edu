@@ -26,7 +26,6 @@ class ConvLayer(CLayer):
         self.padding = padding
         self.activator = activator
 
-    def Initialize(self):
         self.WeightsBias = ConvWeightsBias(self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width)
         self.output_height, self.output_width = calculate_output_size(
             self.input_height, self.input_width, 
@@ -43,12 +42,12 @@ class ConvLayer(CLayer):
     """
     
     def forward(self, x):
-        self.input_shape = x.shape
         assert(x.ndim == 4)
-        assert(self.input_shape[1] == self.num_input_channel)
-        assert(self.input_shape[2] == self.input_height)
-        assert(self.input_shape[3] == self.input_width)
         self.x = x
+        assert(self.x.shape[1] == self.num_input_channel)
+        assert(self.x.shape[2] == self.input_height)
+        assert(self.x.shape[3] == self.input_width)
+        self.batch_size = self.x.shape[0]
 
         if self.padding > 0:
             self.padded = np.pad(self.x, ((0,0), (0,0), (self.padding,self.padding), (self.padding,self.padding)), 'constant',  constant_values=(0,0))
@@ -56,10 +55,10 @@ class ConvLayer(CLayer):
             self.padded = self.x
         #end if
 
-        #self.z = np.zeros((self.input_shape[0], self.num_output_channels, self.output_height, self.output_width)
+        #self.z = np.zeros((self.input_shape[0], self.num_output_channel, self.output_height, self.output_width)
         self.z = jit_conv_4d(self.padded, self.WeightsBias.W, self.WeightsBias.B, self.output_height, self.output_width, self.stride)
         self.a = self.activator.forward(self.z)
-        return self.a
+        return self.z, self.a
 
     def forward_fast(self, x):
         FN, C, FH, FW = self.WeightsBias.W.shape
@@ -74,13 +73,60 @@ class ConvLayer(CLayer):
         self.col_x = col_x
         self.col_W = col_W
         self.a = self.activator.forward(self.z)
-        return self.a
-
-
+        return self.z, self.a
 
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
     def backward(self, delta_in, flag):
-        pass
+        assert(delta_in.ndim == 4)
+        assert(delta_in.shape == self.a.shape)
+        
+        # 计算激活函数的导数
+        dz,_ = self.activator.backward(self.z, self.a, delta_in)
+        
+        # 转换误差矩阵尺寸
+        dz_padded, dz_stride_1 = expand_delta_map(dz, self.batch_size, self.num_input_channel, self.input_height, self.input_width, self.output_height, self.output_width, self.filter_height, self.filter_width, self.padding, self.stride)
+        
+        # 计算本层的权重矩阵的梯度
+        self._calculate_weightsbias_grad(dz_stride_1)
+
+        # 计算本层输出到下一层的误差矩阵
+        delta_out = self._calculate_delta_out(dz_padded)
+        return delta_out
+
+    # 用输入数据乘以回传入的误差矩阵,得到卷积核的梯度矩阵
+    def _calculate_weightsbias_grad(dz):
+        self.WeightsBias.ClearGrads()
+        pad_h, pad_w = calculate_padding_size(self.input_height, self.input_width, dz.shape[2], dz.shape[3], self.filter_height, self.filter_width, 1)
+        input_padded = np.pad(self.x, ((0,0),(0,0),(pad_h, pad_h),(pad_w,pad_w)))
+        for bs in range(batch_size):
+            for oc in range(self.num_output_channel):   # == kernal count
+                for ic in range(self.num_input_channel):    # == filter count
+                    w_grad = np.zeros(self.filter_height, self.filter_width)
+                    conv2d(input_padded[bs,ic], dz[bs,oc], 0, w_grad)
+                    self.WeightsBias.W_grad[oc,ic] += w_grad
+                #end ic
+                self.WeightsBias.B_grad[oc] += dz[bs,oc].sum()
+            #end oc
+        #end bs
+        self.WeightsBias.MeanGrads(batch_size)
+
+        
+    # 用输入误差矩阵乘以（旋转180度后的）卷积核
+    def _calculate_delta_out(dz, flag):
+        delta_out = np.zeros(self.x.shape)
+        if flag != LayerIndexFlags.FirstLayer:
+            rot_weights = self.WeightsBias.Rotate180()
+            for bs in range(batch_size):
+                for oc in range(self.num_output_channel):    # == kernal count
+                    delta_per_input = np.zeros((self.input_height, self.input_width))
+                    for ic in range(self.num_input_channel): # == filter count
+                        conv2d(dz[bs,oc], rot_weights[oc,ic], 0, delta_per_input)
+                        delta_out[bs,ic] += delta_per_input
+                    #END IC
+                #end oc
+            #end bs
+        # end if
+        return delta_out
 
     def pre_update(self):
         self.weights.pre_Update()
@@ -97,11 +143,11 @@ class ConvLayer(CLayer):
 #end class
 
 def conv1():
-    r1 = cl.forward(x)
+    r1,_ = cl.forward(x)
     return r1
 
 def conv2():
-    r2 = cl.forward_fast(x)
+    r2,_ = cl.forward_fast(x)
     return r2
 
 

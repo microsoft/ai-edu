@@ -6,22 +6,22 @@ import numba as nb
 import timeit
 
 # 普通的卷积，用数组运算
-def conv_kernel(x, w, rs, n, num_input_channels, height, width, num_output_channels, filter_height, filter_width, out_h, out_w):
+def conv_kernel(x, w, rs, n, num_input_channel, height, width, num_output_channel, filter_height, filter_width, out_h, out_w):
     for i in range(n):
         for j in range(out_h):
             for p in range(out_w):
                 window = x[i, ..., j:j+filter_height, p:p+filter_width]
-                for q in range(num_output_channels):
+                for q in range(num_output_channel):
                     rs[i, q, j, p] += np.sum(w[q] * window)
     return rs
 
 # 逐点运算的卷积，最慢
-def conv_kernel2(x, w, rs, n, num_input_channels, height, width, num_output_channels, filter_height, filter_width, out_h, out_w):
+def conv_kernel2(x, w, rs, n, num_input_channel, height, width, num_output_channel, filter_height, filter_width, out_h, out_w):
     for i in range(n):
         for j in range(out_h):
             for p in range(out_w):
-                for q in range(num_output_channels):
-                    for r in range(num_input_channels):
+                for q in range(num_output_channel):
+                    for r in range(num_input_channel):
                         for s in range(filter_height):
                             for t in range(filter_width):
                                 rs[i, q, j, p] += x[i, r, j+s, p+t] * w[q, r, s, t]
@@ -29,43 +29,43 @@ def conv_kernel2(x, w, rs, n, num_input_channels, height, width, num_output_chan
 
 # 简单地加了个 jit 后的卷积，用数组运算
 @nb.jit(nopython=True)
-def jit_conv_kernel(x, weights, rs, batch_size, num_input_channels, height, width, num_output_channels, filter_height, filter_width, out_h, out_w):
+def jit_conv_kernel(x, weights, rs, batch_size, num_input_channel, height, width, num_output_channel, filter_height, filter_width, out_h, out_w):
     for b in range(batch_size):
         for i in range(out_h):
             for j in range(out_w):
                 window = x[b, ..., i:i+filter_height, j:j+filter_width]
-                for d in range(num_output_channels):
+                for d in range(num_output_channel):
                     rs[b, d, i, j] += np.sum(weights[d] * window)
     return rs
 
 # 加jit, 用逐点运算，会比用数组运算快
 @nb.jit(nopython=True)
-def jit_conv_kernel2(x, w, rs, n, num_input_channels, height, width, num_output_channels, filter_height, filter_width, out_h, out_w):
+def jit_conv_kernel2(x, w, rs, n, num_input_channel, height, width, num_output_channel, filter_height, filter_width, out_h, out_w):
     for i in range(n):
         for j in range(out_h):
             for p in range(out_w):
-                for q in range(num_output_channels):
-                    for r in range(num_input_channels):
+                for q in range(num_output_channel):
+                    for r in range(num_input_channel):
                         for s in range(filter_height):
                             for t in range(filter_width):
                                 rs[i, q, j, p] += x[i, r, j+s, p+t] * w[q, r, s, t]
     return rs
 
 @nb.jit(nopython=True)
-def my_conv_4d(x, weights, rs, batch_size, num_input_channels, height, width, num_output_channels, filter_height, filter_width, out_h, out_w, stride):
+def my_conv_4d(x, weights, rs, batch_size, num_input_channel, height, width, num_output_channel, filter_height, filter_width, out_h, out_w, stride):
     # 输入图片的批大小，通道数，高，宽
     assert(x.ndim == 4)
     # 输入图片的通道数
     assert(x.shape[1] == weights.shape[1])  
     batch_size = x.shape[0]
-    num_input_channels = x.shape[1]
-    num_output_channels = weights.shape[0]
+    num_input_channel = x.shape[1]
+    num_output_channel = weights.shape[0]
     filter_height = weights.shape[2]
     filter_width = weights.shape[3]
 
     for bs in range(batch_size):
-        for oc in range(num_output_channels):
-            for ic in range(num_input_channels):
+        for oc in range(num_output_channel):
+            for ic in range(num_input_channel):
                 for i in range(out_h):
                     for j in range(out_w):
                         ii = i * stride
@@ -78,31 +78,31 @@ def my_conv_4d(x, weights, rs, batch_size, num_input_channels, height, width, nu
     return rs
 
 def conv1():
-    rs = np.zeros([n, num_output_channels, out_h, out_w])
+    rs = np.zeros([n, num_output_channel, out_h, out_w])
     conv_kernel2(x, w, rs, *args)
     return rs
 
 def conv2():
-    rs = np.zeros([n, num_output_channels, out_h, out_w])
+    rs = np.zeros([n, num_output_channel, out_h, out_w])
     conv_kernel(x, w, rs, *args)
     return rs
 
 
 def conv3():
-    rs = np.zeros([n, num_output_channels, out_h, out_w])
+    rs = np.zeros([n, num_output_channel, out_h, out_w])
     #jit_conv_kernel(x, w, rs, *args)
     my_conv_4d(x, w, rs, *args)
     return rs
 
 def conv4():
-    rs = np.zeros([n, num_output_channels, out_h, out_w])
+    rs = np.zeros([n, num_output_channel, out_h, out_w])
     jit_conv_kernel2(x, w, rs, *args)
     return rs
 
 #@nb.jit(nopython=True)
-def cal5(w, num_output_channels, col_x, out_h, out_w, N):
+def cal5(w, num_output_channel, col_x, out_h, out_w, N):
     col_x = col_x.transpose(0, 4, 5, 1, 2, 3).reshape(N*out_h*out_w, -1)
-    col_w = w.reshape(num_output_channels, -1).T
+    col_w = w.reshape(num_output_channel, -1).T
     out = np.dot(col_x, col_w)
     rs = out.reshape(n, out_h, out_w, -1).transpose(0,3,1,2)
     return rs
@@ -129,9 +129,9 @@ def conv5():
     #col_x = col_x.transpose(0, 4, 5, 1, 2, 3).reshape(N*out_h*out_w, -1)
 
 #    col_x = im2col(x, filter_height, filter_width, 1, 0)
-    rs = cal5(w, num_output_channels, col_x, out_h, out_w, N)
+    rs = cal5(w, num_output_channel, col_x, out_h, out_w, N)
 
-    #col_w = w.reshape(num_output_channels, -1).T
+    #col_w = w.reshape(num_output_channel, -1).T
     #out = np.dot(col_x, col_w)
     #rs = out.reshape(n, out_h, out_w, -1).transpose(0,3,1,2)
 
@@ -164,11 +164,11 @@ if __name__ == '__main__':
     w = np.random.randn(16, x.shape[1], 5, 5)
     stride = 3
     pad = 0
-    n, num_input_channels, height, width = x.shape
-    num_output_channels, _, filter_height, filter_width = w.shape
+    n, num_input_channel, height, width = x.shape
+    num_output_channel, _, filter_height, filter_width = w.shape
     out_h = (height - filter_height + 2*pad)//stride + 1
     out_w = (width - filter_width + 2*pad)//stride + 1
-    args = (n, num_input_channels, height, width, num_output_channels, filter_height, filter_width, out_h, out_w, stride)
+    args = (n, num_input_channel, height, width, num_output_channel, filter_height, filter_width, out_h, out_w, stride)
     
 
    #  print(np.linalg.norm(conv1() - conv2()).ravel())

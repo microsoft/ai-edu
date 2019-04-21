@@ -14,15 +14,34 @@ FW - Filter Width
 """
 class ConvWeightsBias(object):
     def __init__(self, output_c, input_c, filter_h, filter_w):
-        self.WK = output_c
-        self.WC = input_c
-        self.FH = filter_h
-        self.FW = filter_w
+        self.KernalCount = output_c
+        self.FilterCount = input_c
+        self.FilterHeight = filter_h
+        self.FilterWidth = filter_w
 
-        self.W = np.zeros((self.WK, self.WC, self.FH, self.FW))
-        self.W = np.random.randn(self.WK, self.WC, self.FH, self.FW)
-        self.B = np.zeros((self.WK, 1)) + 0.1
+        self.W = np.zeros((self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth))
+        #self.W = np.random.randn(self.KernalCount, self.FilterCount, self.FH, self.FW)
+        self.B = np.zeros((self.KernalCount, 1))# + 0.1
+
+        self.W_grad = np.zeros(self.W.shape)
+        self.B_grad = np.zeros(self.B.shape)
+
+    def Rotate180(self):
+        self.WT = np.zeros(self.W.shape)
+        for i in range(self.KernalCount):
+            for j in range(self.FilterCount):
+                self.WT[i,j] = np.rot90(self.W[i,j], 2)
+        return self.WT
+
+    def ClearGrads(self):
+        self.W_grad = np.zeros(self.W.shape)
+        self.B_grad = np.zeros(self.B.shape)
+
+    def MeanGrads(self, m):
+        self.W_grad = self.W_grad / m
+        self.B_grad = self.B_grad / m
 
 
 if __name__ == '__main__':
-    wb = ConvWeightsBias(2,3,5,5)
+    wb = ConvWeightsBias(4,2,3,3)
+

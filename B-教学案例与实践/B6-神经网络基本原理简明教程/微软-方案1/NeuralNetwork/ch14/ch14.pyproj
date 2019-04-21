@@ -38,6 +38,9 @@
     <Compile Include="MiniFramework\LossFunction.py" />
     <Compile Include="MiniFramework\NeuralNet.py" />
     <Compile Include="MiniFramework\Parameters.py" />
+    <Compile Include="MiniFramework\PoolingLayer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MnistDataReader.py" />

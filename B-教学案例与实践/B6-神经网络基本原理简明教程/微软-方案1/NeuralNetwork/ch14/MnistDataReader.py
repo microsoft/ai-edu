@@ -121,7 +121,8 @@ class MnistDataReader(DataReader):
         start = iteration * batch_size
         end = start + batch_size
         if self.validation_size == 0:
-            batch_X = self.X[0:self.num_feature, start:end].reshape(self.num_feature, batch_size)
+            #batch_X = self.X[0:self.num_feature, start:end].reshape(self.num_feature, batch_size)
+            batch_X = self.X[0:self.num_feature, start:end].reshape(batch_size, 1, 28, 28)
             batch_Y = self.Y[:, start:end].reshape(-1, batch_size)
         else:
             batch_X = self.XTrainSet[0:self.num_feature, start:end].reshape(self.num_feature, batch_size)

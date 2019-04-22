@@ -6,13 +6,17 @@ import numpy as np
 class CActivator(object):
     # z = 本层的wx+b计算值矩阵
     def forward(self, z):
-        pass
+        return z
 
     # z = 本层的wx+b计算值矩阵
     # a = 本层的激活函数输出值矩阵
     # delta = 上（后）层反传回来的梯度值矩阵
     def backward(self, z, a, delta):
-        pass
+        # da是本激活函数的导数值
+        da = 1
+        # dz是激活函数导数值与传回误差项相计算的结果
+        dz = delta
+        return dz, da
 
 
 # 直传函数，相当于无激活
@@ -45,18 +49,35 @@ class Tanh(CActivator):
         dz = np.multiply(delta, da)
         return dz, da
 
-
+# z为矩阵
 class Relu(CActivator):
+    def __init__(self):
+        self.mem_mask = None
+
     def forward(self, z):
-        a = np.maximum(z, 0)
+        # 简单实现
+        #a = np.maximum(z, 0)
+        #return a
+
+        # 上下文实现
+        # 记录前向的时小于0的位置信息在mask里面
+        self.mem_mask = (z <= 0)
+        a = z.copy()
+        a[self.mem_mask] = 0
         return a
 
     # 注意relu函数判断是否大于1的根据是正向的wx+b=z的值，而不是a值
     def backward(self, z, a, delta):
-        da = np.zeros(z.shape)
-        da[z>0] = 1
-        dz = da * delta
-        return dz, da
+        # 简单实现
+        #da = np.zeros(z.shape)
+        #da[z>0] = 1
+        #dz = da * delta
+        #return dz, da
+
+        # 上下文实现
+        delta[self.mem_mask] = 0    # 直接把正向时小于0的位置置零
+        dz = delta
+        return dz, None # 此处da可以返回self.mem_mask
 
 
 class Softmax(CActivator):

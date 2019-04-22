@@ -3,7 +3,6 @@
 
 
 import numpy as np
-from enum import Enum
 
 from MiniFramework.Layer import *
 from MiniFramework.FCLayer import *
@@ -97,7 +96,6 @@ class NeuralNet(object):
             if loss < self.params.eps:
                 break
             # end if
-            #dataReader.Shuffle()
         # end for
         
     def Test(self, dataReader):

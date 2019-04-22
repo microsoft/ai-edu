@@ -11,19 +11,18 @@ from MiniFramework.WeightsBias import *
 from MiniFramework.Parameters import *
 
 class FcLayer(CLayer):
-    def __init__(self, input_size, output_size, activator):
+    def __init__(self, input_size, output_size, activator, param):
         self.input_size = input_size
         self.output_size = output_size
         self.activator = activator
-
-    def Initialize(self, param):
         self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer_name, param.eta)
         self.weights.Initialize()
 
     def forward(self, input):
         self.input_shape = input.shape
-        if input.ndim == 3: # come from pooling layer
-            self.x = input.reshape(input.size, 1)
+        batch_size = input.shape[0]
+        if input.ndim == 4: # come from pooling layer
+            self.x = input.reshape(-1, batch_size)
         else:
             self.x = input
         self.z = np.dot(self.weights.W, self.x) + self.weights.B

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>TestNumba\test_conv.py</StartupFile>
+    <StartupFile>MnistConv.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,8 +21,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ch14.py" />
-    <Compile Include="MiniFramework.py" />
+    <Compile Include="MnistConv.py" />
+    <Compile Include="MnistFC.py" />
     <Compile Include="MiniFramework\Activators.py" />
     <Compile Include="MiniFramework\ConvWeightsBias.py">
       <SubType>Code</SubType>
@@ -38,6 +38,9 @@
     <Compile Include="MiniFramework\LossFunction.py" />
     <Compile Include="MiniFramework\NeuralNet.py" />
     <Compile Include="MiniFramework\Parameters.py" />
+    <Compile Include="MiniFramework\PoolingLayer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MnistDataReader.py" />

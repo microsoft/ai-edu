@@ -24,18 +24,24 @@ class ConvWeightsBias(WeightsBias):
         self.optimizer_name = optimizer_name
         self.eta = eta
 
-        self.initial_value_filename = str.format("_{0}_{1}_{2}_{3}_{4}_init.npy", 
-                                                 self.KernalCount, 
-                                                 self.FilterCount, 
-                                                 self.FilterHeight, 
-                                                 self.FilterWidth, 
-                                                 self.init_method.name)
-        self.result_value_filename = str.format("_{0}_{1}_{2}_{3}_{4}_result.npy", 
-                                                 self.KernalCount, 
-                                                 self.FilterCount, 
-                                                 self.FilterHeight, 
-                                                 self.FilterWidth, 
-                                                 self.init_method.name)
+        
+        tmp = str.format("_{0}_{1}_{2}_{3}_{4}_init.npy", 
+                        self.KernalCount, 
+                        self.FilterCount, 
+                        self.FilterHeight, 
+                        self.FilterWidth, 
+                        self.init_method.name)
+        self.w_initial_filename = "w" + tmp
+        self.b_initial_filename = "b" + tmp
+
+        tmp = str.format("_{0}_{1}_{2}_{3}_{4}_result.npy", 
+                        self.KernalCount, 
+                        self.FilterCount, 
+                        self.FilterHeight, 
+                        self.FilterWidth, 
+                        self.init_method.name)
+        self.w_result_filename = "w" + tmp
+        self.b_result_filename = "b" + tmp
 
         self.WeightsShape = (self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
 

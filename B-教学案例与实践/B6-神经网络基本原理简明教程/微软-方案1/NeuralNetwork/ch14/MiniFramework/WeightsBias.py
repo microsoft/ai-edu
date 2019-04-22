@@ -19,8 +19,11 @@ class WeightsBias(object):
         self.init_method = init_method
         self.optimizer_name = optimizer_name
         self.eta = eta
-        self.initial_value_filename = str.format("_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
-        self.result_value_filename = str.format("_{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
+
+        self.w_initial_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
+        self.b_initial_filename = str.format("b_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
+        self.w_result_filename = str.format("w_{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
+        self.b_result_filename = str.format("b_{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
 
     def Initialize(self, create_new = False):
         if create_new:
@@ -38,7 +41,7 @@ class WeightsBias(object):
         self.SaveInitialValue()
         
     def LoadExistingParameters(self):
-        w_file = Path(self.initial_value_filename)
+        w_file = Path(self.w_initial_filename)
         if w_file.exists():
             self.LoadInitialValue()
         else:
@@ -60,20 +63,20 @@ class WeightsBias(object):
         self.B = self.oB.update(self.B, self.dB)
 
     def SaveInitialValue(self):
-        np.save("w_" + self.initial_value_filename, self.W)
-        np.save("b_" + self.initial_value_filename, self.B)
+        np.save(self.w_initial_filename, self.W)
+        np.save(self.b_initial_filename, self.B)
 
     def LoadInitialValue(self):
-        self.W = np.load("w_" + self.initial_value_filename)
-        self.B = np.load("b_" + self.initial_value_filename)
+        self.W = np.load(self.w_initial_filename)
+        self.B = np.load(self.b_initial_filename)
 
     def SaveResultValue(self, name):
-        np.save(name + "_w" + self.result_value_filename, self.W)
-        np.save(name + "_b" + self.result_value_filename, self.B)
+        np.save(name + self.w_result_filename, self.W)
+        np.save(name + self.b_result_filename, self.B)
 
     def LoadResultValue(self, name):
-        self.W = np.load(name + "_w" + self.result_value_filename)
-        self.B = np.load(name + "_b" + self.result_value_filename)
+        self.W = np.load(name + self.w_result_filename)
+        self.B = np.load(name + self.b_result_filename)
 
     @staticmethod
     def InitialParameters(num_input, num_output, method):

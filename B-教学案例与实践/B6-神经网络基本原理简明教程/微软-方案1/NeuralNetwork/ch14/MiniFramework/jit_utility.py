@@ -5,6 +5,7 @@
 
 import numpy as np
 import numba as nb
+from numba import float64, int64
 
 # 简单地加了个 jit 后的卷积，用数组运算
 @nb.jit(nopython=True)
@@ -105,7 +106,8 @@ def conv2d(input_array, kernal, bias, output_array):
             target_array = input_array[i_start:i_end, j_start:j_end]
             output_array[i,j] = np.sum(target_array * kernal) + bias
 
-@nb.jit(nopython=True)
+#@nb.jit(nopython=True)
+@nb.jit(float64[:,:,:,:](float64[:,:,:,:],float64[:,:,:,:],float64[:,:],int64,int64,int64))
 def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
     # 输入图片的批大小，通道数，高，宽
     assert(x.ndim == 4)
@@ -193,6 +195,35 @@ def expand_delta_map(dZ, batch_size, input_c, input_h, input_w, output_h, output
         # end bs
     # end else
     return dZ_stride_1
+
+@nb.jit(nopython=True)
+def calcalate_weights_grad(x, dz, batch_size, output_c, input_c, filter_h, filter_w, dW, dB):
+    for bs in range(batch_size):
+        for oc in range(output_c):   # == kernal count
+            for ic in range(input_c):    # == filter count
+                w_grad = np.zeros((filter_h, filter_w))
+                conv2d(x[bs,ic], dz[bs,oc], 0, w_grad)
+                dW[oc,ic] += w_grad
+            #end ic
+            dB[oc] += dz[bs,oc].sum()
+        #end oc
+    #end bs
+    return (dW, dB)
+
+#@nb.jit(nopython=True)
+@nb.jit((float64[:,:,:,:],float64[:,:,:,:],int64,int64,int64,int64,int64,float64[:,:,:,:]))
+def calculate_delta_out(dz, rot_weights, batch_size, num_input_channel, num_output_channel, input_height, input_width, delta_out):
+    for bs in range(batch_size):
+        for oc in range(num_output_channel):    # == kernal count
+            delta_per_input = np.zeros((input_height, input_width))
+            for ic in range(num_input_channel): # == filter count
+                conv2d(dz[bs,oc], rot_weights[oc,ic], 0, delta_per_input)
+                delta_out[bs,ic] += delta_per_input
+            #END IC
+        #end oc
+    #end bs
+    return delta_out
+
 
 #@nb.jit(nopython=True)
 def im2col(input_data, filter_h, filter_w, stride=1, pad=0):

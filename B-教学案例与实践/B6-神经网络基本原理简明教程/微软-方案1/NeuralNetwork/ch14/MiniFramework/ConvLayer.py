@@ -105,36 +105,31 @@ class ConvLayer(CLayer):
     # 用输入数据乘以回传入的误差矩阵,得到卷积核的梯度矩阵
     def _calculate_weightsbias_grad(self, dz):
         self.WeightsBias.ClearGrads()
+        # 先把输入矩阵扩大，周边加0
         (pad_h, pad_w) = calculate_padding_size(self.input_height, self.input_width, dz.shape[2], dz.shape[3], self.filter_height, self.filter_width, 1)
         input_padded = np.pad(self.x, ((0,0),(0,0),(pad_h, pad_h),(pad_w,pad_w)), 'constant')
-        for bs in range(self.batch_size):
-            for oc in range(self.num_output_channel):   # == kernal count
-                for ic in range(self.num_input_channel):    # == filter count
-                    w_grad = np.zeros((self.filter_height, self.filter_width))
-                    conv2d(input_padded[bs,ic], dz[bs,oc], 0, w_grad)
-                    self.WeightsBias.dW[oc,ic] += w_grad
-                #end ic
-                self.WeightsBias.dB[oc] += dz[bs,oc].sum()
-            #end oc
-        #end bs
+        # 输入矩阵与误差矩阵卷积得到权重梯度矩阵
+        (self.WeightsBias.dW, self.WeightsBias.dB) = calcalate_weights_grad(
+                                input_padded, dz, self.batch_size, 
+                                self.num_output_channel, self.num_input_channel, 
+                                self.filter_height, self.filter_width, 
+                                self.WeightsBias.dW, self.WeightsBias.dB)
+
         self.WeightsBias.MeanGrads(self.batch_size)
 
         
     # 用输入误差矩阵乘以（旋转180度后的）卷积核
     def _calculate_delta_out(self, dz, flag):
+        if flag == LayerIndexFlags.FirstLayer:
+            return None
+        # 旋转卷积核180度
+        rot_weights = self.WeightsBias.Rotate180()
         delta_out = np.zeros(self.x.shape)
-        if flag != LayerIndexFlags.FirstLayer:
-            rot_weights = self.WeightsBias.Rotate180()
-            for bs in range(batch_size):
-                for oc in range(self.num_output_channel):    # == kernal count
-                    delta_per_input = np.zeros((self.input_height, self.input_width))
-                    for ic in range(self.num_input_channel): # == filter count
-                        conv2d(dz[bs,oc], rot_weights[oc,ic], 0, delta_per_input)
-                        delta_out[bs,ic] += delta_per_input
-                    #END IC
-                #end oc
-            #end bs
-        # end if
+        # 输入梯度矩阵卷积旋转后的卷积核，得到输出梯度矩阵
+        delta_out = calculate_delta_out(dz, rot_weights, self.batch_size, 
+                            self.num_input_channel, self.num_output_channel, 
+                            self.input_height, self.input_width, delta_out)
+
         return delta_out
 
     def pre_update(self):

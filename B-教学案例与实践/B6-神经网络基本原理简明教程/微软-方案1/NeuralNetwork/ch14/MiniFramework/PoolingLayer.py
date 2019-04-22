@@ -53,25 +53,6 @@ class PoolingLayer(CLayer):
         delta_out = max_pool_backward(self.x, delta_in, self.batch_size, self.num_input_channel, self.output_height, self.output_width, self.pool_height, self.pool_width, self.stride)
         return delta_out
 
-        """
-        delta_out = np.zeros(self.x.shape)
-     
-        for b in range(self.batch_size):
-            for c in range(self.num_input_channel):
-                for i in range(self.output_height):
-                    i_start = i * self.stride
-                    i_end = i_start + self.pool_height
-                    for j in range(self.output_width):
-                        j_start = j * self.stride
-                        j_end = j_start + self.pool_width
-                        if self.pooling_type == PoolingTypes.MAX:
-                            m,n = PoolingLayer.get_max_index(self.x[b,c], i_start, i_end, j_start, j_end)
-                            delta_out[b,c,m,n] = delta_in[b,c,i,j]
-                        else: 
-                            delta_out[b,c,i_start:i_end, j_start:j_end] = delta_in[b,c,i,j] / self.pool_size
-        """
-        
-
     def save_parameters(self, name):
         np.save(name + "_type", self.pooling_type)
 

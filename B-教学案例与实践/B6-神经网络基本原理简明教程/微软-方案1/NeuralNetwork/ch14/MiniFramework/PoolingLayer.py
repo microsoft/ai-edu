@@ -77,18 +77,5 @@ class PoolingLayer(CLayer):
 
     def load_parameters(self, name):
         self.mode = np.load(name+"_type.npy")
-    
-    @staticmethod
-    def get_max_index(input, i_start, i_end, j_start, j_end):
-        assert(input.ndim == 2)
-        max_i = i_start
-        max_j = j_start
-        max_value = input[i_start,j_start]
-        for i in range(i_start,i_end):
-            for j in range(j_start,j_end):
-                if input[i,j] > max_value:
-                    max_value = input[i,j]
-                    max_i, max_j = i, j
 
-        return max_i, max_j
 

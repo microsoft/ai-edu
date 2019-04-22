@@ -227,3 +227,32 @@ def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
         #end for
     #end for
     return img[:, :, pad:H + pad, pad:W + pad]
+
+if __name__ == '__main__':
+
+    x = np.array([1,1,1,2,2,2,3,3,3,
+                  3,3,3,2,2,2,1,1,1,
+                  1,1,1,2,2,2,3,3,3,
+                  3,3,3,2,2,2,1,1,1,
+                  1,1,1,2,2,2,3,3,3,
+                  3,3,3,2,2,2,1,1,1]).reshape(2,3,3,3)
+    print(x)
+    f = np.array([1,1,1,1,
+                  2,2,2,2,
+                  3,3,3,3,
+                  3,3,3,3,
+                  2,2,2,2,
+                  1,1,1,1]).reshape(2,3,2,2)
+    print(f)
+    stride=1
+    padding=0
+    bias=np.zeros((f.shape[0],1))
+    (out_h, out_w) = calculate_output_size(x.shape[2], x.shape[3], f.shape[2], f.shape[3], padding, stride)
+    z = jit_conv_4d(x, f, bias, out_h, out_w, stride=1)
+    print("------------------")
+    print(z)
+    print(z.shape)
+
+
+    a= max_pool_forward(z, 2, 2, 1, 1, 2, 2, 2)
+    print(a)

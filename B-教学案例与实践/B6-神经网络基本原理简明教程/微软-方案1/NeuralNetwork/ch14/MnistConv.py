@@ -30,7 +30,7 @@ def LoadData(num_output):
 
 def Test(dataReader, model):
     correct = 0
-    test_batch = 2
+    test_batch = 10
     max_iteration = dataReader.num_test//test_batch
     for i in range(max_iteration):
         x, y = dataReader.GetBatchTestSamples(test_batch, i)
@@ -43,11 +43,11 @@ def Test(dataReader, model):
 
 class Model(object):
     def __init__(self, param):
-        self.c1 = ConvLayer((1,28,28), (4,5,5), (1,0), Sigmoid(), param)
+        self.c1 = ConvLayer((1,28,28), (4,5,5), (1,0), Relu(), param)
         # 4x24x24
         self.p1 = PoolingLayer(self.c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
         # 4x12x12
-        self.f1 = FcLayer(self.p1.output_size, 32, Sigmoid(), param)
+        self.f1 = FcLayer(self.p1.output_size, 32, Relu(), param)
         self.f2 = FcLayer(self.f1.output_size, 10, Softmax(), param)
 
     def forward(self, x):
@@ -82,14 +82,13 @@ class Model(object):
         self.f1.load_parameters("f1")
         self.f2.load_parameters("f2")
 
-
 if __name__ == '__main__':
 
     num_output = 10
     dataReader = LoadData(num_output)
     max_epoch = 1
-    batch_size = 1
-    eta = 0.1
+    batch_size = 20
+    eta = 0.02
     eps = 0.01
     max_iteration = dataReader.num_example // batch_size
     params = CParameters(eta, max_epoch, batch_size, eps,
@@ -97,14 +96,13 @@ if __name__ == '__main__':
                     InitialMethod.Xavier, 
                     OptimizerName.SGD)
     model = Model(params)
-    
+    """
     model.load()
     print("testing...")
     c,n = Test(dataReader, model)
     print(str.format("rate={0} / {1} = {2}", c, n, c/n))
-    
     exit()
-
+    """
     loss = 0 
     lossFunc = CLossFunction(LossFunctionName.CrossEntropy3)
 

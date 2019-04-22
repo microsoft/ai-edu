@@ -30,6 +30,7 @@ class ConvLayer(CLayer):
         self.activator = activator
 
         self.WeightsBias = ConvWeightsBias(self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width, param.init_method, param.optimizer_name, param.eta)
+        self.WeightsBias.Initialize()
         (self.output_height, self.output_width) = calculate_output_size(
             self.input_height, self.input_width, 
             self.filter_height, self.filter_width, 
@@ -111,9 +112,9 @@ class ConvLayer(CLayer):
                 for ic in range(self.num_input_channel):    # == filter count
                     w_grad = np.zeros((self.filter_height, self.filter_width))
                     conv2d(input_padded[bs,ic], dz[bs,oc], 0, w_grad)
-                    self.WeightsBias.W_grad[oc,ic] += w_grad
+                    self.WeightsBias.dW[oc,ic] += w_grad
                 #end ic
-                self.WeightsBias.B_grad[oc] += dz[bs,oc].sum()
+                self.WeightsBias.dB[oc] += dz[bs,oc].sum()
             #end oc
         #end bs
         self.WeightsBias.MeanGrads(self.batch_size)
@@ -143,10 +144,10 @@ class ConvLayer(CLayer):
         self.WeightsBias.Update()
         
     def save_parameters(self, name):
-        self.WeightsBias.Save(name)
+        self.WeightsBias.SaveResultValue(name)
 
     def load_parameters(self, name):
-        self.WeightsBias.Load(name)
+        self.WeightsBias.LoadResultValue(name)
 
 #end class
 

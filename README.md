@@ -100,6 +100,7 @@
    - [微软LightGBM（Light Gradient Boosting Machine）GitHub Repo](https://github.com/Microsoft/LightGBM)
    - [微软Graph Engine GitHub Repo](https://github.com/Microsoft/GraphEngine)
    - [微软Distributed Machine Learning Toolkit GitHub Repo](https://github.com/Microsoft/DMTK)
+   - [微软NLP深度学习工具包 NeuronBlocks GitHub Repo](https://github.com/Microsoft/NeuronBlocks)
   
 - [D:答疑与交流](./D-答疑与交流)
   

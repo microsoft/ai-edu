@@ -19,33 +19,36 @@ class WeightsBias(object):
         self.init_method = init_method
         self.optimizer_name = optimizer_name
         self.eta = eta
-        self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
-        self.result_value_filename = str.format("{0}_{1}_{2}_result", self.num_output, self.num_input, self.init_method.name)
+
+        self.w_initial_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
+        self.b_initial_filename = str.format("b_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
+        self.w_result_filename = str.format("w_{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
+        self.b_result_filename = str.format("b_{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
 
     def Initialize(self, create_new = False):
         if create_new:
-            self.__CreateNew()
+            self.CreateNew()
         else:
-            self.__LoadExistingParameters()
+            self.LoadExistingParameters()
         # end if
-        self.__CreateOptimizers()
+        self.CreateOptimizers()
 
         self.dW = np.zeros(self.W.shape)
         self.dB = np.zeros(self.B.shape)
 
-    def __CreateNew(self):
+    def CreateNew(self):
         self.W, self.B = WeightsBias.InitialParameters(self.num_input, self.num_output, self.init_method)
-        self.__SaveInitialValue()
+        self.SaveInitialValue()
         
-    def __LoadExistingParameters(self):
-        w_file = Path(self.initial_value_filename)
+    def LoadExistingParameters(self):
+        w_file = Path(self.w_initial_filename)
         if w_file.exists():
-            self.__LoadInitialValue()
+            self.LoadInitialValue()
         else:
-            self.__CreateNew()
+            self.CreateNew()
         # end if
 
-    def __CreateOptimizers(self):
+    def CreateOptimizers(self):
         self.oW = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
         self.oB = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
 
@@ -59,20 +62,21 @@ class WeightsBias(object):
         self.W = self.oW.update(self.W, self.dW)
         self.B = self.oB.update(self.B, self.dB)
 
-    def __SaveInitialValue(self):
-        np.save(self.initial_value_filename, self.W)
+    def SaveInitialValue(self):
+        np.save(self.w_initial_filename, self.W)
+        np.save(self.b_initial_filename, self.B)
 
-    def __LoadInitialValue(self):
-        self.W = np.load(self.initial_value_filename)
-        self.B = np.zeros((self.num_output, 1))
+    def LoadInitialValue(self):
+        self.W = np.load(self.w_initial_filename)
+        self.B = np.load(self.b_initial_filename)
 
     def SaveResultValue(self, name):
-        np.save(name + "_w_" + self.result_value_filename + ".npy", self.W)
-        np.save(name + "_b_" + self.result_value_filename + ".npy", self.B)
+        np.save(name + self.w_result_filename, self.W)
+        np.save(name + self.b_result_filename, self.B)
 
     def LoadResultValue(self, name):
-        self.W = np.load(name + "_w_" + self.result_value_filename + ".npy")
-        self.B = np.load(name + "_b_" + self.result_value_filename + ".npy")
+        self.W = np.load(name + self.w_result_filename)
+        self.B = np.load(name + self.b_result_filename)
 
     @staticmethod
     def InitialParameters(num_input, num_output, method):

@@ -22,7 +22,7 @@ class FcLayer(CLayer):
         self.input_shape = input.shape
         batch_size = input.shape[0]
         if input.ndim == 4: # come from pooling layer
-            self.x = input.reshape(-1, batch_size)
+            self.x = input.reshape(batch_size,-1).T
         else:
             self.x = input
         self.z = np.dot(self.weights.W, self.x) + self.weights.B

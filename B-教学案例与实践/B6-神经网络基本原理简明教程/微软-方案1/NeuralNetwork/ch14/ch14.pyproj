@@ -22,7 +22,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MnistConv.py" />
-    <Compile Include="MnistFC.py" />
     <Compile Include="MiniFramework\Activators.py" />
     <Compile Include="MiniFramework\ConvWeightsBias.py">
       <SubType>Code</SubType>
@@ -43,7 +42,7 @@
     </Compile>
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="MiniFramework\__init__.py" />
-    <Compile Include="MnistDataReader.py" />
+    <Compile Include="MnistImageReader.py" />
     <Compile Include="TestNumba\test_conv.py">
       <SubType>Code</SubType>
     </Compile>

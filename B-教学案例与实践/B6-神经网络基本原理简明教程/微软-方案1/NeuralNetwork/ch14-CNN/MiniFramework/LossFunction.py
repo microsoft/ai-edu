@@ -6,14 +6,15 @@ import matplotlib.pyplot as plt
 from enum import Enum
 
 class CTrace(object):
-    def __init__(self, loss, epoch, iteration):
+    def __init__(self, loss, epoch, iteration, accuracy):
         self.loss = loss
         self.epoch = epoch
         self.iteration = iteration
+        self.accuracy = accuracy
     # end def
 
     def toString(self):
-        info = str.format("epc={0},ite={1},los={2:.4f}", self.epoch, self.iteration, self.loss)
+        info = str.format("epc={0},ite={1},los={2:.4f},acy={2:.4f}", self.epoch, self.iteration, self.loss, self.accuracy)
         return info
 
 # end class
@@ -23,14 +24,16 @@ class CLossHistory(object):
     def __init__(self):
         # loss history
         self.loss_history = []
+        self.accuracy_history = []
         self.min_loss_index = -1
         # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
-        self.min_trace = CTrace(100000, -1, -1)
+        self.min_trace = CTrace(100000, -1, -1, -1)
 
-    def AddLossHistory(self, loss, epoch, iteration):
+    def AddLossHistory(self, loss, epoch, iteration, accuracy):
         self.loss_history.append(loss)
+        self.accuracy_history.append(accuracy)
         if loss < self.min_trace.loss:
-            self.min_trace = CTrace(loss, epoch, iteration)
+            self.min_trace = CTrace(loss, epoch, iteration, accuracy)
             self.minimal_loss_index = len(self.loss_history) - 1
             return True
         # end if
@@ -39,9 +42,10 @@ class CLossHistory(object):
     # 图形显示损失函数值历史记录
     def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
         plt.plot(self.loss_history)
+        plt.plot(self.accuracy_history)
         title = self.min_trace.toString() + "," + params.toString()
         plt.title(title)
-        plt.xlabel("epoch")
+        plt.xlabel("iteration")
         plt.ylabel("loss")
         if xmin != None and ymin != None:
             plt.axis([xmin, xmax, ymin, ymax])

@@ -20,10 +20,10 @@ class WeightsBias(object):
         self.optimizer_name = optimizer_name
         self.eta = eta
 
-        self.w_initial_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
-        self.b_initial_filename = str.format("b_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
-        self.w_result_filename = str.format("w_{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
-        self.b_result_filename = str.format("b_{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
+        self.w_initial_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_input, self.num_output, self.init_method.name)
+        self.b_initial_filename = str.format("b_{0}_{1}_{2}_init.npy", self.num_input, self.num_output, self.init_method.name)
+        self.w_result_filename = str.format("w_{0}_{1}_{2}_result.npy", self.num_input, self.num_output, self.init_method.name)
+        self.b_result_filename = str.format("b_{0}_{1}_{2}_result.npy", self.num_input, self.num_output, self.init_method.name)
 
     def Initialize(self, create_new = False):
         if create_new:

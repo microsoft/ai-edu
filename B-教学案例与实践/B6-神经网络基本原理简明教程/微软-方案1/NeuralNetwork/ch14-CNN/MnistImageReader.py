@@ -33,8 +33,9 @@ class MnistImageReader(DataReader):
         self.num_example = 0
         self.num_feature = 0
         self.num_category = 0
-        self.validation_size = 0
+        self.num_validation = 0
         self.num_test = 0
+        self.num_train = 0
 
     def ReadData(self):
         self.XTrainRaw = self.__ReadImageFile(self.train_image_file)
@@ -44,8 +45,11 @@ class MnistImageReader(DataReader):
         self.num_example = self.XTrainRaw.shape[0]
         self.num_category = len(np.unique(self.YTrainRaw))
         self.num_test = self.XTestRaw.shape[0]
+        self.num_train = self.num_example
+        self.num_validation = 0
 
-    # output array: 768 x num_images
+    # output array: num_images * channel * 28 * 28
+    # due to gray image instead of color, so channel = 1
     def __ReadImageFile(self, image_file_name):
         # header
         f = open(image_file_name, "rb")
@@ -116,21 +120,37 @@ class MnistImageReader(DataReader):
 
     # need explicitly call this function to generate validation set
     def GenerateDevSet(self, k = 10):
-        self.validation_size = (int)(self.num_example / k)
-        self.XDevSet = self.X[0:validation_size]
-        self.XTrainSet = self.X[validation_size:]
-        self.YDevSet = self.Y[:,0:validation_size]
-        self.YTrainSet = self.X[:,validation_size:]
+        self.num_validation = (int)(self.num_example / k)
+        # dev set
+        self.XDevSet = self.X[0:self.num_validation]
+        self.YDevSet = self.Y[:,0:self.num_validation]
+        # train set
+        self.XTrainSet = self.X[self.num_validation:]
+        self.YTrainSet = self.Y[:,self.num_validation:]
+        
+        self.num_train = self.num_example - self.num_validation
 
-    def GetBatchSamples(self, batch_size, iteration):
+    def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        if self.validation_size == 0:
+        if self.num_validation == 0:
             batch_X = self.X[start:end]
-            batch_Y = self.Y[:, start:end].reshape(-1, batch_size)
+            batch_Y = self.Y[:, start:end]
         else:
-            batch_X = self.XTrainSet[0:self.num_feature, start:end].reshape(self.num_feature, batch_size)
-            batch_Y = self.YTrainSet[:, start:end].reshape(-1, batch_size)
+            batch_X = self.XTrainSet[start:end]
+            batch_Y = self.YTrainSet[:, start:end]
+        return batch_X, batch_Y
+
+    # recommend not use this function in DeepLearning
+    def GetBatchValidationSamples(self, batch_size, iteration):
+        start = iteration * batch_size
+        end = start + batch_size
+        if self.num_validation == 0:
+            batch_X = self.X[start:end]
+            batch_Y = self.Y[:, start:end]
+        else:
+            batch_X = self.XDevSet[start:end]
+            batch_Y = self.YDevSet[:, start:end]
         return batch_X, batch_Y
 
     def GetBatchTestSamples(self, batch_size, iteration):
@@ -140,16 +160,26 @@ class MnistImageReader(DataReader):
         batch_Y = self.YTestSet[start:end]
         return batch_X, batch_Y
 
-
-        # permutation only affect along the first axis, so we need transpose the array first
+    # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format
+    # suggest to call this function for each epoch
     def Shuffle(self):
-        seed = np.random.randint(0,100)
-        np.random.seed(seed)
-        XP = np.random.permutation(self.X.T)
-        np.random.seed(seed)
-        YP = np.random.permutation(self.Y.T)
-        self.X = XP.T
-        self.Y = YP.T
-        return self.X, self.Y
+        if self.num_validation == 0:
+            seed = np.random.randint(0,100)
+            np.random.seed(seed)
+            XP = np.random.permutation(self.X.T)
+            np.random.seed(seed)
+            YP = np.random.permutation(self.Y.T)
+            self.X = XP.T
+            self.Y = YP.T
+            return self.X, self.Y
+        else:
+            seed = np.random.randint(0,100)
+            np.random.seed(seed)
+            XP = np.random.permutation(self.XTrainSet.T)
+            np.random.seed(seed)
+            YP = np.random.permutation(self.YTrainSet.T)
+            self.XTrainSet = XP.T
+            self.YTrainSet = YP.T
+            return self.XTrainSet, self.YTrainSet
 

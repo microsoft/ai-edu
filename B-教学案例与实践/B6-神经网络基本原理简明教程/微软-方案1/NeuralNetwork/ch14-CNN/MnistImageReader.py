@@ -103,10 +103,10 @@ class MnistImageReader(DataReader):
 
     def ToOneHot(self, dataSet):
         num = dataSet.shape[0]
-        Y = np.zeros((self.num_category, num))
+        Y = np.zeros((num, self.num_category))
         for i in range(num):
             n = (int)(dataSet[i])
-            Y[n,i] = 1
+            Y[i,n] = 1
             # end if
         # end for
         return Y
@@ -123,10 +123,10 @@ class MnistImageReader(DataReader):
         self.num_validation = (int)(self.num_example / k)
         # dev set
         self.XDevSet = self.X[0:self.num_validation]
-        self.YDevSet = self.Y[:,0:self.num_validation]
+        self.YDevSet = self.Y[0:self.num_validation]
         # train set
         self.XTrainSet = self.X[self.num_validation:]
-        self.YTrainSet = self.Y[:,self.num_validation:]
+        self.YTrainSet = self.Y[self.num_validation:]
         
         self.num_train = self.num_example - self.num_validation
 
@@ -135,11 +135,11 @@ class MnistImageReader(DataReader):
         end = start + batch_size
         if self.num_validation == 0:
             batch_X = self.X[start:end]
-            batch_Y = self.Y[:, start:end]
+            batch_Y = self.Y[start:end]
         else:
             batch_X = self.XTrainSet[start:end]
-            batch_Y = self.YTrainSet[:, start:end]
-        return batch_X, batch_Y
+            batch_Y = self.YTrainSet[start:end]
+        return batch_X, batch_Y.T
 
     # recommend not use this function in DeepLearning
     def GetBatchValidationSamples(self, batch_size, iteration):
@@ -147,11 +147,11 @@ class MnistImageReader(DataReader):
         end = start + batch_size
         if self.num_validation == 0:
             batch_X = self.X[start:end]
-            batch_Y = self.Y[:, start:end]
+            batch_Y = self.Y[start:end]
         else:
             batch_X = self.XDevSet[start:end]
-            batch_Y = self.YDevSet[:, start:end]
-        return batch_X, batch_Y
+            batch_Y = self.YDevSet[start:end]
+        return batch_X, batch_Y.T
 
     def GetBatchTestSamples(self, batch_size, iteration):
         start = iteration * batch_size
@@ -167,19 +167,19 @@ class MnistImageReader(DataReader):
         if self.num_validation == 0:
             seed = np.random.randint(0,100)
             np.random.seed(seed)
-            XP = np.random.permutation(self.X.T)
+            XP = np.random.permutation(self.X)
             np.random.seed(seed)
-            YP = np.random.permutation(self.Y.T)
-            self.X = XP.T
-            self.Y = YP.T
+            YP = np.random.permutation(self.Y)
+            self.X = XP
+            self.Y = YP
             return self.X, self.Y
         else:
             seed = np.random.randint(0,100)
             np.random.seed(seed)
-            XP = np.random.permutation(self.XTrainSet.T)
+            XP = np.random.permutation(self.XTrainSet)
             np.random.seed(seed)
-            YP = np.random.permutation(self.YTrainSet.T)
-            self.XTrainSet = XP.T
-            self.YTrainSet = YP.T
+            YP = np.random.permutation(self.YTrainSet)
+            self.XTrainSet = XP
+            self.YTrainSet = YP
             return self.XTrainSet, self.YTrainSet
 

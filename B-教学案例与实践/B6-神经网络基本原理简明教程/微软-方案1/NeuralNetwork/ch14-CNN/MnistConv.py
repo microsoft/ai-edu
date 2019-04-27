@@ -27,12 +27,12 @@ def LoadData(num_output):
     mdr.ReadData()
     mdr.Normalize()
     mdr.Shuffle()
-    mdr.GenerateDevSet()
+    mdr.GenerateDevSet(12)
     return mdr
 
 def Test(dataReader, model):
     correct = 0
-    test_batch = 5
+    test_batch = 1000
     max_iteration = dataReader.num_test//test_batch
     for i in range(max_iteration):
         x, y = dataReader.GetBatchTestSamples(test_batch, i)
@@ -41,23 +41,36 @@ def Test(dataReader, model):
     #end for
     return correct, dataReader.num_test
 
-def Validate(dataReader, model):
-    correct = 0
-    val_batch = 5
-    max_iteration = dataReader.num_validation//val_batch
-    for i in range(max_iteration):
-        x, y = dataReader.GetBatchValidationSamples(val_batch, i)
-        model.forward(x)
-        correct += CalAccuracy(model.output, y, None)
+def CheckErrorAndLoss(dataReader, model, lossFunc, batch_x, batch_y, loss_history, epoch, iteration):
+    
+    loss_train = lossFunc.CheckLoss(batch_y, model.output)
+    accuracy_train = CalAccuracy(model.output, batch_y, None) / batch_y.shape[1]
+    
+    model.forward(dataReader.XDevSet)
+    loss_val = lossFunc.CheckLoss(dataReader.YDevSet.T, model.output)
+    y = dataReader.YDevSet.T
+    accuracy_val = CalAccuracy(model.output, y, None) / y.shape[1]
+    
+    loss_history.Add(epoch, iteration, loss_train, accuracy_train, loss_val, accuracy_val)
+    print("epoch=%d, iteration=%d" %(epoch, iteration))
+    print("loss_train=%.3f, accuracy_train=%f" %(loss_train, accuracy_train))
+    print("loss_valid=%.3f, accuracy_valid=%f" %(loss_val, accuracy_val))
+
+    #val_batch = 5
+    #max_iteration = dataReader.num_validation//val_batch
+    #for i in range(max_iteration):
+        #x, y = dataReader.GetBatchValidationSamples(val_batch, i)
+        #model.forward(x)
+        #correct += CalAccuracy(model.output, y, None)
     #end for
-    return correct, dataReader.num_validation
+    return
 
 def CalAccuracy(a, y_onehot, y_label):
-    ra = np.argmax(a, axis=0)
+    ra = np.argmax(a, axis=0).reshape(-1,1)
     if y_onehot is None:
         ry = y_label
     elif y_label is None:
-        ry = np.argmax(y_onehot, axis=0)
+        ry = np.argmax(y_onehot, axis=0).reshape(-1,1)
     r = (ra == ry)
     correct = r.sum()
     return correct
@@ -122,8 +135,8 @@ def train():
     num_output = 10
     dataReader = LoadData(num_output)
 
-    max_epoch = 1
-    batch_size = 5
+    max_epoch = 5
+    batch_size = 50
     eta = 0.01
     eps = 0.01
     max_iteration = dataReader.num_train // batch_size
@@ -154,7 +167,6 @@ def train():
     #max_iteration = 1000
     for epoch in range(max_epoch):
         print(epoch)
-        #dataReader.Shuffle()
         for iteration in range(max_iteration):
             #t0 = time.time()
             batch_x, batch_y = dataReader.GetBatchTrainSamples(batch_size, iteration)
@@ -177,17 +189,11 @@ def train():
             """
             # calculate loss
             if iteration % 100 == 0:
-                loss = lossFunc.CheckLoss(batch_y, model.output)
-                accuracy = CalAccuracy(model.output, batch_y, None)
-                loss_history.AddLossHistory(loss, epoch, iteration, accuracy)
-                print("epoch=%d, iteration=%d, loss=%f, accuracy=%f" %(epoch, iteration * batch_size, loss, accuracy))
+                CheckErrorAndLoss(dataReader, model, lossFunc, batch_x, batch_y, loss_history, epoch, iteration*batch_size)
             # end if
         # end for
         model.save()
-        c,n = Validate(dataReader, model)
-        print(str.format("rate={0} / {1} = {2}", c, n, c / n))
         dataReader.Shuffle()
-        dataReader.GenerateDevSet()
         
     
     t1 = time.time()

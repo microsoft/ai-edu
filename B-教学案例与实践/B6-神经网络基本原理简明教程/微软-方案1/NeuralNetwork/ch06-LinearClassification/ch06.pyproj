@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_ShowMultipleResult.py</StartupFile>
+    <StartupFile>Level6_MultipleClassification.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,8 +23,15 @@
   <ItemGroup>
     <Compile Include="Level0_BaseClassification.py" />
     <Compile Include="Level2_ShowBinaryResult.py" />
-    <Compile Include="Level4_ShowMultipleResult.py" />
-    <Compile Include="Level3_MultipleClassification.py" />
+    <Compile Include="Level5_LogicAndGate.py" />
+    <Compile Include="Level5_LogicGateBase.py" />
+    <Compile Include="Level5_LogicNandGate.py" />
+    <Compile Include="Level5_LogicNorGate.py" />
+    <Compile Include="Level5_LogicOrGate.py" />
+    <Compile Include="Level4_TanhAsBinaryClassifier.py" />
+    <Compile Include="Level4_TanhWithCrossEntropy_Curve.py" />
+    <Compile Include="Level7_ShowMultipleResult.py" />
+    <Compile Include="Level6_MultipleClassification.py" />
     <Compile Include="Level1_BinaryClassification.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

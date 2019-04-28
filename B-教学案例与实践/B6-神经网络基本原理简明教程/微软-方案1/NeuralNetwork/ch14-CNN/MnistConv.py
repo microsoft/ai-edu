@@ -145,9 +145,9 @@ def train():
                     InitialMethod.Xavier, 
                     OptimizerName.SGD)
     model = Model(params)
-    """
-    model.load()
     
+    model.load()
+    """
     print("testing...")
     c,n = Test(dataReader, model)
     print(str.format("rate={0} / {1} = {2}", c, n, c/n))

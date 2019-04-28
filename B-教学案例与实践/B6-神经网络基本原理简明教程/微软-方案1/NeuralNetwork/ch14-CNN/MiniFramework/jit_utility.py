@@ -225,6 +225,29 @@ def calculate_delta_out(dz, rot_weights, batch_size, num_input_channel, num_outp
     return delta_out
 
 
+def im2col2(input_data, filter_h, filter_w, stride=1, pad=0):
+    N, C, H, W = input_data.shape
+    out_h = (H + 2*pad - filter_h)//stride + 1
+    out_w = (W + 2*pad - filter_w)//stride + 1
+    img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
+    img = input_data
+    col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
+    col = im2col3(img, col, N, filter_h, filter_w, out_h, out_w, stride)
+    col = col.transpose(0, 4, 5, 1, 2, 3).reshape(N*out_h*out_w, -1)
+    return col
+
+@nb.jit(nopython=True)
+def im2col3(img, col, N, filter_h, filter_w, out_h, out_w, stride):
+    for i in range(filter_h):
+        i_max = i + stride*out_h
+        for j in range(filter_w):
+            j_max = j + stride*out_w
+            col[:, :, i, j, :, :] = img[:, :, i:i_max:stride, j:j_max:stride]
+        #end for
+    #end for
+    return col
+
+
 #@nb.jit(nopython=True)
 def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
     N, C, H, W = input_data.shape

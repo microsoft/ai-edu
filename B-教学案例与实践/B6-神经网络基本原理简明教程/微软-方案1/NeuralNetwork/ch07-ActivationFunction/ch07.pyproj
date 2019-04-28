@@ -4,7 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d6d2a726-eb70-4989-b823-7e7373df1b43</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_TanhAsBinaryClassifier.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,13 +22,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level4_LogicNandGate.py" />
-    <Compile Include="Level4_LogicGateBase.py" />
-    <Compile Include="Level4_LogicAndGate.py" />
-    <Compile Include="Level4_LogicNorGate.py" />
-    <Compile Include="Level4_LogicOrGate.py" />
-    <Compile Include="Level1_DrawActivators.py" />
-    <Compile Include="Level2_DrawActivators.py">
+    <Compile Include="Level1_DrawActivators1.py" />
+    <Compile Include="Level2_DrawActivators2.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Activators\Elu.py" />
@@ -41,10 +37,6 @@
     <Compile Include="Activators\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level3_TanhWithCrossEntropy_Curve.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level3_TanhAsBinaryClassifier.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Activators\" />

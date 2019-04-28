@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Level4_LogicGateBase import *
+from Level5_LogicGateBase import *
 
 # x1=0,x2=0,y=0
 # x1=0,x2=1,y=1

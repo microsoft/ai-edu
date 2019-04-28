@@ -74,7 +74,7 @@
   - [自构建－AI游戏开发案例－黄金点游戏](./B-教学案例与实践/B8-自构建－AI游戏开发案例－黄金点游戏/README.md) 
   - [自构建－图像识别应用案例-手写算式计算器](./B-教学案例与实践/B9-自构建－图像识别应用案例-手写算式计算器/README.md)
   - [扩展阅读－机器学习平台建设](./B-教学案例与实践/B10-扩展阅读－机器学习平台建设/readme.md) 
-  - [清华大学网络产品案例分析与设计展示](./B-教学案例与实践/清华大学网络产品案例分析与设计展示/README.md) 
+  - [清华大学网络产品案例分析与设计展示](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/清华大学网络产品案例分析与设计展示) 
   - [复旦大学城市声音分类及图像超分辨率案例](./B-教学案例与实践/复旦大学城市声音分类-图像超分辨率/README.md) 
   - [东北大学视频见解应用案例之视频标签提取](./B-教学案例与实践/东北大学视频见解应用案例之视频标签提取/README.md) 
   - [大连理工网络安全案例教程](./B-教学案例与实践/大连理工基础案例教程/README.md)
@@ -101,6 +101,7 @@
    - [微软Graph Engine GitHub Repo](https://github.com/Microsoft/GraphEngine)
    - [微软Distributed Machine Learning Toolkit GitHub Repo](https://github.com/Microsoft/DMTK)
    - [微软NLP深度学习工具包 NeuronBlocks GitHub Repo](https://github.com/Microsoft/NeuronBlocks)
+   - [北航VisualPytorch工具(通过拖拽组件来生成Pytorch代码)](https://github.com/Microsoft/ai-edu/tree/master/C-开发工具与环境/北航19软件工程VisualPytorch)
   
 - [D:答疑与交流](./D-答疑与交流)
   

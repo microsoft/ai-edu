@@ -27,7 +27,7 @@ class WeightsBias(object):
 
     def Initialize(self, create_new = False):
         if create_new:
-            self.CreateNew()
+            self.__CreateNew()
         else:
             self.LoadExistingParameters()
         # end if

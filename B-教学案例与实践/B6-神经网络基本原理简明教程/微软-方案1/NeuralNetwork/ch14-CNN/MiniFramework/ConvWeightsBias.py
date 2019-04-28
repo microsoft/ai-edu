@@ -23,7 +23,6 @@ class ConvWeightsBias(WeightsBias):
         self.init_method = init_method
         self.optimizer_name = optimizer_name
         self.eta = eta
-
         
         tmp = str.format("_{0}_{1}_{2}_{3}_{4}_init.npy", 
                         self.KernalCount, 
@@ -42,8 +41,17 @@ class ConvWeightsBias(WeightsBias):
                         self.init_method.name)
         self.w_result_filename = "w" + tmp
         self.b_result_filename = "b" + tmp
-
         self.WeightsShape = (self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
+
+    def Initialize(self, create_new = False):
+        if create_new:
+            self.CreateNew()
+        else:
+            self.LoadExistingParameters()
+
+        self.__CreateOptimizers()
+        self.dW = np.zeros(self.W.shape)
+        self.dB = np.zeros(self.B.shape)
 
     def CreateNew(self):
         self.W = ConvWeightsBias.InitialConvParameters(self.WeightsShape, self.init_method)
@@ -66,12 +74,18 @@ class ConvWeightsBias(WeightsBias):
         self.dB = self.dB / m
 
     def Update(self):
-        self.W = self.W - self.eta * self.dW
-        self.B = self.B - self.eta * self.dB
+#        self.W = self.W - self.eta * self.dW
+#        self.B = self.B - self.eta * self.dB
+        self.W = self.oW.update(self.W, self.dW)
+        self.B = self.oB.update(self.B, self.dB)
+
+
+    def __CreateOptimizers(self):
+        self.oW = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oB = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
 
     @staticmethod
     def InitialConvParameters(shape, method):
-        
         assert(len(shape) == 4)
         num_input = shape[2]
         num_output = shape[3]

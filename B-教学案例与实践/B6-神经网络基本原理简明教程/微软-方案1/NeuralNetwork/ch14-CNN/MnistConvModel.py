@@ -77,7 +77,7 @@ def CalAccuracy(a, y_onehot, y_label):
 
 class Model(object):
     def __init__(self, param):
-        self.c1 = ConvLayer((1,28,28), (4,5,5), (1,0), Relu(), param)
+        self.c1 = ConvLayer((1,28,28), (4,3,3), (2,2), Relu(), param)
         # 4x24x24
         self.p1 = PoolingLayer(self.c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
         # 4x12x12
@@ -108,7 +108,7 @@ class Model(object):
         delta = self.p1.backward(delta, LayerIndexFlags.MiddleLayer)
         delta = self.c1.backward(delta, LayerIndexFlags.FirstLayer)
 
-    def update(self, learning_rate):
+    def update(self):
         self.c1.update()
         #self.c2.update()
         self.f1.update()
@@ -145,9 +145,9 @@ def train():
                     InitialMethod.Xavier, 
                     OptimizerName.SGD)
     model = Model(params)
-    
-    model.load()
     """
+    model.load()
+    
     print("testing...")
     c,n = Test(dataReader, model)
     print(str.format("rate={0} / {1} = {2}", c, n, c/n))
@@ -157,10 +157,6 @@ def train():
     lossFunc = CLossFunction(LossFunctionName.CrossEntropy3)
     loss_history = CLossHistory()
 
-    #list1 = []
-    #list2 = []
-    #list3 = []
-    #list4 = []
 
     t0 = time.time()
 
@@ -170,23 +166,10 @@ def train():
         for iteration in range(max_iteration):
             #t0 = time.time()
             batch_x, batch_y = dataReader.GetBatchTrainSamples(batch_size, iteration)
-            #plt.imshow(batch_x[0,0])
-            #plt.show()
-            #plt.imshow(batch_x[1,0])
-            #plt.show()
-            #t1 = time.time()
             output = model.forward(batch_x)
-            #t2 = time.time()
             model.backward(batch_y)
-            #t3 = time.time()
-            model.update(eta)
-            #t4 = time.time()
-            """
-            list1.append(t1-t0)
-            list2.append(t2-t1)
-            list3.append(t3-t2)
-            list4.append(t4-t3)
-            """
+            model.update()
+
             # calculate loss
             if iteration % 100 == 0:
                 CheckErrorAndLoss(dataReader, model, lossFunc, batch_x, batch_y, loss_history, epoch, iteration*batch_size)
@@ -198,30 +181,10 @@ def train():
     
     t1 = time.time()
     print("time used:", t1 - t0)
-    
-
-    """        
-    t1,t2,t3,t4=0,0,0,0
-    for i in range(1000):
-        t1 += list1[i]
-        t2 += list2[i]
-        t3 += list3[i]
-        t4 += list4[i]
-    print(t1,t2,t3,t4)
-    """
 
     print("testing...")
     c,n = Test(dataReader, model)
     print(str.format("rate={0} / {1} = {2}", c, n, c / n))
-
-
-
-    """
-    model.forward(dataReader.X.reshape(60000,1,28,28))
-    loss = lossFunc.CheckLoss(dataReader.Y, model.output)
-    print("epoch=%d, iteration=%d, loss=%f" %(epoch,iteration,loss))
-    is_min = loss_history.AddLossHistory(loss, epoch, iteration)                
-    """
 
     model.save()
     loss_history.ShowLossHistory(params)

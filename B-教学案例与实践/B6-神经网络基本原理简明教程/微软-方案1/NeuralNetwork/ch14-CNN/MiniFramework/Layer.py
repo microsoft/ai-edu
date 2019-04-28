@@ -13,7 +13,7 @@ class CLayer(object):
     def __init__(self, layer_type):
         self.layer_type = layer_type
 
-    def update(self, lr):
+    def update(self):
         return
 
 class LayerIndexFlags(Enum):

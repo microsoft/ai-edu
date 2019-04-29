@@ -69,15 +69,15 @@ class ConvLayer(CLayer):
         N, C, H, W = x.shape
         out_h = 1 + int((H + 2 * self.padding - FH) / self.stride)
         out_w = 1 + int((W + 2 * self.padding - FW) / self.stride)
-        col_x = im2col(x, FH, FW, self.stride, self.padding)
-        col_W = self.WeightsBias.W.reshape(FN, -1).T
-        out = np.dot(col_x, col_W) + self.WeightsBias.B.reshape(-1,FN)
+        col_x = im2col2(x, FH, FW, self.stride, self.padding)
+        col_w = self.WeightsBias.W.reshape(FN, -1).T
+        out = np.dot(col_x, col_w) + self.WeightsBias.B.reshape(-1,FN)
         self.z = out.reshape(N, out_h, out_w, -1).transpose(0, 3, 1, 2) 
         self.x = x
         self.col_x = col_x
-        self.col_W = col_W
+        self.col_w = col_w
         self.a = self.activator.forward(self.z)
-        return self.z, self.a
+        return self.a
 
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
     def backward(self, delta_in, flag):
@@ -147,20 +147,21 @@ class ConvLayer(CLayer):
 #end class
 
 def conv1():
-    r1,_ = cl.forward(x)
+    r1 = cl.forward(x)
     return r1
 
 def conv2():
-    r2,_ = cl.forward_fast(x)
+    r2 = cl.forward_fast(x)
     return r2
 
 
 if __name__ == '__main__':
-    # 64 个 3 x 28 x 28 的图像输入（模拟 mnist）
-    x = np.random.randn(64, 3, 28, 28)
-    cl = ConvLayer(3, 10, 5, 5, 28, 28, 1, 0, Relu())
-    cl.Initialize()
+    
+    params = CParameters(0.1, 1, 64, 0.1, LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD)
 
+    # 64 个 3 x 28 x 28 的图像输入（模拟 mnist）
+    x = np.random.randn(1024, 3, 28, 28)
+    cl = ConvLayer((3,28,28,), (4,5,5), (1, 0), Relu(), params)
 
     r1 = conv1()
     r2 = conv2()
@@ -170,10 +171,10 @@ if __name__ == '__main__':
 
     num=10
     t4 = timeit.timeit('conv1()','from __main__ import conv1', number=num)
-    print("t4:", t4, t4/num)
+    print("numba:", t4, t4/num)
 
     t5 = timeit.timeit('conv2()','from __main__ import conv2', number=num)
-    print("t5:", t5, t5/num)
+    print("im2col:", t5, t5/num)
 
 
 

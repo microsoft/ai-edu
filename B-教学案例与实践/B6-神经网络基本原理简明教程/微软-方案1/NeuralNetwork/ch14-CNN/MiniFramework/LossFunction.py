@@ -48,11 +48,17 @@ class CLossHistory(object):
         p1, = plt.plot(self.loss_history_val)
         p2, = plt.plot(self.loss_history_train)
         plt.legend([p1,p2], ["validation","train"])
+        title = self.min_trace.toString() + "," + params.toString()
+        plt.title(title)
+        plt.ylabel("loss")
         plt.show()
         
         p1, = plt.plot(self.accuracy_history_val)
         p2, = plt.plot(self.accuracy_history_train)
         plt.legend([p1,p2], ["validation","train"])
+        title = self.min_trace.toString() + "," + params.toString()
+        plt.title(title)
+        plt.ylabel("accuracy")
         plt.show()
         
 

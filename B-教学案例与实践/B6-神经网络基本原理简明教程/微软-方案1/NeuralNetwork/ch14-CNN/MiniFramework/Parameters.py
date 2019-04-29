@@ -7,7 +7,7 @@ from MiniFramework.GDOptimizer import *
 
 # this class is for two-layer NN only
 class CParameters(object):
-    def __init__(self, eta=0.1, max_epoch=10000, batch_size=5, eps = 0.1,
+    def __init__(self, eta=0.1, max_epoch=100, batch_size=5, eps = 0.1,
                  lossFuncName=LossFunctionName.MSE, 
                  initMethod=InitialMethod.Zero, 
                  optimizerName=OptimizerName.SGD):

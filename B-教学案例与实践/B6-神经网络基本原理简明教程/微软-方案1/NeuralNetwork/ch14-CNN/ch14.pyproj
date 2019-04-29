@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MnistConv.py</StartupFile>
+    <StartupFile>Cifar10.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MnistConv.py" />
+    <Compile Include="Cifar10.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MnistConvNet.py" />
+    <Compile Include="MnistConvModel.py" />
     <Compile Include="MiniFramework\Activators.py" />
     <Compile Include="MiniFramework\ConvWeightsBias.py">
       <SubType>Code</SubType>
@@ -42,6 +46,7 @@
     </Compile>
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="MiniFramework\__init__.py" />
+    <Compile Include="CifarImageReader.py" />
     <Compile Include="MnistImageReader.py" />
     <Compile Include="TestNumba\test_conv.py">
       <SubType>Code</SubType>

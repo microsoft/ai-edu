@@ -28,83 +28,69 @@ from MiniFramework.DataReader import *
 
 class CifarImageReader(DataReader):
     def __init__(self, train_file_1, train_file_2, train_file_3, train_file_4, train_file_5, test_file):
-        self.train_file_1 = train_file_1
-        self.train_file_2 = train_file_2
-        self.train_file_3 = train_file_3
-        self.train_file_4 = train_file_4
-        self.train_file_5 = train_file_5
+        self.train_file = []
+        self.train_file.append(train_file_1)
+        self.train_file.append(train_file_2)
+        self.train_file.append(train_file_3)
+        self.train_file.append(train_file_4)
+        self.train_file.append(train_file_5)
         self.test_file = test_file
         self.num_example = 0
         self.num_category = 10
-        self.num_dev = 0
+        self.num_validation = 0
         self.num_test = 0
         self.num_train = 0
 
     def ReadData(self):
-        self.XTrainRaw = self.__ReadImageFile(self.train_image_file)
-        self.YTrainRaw = self.__ReadLabelFile(self.train_label_file)
-        self.XTestRaw = self.__ReadImageFile(self.test_image_file)
-        self.YTestRaw = self.__ReadLabelFile(self.test_label_file)
-        self.num_example = self.XTrainRaw.shape[0]
-        self.num_category = len(np.unique(self.YTrainRaw))
-        self.num_test = self.XTestRaw.shape[0]
-        self.num_train = self.num_example
-        self.num_validation = 0
+        self.__ReadTrainFiles()
+        self.__ReadTestFile()
+        self.num_train = self.num_example = self.X.shape[0]
+        self.num_test = self.XTestSet.shape[0]
+
+    def __ReadTestFile(self):
+        self.XTestSet, self.YTestSet = self.__ReadSingleDataFile(self.test_file)
+
+    def __ReadTrainFiles(self):
+        self.X = None
+        self.Y = None
+        for i in range(5):
+            image_data_single, label_data_single = self.__ReadSingleDataFile(self.train_file[i])
+            if self.X is None:
+                self.X = image_data_single
+                self.Y = label_data_single
+            else:
+                self.X = np.vstack((self.X, image_data_single))
+                self.Y = np.vstack((self.Y, label_data_single))
+            #end if
+        #end for
 
     # output array: num_images * channel * 28 * 28
     # 3 color, so channel = 3
-    def ReadImageFile(self, image_file_name):
+    def __ReadSingleDataFile(self, image_file_name):
         image_data = np.empty((10000,3,32,32)) 
+        label_data = np.zeros((10000,10))
         f = open(image_file_name, "rb")
-        for i in range(1000):
+        for i in range(10000):
             a = f.read(1)
+            label = int.from_bytes(a, byteorder='big')
+            label_data[i,label] = 1
             for j in range(3):
                 b = f.read(1024)
-                fmt = '>' + str(1024) + 'B'
+                fmt = '=' + str(1024) + 'B'
                 unpacked_data = struct.unpack(fmt, b)
                 array_data = np.array(unpacked_data)
-                array_data2 = array_data.reshape((32,32))
-                image_data[i,j] = array_data2
+                array_data2 = array_data.reshape(32,32)
+                image_data[i,j] = array_data2/255
             #end for
-            plt.imshow(image_data[i])
-            plt.show()
+#            plt.imshow(image_data[i].transpose(1,2,0))
+#            plt.show()
         #end for
         f.close()
-        return image_data
-
-
-    def Normalize(self):
-        self.NormalizeX()
-        self.NormalizeY()
-
-    def NormalizeX(self):
-        self.X = self.__NormalizeData(self.XTrainRaw)
-        self.XTestSet = self.__NormalizeData(self.XTestRaw)
-
-    def NormalizeY(self):
-        self.Y = self.ToOneHot(self.YTrainRaw)
-        # no need to OneHot test set, we only need to get [0~9] from this set, instead of onehot encoded
-        self.YTestSet = self.YTestRaw
-
-    def ToOneHot(self, dataSet):
-        num = dataSet.shape[0]
-        Y = np.zeros((num, self.num_category))
-        for i in range(num):
-            n = (int)(dataSet[i])
-            Y[i,n] = 1
-            # end if
-        # end for
-        return Y
-
-    def __NormalizeData(self, XRawData):
-        X_NEW = np.zeros(XRawData.shape)
-        x_max = np.max(XRawData)
-        x_min = np.min(XRawData)
-        X_NEW = (XRawData - x_min)/(x_max-x_min)
-        return X_NEW
+        return image_data, label_data
 
     # need explicitly call this function to generate validation set
-    def GenerateDevSet(self, k = 10):
+    def HoldOut(self, k = 10):
+        self.Shuffle()
         self.num_validation = (int)(self.num_example / k)
         # dev set
         self.XDevSet = self.X[0:self.num_validation]

@@ -33,8 +33,7 @@ flags.DEFINE_string("master", "", "Address of TensorFlow master.")
 flags.DEFINE_string("schedule", "train_and_evaluate",
                     "Must be train_and_evaluate for decoding.")
 
-
-home = '/home/administor/code/test_model'
+home = os.path.join(os.getenv("HOME"), "code", "test_model")
 FLAGS.t2t_usr_dir = home + '/usr_dir'
 FLAGS.data_dir = home + '/data_dir'
 FLAGS.output_dir =  home + '/model'

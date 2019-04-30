@@ -84,7 +84,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 本案例的语言使用 Python3.x ，并需要安装一些 python packages。
 
-1. 训练所需 python packages 在文件 [train_requirements.txt](./src/training/pip_requirerments.txt) 中。
+1. 训练所需 python packages 在文件 [train_requirements.txt](./src/training/train_requirerments.txt) 中。
 2. 服务所需 python packages 在文件 [conda_requirements.txt](./src/service/conda_requirements.txt) 中。
 
 ### 框架和模型库
@@ -102,9 +102,9 @@ Copyright © Microsoft Corporation. All rights reserved.
 1. 自己写一套完成对联生成工作的深度学习模型。这个工作量相当之大，可能需要一个NLP专业团队来进行开发，调优。
 2. 应用已有的深度学习模型，直接应用。这个选择比较符合客观需要。我们找到了两个工具包：
 
-    + Tensor2Tensor 工具包：Tensor2Tensor（以下简称T2T）是由 Google Brain 团队使用和维护的开源深度学习模型库，支持多种数据集和模型。T2T 在 github 上有完整的介绍和用法，可以访问这里了解详细信息。
+    + Tensor2Tensor 工具包：Tensor2Tensor（以下简称T2T）是由 Google Brain 团队使用和维护的开源深度学习模型库，支持多种数据集和模型。T2T 在 github 上有完整的介绍和用法，可以访问[这里](https://github.com/tensorflow/tensor2tensor)了解详细信息。
 
-    + Fairseq 工具包：Fairseq 是 Facebook 推出的一个序列建模工具包，这个工具包允许研究和开发人员自定义训练翻译、摘要、语言模型等文本生成任务。这里是它的 PyTorch 实现。
+    + Fairseq 工具包：[Fairseq](https://github.com/pytorch/fairseq) 是 Facebook 推出的一个序列建模工具包，这个工具包允许研究和开发人员自定义训练翻译、摘要、语言模型等文本生成任务。这里是它的 PyTorch 实现。
 
     本案例中，我们使用 T2T 工具包进行模型训练。
 
@@ -132,17 +132,18 @@ Copyright © Microsoft Corporation. All rights reserved.
     a. 分隔数据的python代码 (split_data.py)：
     ```
     import sys
+
     filename = sys.argv[1]
     with open(filename, 'r', encoding='utf-8') as infile:
-    with open(filename + '.clean', 'w', encoding='utf-8') as outfile:
-        lines = infile.readlines()
-        for line in lines:
-        out = ""
-        for i in line.strip():
-            out += i + (' ')
-        out = out[:-1]
-        out += '\n'
-        outfile.write(out)
+        with open(filename + '.clean', 'w', encoding='utf-8') as outfile:
+            lines = infile.readlines()
+            for line in lines:
+                out = ""
+                for i in line.strip():
+                    out += i + (' ')
+                out = out[:-1]
+                out += '\n'
+                outfile.write(out)
     ```
     b. 执行如下命令完成文件分隔
     ```

@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 # -*- coding:utf-8 -*-
 import time
 from multiprocessing.dummy import Pool as ThreadPool

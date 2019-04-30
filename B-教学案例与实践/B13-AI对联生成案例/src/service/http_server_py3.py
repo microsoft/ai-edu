@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
 from io import BytesIO
 from utils import *
@@ -5,11 +8,18 @@ import chardet
 import ssl
 from socketserver import ThreadingMixIn
 
+import os
+model_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "test_model")
+t2t_dir = os.path.join(model_path, "tensor2tensor-1.2.9")
+t2t_main = os.path.join(t2t_dir, "tensor2tensor")
+t2t_bin = os.path.join(t2t_main, "bin")
 import sys
-sys.path.append(r'/home/administor/code/test_model/')
-sys.path.append(r'/home/administor/code/test_model/tensor2tensor-1.2.9/')
-sys.path.append(r'/home/administor/code/test_model/tensor2tensor-1.2.9/tensor2tensor/bin/')
-sys.path.append(r'/home/administor/code/test_model/tensor2tensor-1.2.9/tensor2tensor/')
+sys.path.append(model_path)
+sys.path.append(t2t_dir)
+sys.path.append(t2t_main)
+sys.path.append(t2t_bin)
+
+
 import up2down_class
 import threading
 

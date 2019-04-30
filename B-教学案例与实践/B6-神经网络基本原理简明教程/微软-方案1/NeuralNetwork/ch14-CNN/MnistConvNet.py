@@ -58,9 +58,9 @@ def net():
     num_output = 10
     dataReader = LoadData(num_output)
 
-    max_epoch = 5
+    max_epoch = 1
     batch_size = 50
-    eta = 0.001
+    eta = 0.01
     eps = 0.01
     params = CParameters(eta, max_epoch, batch_size, eps,
                     LossFunctionName.CrossEntropy3, 

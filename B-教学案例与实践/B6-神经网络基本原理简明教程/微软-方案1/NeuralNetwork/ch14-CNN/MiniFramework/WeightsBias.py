@@ -33,8 +33,8 @@ class WeightsBias(object):
         # end if
         self.CreateOptimizers()
 
-        self.dW = np.zeros(self.W.shape)
-        self.dB = np.zeros(self.B.shape)
+        self.dW = np.zeros(self.W.shape).astype(np.float32)
+        self.dB = np.zeros(self.B.shape).astype(np.float32)
 
     def CreateNew(self):
         self.W, self.B = WeightsBias.InitialParameters(self.num_input, self.num_output, self.init_method)
@@ -82,18 +82,18 @@ class WeightsBias(object):
     def InitialParameters(num_input, num_output, method):
         if method == InitialMethod.Zero:
             # zero
-            W = np.zeros((num_output, num_input))
+            W = np.zeros((num_output, num_input)).astype(np.float32)
         elif method == InitialMethod.Normal:
             # normalize
-            W = np.random.normal(size=(num_output, num_input))
+            W = np.random.normal(size=(num_output, num_input)).astype(np.float32)
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_input), size=(num_output, num_input))
+            W = np.random.normal(0, np.sqrt(2/num_input), size=(num_output, num_input)).astype(np.float32)
         elif method == InitialMethod.Xavier:
             # xavier
             W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
                                   np.sqrt(6/(num_output+num_input)),
-                                  size=(num_output,num_input))
+                                  size=(num_output,num_input)).astype(np.float32)
         # end if
-        B = np.zeros((num_output, 1))
+        B = np.zeros((num_output, 1)).astype(np.float32)
         return W, B
 

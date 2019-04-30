@@ -5,7 +5,7 @@
 
 import numpy as np
 import numba as nb
-from numba import float64, int64
+from numba import float32, int32
 
 # 简单地加了个 jit 后的卷积，用数组运算
 @nb.jit(nopython=True)
@@ -33,7 +33,7 @@ def jit_conv_kernel2(x, w, rs, batch_size, num_input_channel, input_height, inpu
 
 @nb.jit(nopython=True)
 def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
-    z = np.zeros((batch_size, input_c, output_h, output_w))
+    z = np.zeros((batch_size, input_c, output_h, output_w)).astype(np.float32)
     for b in range(batch_size):
         for c in range(input_c):
             for i in range(output_h):
@@ -54,7 +54,7 @@ def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w,
 
 @nb.jit(nopython=True)
 def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
-    delta_out = np.zeros(x.shape)
+    delta_out = np.zeros(x.shape).astype(np.float32)
     for b in range(batch_size):
         for c in range(input_c):
             for i in range(output_h):
@@ -107,7 +107,7 @@ def conv2d(input_array, kernal, bias, output_array):
             output_array[i,j] = np.sum(target_array * kernal) + bias
 
 #@nb.jit(nopython=True)
-@nb.jit(float64[:,:,:,:](float64[:,:,:,:],float64[:,:,:,:],float64[:,:],int64,int64,int64))
+@nb.jit(float32[:,:,:,:](float32[:,:,:,:],float32[:,:,:,:],float32[:,:],int32,int32,int32))
 def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
     # 输入图片的批大小，通道数，高，宽
     assert(x.ndim == 4)
@@ -118,7 +118,7 @@ def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
     num_output_channel = weights.shape[0]
     filter_height = weights.shape[2]
     filter_width = weights.shape[3]
-    rs = np.zeros((batch_size, num_output_channel, out_h, out_w))
+    rs = np.zeros((batch_size, num_output_channel, out_h, out_w)).astype(np.float32)
 
     for bs in range(batch_size):
         for oc in range(num_output_channel):
@@ -180,7 +180,7 @@ def expand_delta_map(dZ, batch_size, input_c, input_h, input_w, output_h, output
         # 假设如果stride等于1时，卷积后输出的图片大小应该是多少，然后根据这个尺寸调整delta_z的大小
         (expand_h, expand_w) = calculate_output_size(input_h, input_w, filter_h, filter_w, padding, 1)
         # 初始化一个0数组，四维
-        dZ_stride_1 = np.zeros((batch_size, input_c, expand_h, expand_w))
+        dZ_stride_1 = np.zeros((batch_size, input_c, expand_h, expand_w)).astype(np.float32)
         # 把误差值填到当stride=1时的对应位置上
         for bs in range(batch_size):
             for ic in range(input_c):
@@ -201,7 +201,7 @@ def calcalate_weights_grad(x, dz, batch_size, output_c, input_c, filter_h, filte
     for bs in range(batch_size):
         for oc in range(output_c):   # == kernal count
             for ic in range(input_c):    # == filter count
-                w_grad = np.zeros((filter_h, filter_w))
+                w_grad = np.zeros((filter_h, filter_w)).astype(np.float32)
                 conv2d(x[bs,ic], dz[bs,oc], 0, w_grad)
                 dW[oc,ic] += w_grad
             #end ic
@@ -211,11 +211,11 @@ def calcalate_weights_grad(x, dz, batch_size, output_c, input_c, filter_h, filte
     return (dW, dB)
 
 #@nb.jit(nopython=True)
-@nb.jit((float64[:,:,:,:],float64[:,:,:,:],int64,int64,int64,int64,int64,float64[:,:,:,:]))
+@nb.jit((float32[:,:,:,:],float32[:,:,:,:],int32,int32,int32,int32,int32,float32[:,:,:,:]))
 def calculate_delta_out(dz, rot_weights, batch_size, num_input_channel, num_output_channel, input_height, input_width, delta_out):
     for bs in range(batch_size):
         for oc in range(num_output_channel):    # == kernal count
-            delta_per_input = np.zeros((input_height, input_width))
+            delta_per_input = np.zeros((input_height, input_width)).astype(np.float32)
             for ic in range(num_input_channel): # == filter count
                 conv2d(dz[bs,oc], rot_weights[oc,ic], 0, delta_per_input)
                 delta_out[bs,ic] += delta_per_input
@@ -231,7 +231,7 @@ def im2col2(input_data, filter_h, filter_w, stride=1, pad=0):
     out_w = (W + 2*pad - filter_w)//stride + 1
     img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
     img = input_data
-    col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
+    col = np.zeros((N, C, filter_h, filter_w, out_h, out_w)).astype(np.float32)
     col = im2col3(img, col, N, filter_h, filter_w, out_h, out_w, stride)
     col = col.transpose(0, 4, 5, 1, 2, 3).reshape(N*out_h*out_w, -1)
     return col
@@ -255,7 +255,7 @@ def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
     out_w = (W + 2*pad - filter_w)//stride + 1
     img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
     img = input_data
-    col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
+    col = np.zeros((N, C, filter_h, filter_w, out_h, out_w)).astype(np.float32)
 
     for i in range(filter_h):
         i_max = i + stride*out_h
@@ -272,7 +272,7 @@ def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
     out_h = (H + 2*pad - filter_h)//stride + 1
     out_w = (W + 2*pad - filter_w)//stride + 1
     col = col.reshape(N, out_h, out_w, C, filter_h, filter_w).transpose(0, 3, 4, 5, 1, 2)
-    img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1))
+    img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1)).astype(np.float32)
     for i in range(filter_h):
         i_max = i + stride*out_h
         for j in range(filter_w):
@@ -300,7 +300,7 @@ if __name__ == '__main__':
     print(f)
     stride=1
     padding=0
-    bias=np.zeros((f.shape[0],1))
+    bias=np.zeros((f.shape[0],1)).astype(np.float32)
     (out_h, out_w) = calculate_output_size(x.shape[2], x.shape[3], f.shape[2], f.shape[3], padding, stride)
     z = jit_conv_4d(x, f, bias, out_h, out_w, stride=1)
     print("------------------")

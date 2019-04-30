@@ -93,8 +93,8 @@ class MnistImageReader(DataReader):
         self.NormalizeY()
 
     def NormalizeX(self):
-        self.X = self.__NormalizeData(self.XTrainRaw)
-        self.XTestSet = self.__NormalizeData(self.XTestRaw)
+        self.X = self.__NormalizeData(self.XTrainRaw).astype(np.float32)
+        self.XTestSet = self.__NormalizeData(self.XTestRaw).astype(np.float32)
 
     def NormalizeY(self):
         self.Y = self.ToOneHot(self.YTrainRaw)
@@ -112,7 +112,7 @@ class MnistImageReader(DataReader):
         return Y
 
     def __NormalizeData(self, XRawData):
-        X_NEW = np.zeros(XRawData.shape)
+        X_NEW = np.zeros(XRawData.shape).astype(np.float32)
         x_max = np.max(XRawData)
         x_min = np.min(XRawData)
         X_NEW = (XRawData - x_min)/(x_max-x_min)

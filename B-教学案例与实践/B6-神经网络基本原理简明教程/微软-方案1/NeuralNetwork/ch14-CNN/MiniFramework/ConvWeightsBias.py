@@ -50,24 +50,24 @@ class ConvWeightsBias(WeightsBias):
             self.LoadExistingParameters()
 
         self.__CreateOptimizers()
-        self.dW = np.zeros(self.W.shape)
-        self.dB = np.zeros(self.B.shape)
+        self.dW = np.zeros(self.W.shape).astype(np.float32)
+        self.dB = np.zeros(self.B.shape).astype(np.float32)
 
     def CreateNew(self):
         self.W = ConvWeightsBias.InitialConvParameters(self.WeightsShape, self.init_method)
-        self.B = np.zeros((self.KernalCount, 1))
+        self.B = np.zeros((self.KernalCount, 1)).astype(np.float32)
         self.SaveInitialValue()
 
     def Rotate180(self):
-        self.WT = np.zeros(self.W.shape)
+        self.WT = np.zeros(self.W.shape).astype(np.float32)
         for i in range(self.KernalCount):
             for j in range(self.FilterCount):
                 self.WT[i,j] = np.rot90(self.W[i,j], 2)
         return self.WT
 
     def ClearGrads(self):
-        self.dW = np.zeros(self.W.shape)
-        self.dB = np.zeros(self.B.shape)
+        self.dW = np.zeros(self.W.shape).astype(np.float32)
+        self.dB = np.zeros(self.B.shape).astype(np.float32)
 
     def MeanGrads(self, m):
         self.dW = self.dW / m
@@ -91,14 +91,14 @@ class ConvWeightsBias(WeightsBias):
         num_output = shape[3]
         
         if method == InitialMethod.Zero:
-            W = np.zeros(shape)
+            W = np.zeros(shape).astype(np.float32)
         elif method == InitialMethod.Normal:
-            W = np.random.normal(size=shape)
+            W = np.random.normal(size=shape).astype(np.float32)
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_input*num_output), size=shape)
+            W = np.random.normal(0, np.sqrt(2/num_input*num_output), size=shape).astype(np.float32)
         elif method == InitialMethod.Xavier:
             W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
                                   np.sqrt(6/(num_output+num_input)),
-                                  size=shape)
+                                  size=shape).astype(np.float32)
         return W
 

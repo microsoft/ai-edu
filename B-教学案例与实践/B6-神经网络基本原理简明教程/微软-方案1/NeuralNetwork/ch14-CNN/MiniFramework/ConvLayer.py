@@ -124,7 +124,7 @@ class ConvLayer(CLayer):
             return None
         # 旋转卷积核180度
         rot_weights = self.WeightsBias.Rotate180()
-        delta_out = np.zeros(self.x.shape)
+        delta_out = np.zeros(self.x.shape).astype(np.float32)
         # 输入梯度矩阵卷积旋转后的卷积核，得到输出梯度矩阵
         delta_out = calculate_delta_out(dz, rot_weights, self.batch_size, 
                             self.num_input_channel, self.num_output_channel, 

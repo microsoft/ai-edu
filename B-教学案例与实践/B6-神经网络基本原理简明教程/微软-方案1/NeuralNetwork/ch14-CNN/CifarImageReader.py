@@ -67,7 +67,7 @@ class CifarImageReader(DataReader):
     # output array: num_images * channel * 28 * 28
     # 3 color, so channel = 3
     def __ReadSingleDataFile(self, image_file_name):
-        image_data = np.empty((10000,3,32,32)) 
+        image_data = np.empty((10000,3,32,32)).astype(np.float32)
         label_data = np.zeros((10000,10))
         f = open(image_file_name, "rb")
         for i in range(10000):
@@ -86,7 +86,7 @@ class CifarImageReader(DataReader):
 #            plt.show()
         #end for
         f.close()
-        return image_data, label_data
+        return image_data.astype(np.float32), label_data
 
     # need explicitly call this function to generate validation set
     def HoldOut(self, k = 10):
@@ -129,7 +129,7 @@ class CifarImageReader(DataReader):
         end = start + batch_size
         batch_X = self.XTestSet[start:end]
         batch_Y = self.YTestSet[start:end]
-        return batch_X, batch_Y
+        return batch_X, batch_Y.T
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format

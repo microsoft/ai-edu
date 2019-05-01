@@ -87,7 +87,7 @@ def pool_get_max_index(input, i_start, i_end, j_start, j_end):
     return max_i, max_j
 
 @nb.jit(nopython=True)
-def conv2d(input_array, kernal, bias, output_array):
+def jit_conv_2d(input_array, kernal, bias, output_array):
     assert(input_array.ndim == 2)
     assert(output_array.ndim == 2)
     assert(kernal.ndim == 2)

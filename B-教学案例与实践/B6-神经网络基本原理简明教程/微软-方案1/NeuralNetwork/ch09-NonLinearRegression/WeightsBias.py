@@ -47,6 +47,11 @@ class WeightsBias(object):
         self.W = self.W - self.eta * self.dW
         self.B = self.B - self.eta * self.dB
 
+    def UpdateWithLr(self, lr):
+        self.W = self.W - lr * self.dW
+        self.B = self.B - lr * self.dB
+
+
     def toString(self):
         info = str.format("w={0}\nb={1}\n", self.W, self.B)
         return info

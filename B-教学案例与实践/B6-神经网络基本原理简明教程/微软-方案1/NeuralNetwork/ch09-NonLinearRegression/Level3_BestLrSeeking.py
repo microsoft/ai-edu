@@ -10,7 +10,7 @@ from LossFunction import *
 from Parameters import *
 from Activators import *
 from DataReader import *
-from Level0_TwoLayerNet import *
+from Level0_TwoLayerFittingNet import *
 
 x_data_name = "X09.dat"
 y_data_name = "Y09.dat"
@@ -85,7 +85,7 @@ class LrLooper(object):
         return self.lr_history, self.loss_history
 
 
-class LrSeekingNet(TwoLayerNet):
+class LrSeekingNet(TwoLayerFittingNet):
 
     def UpdateWeights(self, wb1, wb2, lr):
         wb1.UpdateWithLr(lr)
@@ -99,7 +99,7 @@ class LrSeekingNet(TwoLayerNet):
         wb2.InitializeWeights(False)
         # calculate loss to decide the stop condition
         loss = 0 
-        lossFunc = CLossFunction(self.loss_func_name)
+        lossFunc = CLossFunction(params.loss_func_name)
 
         lr, loop = lr_searcher.getFirstLearningRate()         # 特意增加的逻辑代码
 
@@ -111,14 +111,14 @@ class LrSeekingNet(TwoLayerNet):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)
                 # get z from x,y
-                dict_cache = self.forward(batch_x, wb1, wb2)
+                dict_cache = self.ForwardCalculationBatch(batch_x, wb1, wb2)
                 # calculate gradient of w and b
                 self.BackPropagationBatch(batch_x, batch_y, dict_cache, wb1, wb2)
                 # update w,b
                 self.UpdateWeights(wb1, wb2, lr) # 特意修改的逻辑代码
             # end for            
             # calculate loss for this batch
-            output = self.forward(dataReader.X, wb1, wb2)
+            output = self.ForwardCalculationBatch(dataReader.X, wb1, wb2)
             loss = lossFunc.CheckLoss(dataReader.Y, output["Output"])
             print("epoch=%d, loss=%f, lr=%f" %(epoch,loss,lr))
             loss_history.AddLossHistory(loss, epoch, iteration, wb1, wb2)          
@@ -136,28 +136,20 @@ class LrSeekingNet(TwoLayerNet):
 def try_1():
     # try 1    
     lr_Searcher = LrLooper()
-    looper = Looper(0.0001,0.0001,50)
-    lr_Searcher.addLooper(looper)
-    looper = Looper(0.001,0.001,50)
-    lr_Searcher.addLooper(looper)
-    looper = Looper(0.01,0.01,50)
-    lr_Searcher.addLooper(looper)
-    looper = Looper(0.1,0.1,50)
-    lr_Searcher.addLooper(looper) 
-    looper = Looper(1,0.01,50,1.2)
+    looper = Looper(0.1,0.1,100)
     lr_Searcher.addLooper(looper) 
     return lr_Searcher
 
 def try_2():
     # try 2
     lr_Searcher = LrLooper()
-    looper = Looper(0.5,0.01,50,1.0)
+    looper = Looper(0.5,0.01,20,1.0)
     lr_Searcher.addLooper(looper)
     return lr_Searcher
 
 def try_3():
     lr_Searcher = LrLooper()
-    looper = Looper(0.8,0.01,200,1.1)
+    looper = Looper(0.8,0.01,20,1.1)
     lr_Searcher.addLooper(looper)
     return lr_Searcher
 
@@ -167,7 +159,7 @@ def ShowResult(net, X, Y, title, wb1, wb2):
     plt.plot(X[0,:], Y[0,:], '.', c='b')
     # create and draw visualized validation data
     TX = np.linspace(0,1,100).reshape(1,100)
-    dict_cache = net.forward(TX, wb1, wb2)
+    dict_cache = net.ForwardCalculationBatch(TX, wb1, wb2)
     TY = dict_cache["Output"]
     plt.plot(TX, TY, 'x', c='r')
     plt.title(title)
@@ -180,23 +172,24 @@ if __name__ == '__main__':
     X = dataReader.NormalizeX(passthrough=True)
     Y = dataReader.NormalizeY()
     # 为了说明问题，我们用2个隐层单元和20批大小来做试验
-    n_input, n_hidden, n_output = 1, 2, 1
-    eta, batch_size, max_epoch = 0.1, 20, 30000
+    n_input, n_hidden, n_output = 1, 4, 1
+    eta, batch_size, max_epoch = 0.1, 1, 10000
     eps = 0.001
 
     params = CParameters(n_input, n_hidden, n_output,
                          eta, max_epoch, batch_size, eps, 
-                         InitialMethod.Xavier,
-                         OptimizerName.SGD)
+                         LossFunctionName.MSE,
+                         InitialMethod.Xavier)
 
-    loss_history = CLossHistory()
+    loss_history = CLossHistory(params)
 
     # 试验时，先注释掉try_2，运行try_1；然后注释掉try_1，运行try_2
-    lr_Searcher = try_1()
-    # lr_Searcher = try_2()
+    #lr_Searcher = try_1()
+    #lr_Searcher = try_2()
+    lr_Searcher = try_3()
 
 
-    net = LrSeekingNet(NetType.Fitting)
+    net = LrSeekingNet()
     wb1, wb2 = net.train(dataReader, params, loss_history, lr_Searcher)
 
     lrs, losses = lr_Searcher.getLrLossHistory()

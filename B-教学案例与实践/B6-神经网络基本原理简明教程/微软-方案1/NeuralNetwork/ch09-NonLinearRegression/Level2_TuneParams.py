@@ -65,34 +65,40 @@ def ShowLossHistory(file1, file2, file3, file4):
 
     plt.show()
 
+
+def try_hyperParameters(ne, batch, eta):
+    filename = str.format("{0}_{1}_{2}.pkl", ne, batch, eta).replace('.', '', 1)
+    file = Path(filename)
+    if file.exists():
+        return file
+    else:
+        lh = train(ne, batch, eta)
+        lh.Dump(filename)
+        return file
+
+
 if __name__ == '__main__':
   
     
     ne, batch, eta = 4, 10, 0.1
-    lh = train(ne, batch, eta)
-    lh.Dump("4_10_01.pkl")
+    file_1 = try_hyperParameters(ne, batch, eta)
 
     ne, batch, eta = 4, 10, 0.3
-    lh = train(ne, batch, eta)
-    lh.Dump("4_10_03.pkl")
+    file_2 = try_hyperParameters(ne, batch, eta)
     
     ne, batch, eta = 4, 10, 0.5
-    lh = train(ne, batch, eta)
-    lh.Dump("4_10_05.pkl")
+    file_3 = try_hyperParameters(ne, batch, eta)
 
     ne, batch, eta = 4, 10, 0.7
-    lh = train(ne, batch, eta)
-    lh.Dump("4_10_07.pkl")
+    file_4 = try_hyperParameters(ne, batch, eta)
     
-    ShowLossHistory("4_10_01.pkl", "4_10_03.pkl", "4_10_05.pkl", "4_10_07.pkl")
+    ShowLossHistory(file_1, file_2, file_3, file_4)
     
     ne, batch, eta = 4, 1, 0.5
-    lh = train(ne, batch, eta)
-    lh.Dump("4_01_05.pkl")
+    file_1 = try_hyperParameters(ne, batch, eta)
 
     ne, batch, eta = 4, 5, 0.5
-    lh = train(ne, batch, eta)
-    lh.Dump("4_05_05.pkl")
+    file_2 = try_hyperParameters(ne, batch, eta)
 
     # already have this data
     #ne, batch, eta = 4, 10, 0.5
@@ -100,14 +106,12 @@ if __name__ == '__main__':
     #lh.Dump("4_10_05.pkl")
 
     ne, batch, eta = 4, 20, 0.5
-    lh = train(ne, batch, eta)
-    lh.Dump("4_20_05.pkl")
+    file_4 = try_hyperParameters(ne, batch, eta)
     
-    ShowLossHistory("4_01_05.pkl", "4_05_05.pkl", "4_10_05.pkl", "4_20_05.pkl")
+    ShowLossHistory(file_1, file_2, file_3, file_4)
 
     ne, batch, eta = 2, 10, 0.5
-    lh = train(ne, batch, eta)
-    lh.Dump("2_10_05.pkl")
+    file_1 = try_hyperParameters(ne, batch, eta)
 
     # already have this data
     #ne, batch, eta = 4, 10, 0.5
@@ -115,12 +119,11 @@ if __name__ == '__main__':
     #lh.Dump("4_10_05.pkl")
 
     ne, batch, eta = 6, 10, 0.5
-    lh = train(ne, batch, eta)
-    lh.Dump("6_10_05.pkl")
+    file_3 = try_hyperParameters(ne, batch, eta)
 
     ne, batch, eta = 8, 10, 0.5
-    lh = train(ne, batch, eta)
-    lh.Dump("8_10_05.pkl")
+    file_4 = try_hyperParameters(ne, batch, eta)
 
-    ShowLossHistory("2_10_05.pkl", "4_10_05.pkl", "6_10_05.pkl", "8_10_05.pkl")
+    ShowLossHistory(file_1, file_2, file_3, file_4)
+
 

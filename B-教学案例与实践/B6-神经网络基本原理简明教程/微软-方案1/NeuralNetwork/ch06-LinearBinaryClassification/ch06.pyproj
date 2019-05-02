@@ -4,8 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>Level4_TanhWithCrossEntropy_Curve.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Activators.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level0_BaseClassification.py" />
     <Compile Include="Level2_ShowBinaryResult.py" />
     <Compile Include="Level5_LogicAndGate.py" />

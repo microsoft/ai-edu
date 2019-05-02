@@ -5,8 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-from Activators.Tanh import *
-from Activators.Sigmoid import *
+from Activators import *
 
 # modified cross entropy function for tanh
 def target_function2(a,y):

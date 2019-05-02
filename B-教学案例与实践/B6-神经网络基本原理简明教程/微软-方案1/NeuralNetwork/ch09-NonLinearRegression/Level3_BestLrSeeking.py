@@ -12,8 +12,8 @@ from Activators import *
 from DataReader import *
 from Level0_TwoLayerNet import *
 
-x_data_name = "X8.dat"
-y_data_name = "Y8.dat"
+x_data_name = "X09.dat"
+y_data_name = "Y09.dat"
 
 class Looper(object):
     # e.g. (0.01, 0.005, 100) means start from 0.01, every 100 iteration will add 0.005 until 0.01*10 (=0.1)

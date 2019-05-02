@@ -7,8 +7,8 @@ from pathlib import Path
 import math
 from Level0_BaseClassification import *
 
-x_data_name = "X2.dat"
-y_data_name = "Y2.dat"
+x_data_name = "X06.dat"
+y_data_name = "Y06.dat"
 
 def ToBool(YData):
     num_example = YData.shape[1]

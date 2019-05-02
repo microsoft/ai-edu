@@ -28,8 +28,6 @@
     <Compile Include="Level1_InitializeWeights.py" />
     <Compile Include="Level4_Optimizer08.py" />
     <Compile Include="Level5_Optimizer09.py" />
-    <Compile Include="Level2_TuneParams.py" />
-    <Compile Include="Level3_BestLrSeeking.py" />
     <Compile Include="LossFunction.py" />
     <Compile Include="Parameters.py" />
     <Compile Include="WeightsBias.py" />

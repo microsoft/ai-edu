@@ -7,8 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-x_data_name = "TemperatureControlXData.dat"
-y_data_name = "TemperatureControlYData.dat"
+x_data_name = "X04.dat"
+y_data_name = "Y04.dat"
 
 def ReadData():
     Xfile = Path(x_data_name)

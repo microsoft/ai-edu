@@ -11,8 +11,8 @@ from Activators import *
 from Level1_TwoLayerFittingNet import *
 from DataReader import *
 
-x_data_name = "X8.dat"
-y_data_name = "Y8.dat"
+x_data_name = "X09.dat"
+y_data_name = "Y09.dat"
 
 def ShowResult(net, X, Y, title, wb1, wb2):
     # draw train data

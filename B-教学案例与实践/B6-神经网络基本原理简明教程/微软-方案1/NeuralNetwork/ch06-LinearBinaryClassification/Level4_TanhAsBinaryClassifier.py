@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import math
 
-x_data_name = "X7_2.dat"
-y_data_name = "Y7_2.dat"
+x_data_name = "X06.dat"
+y_data_name = "Y06.dat"
 
 def ToBool(YData):
     num_example = YData.shape[1]

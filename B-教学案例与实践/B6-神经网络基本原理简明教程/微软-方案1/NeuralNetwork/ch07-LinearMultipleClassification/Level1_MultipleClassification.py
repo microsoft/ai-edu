@@ -7,8 +7,8 @@ from pathlib import Path
 import math
 from Level0_BaseClassification import *
 
-x_data_name = "X3.dat"
-y_data_name = "Y3.dat"
+x_data_name = "X07.dat"
+y_data_name = "Y07.dat"
 
 def ShowData(X,Y):
     for i in range(X.shape[1]):

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_CurveFitting.py</StartupFile>
+    <StartupFile>Level2_TuneParams.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,8 +25,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataReader.py" />
-    <Compile Include="Level1_TwoLayerFittingNet.py" />
-    <Compile Include="Level2_CurveFitting.py" />
+    <Compile Include="Level0_TwoLayerFittingNet.py" />
+    <Compile Include="Level1_CurveFitting.py" />
+    <Compile Include="Level2_TuneParams.py" />
+    <Compile Include="Level3_BestLrSeeking.py" />
     <Compile Include="LossFunction.py">
       <SubType>Code</SubType>
     </Compile>

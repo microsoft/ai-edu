@@ -7,7 +7,7 @@ from pathlib import Path
 import math
 
 from Level0_BaseClassification import *
-from Level6_MultipleClassification import *
+from Level1_MultipleClassification import *
 
 def ShowData(X,Y):
     for i in range(X.shape[1]):

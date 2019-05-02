@@ -19,8 +19,8 @@ class CData(object):
 
 # 加载数据
 def ReadData():
-    Xfile = Path("HousePriceXData.dat")
-    Yfile = Path("HousePriceYData.dat")
+    Xfile = Path("X05.dat")
+    Yfile = Path("Y05.dat")
     if Xfile.exists() & Yfile.exists():
         XData = np.load(Xfile)
         YData = np.load(Yfile)

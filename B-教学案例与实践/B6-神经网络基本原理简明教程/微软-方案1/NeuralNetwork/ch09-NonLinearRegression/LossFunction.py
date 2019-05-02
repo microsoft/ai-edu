@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from enum import Enum
+import pickle
 
 class CTrace(object):
     def __init__(self, loss, epoch, iteration, wb1, wb2):
@@ -22,12 +23,13 @@ class CTrace(object):
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class CLossHistory(object):
-    def __init__(self):
+    def __init__(self, params):
         # loss history
         self.loss_history = []
         self.min_loss_index = -1
         # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
         self.min_trace = CTrace(100000, -1, -1, None, None)
+        self.params = params
 
     def AddLossHistory(self, loss, epoch, iteration, wb1, wb2):
         self.loss_history.append(loss)
@@ -39,10 +41,10 @@ class CLossHistory(object):
         return False
 
     # 图形显示损失函数值历史记录
-    def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
+    def ShowLossHistory(self, xmin=None, xmax=None, ymin=None, ymax=None):
         plt.plot(self.loss_history)
-        title = self.min_trace.toString() + "," + params.toString()
-        plt.title(title)
+        title = self.min_trace.toString() + "," + self.params.toString()
+        plt.subtitle(title)
         plt.xlabel("epoch")
         plt.ylabel("loss")
         if xmin != None and ymin != None:
@@ -50,9 +52,33 @@ class CLossHistory(object):
         plt.show()
         return title
 
+    def ShowLossHistory(self, axes, xmin=None, xmax=None, ymin=None, ymax=None):
+        axes.plot(self.loss_history)
+        title = self.min_trace.toString() + "," + self.params.toString()
+        axes.set_title(title)
+        axes.set_xlabel("epoch")
+        axes.set_ylabel("loss")
+        if xmin != None and ymin != None:
+            axes.axis([xmin, xmax, ymin, ymax])
+        #plt.show()
+        return title
+
         # 从历史记录中获得最小损失值得训练权重值
     def GetMinimalLossData(self):
         return self.min_trace
+
+    def Dump(self, name):
+        f = open(name, 'wb')
+        pickle.dump(self, f)
+
+    def Load(name):
+        f = open(name, 'rb')
+        lh = pickle.load(f)
+        return lh
+
+    def SaveToArray(self, name):
+        arr = np.array(self.loss_history)
+        np.save(name, arr)
 
 # end class
 

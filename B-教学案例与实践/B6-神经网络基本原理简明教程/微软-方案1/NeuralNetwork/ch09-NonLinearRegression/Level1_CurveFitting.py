@@ -8,7 +8,7 @@ import math
 from LossFunction import * 
 from Parameters import *
 from Activators import *
-from Level1_TwoLayerFittingNet import *
+from Level0_TwoLayerFittingNet import *
 from DataReader import *
 
 x_data_name = "X09.dat"

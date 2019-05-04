@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_Optimizer.py</StartupFile>
+    <StartupFile>Level2_Optimizer - Copy (2).py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,13 +25,15 @@
     <Compile Include="Level1_InitializeWeights.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level2_Optimizer - Copy %282%29.py" />
+    <Compile Include="Level2_Optimizer - Copy.py" />
     <Compile Include="Level4_Optimizer08.py" />
     <Compile Include="Level5_Optimizer09.py" />
     <Compile Include="Level2_Optimizer.py" />
     <Compile Include="MiniFramework\Activators.py" />
     <Compile Include="MiniFramework\DataReader.py" />
     <Compile Include="MiniFramework\FCLayer.py" />
-    <Compile Include="MiniFramework\GDOptimizer.py" />
+    <Compile Include="MiniFramework\Optimizer.py" />
     <Compile Include="MiniFramework\Layer.py" />
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MiniFramework\LossFunction.py" />

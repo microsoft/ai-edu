@@ -1,73 +1,69 @@
-# Copyright (c) Microsoft. All rights reserved.
-# Licensed under the MIT license. See LICENSE file in the project root for full license information.
-
-from MiniFramework.NeuralNet import *
-from MiniFramework.GDOptimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.Activators import *
-
-from MnistDataReader import *
-
-'''
-train_image_file = 'train-images-01'
-train_label_file = 'train-labels-01'
-test_image_file = 'test-images-01'
-test_label_file = 'test-labels-01'
-'''
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
+# coding: utf-8
+import sys, os
+sys.path.append(os.pardir)  # 親ディレクトリのファイルをインポートするための設定
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import OrderedDict
+from MiniFramework.Optimizer import *
 
 
-def LoadData(num_output):
-    mdr = MnistDataReader(train_image_file, train_label_file, test_image_file, test_label_file)
-    mdr.ReadData()
-    mdr.Normalize()
-    return mdr
+def f(x, y):
+    return x**2 / 20.0 + y**2
 
 
-if __name__ == '__main__':
+def df(x, y):
+    return x / 10.0, 2.0*y
 
-    num_output = 10
-    dataReader = LoadData(num_output)
-    num_feature = dataReader.num_feature
-    num_example = dataReader.num_example
-    num_input = num_feature
-    num_hidden1 = 128
-    num_hidden2 = 96
-    num_hidden3 = 64
-    num_hidden4 = 32
-    max_epoch = 10
-    batch_size = 5
-    learning_rate = 0.02
-    eps = 0.01
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        InitialMethod.Xavier, 
-                        OptimizerName.SGD)
 
-    loss_history = CLossHistory()
+init_pos = (-7.0, 2.0)
+params = {}
+x, y = init_pos[0], init_pos[1]
+gradx, grady = 0, 0
 
-    net = NeuralNet(params)
-    fc1 = FcLayer(num_input, num_hidden1, Relu())
-    net.add_layer(fc1, "fc1")
-    fc2 = FcLayer(num_hidden1, num_hidden2, Relu())
-    net.add_layer(fc2, "fc2")
-    fc3 = FcLayer(num_hidden2, num_hidden3, Relu())
-    net.add_layer(fc3, "fc3")
-    fc4 = FcLayer(num_hidden3, num_hidden4, Relu())
-    net.add_layer(fc4, "fc4")
-    fc5 = FcLayer(num_hidden4, num_output, Softmax())
-    net.add_layer(fc5, "fc5")
-    net.train(dataReader, loss_history)
+
+
+dict = {OptimizerName.SGD:0.9, OptimizerName.Momentum:0.1, OptimizerName.AdaGrad:1.5, OptimizerName.Adam:0.3}
+idx = 1
+
+for key in dict.keys():
+    optimizer_x = OptimizerFactory().CreateOptimizer(dict[key], key)
+    optimizer_y = OptimizerFactory().CreateOptimizer(dict[key], key)
+    x_history = []
+    y_history = []
+    x,y = init_pos[0], init_pos[1]
     
-    loss_history.ShowLossHistory(params, 0, None, 0, 1)
+    for i in range(20):
+        x_history.append(x)
+        y_history.append(y)
+        
+        gradx, grady = df(x, y)
+        x = optimizer_x.update(x, gradx)
+        y = optimizer_y.update(y, grady)
     
-    net.load_parameters()
-    print("Testing...")
-    correct, count = net.Test(dataReader)
-    print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))
+
+    x = np.arange(-10, 10, 0.01)
+    y = np.arange(-5, 5, 0.01)
+    
+    X, Y = np.meshgrid(x, y) 
+    Z = f(X, Y)
+    
+    # for simple contour line  
+    mask = Z > 7
+    Z[mask] = 0
+    
+    # plot 
+    plt.subplot(2, 2, idx)
+    idx += 1
+    plt.plot(x_history, y_history, 'o-', color="red")
+    plt.contour(X, Y, Z)
+    plt.ylim(-10, 10)
+    plt.xlim(-10, 10)
+    plt.plot(0, 0, '+')
+    #colorbar()
+    #spring()
+    plt.title(key)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    
+plt.show()

@@ -14,27 +14,27 @@ class OptimizerName(Enum):
     Adam = 6
 
 
-class GDOptimizerFactory(object):
+class OptimizerFactory(object):
     @staticmethod
-    def CreateOptimizer(eta, name = OptimizerName.SGD):
+    def CreateOptimizer(lr, name = OptimizerName.SGD):
         if name == OptimizerName.SGD:
-            optimizer = SGD(eta)
+            optimizer = SGD(lr)
         elif name == OptimizerName.Adam:
-            optimizer = Adam(eta)
+            optimizer = Adam(lr)
         elif name == OptimizerName.AdaGrad:
-            optimizer = AdaGrad(eta)
+            optimizer = AdaGrad(lr)
         elif name == OptimizerName.Momentum:
-            optimizer = Momentum(eta)
+            optimizer = Momentum(lr)
         elif name == OptimizerName.Nag:
-            optimizer = Nag(eta)
+            optimizer = Nag(lr)
         elif name == OptimizerName.RMSProp:
-            optimizer = RMSProp(eta)
+            optimizer = RMSProp(lr)
         elif name == OptimizerName.AdaDelta:
-            optimizer = AdaDelta(eta)
+            optimizer = AdaDelta(lr)
 
         return optimizer
 
-class GDOptimizer(object):
+class Optimizer(object):
     def __init__(self):
         pass
 
@@ -44,40 +44,42 @@ class GDOptimizer(object):
     def update(self, theta, grad):
         pass
 
-class SGD(GDOptimizer):
-    def __init__(self, eta):
-        self.eta = eta
+class SGD(Optimizer):
+    def __init__(self, lr):
+        self.lr = lr
 
     def update(self, theta, grad):
-        theta = theta - self.eta * grad
+        theta = theta - self.lr * grad
         return theta
 
-class Momentum(GDOptimizer):
-    def __init__(self, eta):
+class Momentum(Optimizer):
+    def __init__(self, lr):
         self.vt = 0
-        self.eta = eta
+        self.lr = lr
         self.alpha = 0.9
 
     def update(self, theta, grad):
-        vt_new = self.alpha * self.vt + self.eta * grad
-        theta = theta - vt_new
+        vt_new = self.alpha * self.vt - self.lr * grad
+        theta = theta + vt_new
+#        vt_new = self.alpha * self.vt + self.lr * grad
+#        theta = theta - vt_new
         self.vt = vt_new
         return theta
 
-class AdaGrad(GDOptimizer):
-    def __init__(self, eta):
+class AdaGrad(Optimizer):
+    def __init__(self, lr):
         self.eps = 1e-6
-        self.eta = eta
+        self.lr = lr
         self.r = 0
 
     def update(self, theta, grad):
         self.r = self.r + np.multiply(grad, grad)
-        alpha = self.eta / (self.eps + np.sqrt(self.r))
+        alpha = self.lr / (self.eps + np.sqrt(self.r))
         theta = theta - alpha * grad
         return theta
 
-class AdaDelta(GDOptimizer):
-    def __init__(self, eta):
+class AdaDelta(Optimizer):
+    def __init__(self, lr):
         self.eps = 1e-5
         self.r = 0
         self.s = 0
@@ -92,9 +94,9 @@ class AdaDelta(GDOptimizer):
         self.r = self.alpha * self.r + (1-self.alpha) * d_theta2
         return theta
 
-class RMSProp(GDOptimizer):
-    def __init__(self, eta):
-        self.eta = eta
+class RMSProp(Optimizer):
+    def __init__(self, lr):
+        self.lr = lr
         self.p = 0.9
         self.eps = 1e-6
         self.r = 0
@@ -102,13 +104,13 @@ class RMSProp(GDOptimizer):
     def update(self, theta, grad):
         grad2 = np.multiply(grad, grad)
         self.r = self.p * self.r + (1-self.p) * grad2
-        alpha = self.eta / np.sqrt(self.eps + self.r)
+        alpha = self.lr / np.sqrt(self.eps + self.r)
         theta = theta - alpha * grad
         return theta
 
-class Adam(GDOptimizer):
-    def __init__(self, eta=0.001):
-        self.eta = eta
+class Adam(Optimizer):
+    def __init__(self, lr=0.001):
+        self.lr = lr
         self.p1 = 0.9
         self.p2 = 0.999
         self.eps = 1e-8
@@ -124,15 +126,15 @@ class Adam(GDOptimizer):
         self.v = self.p2 * self.v + (1-self.p2) * np.multiply(grad, grad)
         m_hat = self.m / (1 - self.p1 ** self.t)
         v_hat = self.v / (1 - self.p2 ** self.t)
-        d_theta = self.eta * m_hat / (self.eps + np.sqrt(v_hat))
+        d_theta = self.lr * m_hat / (self.eps + np.sqrt(v_hat))
         theta = theta - d_theta
         return theta
 
 # 本算法要求在训练过程中两次介入：1. 在前向计算之前，先更新一次临时梯度 pre_update()；2. 在反向传播之后，再更新一次梯度 final_update()
-class Nag(GDOptimizer):
-    def __init__(self, eta):
+class Nag(Optimizer):
+    def __init__(self, lr):
         self.vt = 0
-        self.eta = eta
+        self.lr = lr
         self.alpha = 0.9
 
     # 先用预测的梯度来更新W,b
@@ -142,6 +144,6 @@ class Nag(GDOptimizer):
 
     # 再用动量法更新W,b do final update
     def update(self, theta, grad):
-        self.vt = self.alpha * self.vt + self.eta * grad
+        self.vt = self.alpha * self.vt + self.lr * grad
         theta = theta - self.vt
         return theta

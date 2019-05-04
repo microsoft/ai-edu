@@ -15,7 +15,6 @@ train_label_file = 'train-labels-10'
 test_image_file = 'test-images-10'
 test_label_file = 'test-labels-10'
 
-
 def LoadData(num_output):
     mdr = MnistDataReader(train_image_file, train_label_file, test_image_file, test_label_file)
     mdr.ReadData()
@@ -30,9 +29,11 @@ if __name__ == '__main__':
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
-    num_hidden1 = 64
-    num_hidden2 = 32
-    max_epoch = 5
+    num_hidden1 = 128
+    num_hidden2 = 96
+    num_hidden3 = 64
+    num_hidden4 = 32
+    max_epoch = 10
     batch_size = 5
     learning_rate = 0.02
     eps = 0.01
@@ -49,8 +50,12 @@ if __name__ == '__main__':
     net.add_layer(fc1, "fc1")
     fc2 = FcLayer(num_hidden1, num_hidden2, Relu())
     net.add_layer(fc2, "fc2")
-    fc3 = FcLayer(num_hidden2, num_output, Softmax())
+    fc3 = FcLayer(num_hidden2, num_hidden3, Relu())
     net.add_layer(fc3, "fc3")
+    fc4 = FcLayer(num_hidden3, num_hidden4, Relu())
+    net.add_layer(fc4, "fc4")
+    fc5 = FcLayer(num_hidden4, num_output, Softmax())
+    net.add_layer(fc5, "fc5")
     net.train(dataReader, loss_history)
     
     loss_history.ShowLossHistory(params, 0, None, 0, 1)

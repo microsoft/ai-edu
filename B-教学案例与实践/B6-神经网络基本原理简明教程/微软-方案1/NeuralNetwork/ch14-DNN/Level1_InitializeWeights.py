@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from MiniFramework.NeuralNet import *
-from MiniFramework.GDOptimizer import *
+from MiniFramework.Optimizer import *
 from MiniFramework.LossFunction import *
 from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *

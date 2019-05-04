@@ -41,7 +41,7 @@ class CLossHistory(object):
         plt.plot(self.loss_history)
         title = self.min_trace.toString() + "," + params.toString()
         plt.title(title)
-        plt.xlabel("epoch")
+        plt.xlabel("iteration")
         plt.ylabel("loss")
         if xmin != None and ymin != None:
             plt.axis([xmin, xmax, ymin, ymax])

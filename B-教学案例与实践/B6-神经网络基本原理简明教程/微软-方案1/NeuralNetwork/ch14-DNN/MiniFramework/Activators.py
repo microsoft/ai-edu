@@ -14,6 +14,8 @@ class CActivator(object):
     def backward(self, z, a, delta):
         pass
 
+    def get_name(self):
+        return self.__class__.__name__
 
 # 直传函数，相当于无激活
 class Identity(CActivator):

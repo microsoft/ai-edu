@@ -27,6 +27,6 @@ class CParameters(object):
 
 
     def toString(self):
-        title = str.format("bz:{0},eta:{1},ne:{2},init:{3},op:{4}", self.batch_size, self.eta, self.num_hidden, self.init_method.name, self.optimizer_name.name)
+        title = str.format("bz:{0},eta:{1},init:{2},op:{3}", self.batch_size, self.eta, self.init_method.name, self.optimizer_name.name)
         return title
 

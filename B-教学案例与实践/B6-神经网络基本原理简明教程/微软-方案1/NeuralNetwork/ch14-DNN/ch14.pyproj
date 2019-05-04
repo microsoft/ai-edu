@@ -2,15 +2,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>ea2e2a33-4a00-430c-82fd-357003b11772</ProjectGuid>
+    <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_Optimizer08.py</StartupFile>
+    <StartupFile>Level1_InitializeWeights.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>ch10</Name>
-    <RootNamespace>ch10</RootNamespace>
+    <Name>ch12</Name>
+    <RootNamespace>ch12</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,16 +21,28 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py" />
-    <Compile Include="DataReader.py" />
-    <Compile Include="GDOptimizer.py" />
-    <Compile Include="Level0_TwoLayerNet.py" />
-    <Compile Include="Level1_InitializeWeights.py" />
+    <Compile Include="BN.py" />
+    <Compile Include="Level1_InitializeWeights.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level4_Optimizer08.py" />
     <Compile Include="Level5_Optimizer09.py" />
-    <Compile Include="LossFunction.py" />
-    <Compile Include="Parameters.py" />
-    <Compile Include="WeightsBias.py" />
+    <Compile Include="MiniFramework - Copy.py" />
+    <Compile Include="MiniFramework\Activators.py" />
+    <Compile Include="MiniFramework\DataReader.py" />
+    <Compile Include="MiniFramework\FCLayer.py" />
+    <Compile Include="MiniFramework\GDOptimizer.py" />
+    <Compile Include="MiniFramework\Layer.py" />
+    <Compile Include="MiniFramework\__init__.py" />
+    <Compile Include="MiniFramework\LossFunction.py" />
+    <Compile Include="MiniFramework\NeuralNet.py" />
+    <Compile Include="MiniFramework\Parameters.py" />
+    <Compile Include="MiniFramework\WeightsBias.py" />
+    <Compile Include="MiniFramework.py" />
+    <Compile Include="MnistDataReader.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MiniFramework\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-from MiniFramework.GDOptimizer import *
+from MiniFramework.Optimizer import *
 
 class InitialMethod(Enum):
     Zero = 0,
@@ -46,8 +46,8 @@ class WeightsBias(object):
         # end if
 
     def __CreateOptimizers(self):
-        self.oW = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oB = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
 
     def pre_Update(self):
         if self.optimizer_name == OptimizerName.Nag:

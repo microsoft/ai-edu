@@ -3,7 +3,7 @@
 
 from MiniFramework.LossFunction import *
 from MiniFramework.WeightsBias import *
-from MiniFramework.GDOptimizer import *
+from MiniFramework.Optimizer import *
 
 # this class is for two-layer NN only
 class CParameters(object):

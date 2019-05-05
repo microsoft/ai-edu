@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_Optimizer.py</StartupFile>
+    <StartupFile>Level2_Optimizer_Sample.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -25,11 +25,10 @@
     <Compile Include="Level1_InitializeWeights.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2_Optimizer_beale.py" />
-    <Compile Include="Level2_Optimizer.py" />
+    <Compile Include="Level3_Optimizer_Real.py" />
+    <Compile Include="Level2_Optimizer_Sample.py" />
     <Compile Include="Level4_Optimizer08.py" />
     <Compile Include="Level5_Optimizer09.py" />
-    <Compile Include="Level2_Optimizer_xy.py" />
     <Compile Include="MiniFramework\Activators.py" />
     <Compile Include="MiniFramework\DataReader.py" />
     <Compile Include="MiniFramework\FCLayer.py" />

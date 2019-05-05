@@ -138,7 +138,7 @@ def loss_2d(x,y,n,loss_history,batch_size):
     last_loss, result_w, result_b = loss_history.GetLast()
 
     # show contour of loss
-    s = 100
+    s = 150
     W = np.linspace(result_w-1,result_w+1,s)
     B = np.linspace(result_b-1,result_b+1,s)
     LOSS = np.zeros((s,s))
@@ -195,8 +195,8 @@ def loss_2d(x,y,n,loss_history,batch_size):
 if __name__ == '__main__':
     
     # 修改params分别为下面三行，运行程序，对比不同的运行结果
-    #params = CParameters(eta=0.1, max_epoch=50, batch_size=1, eps = 0.005)
-    params = CParameters(eta=0.1, max_epoch=50, batch_size=10, eps = 0.005)
+    params = CParameters(eta=0.1, max_epoch=50, batch_size=1, eps = 0.005)
+    #params = CParameters(eta=0.1, max_epoch=50, batch_size=10, eps = 0.005)
     #params = CParameters(eta=0.5, max_epoch=1000, batch_size=200, eps = 0.005)
      
     W, B = InitialWeights(1,1,0)

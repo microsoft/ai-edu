@@ -51,7 +51,6 @@ class CLossHistory(object):
         # 从历史记录中获得最小损失值得训练权重值
     def GetMinimalLossData(self):
         return self.min_trace
-
 # end class
 
 class LossFunctionName(Enum):

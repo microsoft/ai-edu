@@ -35,7 +35,8 @@ if __name__ == '__main__':
     #ax.plot_surface(X, Y, Z, norm=LogNorm(), rstride=1, cstride=1, edgecolor='none', alpha=.8, cmap=plt.cm.jet)
     #ax.plot(*minima_, f(*minima_), 'r*', markersize=20)
 
-    ax.contour(X, Y, Z, levels=np.logspace(-.5, 5, 35), norm=LogNorm(), cmap=plt.cm.jet)
+    ax.contour(X, Y, Z, levels=np.logspace(-.5, 5, 35))
+    #ax.contour(X, Y, Z, levels=np.logspace(-.5, 5, 35), norm=LogNorm(), cmap=plt.cm.jet)
 
 
     ax.set_xlabel('x')

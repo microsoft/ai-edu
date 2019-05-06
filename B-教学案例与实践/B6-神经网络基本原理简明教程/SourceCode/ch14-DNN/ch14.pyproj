@@ -21,12 +21,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BN.py" />
+    <Compile Include="Level2_BatchNormalization.py" />
     <Compile Include="Level1_InitializeWeights.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level3_Optimizer_Real.py" />
-    <Compile Include="Level2_Optimizer_Sample.py" />
+    <Compile Include="Level4_Optimizer_Sample.py" />
     <Compile Include="Level4_Optimizer08.py" />
     <Compile Include="Level5_Optimizer09.py" />
     <Compile Include="MiniFramework\Activators.py" />

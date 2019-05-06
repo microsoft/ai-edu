@@ -24,7 +24,7 @@ def run():
         x,y = -7.0, 2.0
         dx, dy = 0, 0
 
-        for i in range(15):
+        for i in range(25):
             x_history.append(x)
             y_history.append(y)
         
@@ -47,7 +47,7 @@ def run():
         plt.subplot(2, 2, idx)
         idx += 1
         plt.plot(x_history, y_history, 'o-')
-        plt.contour(X, Y, Z)
+        c = plt.contour(X, Y, Z)
         plt.ylim(-10, 10)
         plt.xlim(-10, 10)
         plt.plot(0, 0, '+')

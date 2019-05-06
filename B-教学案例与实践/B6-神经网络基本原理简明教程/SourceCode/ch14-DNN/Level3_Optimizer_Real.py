@@ -105,14 +105,16 @@ def CheckLoss(W, B, X, Y):
     return loss
 
 def show_contour(ax, loss_history, optimizer):
-
+    # draw w,b training history
     ax.plot(loss_history.w_history, loss_history.b_history)
-
+    # read example data
     X,Y = ReadData()
+    # generate w,b data grid array for 3D, w = x_axis, b = y_axis
     w = np.arange(1, 3, 0.01)
     b = np.arange(2, 4, 0.01)
     W, B = np.meshgrid(w, b) 
     m = X.shape[1]
+    # calculate Z (z_axis)
     Z = np.zeros((W.shape))
     for i in range(Z.shape[0]):
         for j in range(Z.shape[1]):
@@ -122,7 +124,12 @@ def show_contour(ax, loss_history, optimizer):
             LOSS = (z - Y)**2
             loss = LOSS.sum()/m/2
             Z[i,j] = loss
-    ax.contour(W, B, Z, levels=np.logspace(-4, 4, 35), norm=LogNorm(), cmap=plt.cm.jet)
+        #end for
+    #end for
+    # draw contour
+    c = ax.contour(W, B, Z, levels=np.logspace(-4, 4, 35), norm=LogNorm(), cmap=plt.cm.jet)
+    #ax.clabel(c,fontsize=6,colors=('k','r'))
+    # set the drawing rectangle area
     ax.axis([1, 3, 2, 4])
     ax.set_xlabel("w")
     ax.set_ylabel("b")

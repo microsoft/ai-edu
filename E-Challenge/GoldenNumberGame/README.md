@@ -6,12 +6,12 @@
 
 如何挑战：
 
-* 人工挑战：打开[网页客户端](https://goldennumber.aiedu.msra.cn/)或者使用[本地客户端](../C-开发工具与环境/微软黄金点程序工具/OnlineGame/SampleClient)，提交你的预测值，看能否最接近黄金点。
-* 写AI来挑战：[用C#写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame/BotDemoInCSharp)，或者[用Python写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame/BotDemoInPython)，或者[用你熟悉的语言来写个bot](../C-开发工具与环境/微软黄金点程序工具/OnlineGame)，让你的bot智能的选择数字进行提交，看能否在多回合比赛中得分最高。
+* 人工挑战：打开[网页客户端](https://goldennumber.aiedu.msra.cn/)或者使用[本地客户端](../../C-开发工具与环境/微软黄金点程序工具/OnlineGame/SampleClient)，提交你的预测值，看能否最接近黄金点。
+* 写AI来挑战：[用C#写个bot](../../C-开发工具与环境/微软黄金点程序工具/OnlineGame/BotDemoInCSharp)，或者[用Python写个bot](../../C-开发工具与环境/微软黄金点程序工具/OnlineGame/BotDemoInPython)，或者[用你熟悉的语言来写个bot](../../C-开发工具与环境/微软黄金点程序工具/OnlineGame)，让你的bot智能的选择数字进行提交，看能否在多回合比赛中得分最高。
 
 比赛说明：
 
-* 服务器接口详细说明及bot示例，请参考[这里](../C-开发工具与环境/微软黄金点程序工具/OnlineGame)。
+* 服务器接口详细说明及bot示例，请参考[这里](../../C-开发工具与环境/微软黄金点程序工具/OnlineGame)。
 * [房间0](https://goldennumber.aiedu.msra.cn/main?roomid=0)和[房间1](https://goldennumber.aiedu.msra.cn/main?roomid=1)是常规比赛房间，其中内置了多个基于规则的bot会和你一起比赛。
 * [房间0](https://goldennumber.aiedu.msra.cn/main?roomid=0)要求每个玩家每回合提交一个数，[房间1](https://goldennumber.aiedu.msra.cn/main?roomid=1)要求每个玩家每回合提交两个数，可以用两个数双保险去接近黄金点值，也可以提交一个较大的数字来保证自己的另一个数字比较接近黄金点值。
 * 统计得分时，只累加当天进行的各回合比赛的得分。

@@ -34,7 +34,7 @@ if __name__ == '__main__':
     s = sigmoid(x)
     p2, = plt.plot(x, s)
     plt.grid()
-    plt.legend([p1,p2], ["forward", "activation"])
+    plt.legend([p1,p2], ["forward batch data", "activation"])
     plt.axis([-5, 5, 0, 1])
     plt.show()
 

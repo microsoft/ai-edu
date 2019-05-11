@@ -5,8 +5,9 @@ from enum import Enum
 
 class LayerTypes(Enum):
     FC = 0      # full connection
-    CONV = 1    # convalution
-    POOL = 2    # pooling
+    CV = 1      # convalution
+    PL = 2      # pooling
+    BN = 3      # batch normalization
 
 
 class CLayer(object):

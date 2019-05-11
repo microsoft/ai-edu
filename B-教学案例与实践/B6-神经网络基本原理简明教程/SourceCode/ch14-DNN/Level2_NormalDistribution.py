@@ -4,13 +4,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from MiniFramework.Activators import *
+
 def nd_fun(x, sigma, mu):
     a = - (x-mu)**2 / (2*sigma*sigma)
     f = np.exp(a) / (sigma * np.sqrt(2*np.pi))
     return f
-
-def sigmoid(x):
-    return 1.0 / (1.0 + np.exp(-x))
 
 if __name__ == '__main__':
     x = np.linspace(-5,5)
@@ -31,11 +30,20 @@ if __name__ == '__main__':
     x = np.linspace(-5,5)
     f = nd_fun(x, 1.5, 2)
     p1, = plt.plot(x,f)
-    s = sigmoid(x)
+    s = Sigmoid().forward(x)
     p2, = plt.plot(x, s)
     plt.grid()
-    plt.legend([p1,p2], ["forward batch data", "activation"])
+    plt.legend([p1,p2], ["forward batch data", "Sigmoid"])
     plt.axis([-5, 5, 0, 1])
     plt.show()
 
+    x = np.linspace(-5,5)
+    f = nd_fun(x, 1.5, 2)
+    p1, = plt.plot(x,f)
+    r = Relu().forward(x)
+    p2, = plt.plot(x, r)
+    plt.grid()
+    plt.legend([p1,p2], ["forward batch data", "Relu"])
+    plt.axis([-5, 5, 0, 5])
+    plt.show()
 

@@ -186,14 +186,16 @@ def batchnorm_backward(dout, cache):
     return dx, dgamma, dbeta
 
 if __name__ == '__main__':
-    bn = BnLayer(10)
-    x = np.random.random(size=(16,10))
+    batch_size = 64
+    features=10
+    bn = BnLayer(features)
+    x = np.random.random(size=(batch_size,features))
     z = bn.forward(x)
-    delta_in = np.random.random(size=(16,10))
+    delta_in = np.random.random(size=(batch_size,features))
     delta_out, d_gamma, d_beta = bn.backward(delta_in)
 
-    gamma = np.ones((1,10))
-    beta = np.zeros((1,10))
+    gamma = bn.gamma
+    beta = bn.beta
     bn_param = {"mode":"train"}
     out, cache = batchnorm_forward(x, gamma, beta, bn_param)
     dx,dgamma,dbeta = batchnorm_backward(delta_in, cache)

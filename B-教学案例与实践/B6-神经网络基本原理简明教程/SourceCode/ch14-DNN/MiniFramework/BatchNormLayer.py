@@ -32,8 +32,12 @@ class BnLayer(CLayer):
         assert(delta_in.ndim == 2 or delta_in.ndim == 4)  # fc or cv
         m = self.x.shape[0]
         # calculate d_beta, b_gamma
-        self.d_beta = np.sum(delta_in, axis=0)
+       
+        # 公式11
         self.d_gamma = np.sum(delta_in * self.norm_x, axis=0)
+        # 公式12
+        self.d_beta = np.sum(delta_in, axis=0)
+
         # calculate delta_out
         # 公式14
         d_norm_x = self.gamma * delta_in 

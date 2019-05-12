@@ -4,17 +4,13 @@
 import numpy as np
 
 from MiniFramework.Layer import *
-from MiniFramework.Activators import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.Parameters import *
 
 class FcLayer(CLayer):
-    def __init__(self, input_size, output_size, activator):
+    def __init__(self, input_size, output_size, param):
         self.input_size = input_size
         self.output_size = output_size
-        self.activator = activator
-
-    def Initialize(self, param):
         self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer_name, param.eta)
         self.weights.InitializeWeights()
 
@@ -25,17 +21,21 @@ class FcLayer(CLayer):
         else:
             self.x = input
         self.z = np.dot(self.weights.W, self.x) + self.weights.B
-        self.a = self.activator.forward(self.z)
-        return self.a
+        #self.a = self.activator.forward(self.z)
+        return self.z
 
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
     def backward(self, delta_in, flag):
+        
+        """
         if flag == LayerIndexFlags.LastLayer or flag == LayerIndexFlags.SingleLayer:
             dZ = delta_in
         else:
             #dZ = delta_in * self.activator.backward(self.a)
             dZ,_ = self.activator.backward(self.z, self.a, delta_in)
-
+        """
+        
+        dZ = delta_in
         m = self.x.shape[1]
         self.weights.dW = np.dot(dZ, self.x.T) / m
         self.weights.dB = np.sum(dZ, axis=1, keepdims=True) / m

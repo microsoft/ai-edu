@@ -112,10 +112,10 @@ class MnistDataReader(DataReader):
     # need explicitly call this function to generate validation set
     def GenerateDevSet(self, k = 10):
         self.validation_size = (int)(self.num_example / k)
-        self.XDevSet = self.X[:,0:validation_size]
-        self.XTrainSet = self.X[:,validation_size:]
-        self.YDevSet = self.Y[:,0:validation_size]
-        self.YTrainSet = self.X[:,validation_size:]
+        self.XDevSet = self.X[:,0:self.validation_size]
+        self.XTrainSet = self.X[:,self.validation_size:]
+        self.YDevSet = self.Y[:,0:self.validation_size]
+        self.YTrainSet = self.X[:,self.validation_size:]
 
     def GetBatchSamples(self, batch_size, iteration):
         start = iteration * batch_size

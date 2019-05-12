@@ -14,8 +14,14 @@ class CLayer(object):
     def __init__(self, layer_type):
         self.layer_type = layer_type
 
-    def update(self, lr):
-        return
+    def update(self):
+        pass
+
+    def save_parameters(self, name):
+        pass
+
+    def load_parameters(self, name):
+        pass
 
 class LayerIndexFlags(Enum):
     SingleLayer = 0

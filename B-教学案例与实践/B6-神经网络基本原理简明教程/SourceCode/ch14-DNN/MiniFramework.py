@@ -6,9 +6,9 @@ from MiniFramework.Optimizer import *
 from MiniFramework.LossFunction import *
 from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
-from MiniFramework.Activators import *
+from MiniFramework.ActivatorLayer import *
 
-from MnistDataReader import *
+from MnistImageDataReader import *
 
 train_image_file = 'train-images-10'
 train_label_file = 'train-labels-10'
@@ -17,11 +17,11 @@ test_label_file = 'test-labels-10'
 
 
 def LoadData(num_output):
-    mdr = MnistDataReader(train_image_file, train_label_file, test_image_file, test_label_file)
+    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
     mdr.ReadData()
     mdr.Normalize()
+    mdr.GenerateDevSet()
     return mdr
-
 
 if __name__ == '__main__':
 
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     num_hidden1 = 64
     num_hidden2 = 32
     max_epoch = 5
-    batch_size = 5
+    batch_size = 32
     learning_rate = 0.02
     eps = 0.01
 
@@ -45,12 +45,19 @@ if __name__ == '__main__':
     loss_history = CLossHistory()
 
     net = NeuralNet(params)
-    fc1 = FcLayer(num_input, num_hidden1, Relu())
+    fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    fc2 = FcLayer(num_hidden1, num_hidden2, Relu())
+    relu1 = ActivatorLayer(Relu())
+    net.add_layer(relu1, "relu1")
+    fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    fc3 = FcLayer(num_hidden2, num_output, Softmax())
+    relu2 = ActivatorLayer(Relu())
+    net.add_layer(relu2, "relu2")
+    fc3 = FcLayer(num_hidden2, num_output, params)
     net.add_layer(fc3, "fc3")
+    softmax = ActivatorLayer(Softmax())
+    net.add_layer(softmax, "softmax")
+
     net.train(dataReader, loss_history)
     
     loss_history.ShowLossHistory(params, 0, None, 0, 1)

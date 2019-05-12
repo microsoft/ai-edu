@@ -3,6 +3,27 @@
 
 import numpy as np
 
+from MiniFramework.Layer import *
+
+class ActivatorLayer(CLayer):
+    def __init__(self, activator):
+        self.activator = activator
+
+    def forward(self, input):
+        self.input_shape = input.shape
+        self.x = input
+        self.a = self.activator.forward(self.x)
+        return self.a
+
+    # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
+    def backward(self, delta_in, flag):
+        if flag == LayerIndexFlags.LastLayer or flag == LayerIndexFlags.SingleLayer:
+            dZ = delta_in
+        else:
+            dZ,_ = self.activator.backward(self.x, self.a, delta_in)
+        # end if
+        return dZ
+
 class CActivator(object):
     # z = 本层的wx+b计算值矩阵
     def forward(self, z):

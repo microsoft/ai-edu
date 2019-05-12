@@ -3,7 +3,6 @@
 
 
 import numpy as np
-from enum import Enum
 
 from MiniFramework.Layer import *
 from MiniFramework.FCLayer import *
@@ -14,11 +13,10 @@ class NeuralNet(object):
         self.params = params
         self.layer_list = []
         self.layer_name = []
-        self.output = np.zeros((1,1))
+        self.output = None
         self.layer_count = 0
 
     def add_layer(self, layer, name=""):
-        layer.Initialize(self.params)
         self.layer_list.append(layer)
         self.layer_name.append(name)
         self.layer_count += 1
@@ -63,17 +61,20 @@ class NeuralNet(object):
             else:
                 return LayerIndexFlags.MiddleLayer
 
-    def train(self, dataReader, loss_history):
+    # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
+    def train(self, dataReader, loss_history, checkpoint=0.1):
         loss = 0 
         lossFunc = CLossFunction(self.params.loss_func_name)
         # if num_example=200, batch_size=10, then iteration=200/10=20
         if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_example:
-            self.params.batch_size = dataReader.num_example
-        max_iteration = (int)(dataReader.num_example / self.params.batch_size)
+            self.params.batch_size = dataReader.num_train
+        # end if
+        max_iteration = dataReader.num_train // self.params.batch_size
+        checkpoint_iteration = max_iteration * checkpoint
         for epoch in range(self.params.max_epoch):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
-                batch_x, batch_y = dataReader.GetBatchSamples(self.params.batch_size, iteration)
+                batch_x, batch_y = dataReader.GetBatchTrainSamples(self.params.batch_size, iteration)
                 # for optimizers which need pre-update weights
                 if self.params.optimizer_name == OptimizerName.Nag:
                     self.__pre_update()
@@ -84,35 +85,52 @@ class NeuralNet(object):
                 # final update w,b
                 self.__update()
 
-                if iteration % 1000 == 0:
-                    self.__forward(dataReader.X)
-                    loss = lossFunc.CheckLoss(dataReader.Y, self.output)
-                    print("epoch=%d, iteration=%d, loss=%f" %(epoch,iteration,loss))
-                    is_min = loss_history.AddLossHistory(loss, epoch, iteration)                
-                    if is_min:
-                        self.save_parameters()
+                if iteration % checkpoint_iteration == 0:
+                    self.CheckErrorAndLoss(dataReader, lossFunc, batch_x, batch_y, loss_history, epoch, iteration*self.params.batch_size)
                 #end if
-            # end for            
+            # end for    
+            self.save_parameters()
             dataReader.Shuffle()
-            if loss < self.params.eps:
-                break
             # end if
-            #dataReader.Shuffle()
         # end for
-        
-    def Test(self, dataReader):
-        X = dataReader.XTestSet
-        Y = dataReader.YTestSet
-        correct = 0
-        count = X.shape[1]
-        for i in range(count):
-            x = X[:,i].reshape(dataReader.num_feature, 1)
-            y = Y[:,i].reshape(dataReader.num_category, 1)
-            self.__forward(x)
-            if np.argmax(self.output) == np.argmax(y):
-                correct += 1
+        print("testing...")
+        c,n = self.Test(dataReader)
+        print(str.format("rate={0} / {1} = {2}", c, n, c / n))
 
-        return correct, count
+
+    def CheckErrorAndLoss(self, dataReader, lossFunc, train_x, train_y, loss_history, epoch, iteration):
+        loss_train = lossFunc.CheckLoss(train_y, self.output)
+        accuracy_train = self.__CalAccuracy(self.output, train_y) / train_y.shape[1]
+        val_x, val_y = dataReader.GetDevSet()
+        self.__forward(val_x)
+        loss_val = lossFunc.CheckLoss(dataReader.YDevSet.T, self.output)
+        accuracy_val = self.__CalAccuracy(self.output, val_y) / val_y.shape[1]
+    
+        loss_history.Add(epoch, iteration, loss_train, accuracy_train, loss_val, accuracy_val)
+        print("epoch=%d, iteration=%d" %(epoch, iteration))
+        print("loss_train=%.3f, accuracy_train=%f" %(loss_train, accuracy_train))
+        print("loss_valid=%.3f, accuracy_valid=%f" %(loss_val, accuracy_val))
+
+        return
+
+    def Test(self, dataReader):
+        correct = 0
+        test_batch = 1000
+        max_iteration = dataReader.num_test//test_batch
+        for i in range(max_iteration):
+            x, y = dataReader.GetBatchTestSamples(test_batch, i)
+            self.__forward(x)
+            correct += self.__CalAccuracy(self.output, y)
+        #end for
+        return correct, dataReader.num_test
+
+    def __CalAccuracy(self, a, y_onehot):
+        ra = np.argmax(a, axis=0).reshape(-1,1)
+        ry = np.argmax(y_onehot, axis=0).reshape(-1,1)
+        r = (ra == ry)
+        correct = r.sum()
+        return correct
+
 
     def inference(self, X):
         self.__forward(X)

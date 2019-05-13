@@ -1,6 +1,6 @@
 # 简介
 - [edX课程链接](https://www.edx.org/microsoft-professional-program-artificial-intelligence)
-- 微软将免费提供总共250课时的10门人工智能课程,覆盖10项应用技能、10个学分，完成课程学习的用户可申请微软专业学位课程（MPP）证书作为职业技能凭证.
+- 微软将免费提供9门人工智能课程+1个Capstone项目实战,覆盖10项应用技能、10个学分，完成课程学习的用户可申请微软专业学位课程（MPP）证书作为职业技能凭证.
 - 您将学到
   - 使用Python 处理数据
   - 人工智能中的道德与法律
@@ -10,7 +10,7 @@
   - 实施AI解决方案
 - 我们推荐您使用 Microsoft Edge 浏览器并安装 Translator for Microsoft Edge 插件实现即时英中翻译
 
-# [课程大纲](https://www.edx.org/microsoft-professional-program-artificial-intelligence)
+# 课程大纲（点击[这里](https://www.edx.org/microsoft-professional-program-artificial-intelligence)获取最新的课程大纲）
 
 - 第1课 - 人工智能介绍
 - 第2课 - Python在数据科学中的使用介绍

@@ -25,40 +25,48 @@ class CLossHistory(object):
         # loss history
         self.loss_history_train = []
         self.accuracy_history_train = []
+        self.iteration_history_train = []
+        self.epoch_history_train = []
+
         self.loss_history_val = []
         self.accuracy_history_val = []
         self.min_loss_index = -1
         # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
         self.min_trace = CTrace(100000, -1, -1, -1)
 
-    def Add(self, epoch, iteration, loss_train, accuracy_train, loss_val, accuracy_val):
+    def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_val, accuracy_val):
+        self.iteration_history_train.append(total_iteration)
+        self.epoch_history_train.append(epoch)
         self.loss_history_train.append(loss_train)
         self.accuracy_history_train.append(accuracy_train)
         self.loss_history_val.append(loss_val)
         self.accuracy_history_val.append(accuracy_val)
+        """
         if loss_val < self.min_trace.loss:
             self.min_trace = CTrace(epoch, iteration, loss_val, accuracy_val)
             self.minimal_loss_index = len(self.loss_history_val) - 1
             return True
-        # end if
+        """
         return False
 
     # 图形显示损失函数值历史记录
     def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
-        p1, = plt.plot(self.loss_history_val)
-        p2, = plt.plot(self.loss_history_train)
+        p1, = plt.plot(self.iteration_history_train, self.loss_history_val)
+        p2, = plt.plot(self.iteration_history_train, self.loss_history_train)
         plt.legend([p1,p2], ["validation","train"])
         title = self.min_trace.toString() + "," + params.toString()
         plt.title(title)
         plt.ylabel("loss")
+        plt.xlabel("iteration")
         plt.show()
         
-        p1, = plt.plot(self.accuracy_history_val)
-        p2, = plt.plot(self.accuracy_history_train)
+        p1, = plt.plot(self.iteration_history_train, self.accuracy_history_val)
+        p2, = plt.plot(self.iteration_history_train, self.accuracy_history_train)
         plt.legend([p1,p2], ["validation","train"])
         title = self.min_trace.toString() + "," + params.toString()
         plt.title(title)
         plt.ylabel("accuracy")
+        plt.xlabel("iteration")
         plt.show()
         
 

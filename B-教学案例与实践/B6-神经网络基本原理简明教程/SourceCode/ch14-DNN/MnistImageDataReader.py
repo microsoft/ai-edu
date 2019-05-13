@@ -103,7 +103,7 @@ class MnistImageDataReader(DataReader):
     def NormalizeY(self):
         self.Y = self.ToOneHot(self.YTrainRaw)
         # no need to OneHot test set, we only need to get [0~9] from this set, instead of onehot encoded
-        self.YTestSet = self.YTestRaw
+        self.YTestSet = self.ToOneHot(self.YTestRaw)
 
     def ToOneHot(self, dataSet):
         num = dataSet.shape[0]
@@ -182,9 +182,9 @@ class MnistImageDataReader(DataReader):
         batch_Y = self.YTestSet[start:end]
 
         if self.mode == "vector":
-            return batch_X.reshape(batch_size, -1).T, batch_Y
+            return batch_X.reshape(batch_size, -1).T, batch_Y.T
         elif self.mode == "image":
-            return batch_X, batch_Y
+            return batch_X, batch_Y.T
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format

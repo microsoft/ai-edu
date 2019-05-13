@@ -32,17 +32,15 @@ if __name__ == '__main__':
     num_input = num_feature
     num_hidden1 = 64
     num_hidden2 = 32
-    max_epoch = 5
+    max_epoch = 50
     batch_size = 32
     learning_rate = 0.02
-    eps = 0.01
+    eps = 0.05
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,
                         LossFunctionName.CrossEntropy3, 
                         InitialMethod.Xavier, 
-                        OptimizerName.SGD)
-
-    loss_history = CLossHistory()
+                        OptimizerName.RMSProp)
 
     net = NeuralNet(params)
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -58,9 +56,9 @@ if __name__ == '__main__':
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, loss_history)
+    net.train(dataReader, checkpoint=0.2)
     
-    loss_history.ShowLossHistory(params, 0, None, 0, 1)
+    net.ShowLossHistory(0, None, 0, 1)
     
     net.load_parameters()
     print("Testing...")

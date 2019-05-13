@@ -62,15 +62,16 @@ class NeuralNet(object):
                 return LayerIndexFlags.MiddleLayer
 
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
-    def train(self, dataReader, loss_history, checkpoint=0.1):
+    def train(self, dataReader, checkpoint=0.1):
+        self.loss_history = CLossHistory()
         loss = 0 
-        lossFunc = CLossFunction(self.params.loss_func_name)
+        self.lossFunc = CLossFunction(self.params.loss_func_name)
         # if num_example=200, batch_size=10, then iteration=200/10=20
         if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_example:
             self.params.batch_size = dataReader.num_train
         # end if
         max_iteration = dataReader.num_train // self.params.batch_size
-        checkpoint_iteration = max_iteration * checkpoint
+        checkpoint_iteration = (int)(max_iteration * checkpoint)
         for epoch in range(self.params.max_epoch):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
@@ -86,32 +87,37 @@ class NeuralNet(object):
                 self.__update()
 
                 if iteration % checkpoint_iteration == 0:
-                    self.CheckErrorAndLoss(dataReader, lossFunc, batch_x, batch_y, loss_history, epoch, iteration*self.params.batch_size)
+                    loss_valdation = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, epoch * max_iteration + iteration)
+                    if loss_valdation <= self.params.eps:
+                        break
                 #end if
-            # end for    
+            # end for
             self.save_parameters()
             dataReader.Shuffle()
             # end if
+            if loss_valdation <= self.params.eps:
+                break
+
         # end for
         print("testing...")
         c,n = self.Test(dataReader)
         print(str.format("rate={0} / {1} = {2}", c, n, c / n))
 
 
-    def CheckErrorAndLoss(self, dataReader, lossFunc, train_x, train_y, loss_history, epoch, iteration):
-        loss_train = lossFunc.CheckLoss(train_y, self.output)
+    def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
+        loss_train = self.lossFunc.CheckLoss(train_y, self.output)
         accuracy_train = self.__CalAccuracy(self.output, train_y) / train_y.shape[1]
         val_x, val_y = dataReader.GetDevSet()
         self.__forward(val_x)
-        loss_val = lossFunc.CheckLoss(dataReader.YDevSet.T, self.output)
+        loss_val = self.lossFunc.CheckLoss(val_y, self.output)
         accuracy_val = self.__CalAccuracy(self.output, val_y) / val_y.shape[1]
     
-        loss_history.Add(epoch, iteration, loss_train, accuracy_train, loss_val, accuracy_val)
-        print("epoch=%d, iteration=%d" %(epoch, iteration))
+        self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_val, accuracy_val)
+        print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
         print("loss_train=%.3f, accuracy_train=%f" %(loss_train, accuracy_train))
         print("loss_valid=%.3f, accuracy_valid=%f" %(loss_val, accuracy_val))
 
-        return
+        return loss_val
 
     def Test(self, dataReader):
         correct = 0
@@ -125,8 +131,8 @@ class NeuralNet(object):
         return correct, dataReader.num_test
 
     def __CalAccuracy(self, a, y_onehot):
-        ra = np.argmax(a, axis=0).reshape(-1,1)
-        ry = np.argmax(y_onehot, axis=0).reshape(-1,1)
+        ra = np.argmax(a, axis=0)
+        ry = np.argmax(y_onehot, axis=0)
         r = (ra == ry)
         correct = r.sum()
         return correct
@@ -149,3 +155,6 @@ class NeuralNet(object):
             layer = self.layer_list[i]
             name = self.layer_name[i]
             layer.load_parameters(name)
+
+    def ShowLossHistory(self, xmin=None, xmax=None, ymin=None, ymax=None):
+        self.loss_history.ShowLossHistory(self.params, xmin, xmax, ymin, ymax)

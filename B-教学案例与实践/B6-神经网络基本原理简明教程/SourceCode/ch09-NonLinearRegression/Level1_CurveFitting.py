@@ -39,7 +39,7 @@ if __name__ == '__main__':
     params = CParameters(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps)
 
     # SGD, MiniBatch, FullBatch
-    loss_history = CLossHistory()
+    loss_history = CLossHistory(params)
     net = TwoLayerFittingNet()
     wb1, wb2 = net.train(dataReader, params, loss_history)
 

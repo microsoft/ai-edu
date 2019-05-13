@@ -34,13 +34,16 @@ class CLossHistory(object):
         # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
         self.min_trace = CTrace(100000, -1, -1, -1)
 
-    def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_val, accuracy_val):
+    def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld):
         self.iteration_history_train.append(total_iteration)
         self.epoch_history_train.append(epoch)
         self.loss_history_train.append(loss_train)
         self.accuracy_history_train.append(accuracy_train)
-        self.loss_history_val.append(loss_val)
-        self.accuracy_history_val.append(accuracy_val)
+        if loss_vld is not None:
+            self.loss_history_val.append(loss_vld)
+        if accuracy_vld is not None:
+            self.accuracy_history_val.append(accuracy_vld)
+
         """
         if loss_val < self.min_trace.loss:
             self.min_trace = CTrace(epoch, iteration, loss_val, accuracy_val)

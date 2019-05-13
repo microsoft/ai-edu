@@ -16,7 +16,7 @@ test_image_file = 'test-images-10'
 test_label_file = 'test-labels-10'
 
 
-def LoadData(num_output):
+def LoadData():
     mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
     mdr.ReadData()
     mdr.Normalize()
@@ -25,22 +25,22 @@ def LoadData(num_output):
 
 if __name__ == '__main__':
 
-    num_output = 10
-    dataReader = LoadData(num_output)
+    dataReader = LoadData()
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
     num_hidden1 = 64
     num_hidden2 = 32
-    max_epoch = 50
+    num_output = 10
+    max_epoch = 20
     batch_size = 32
     learning_rate = 0.02
-    eps = 0.05
+    eps = 0.08
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,
                         LossFunctionName.CrossEntropy3, 
                         InitialMethod.Xavier, 
-                        OptimizerName.RMSProp)
+                        OptimizerName.SGD)
 
     net = NeuralNet(params)
     fc1 = FcLayer(num_input, num_hidden1, params)

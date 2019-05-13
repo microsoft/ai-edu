@@ -25,21 +25,15 @@ class FcLayer(CLayer):
         return self.z
 
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
-    def backward(self, delta_in, flag):
-        
-        """
-        if flag == LayerIndexFlags.LastLayer or flag == LayerIndexFlags.SingleLayer:
-            dZ = delta_in
-        else:
-            #dZ = delta_in * self.activator.backward(self.a)
-            dZ,_ = self.activator.backward(self.z, self.a, delta_in)
-        """
-        
+    def backward(self, delta_in, flag):       
         dZ = delta_in
         m = self.x.shape[1]
         self.weights.dW = np.dot(dZ, self.x.T) / m
         self.weights.dB = np.sum(dZ, axis=1, keepdims=True) / m
         # calculate delta_out for lower level
+        if flag == LayerIndexFlags.FirstLayer:
+            return None
+        
         delta_out = np.dot(self.weights.W.T, dZ)
 
         if len(self.input_shape) > 2:

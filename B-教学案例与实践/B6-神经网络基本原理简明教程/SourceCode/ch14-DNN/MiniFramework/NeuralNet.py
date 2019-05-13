@@ -88,14 +88,14 @@ class NeuralNet(object):
 
                 if iteration % checkpoint_iteration == 0:
                     loss_valdation = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, epoch * max_iteration + iteration)
-                    if loss_valdation <= self.params.eps:
+                    if loss_valdation is not None and loss_valdation <= self.params.eps:
                         break
                 #end if
             # end for
             self.save_parameters()
             dataReader.Shuffle()
             # end if
-            if loss_valdation <= self.params.eps:
+            if loss_valdation is not None and loss_valdation <= self.params.eps:
                 break
 
         # end for
@@ -105,19 +105,24 @@ class NeuralNet(object):
 
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
+        print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
         accuracy_train = self.__CalAccuracy(self.output, train_y) / train_y.shape[1]
-        val_x, val_y = dataReader.GetDevSet()
-        self.__forward(val_x)
-        loss_val = self.lossFunc.CheckLoss(val_y, self.output)
-        accuracy_val = self.__CalAccuracy(self.output, val_y) / val_y.shape[1]
-    
-        self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_val, accuracy_val)
-        print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
         print("loss_train=%.3f, accuracy_train=%f" %(loss_train, accuracy_train))
-        print("loss_valid=%.3f, accuracy_valid=%f" %(loss_val, accuracy_val))
-
-        return loss_val
+        vld_x, vld_y = dataReader.GetDevSet()
+        if vld_x is None or vld_y is None:
+            self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, None, None)
+            return None
+        else:
+            self.__forward(vld_x)
+            loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
+            accuracy_vld = self.__CalAccuracy(self.output, vld_y) / vld_y.shape[1]
+            print("loss_valid=%.3f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
+            self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
+            return loss_vld
+        # end if
+        
+        
 
     def Test(self, dataReader):
         correct = 0

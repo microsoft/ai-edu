@@ -15,8 +15,7 @@ y_data_name = "Y09.dat"
 def LoadData():
     dataReader = DataReader(x_data_name, y_data_name)
     dataReader.ReadData()
-    dataReader.NormalizeX()
-    dataReader.NormalizeY()
+    dataReader.Normalize(False, False, False)
     return dataReader
 
 def ShowResult(net, dataReader, title):

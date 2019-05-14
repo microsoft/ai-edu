@@ -48,6 +48,20 @@ class DataReader(object):
         # end if
         return None,None
 
+    def Normalize(self, normalize_x=False, normalize_y=False, to_one_hot = False):
+        if normalize_x:
+            self.NormalizeX()
+        else:
+            self.X = self.XRawData
+
+        if normalize_y:
+            if to_one_hot:
+                self.ToOneHot()
+            else:
+                self.Y = self.NormalizeY()
+        else:
+            self.Y = self.YRawData
+
     # normalize data by extracting range from source data
     # return: X_new: normalized data with same shape
     # return: X_norm: 2xN (features)

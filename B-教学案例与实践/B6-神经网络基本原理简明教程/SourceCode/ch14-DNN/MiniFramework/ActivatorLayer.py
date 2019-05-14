@@ -5,6 +5,21 @@ import numpy as np
 
 from MiniFramework.Layer import *
 
+class ClassificationLayer(CLayer):
+    def __init__(self, activator):
+        self.activator = activator
+
+    def forward(self, input):
+        self.input_shape = input.shape
+        self.x = input
+        self.a = self.activator.forward(self.x)
+        return self.a
+
+    # 对分类函数的求导已经和损失函数合并计算了，所以不需要再做，直接回传误差给上一层
+    def backward(self, delta_in, flag):
+        dZ = delta_in
+        return dZ
+
 class ActivatorLayer(CLayer):
     def __init__(self, activator):
         self.activator = activator
@@ -17,11 +32,7 @@ class ActivatorLayer(CLayer):
 
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
     def backward(self, delta_in, flag):
-        if flag == LayerIndexFlags.LastLayer or flag == LayerIndexFlags.SingleLayer:
-            dZ = delta_in
-        else:
-            dZ,_ = self.activator.backward(self.x, self.a, delta_in)
-        # end if
+        dZ,_ = self.activator.backward(self.x, self.a, delta_in)
         return dZ
 
 class CActivator(object):

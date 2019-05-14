@@ -71,7 +71,7 @@ class NeuralNet(object):
         loss = 0 
         self.lossFunc = CLossFunction(self.params.loss_func_name)
         # if num_example=200, batch_size=10, then iteration=200/10=20
-        if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_example:
+        if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_train:
             self.params.batch_size = dataReader.num_train
         # end if
         max_iteration = dataReader.num_train // self.params.batch_size
@@ -90,8 +90,9 @@ class NeuralNet(object):
                 # final update w,b
                 self.__update()
 
-                if iteration % checkpoint_iteration == 0:
-                    loss_valdation = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, epoch * max_iteration + iteration)
+                total_iteration = epoch * max_iteration + iteration
+                if total_iteration % checkpoint_iteration == 0:
+                    loss_valdation = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
                     if loss_valdation is not None and loss_valdation <= self.params.eps:
                         break
                 #end if

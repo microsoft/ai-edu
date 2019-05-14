@@ -43,7 +43,7 @@ def ShowResult2D(net, wb1, wb2, title):
     for i in range(count):
         for j in range(count):
             x = np.array([x1[i],x2[j]]).reshape(2,1)
-            dict_cache = net.ForwardCalculationBatch2(x, wb1, wb2)
+            dict_cache = net.forward(x, wb1, wb2)
             output = dict_cache["Output"]
             if output[0,0] >= 0.5:
                 plt.plot(x[0,0], x[1,0], 's', c='m')
@@ -105,7 +105,7 @@ def train():
 
     #ShowData(XData, YData)
 
-    wb1, wb2 = net.train(dataReader, params, loss_history, net.ForwardCalculationBatch2)
+    wb1, wb2 = net.train(dataReader, params, loss_history)
 
     trace = loss_history.GetMinimalLossData()
     print(trace.toString())

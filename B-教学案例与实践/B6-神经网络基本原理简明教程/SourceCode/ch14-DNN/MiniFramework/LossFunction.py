@@ -32,7 +32,7 @@ class CLossHistory(object):
         self.accuracy_history_val = []
         self.min_loss_index = -1
         # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
-        self.min_trace = CTrace(100000, -1, -1, -1)
+        #self.min_trace = CTrace(100000, -1, -1, -1)
 
     def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld):
         self.iteration_history_train.append(total_iteration)
@@ -57,7 +57,7 @@ class CLossHistory(object):
         p2, = plt.plot(self.iteration_history_train, self.loss_history_train)
         p1, = plt.plot(self.iteration_history_train, self.loss_history_val)
         plt.legend([p1,p2], ["validation","train"])
-        title = self.min_trace.toString() + "," + params.toString()
+        title = params.toString()
         plt.title(title)
         plt.ylabel("loss")
         plt.xlabel("iteration")
@@ -66,14 +66,13 @@ class CLossHistory(object):
         p2, = plt.plot(self.iteration_history_train, self.accuracy_history_train)
         p1, = plt.plot(self.iteration_history_train, self.accuracy_history_val)
         plt.legend([p1,p2], ["validation","train"])
-        title = self.min_trace.toString() + "," + params.toString()
+        title = params.toString()
         plt.title(title)
         plt.ylabel("accuracy")
         plt.xlabel("iteration")
         plt.show()
         
-
-        title = self.min_trace.toString() + "," + params.toString()
+        title = params.toString()
         return title
         """
         plt.title(title)

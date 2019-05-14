@@ -19,13 +19,23 @@ def LoadData():
     dataReader.NormalizeY()
     return dataReader
 
+def ShowResult(net, dataReader, title):
+    # draw train data
+    plt.plot(dataReader.X[0,:], dataReader.Y[0,:], '.', c='b')
+    # create and draw visualized validation data
+    TX = np.linspace(0,1,100).reshape(1,100)
+    TY = net.inference(TX)
+    plt.plot(TX, TY, 'x', c='r')
+    plt.title(title)
+    plt.show()
+
 if __name__ == '__main__':
     dataReader = LoadData()
     num_input = 1
     num_hidden1 = 4
     num_output = 1
 
-    max_epoch = 100
+    max_epoch = 10000
     batch_size = 10
     learning_rate = 0.5
     eps = 0.001
@@ -43,7 +53,7 @@ if __name__ == '__main__':
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
 
-    net.train(dataReader, checkpoint=1)
-    
+    net.train(dataReader, checkpoint=1, test=False)
     net.ShowLossHistory()
     
+    ShowResult(net, dataReader, params.toString())

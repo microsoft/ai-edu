@@ -42,6 +42,7 @@ class DataReader(object):
             self.num_category = len(np.unique(self.YRawData))
 
             self.num_train = self.num_example
+            self.num_test = self.num_example    # no sperate test example
 
             return self.XRawData, self.YRawData
         # end if
@@ -89,7 +90,7 @@ class DataReader(object):
     def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        batch_X = self.X[0:self.num_feature, start:end].reshape(self.num_feature, batch_size)
+        batch_X = self.X[:, start:end].reshape(self.num_feature, batch_size)
         batch_Y = self.Y[:, start:end].reshape(-1, batch_size)
         return batch_X, batch_Y
 

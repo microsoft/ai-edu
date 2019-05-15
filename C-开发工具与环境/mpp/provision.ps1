@@ -25,7 +25,8 @@ Function global:ADD-PATH() {
 }
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-choco install docker-for-windows git python3 googlechrome vscode pycharm -y
+choco install docker-for-windows git python3 vscode pycharm -y
+choco install --force googlechrome -y
 $h=hostname
 ipconfig | select-string -pattern "  IPv4 "|format-table @{Expression={$_.Line};Label="$h IPs"}
 choco -v
@@ -37,13 +38,16 @@ python -m pip install pip --upgrade
 python -m pip install numpy
 python -m pip install matplotlib
 mkdir C:\training
-cd C:\traning
+cd C:\training
 invoke-webrequest https://raw.githubusercontent.com/microsoft/ai-edu/mpp/C-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7%E4%B8%8E%E7%8E%AF%E5%A2%83/mpp/run.ps1 -outfile C:\training\run.ps1
 try {
+    $ErrorActionPreference = "Stop"
     git clone https://github.com/bartuer/training_notebook.git
 } catch {
     cd C:\training\training_notebook
     git pull
+} finally{
+   $ErrorActionPreference = "Continue";
 }
 Write-Host -ForegroundColor Yellow "configure docker volume, share C folder, then restart machine"
 Write-Host -ForegroundColor Yellow "after rebooting, cd C:\training .\run.ps1"

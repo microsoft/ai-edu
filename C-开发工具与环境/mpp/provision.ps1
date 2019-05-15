@@ -30,7 +30,7 @@ $h=hostname
 ipconfig | select-string -pattern "  IPv4 "|format-table @{Expression={$_.Line};Label="$h IPs"}
 choco -v
 docker -v
-git -v
+git --version
 $newpath = ADD-PATH -addedfolder C:\python37
 Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $newpath
 python -m pip install pip --upgrade

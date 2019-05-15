@@ -12,8 +12,8 @@ from Level0_TwoLayerClassificationNet import *
 from DataReader import * 
 from WeightsBias import *
 
-x_data_name = "X11.npy"
-y_data_name = "Y11.npy"
+x_data_name = "X11.dat"
+y_data_name = "Y11.dat"
 
 def ShowAreaResult(net, wb1, wb2, title):
     count = 50
@@ -39,9 +39,9 @@ def ShowData(X, Y):
     for i in range(X.shape[1]):
         if Y[0,i] == 1:
             plt.plot(X[0,i], X[1,i], '^', c='g')
-        elif Y[0,i] == 2:
+        elif Y[1,i] == 1:
             plt.plot(X[0,i], X[1,i], 'x', c='r')
-        elif Y[0,i] == 3:
+        elif Y[2,i] == 1:
             plt.plot(X[0,i], X[1,i], '.', c='b')
         # end if
     # end for
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     loss_history = CLossHistory()
     net = TwoLayerClassificationNet()
 
-    #ShowData(XData, YData)
+    ShowData(X, Y)
 
     net.train(dataReader, params, loss_history)
 
@@ -78,5 +78,5 @@ if __name__ == '__main__':
     print("wait for 10 seconds...")
 
     ShowAreaResult(net, trace.wb1, trace.wb2, title)
-    ShowData(dataReader.X, dataReader.YRawData)
+    ShowData(dataReader.X, dataReader.Y)
     

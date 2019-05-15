@@ -54,25 +54,26 @@ class CLossHistory(object):
 
     # 图形显示损失函数值历史记录
     def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
-        p2, = plt.plot(self.iteration_history_train, self.loss_history_train)
-        p1, = plt.plot(self.iteration_history_train, self.loss_history_val)
-        plt.legend([p1,p2], ["validation","train"])
-        title = params.toString()
-        plt.title(title)
-        plt.ylabel("loss")
-        plt.xlabel("iteration")
-        plt.show()
+        axes = plt.subplot(1,2,1)
+        p2, = axes.plot(self.iteration_history_train, self.loss_history_train)
+        p1, = axes.plot(self.iteration_history_train, self.loss_history_val)
+        axes.legend([p1,p2], ["validation","train"])
+        axes.set_title("Loss")
+        axes.set_ylabel("loss")
+        axes.set_xlabel("iteration")
+        #plt.show()
         
-        p2, = plt.plot(self.iteration_history_train, self.accuracy_history_train)
-        p1, = plt.plot(self.iteration_history_train, self.accuracy_history_val)
-        plt.legend([p1,p2], ["validation","train"])
-        title = params.toString()
-        plt.title(title)
-        plt.ylabel("accuracy")
-        plt.xlabel("iteration")
-        plt.show()
+        axes = plt.subplot(1,2,2)
+        p2, = axes.plot(self.iteration_history_train, self.accuracy_history_train)
+        p1, = axes.plot(self.iteration_history_train, self.accuracy_history_val)
+        axes.legend([p1,p2], ["validation","train"])
+        axes.set_title("Accuracy")
+        axes.set_ylabel("accuracy")
+        axes.set_xlabel("iteration")
         
         title = params.toString()
+        plt.suptitle(title)
+        plt.show()
         return title
         """
         plt.title(title)

@@ -20,8 +20,22 @@ y_data_name = "Y11.dat"
 def LoadData():
     dataReader = DataReader(x_data_name, y_data_name)
     dataReader.ReadData()
-    dataReader.Normalize(normalize_x = False, normalize_y = True, to_one_hot = True)
+    dataReader.Normalize(normalize_x = True, normalize_y = True, to_one_hot = True)
     return dataReader
+
+def ShowData(dataReader):
+    for i in range(dataReader.X.shape[1]):
+        if dataReader.Y[0,i] == 1:
+            plt.plot(dataReader.X[0,i], dataReader.X[1,i], '^', c='g')
+        elif dataReader.Y[1,i] == 1:
+            plt.plot(dataReader.X[0,i], dataReader.X[1,i], 'x', c='r')
+        elif dataReader.Y[2,i] == 1:
+            plt.plot(dataReader.X[0,i], dataReader.X[1,i], '.', c='b')
+        # end if
+    # end for
+    plt.xlabel("x1")
+    plt.ylabel("x2")
+    plt.show()
 
 def ShowResult(net, title):
     print("waiting for 10 seconds...")
@@ -41,15 +55,16 @@ def ShowResult(net, title):
         # end for
     # end for
     plt.title(title)
-    plt.show()
+    #plt.show()
 
 if __name__ == '__main__':
     dataReader = LoadData()
+    #ShowData(dataReader)
     num_input = dataReader.num_feature
     num_hidden1 = 8
     num_output = 3
 
-    max_epoch = 100
+    max_epoch = 1000
     batch_size = 10
     learning_rate = 0.1
     eps = 0.06
@@ -69,7 +84,8 @@ if __name__ == '__main__':
     softmax1 = ClassificationLayer(Softmax())
     net.add_layer(softmax1, "softmax1")
 
-    net.train(dataReader, checkpoint=1, test=False)
+    net.train(dataReader, checkpoint=10, test=False)
     net.ShowLossHistory()
     
     ShowResult(net, params.toString())
+    ShowData(dataReader)

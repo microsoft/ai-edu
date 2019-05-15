@@ -33,12 +33,12 @@ docker -v
 git -v
 $newpath = ADD-PATH -addedfolder C:\python37
 Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $newpath
-python -v
+python -m pip install pip --upgrade
 python -m pip install numpy
 python -m pip install matplotlib
 mkdir C:\training
 cd C:\traning
-invoke-webrequest https://raw.githubusercontent.com/microsoft/ai-edu/master/C-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7%E4%B8%8E%E7%8E%AF%E5%A2%83/mpp/run.ps1 -outfile C:\training\run.ps1
+invoke-webrequest https://raw.githubusercontent.com/microsoft/ai-edu/mpp/C-%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7%E4%B8%8E%E7%8E%AF%E5%A2%83/mpp/run.ps1 -outfile C:\training\run.ps1
 git clone https://github.com/bartuer/training_notebook.git
 Write-Host "configure docker volume, share C folder, then restart machine"
 Write-Host "after rebooting, run.ps1"

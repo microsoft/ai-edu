@@ -49,7 +49,7 @@ if __name__ == '__main__':
     num_hidden1 = 8
     num_output = 3
 
-    max_epoch = 10000
+    max_epoch = 100
     batch_size = 10
     learning_rate = 0.1
     eps = 0.06
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     net = NeuralNet(params)
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    relu1 = ActivatorLayer(Relu())
+    relu1 = ActivatorLayer(Sigmoid())
     net.add_layer(relu1, "relu1")
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")

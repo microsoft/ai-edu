@@ -51,7 +51,7 @@ if __name__ == '__main__':
     num_output = 1
 
     max_epoch = 10000
-    batch_size = 2
+    batch_size = 1
     learning_rate = 0.1
     eps = 0.01
 

@@ -33,8 +33,8 @@ if __name__ == '__main__':
     num_hidden2 = 32
     num_output = 10
     max_epoch = 20
-    batch_size = 32
-    learning_rate = 0.02
+    batch_size = 100
+    learning_rate = 0.2
     eps = 0.08
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=0.2)
+    net.train(dataReader, checkpoint=1)
     
     net.ShowLossHistory(0, None, 0, 1)
     

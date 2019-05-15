@@ -52,7 +52,7 @@ if __name__ == '__main__':
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
 
-    net.train(dataReader, checkpoint=1, test=False)
+    net.train(dataReader, checkpoint=10, test=False)
     net.ShowLossHistory()
     
     ShowResult(net, dataReader, params.toString())

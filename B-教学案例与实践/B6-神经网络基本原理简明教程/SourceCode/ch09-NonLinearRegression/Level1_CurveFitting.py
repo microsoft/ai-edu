@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     trace = loss_history.GetMinimalLossData()
     print(trace.toString())
-    title = loss_history.ShowLossHistory(params)
+    title = loss_history.ShowLossHistory()
 
     ShowResult(net, dataReader.X, dataReader.Y, title, trace.wb1, trace.wb2)
 

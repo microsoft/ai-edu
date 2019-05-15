@@ -91,14 +91,15 @@ def InitialParameters(num_input, num_hidden, num_output, flag):
 
 if __name__ == '__main__':
     print("Loading...")
-    learning_rate = 0.02
+    learning_rate = 0.2
     n_hidden = 32
     n_output = 10
     dataReader = LoadData(n_output)
     n_images = dataReader.num_example
     n_input = dataReader.num_feature
-    m_epoch = 1
+    m_epoch = 20
+    batch_size = 100
     dict_Param = InitialParameters(n_input, n_hidden, n_output, 2)
-    dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, Forward, Backward, Update)
+    dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, Forward, Backward, Update, batch_size)
     Test(dataReader, n_output, dict_Param, n_input, Forward)
     

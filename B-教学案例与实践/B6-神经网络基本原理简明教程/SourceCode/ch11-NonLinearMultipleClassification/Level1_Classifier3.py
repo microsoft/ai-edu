@@ -22,7 +22,7 @@ def ShowAreaResult(net, wb1, wb2, title):
     for i in range(count):
         for j in range(count):
             x = np.array([x1[i],x2[j]]).reshape(2,1)
-            dict_cache = net.ForwardCalculationBatch3(x, wb1, wb2)
+            dict_cache = net.forward(x, wb1, wb2)
             output = dict_cache["Output"]
             r = np.argmax(output, axis=0)
             if r == 0:
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     
     n_input, n_output = dataReader.num_feature, dataReader.num_category
     n_hidden = 8
-    eta, batch_size, max_epoch = 0.1, 10, 10000
+    eta, batch_size, max_epoch = 0.1, 10, 1000
     eps = 0.06
 
     params = CParameters(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, LossFunctionName.CrossEntropy3)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     #ShowData(XData, YData)
 
-    net.train(dataReader, params, loss_history, net.ForwardCalculationBatch3)
+    net.train(dataReader, params, loss_history)
 
     trace = loss_history.GetMinimalLossData()
     print(trace.toString())

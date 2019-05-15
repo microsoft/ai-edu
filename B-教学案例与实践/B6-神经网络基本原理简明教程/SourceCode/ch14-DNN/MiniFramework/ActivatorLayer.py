@@ -100,3 +100,7 @@ class Softmax(CActivator):
         a = exp_z / np.sum(exp_z, axis=0)
         return a
 
+    # softmax层，相当于最后一层，直接A-Y，不需要做反向求导
+    def backward(self, z, a, delta_in):
+        return delta_in, None
+

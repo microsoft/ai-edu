@@ -123,14 +123,14 @@ if __name__ == '__main__':
 
     print("Loading...")
     learning_rate = 0.2
-    n_hidden1 = 32
-    n_hidden2 = 16
+    n_hidden1 = 64
+    n_hidden2 = 32
     n_output = 10
     dataReader = LoadData(n_output)
     n_images = dataReader.num_example
     n_input = dataReader.num_feature
-    m_epoch = 2
-    batch_size = 10
+    m_epoch = 20
+    batch_size = 100
     dict_Param = InitialParameters3(n_input, n_hidden1, n_hidden2, n_output, 2)
     dict_Param = Train(dataReader, learning_rate, m_epoch, n_images, n_input, n_output, dict_Param, forward3, backward3, update3, batch_size)
     SaveResult(dict_Param)

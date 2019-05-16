@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ch11_MultipleClassificationNet.py</StartupFile>
+    <StartupFile>ch12-MnistNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -49,7 +49,7 @@
     <Compile Include="MiniFramework\Parameters.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="ch09_CurveFittingNet.py" />
-    <Compile Include="MnistNet.py" />
+    <Compile Include="ch12-MnistNet.py" />
     <Compile Include="MnistImageDataReader.py" />
   </ItemGroup>
   <ItemGroup>

@@ -43,16 +43,22 @@ if __name__ == '__main__':
                         OptimizerName.SGD)
 
     net = NeuralNet(params)
+
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    relu1 = ActivatorLayer(Relu())
-    net.add_layer(relu1, "relu1")
+
+    sigmoid = ActivatorLayer(Sigmoid())
+    net.add_layer(sigmoid, "sigmoid")
+
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    relu2 = ActivatorLayer(Relu())
-    net.add_layer(relu2, "relu2")
+
+    tanh = ActivatorLayer(Tanh())
+    net.add_layer(tanh, "tanh")
+
     fc3 = FcLayer(num_hidden2, num_output, params)
     net.add_layer(fc3, "fc3")
+
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
@@ -60,7 +66,3 @@ if __name__ == '__main__':
     
     net.ShowLossHistory(0, None, 0, 1)
     
-    net.load_parameters()
-    print("Testing...")
-    correct, count = net.Test(dataReader)
-    print(str.format("rate={0} / {1} = {2}", correct, count, correct/count))

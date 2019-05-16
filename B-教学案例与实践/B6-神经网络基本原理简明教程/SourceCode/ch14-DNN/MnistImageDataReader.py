@@ -25,6 +25,7 @@ from MiniFramework.DataReader import *
 
 
 class MnistImageDataReader(DataReader):
+    # mode: "image"=Nx1x28x28,  "vector"=1x784
     def __init__(self, train_image_file, train_label_file, test_image_file, test_label_file, mode="image"):
         self.train_image_file = train_image_file
         self.train_label_file = train_label_file
@@ -37,6 +38,24 @@ class MnistImageDataReader(DataReader):
         self.num_test = 0
         self.num_train = 0
         self.mode = mode    # image or vector
+
+    def ReadLessData(self, count):
+        self.XTrainRaw = self.__ReadImageFile(self.train_image_file)
+        self.YTrainRaw = self.__ReadLabelFile(self.train_label_file)
+        self.XTestRaw = self.__ReadImageFile(self.test_image_file)
+        self.YTestRaw = self.__ReadLabelFile(self.test_label_file)
+
+        self.XTrainRaw = self.XTrainRaw[0:count]
+        self.YTrainRaw = self.YTrainRaw[0:count]
+
+        self.num_example = self.XTrainRaw.shape[0]
+        self.num_category = len(np.unique(self.YTrainRaw))
+        self.num_test = self.XTestRaw.shape[0]
+        self.num_train = self.num_example
+        if self.mode == "vector":
+            self.num_feature = 784
+        self.num_validation = 0
+
 
     def ReadData(self):
         self.XTrainRaw = self.__ReadImageFile(self.train_image_file)
@@ -111,7 +130,6 @@ class MnistImageDataReader(DataReader):
         for i in range(num):
             n = (int)(dataSet[i])
             Y[i,n] = 1
-            # end if
         # end for
         return Y
 

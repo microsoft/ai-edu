@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ch12-MnistNet.py</StartupFile>
+    <StartupFile>Level3_Dropout.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,14 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ch11_MultipleClassificationNet.py" />
-    <Compile Include="ch10_BinaryClassificationNet.py" />
-    <Compile Include="Level2_BatchNormalization.py" />
-    <Compile Include="Level1_InitializeWeights.py">
+    <Compile Include="Level1_ch11_MultipleClassificationNet.py" />
+    <Compile Include="Level1_ch10_BinaryClassificationNet.py" />
+    <Compile Include="Level3_Dropout.py" />
+    <Compile Include="Level5_BatchNormalization.py" />
+    <Compile Include="Level2_InitializeWeights.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2_BatchNormTest.py" />
-    <Compile Include="Level2_NormalDistribution.py">
+    <Compile Include="Level5_BatchNormTest.py" />
+    <Compile Include="Level5_NormalDistribution.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level3_Optimizer_Real.py" />
@@ -40,7 +41,8 @@
     </Compile>
     <Compile Include="MiniFramework\DataReader.py" />
     <Compile Include="MiniFramework\ActivatorLayer.py" />
-    <Compile Include="MiniFramework\FCLayer.py" />
+    <Compile Include="MiniFramework\DropoutLayer.py" />
+    <Compile Include="MiniFramework\FullConnectionLayer.py" />
     <Compile Include="MiniFramework\Optimizer.py" />
     <Compile Include="MiniFramework\Layer.py" />
     <Compile Include="MiniFramework\__init__.py" />
@@ -48,8 +50,8 @@
     <Compile Include="MiniFramework\NeuralNet.py" />
     <Compile Include="MiniFramework\Parameters.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
-    <Compile Include="ch09_CurveFittingNet.py" />
-    <Compile Include="ch12-MnistNet.py" />
+    <Compile Include="Level1_ch09_CurveFittingNet.py" />
+    <Compile Include="Level1_ch12_MnistNet.py" />
     <Compile Include="MnistImageDataReader.py" />
   </ItemGroup>
   <ItemGroup>

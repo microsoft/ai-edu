@@ -6,7 +6,7 @@ import numpy as np
 import time
 
 from MiniFramework.Layer import *
-from MiniFramework.FCLayer import *
+from MiniFramework.FullConnectionLayer import *
 from MiniFramework.Parameters import *
 
 class NeuralNet(object):

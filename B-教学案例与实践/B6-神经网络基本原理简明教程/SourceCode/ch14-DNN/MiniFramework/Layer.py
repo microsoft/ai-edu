@@ -8,6 +8,7 @@ class LayerTypes(Enum):
     CV = 1      # convalution
     PL = 2      # pooling
     BN = 3      # batch normalization
+    DP = 4      # dropout
 
 
 class CLayer(object):

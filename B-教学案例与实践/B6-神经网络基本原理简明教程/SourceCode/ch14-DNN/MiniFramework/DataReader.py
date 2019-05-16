@@ -25,6 +25,9 @@ class DataReader(object):
         self.num_example = -1
         self.num_feature = -1
         self.num_category = -1
+        self.num_validation = 0
+        self.num_test = 0
+        self.num_train = 0
 
     # read data from file
     def ReadData(self):
@@ -38,9 +41,26 @@ class DataReader(object):
             self.num_feature = self.XRawData.shape[0]
             self.num_category = len(np.unique(self.YRawData))
 
+            self.num_train = self.num_example
+            self.num_test = self.num_example    # no sperate test example
+
             return self.XRawData, self.YRawData
         # end if
         return None,None
+
+    def Normalize(self, normalize_x=False, normalize_y=False, to_one_hot = False):
+        if normalize_x:
+            self.NormalizeX()
+        else:
+            self.X = self.XRawData
+
+        if normalize_y:
+            if to_one_hot:
+                self.ToOneHot()
+            else:
+                self.Y = self.NormalizeY()
+        else:
+            self.Y = self.YRawData
 
     # normalize data by extracting range from source data
     # return: X_new: normalized data with same shape
@@ -81,12 +101,18 @@ class DataReader(object):
         return X_new
 
     # 获得批样本数据
-    def GetBatchSamples(self, batch_size, iteration):
+    def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        batch_X = self.X[0:self.num_feature, start:end].reshape(self.num_feature, batch_size)
+        batch_X = self.X[:, start:end].reshape(self.num_feature, batch_size)
         batch_Y = self.Y[:, start:end].reshape(-1, batch_size)
         return batch_X, batch_Y
+
+    def GetDevSet(self):
+        return self.X, self.Y
+
+    def GetBatchTestSamples(self, batch_size, iteration):
+        return self.GetBatchTrainSamples(batch_size, iteration)
 
     def ToOneHot(self):
         self.Y = np.zeros((self.num_category, self.num_example))

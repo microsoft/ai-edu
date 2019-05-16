@@ -5,16 +5,23 @@ from enum import Enum
 
 class LayerTypes(Enum):
     FC = 0      # full connection
-    CONV = 1    # convalution
-    POOL = 2    # pooling
+    CV = 1      # convalution
+    PL = 2      # pooling
+    BN = 3      # batch normalization
 
 
 class CLayer(object):
     def __init__(self, layer_type):
         self.layer_type = layer_type
 
-    def update(self, lr):
-        return
+    def update(self):
+        pass
+
+    def save_parameters(self, name):
+        pass
+
+    def load_parameters(self, name):
+        pass
 
 class LayerIndexFlags(Enum):
     SingleLayer = 0

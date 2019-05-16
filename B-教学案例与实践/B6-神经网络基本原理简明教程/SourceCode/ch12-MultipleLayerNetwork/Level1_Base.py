@@ -4,6 +4,7 @@
 import numpy as np
 import struct
 import matplotlib.pyplot as plt
+import time
 
 from MnistDataReader import *
 
@@ -49,6 +50,9 @@ def Test(dataReader, num_output, dict_Param, num_input, forward):
     return correct, num_images
 
 def Train(dataReader, learning_rate, max_epoch, num_images, num_input, num_output, dict_param, forward, backward, update, batch_size):
+
+    t0 = time.time()
+
     loss_history = list()
     print("Training...")
     max_iteration = (int)(dataReader.num_example / batch_size)
@@ -65,6 +69,9 @@ def Train(dataReader, learning_rate, max_epoch, num_images, num_input, num_outpu
             # end if
         # end for
         dataReader.Shuffle()
+
+    t1 = time.time()
+    print("time used:", t1 - t0)
 
     ShowLoss(loss_history)
     return dict_param

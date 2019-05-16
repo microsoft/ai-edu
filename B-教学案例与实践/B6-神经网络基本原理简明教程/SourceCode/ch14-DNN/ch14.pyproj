@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_NormalDistribution.py</StartupFile>
+    <StartupFile>ch12-MnistNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,10 +21,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ch11_MultipleClassificationNet.py" />
+    <Compile Include="ch10_BinaryClassificationNet.py" />
     <Compile Include="Level2_BatchNormalization.py" />
     <Compile Include="Level1_InitializeWeights.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level2_BatchNormTest.py" />
     <Compile Include="Level2_NormalDistribution.py">
       <SubType>Code</SubType>
     </Compile>
@@ -32,8 +35,11 @@
     <Compile Include="Level4_Optimizer_Sample.py" />
     <Compile Include="Level4_Optimizer08.py" />
     <Compile Include="Level5_Optimizer09.py" />
-    <Compile Include="MiniFramework\Activators.py" />
+    <Compile Include="MiniFramework\BatchNormLayer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MiniFramework\DataReader.py" />
+    <Compile Include="MiniFramework\ActivatorLayer.py" />
     <Compile Include="MiniFramework\FCLayer.py" />
     <Compile Include="MiniFramework\Optimizer.py" />
     <Compile Include="MiniFramework\Layer.py" />
@@ -42,8 +48,9 @@
     <Compile Include="MiniFramework\NeuralNet.py" />
     <Compile Include="MiniFramework\Parameters.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
-    <Compile Include="MiniFramework.py" />
-    <Compile Include="MnistDataReader.py" />
+    <Compile Include="ch09_CurveFittingNet.py" />
+    <Compile Include="ch12-MnistNet.py" />
+    <Compile Include="MnistImageDataReader.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />

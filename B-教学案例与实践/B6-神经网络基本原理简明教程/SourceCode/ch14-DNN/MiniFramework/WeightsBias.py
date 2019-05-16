@@ -20,7 +20,7 @@ class WeightsBias(object):
         self.optimizer_name = optimizer_name
         self.eta = eta
         self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
-        self.result_value_filename = str.format("{0}_{1}_{2}_result", self.num_output, self.num_input, self.init_method.name)
+        self.result_value_filename = str.format("{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
 
     def InitializeWeights(self, create_new = False):
         if create_new:
@@ -67,12 +67,12 @@ class WeightsBias(object):
         self.B = np.zeros((self.num_output, 1))
 
     def SaveResultValue(self, name):
-        np.save(name + "_w_" + self.result_value_filename + ".npy", self.W)
-        np.save(name + "_b_" + self.result_value_filename + ".npy", self.B)
+        np.save(name + "_w_" + self.result_value_filename, self.W)
+        np.save(name + "_b_" + self.result_value_filename, self.B)
 
     def LoadResultValue(self, name):
-        self.W = np.load(name + "_w_" + self.result_value_filename + ".npy")
-        self.B = np.load(name + "_b_" + self.result_value_filename + ".npy")
+        self.W = np.load(name + "_w_" + self.result_value_filename)
+        self.B = np.load(name + "_b_" + self.result_value_filename)
 
     @staticmethod
     def InitialParameters(num_input, num_output, method):

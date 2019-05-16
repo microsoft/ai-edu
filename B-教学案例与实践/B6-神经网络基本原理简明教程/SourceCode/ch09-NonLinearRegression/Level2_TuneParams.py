@@ -49,19 +49,19 @@ def train(ne, batch, eta):
 def ShowLossHistory(file1, file2, file3, file4):
     lh = CLossHistory.Load(file1)
     axes = plt.subplot(2,2,1)
-    lh.ShowLossHistory(axes)
+    lh.ShowLossHistory4(axes)
     
     lh = CLossHistory.Load(file2)
     axes = plt.subplot(2,2,2)
-    lh.ShowLossHistory(axes)
+    lh.ShowLossHistory4(axes)
 
     lh = CLossHistory.Load(file3)
     axes = plt.subplot(2,2,3)
-    lh.ShowLossHistory(axes)
+    lh.ShowLossHistory4(axes)
 
     lh = CLossHistory.Load(file4)
     axes = plt.subplot(2,2,4)
-    lh.ShowLossHistory(axes)
+    lh.ShowLossHistory4(axes)
 
     plt.show()
 

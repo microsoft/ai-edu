@@ -13,7 +13,7 @@ from Activators import *
 
 class TwoLayerClassificationNet(object):
 
-    def ForwardCalculationBatch3(self, batch_x, wb1, wb2):
+    def forward(self, batch_x, wb1, wb2):
         # layer 1
         Z1 = np.dot(wb1.W, batch_x) + wb1.B
         A1 = Sigmoid().forward(Z1)
@@ -24,18 +24,7 @@ class TwoLayerClassificationNet(object):
         dict_cache ={"Z1":Z1, "Z2":Z2, "A1":A1, "A2":A2, "Output":A2}
         return dict_cache
 
-    def ForwardCalculationBatch2(self, batch_x, wb1, wb2):
-        # layer 1
-        Z1 = np.dot(wb1.W, batch_x) + wb1.B
-        A1 = Sigmoid().forward(Z1)
-        # layer 2
-        Z2 = np.dot(wb2.W, A1) + wb2.B
-        A2 = Sigmoid().forward(Z2)
-        # keep cache for backward
-        dict_cache ={"Z1":Z1, "Z2":Z2, "A1":A1, "A2":A2, "Output":A2}
-        return dict_cache
-
-    def BackPropagationBatch(self, batch_x, batch_y, dict_cache, wb1, wb2):
+    def backward(self, batch_x, batch_y, dict_cache, wb1, wb2):
         # 批量下降，需要除以样本数量，否则会造成梯度爆炸
         m = batch_x.shape[1]
         # 取出缓存值
@@ -55,11 +44,11 @@ class TwoLayerClassificationNet(object):
         wb1.dW = np.dot(dZ1, batch_x.T)/m   # 公式5
         wb1.dB = np.sum(dZ1, axis=1, keepdims=True)/m   # 公式6
 
-    def UpdateWeights(self, wb1, wb2):
+    def update(self, wb1, wb2):
         wb1.Update()
         wb2.Update()
 
-    def train(self, dataReader, params, loss_history, forward):
+    def train(self, dataReader, params, loss_history):
         # initialize weights and bias
         wb1 = WeightsBias(params.num_input, params.num_hidden, params.eta)
         wb1.InitializeWeights(False)
@@ -79,14 +68,14 @@ class TwoLayerClassificationNet(object):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchSamples(params.batch_size,iteration)
                 # get z from x,y
-                dict_cache = forward(batch_x, wb1, wb2)
+                dict_cache = self.forward(batch_x, wb1, wb2)
                 # calculate gradient of w and b
-                self.BackPropagationBatch(batch_x, batch_y, dict_cache, wb1, wb2)
+                self.backward(batch_x, batch_y, dict_cache, wb1, wb2)
                 # update w,b
-                self.UpdateWeights(wb1, wb2)
+                self.update(wb1, wb2)
             # end for            
             # calculate loss for this batch
-            output = self.ForwardCalculationBatch2(dataReader.X, wb1, wb2)
+            output = self.forward(dataReader.X, wb1, wb2)
             loss = lossFunc.CheckLoss(dataReader.Y, output["Output"])
             print("epoch=%d, loss=%f" %(epoch,loss))
             loss_history.AddLossHistory(loss, epoch, iteration, wb1, wb2)            

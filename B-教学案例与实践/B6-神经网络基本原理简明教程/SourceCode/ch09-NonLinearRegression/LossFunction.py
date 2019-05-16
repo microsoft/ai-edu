@@ -52,7 +52,7 @@ class CLossHistory(object):
         plt.show()
         return title
 
-    def ShowLossHistory(self, axes, xmin=None, xmax=None, ymin=None, ymax=None):
+    def ShowLossHistory4(self, axes, xmin=None, xmax=None, ymin=None, ymax=None):
         axes.plot(self.loss_history)
         title = self.min_trace.toString() + "," + self.params.toString()
         axes.set_title(title)
@@ -60,8 +60,19 @@ class CLossHistory(object):
         axes.set_ylabel("loss")
         if xmin != None and ymin != None:
             axes.axis([xmin, xmax, ymin, ymax])
-        #plt.show()
         return title
+
+    def ShowLossHistory(self, xmin=None, xmax=None, ymin=None, ymax=None):
+        plt.plot(self.loss_history)
+        title = self.min_trace.toString() + "," + self.params.toString()
+        plt.title(title)
+        plt.xlabel("epoch")
+        plt.ylabel("loss")
+        if xmin != None and ymin != None:
+            plt.axis([xmin, xmax, ymin, ymax])
+        plt.show()
+        return title
+
 
         # 从历史记录中获得最小损失值得训练权重值
     def GetMinimalLossData(self):

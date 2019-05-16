@@ -3,6 +3,8 @@
 
 import numpy as np
 from enum import Enum
+from numba import jitclass
+from numba import float64
 
 class OptimizerName(Enum):
     SGD = 0,
@@ -108,17 +110,26 @@ class RMSProp(Optimizer):
         theta = theta - alpha * grad
         return theta
 
+spec = [
+    ('lr', float64),
+    ('p1', float64),
+    ('p2', float64),
+    ('eps', float64),
+    ('t', float64),
+    ('m', float64[:,:]),
+    ('v', float64[:,:])
+    ]
+
+#@jitclass(spec)
 class Adam(Optimizer):
     def __init__(self, lr=0.001):
         self.lr = lr
         self.p1 = 0.9
         self.p2 = 0.999
         self.eps = 1e-8
-        #self.s = np.zeros(shape)
-        #self.r = np.zeros(shape)
         self.t = 0
-        self.m = 0
-        self.v = 0
+        self.m = np.empty((1,1))
+        self.v = np.empty((1,1))
 
     def update(self, theta, grad):
         self.t = self.t + 1

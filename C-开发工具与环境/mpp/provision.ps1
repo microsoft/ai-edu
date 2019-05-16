@@ -29,11 +29,11 @@ choco install docker-for-windows git python3 vscode pycharm -y
 choco install --force googlechrome -y
 $h=hostname
 ipconfig | select-string -pattern "  IPv4 "|format-table @{Expression={$_.Line};Label="$h IPs"}
+$newpath = ADD-PATH -addedfolder C:\python37
+Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $newpath
 choco -v
 docker -v
 git --version
-$newpath = ADD-PATH -addedfolder C:\python37
-Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $newpath
 python -m pip install pip --upgrade
 python -m pip install numpy
 python -m pip install matplotlib
@@ -49,5 +49,6 @@ try {
 } finally{
    $ErrorActionPreference = "Continue";
 }
-Write-Host -ForegroundColor Yellow "configure docker volume, share C folder, then restart machine"
-Write-Host -ForegroundColor Yellow "after rebooting, cd C:\training .\run.ps1"
+Write-Host -ForegroundColor Yellow -BackgroundColor DarkGreen "configure docker setting, share C folder, then reboot machine"
+Write-Host -ForegroundColor Yellow -BackgroundColor DarkGreen "after rebooting, cd C:\training; .\run.ps1"
+Start-Process http://bazhou.blob.core.windows.net/learning/mpp/share_c.gif

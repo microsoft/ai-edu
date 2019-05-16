@@ -54,6 +54,8 @@ class CLossHistory(object):
 
     # 图形显示损失函数值历史记录
     def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
+        fig = plt.figure(figsize=(12,5))
+
         axes = plt.subplot(1,2,1)
         p2, = axes.plot(self.iteration_history_train, self.loss_history_train)
         p1, = axes.plot(self.iteration_history_train, self.loss_history_val)

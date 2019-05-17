@@ -96,7 +96,7 @@ if __name__ == '__main__':
     num_output = 10
     max_epoch = 1000
     batch_size = 100
-    learning_rate = 0.2
+    learning_rate = 1
     eps = 0.08
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,

@@ -14,7 +14,7 @@ class FcLayer(CLayer):
         self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer_name, param.eta)
         self.weights.InitializeWeights()
 
-    def forward(self, input):
+    def forward(self, input, train=True):
         self.input_shape = input.shape
         if input.ndim == 3: # come from pooling layer
             self.x = input.reshape(input.size, 1)

@@ -15,6 +15,9 @@ class CLayer(object):
     def __init__(self, layer_type):
         self.layer_type = layer_type
 
+    def train(self, input, train=True):
+        pass
+
     def update(self):
         pass
 

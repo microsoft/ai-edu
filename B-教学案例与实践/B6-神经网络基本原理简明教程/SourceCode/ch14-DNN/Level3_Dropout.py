@@ -27,24 +27,7 @@ def LoadData():
     return mdr
 
 
-def OverFitNet():
-    dataReader = LoadData()
-    num_feature = dataReader.num_feature
-    num_example = dataReader.num_example
-    num_input = num_feature
-    num_hidden1 = 64
-    num_hidden2 = 32
-    num_output = 10
-    max_epoch = 100
-    batch_size = 100
-    learning_rate = 0.2
-    eps = 0.08
-
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        InitialMethod.Xavier, 
-                        OptimizerName.SGD)
-
+def OverFitNet(num_input, num_hidden1, num_hidden2, num_output, params):
     net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -69,24 +52,7 @@ def OverFitNet():
     
     net.ShowLossHistory(0, None, 0, 1)
 
-def DropoutNet():
-    dataReader = LoadData()
-    num_feature = dataReader.num_feature
-    num_example = dataReader.num_example
-    num_input = num_feature
-    num_hidden1 = 64
-    num_hidden2 = 32
-    num_output = 10
-    max_epoch = 100
-    batch_size = 100
-    learning_rate = 0.2
-    eps = 0.08
-
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        InitialMethod.Xavier, 
-                        OptimizerName.SGD)
-
+def DropoutNet(num_input, num_hidden1, num_hidden2, num_output, params):
     net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -114,11 +80,31 @@ def DropoutNet():
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1)
+    net.train(dataReader, checkpoint=1, need_test=True)
     
     net.ShowLossHistory(0, None, 0, 1)
 
 
 if __name__ == '__main__':
-    # OverFitNet()
-    DropoutNet()
+
+    dataReader = LoadData()
+    num_feature = dataReader.num_feature
+    num_example = dataReader.num_example
+    num_input = num_feature
+    num_hidden1 = 64
+    num_hidden2 = 32
+    num_output = 10
+    max_epoch = 100
+    batch_size = 100
+    learning_rate = 0.2
+    eps = 0.08
+
+    params = CParameters(learning_rate, max_epoch, batch_size, eps,
+                        LossFunctionName.CrossEntropy3, 
+                        InitialMethod.Xavier, 
+                        OptimizerName.SGD)
+
+
+
+    OverFitNet(num_input, num_hidden1, num_hidden2, num_output, params)
+    DropoutNet(num_input, num_hidden1, num_hidden2, num_output, params)

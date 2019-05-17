@@ -5,11 +5,12 @@ import numpy as np
 
 from MiniFramework.Layer import *
 
+# sigmoid and softmax
 class ClassificationLayer(CLayer):
     def __init__(self, activator):
         self.activator = activator
 
-    def forward(self, input):
+    def forward(self, input, train=True):
         self.input_shape = input.shape
         self.x = input
         self.a = self.activator.forward(self.x)
@@ -24,7 +25,7 @@ class ActivatorLayer(CLayer):
     def __init__(self, activator):
         self.activator = activator
 
-    def forward(self, input):
+    def forward(self, input, train=True):
         self.input_shape = input.shape
         self.x = input
         self.a = self.activator.forward(self.x)

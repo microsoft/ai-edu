@@ -22,18 +22,18 @@ class NeuralNet(object):
         self.layer_name.append(name)
         self.layer_count += 1
 
-    def __forward(self, X, istest=False):
+    def __forward(self, X, train=True):
         input = X
         for i in range(self.layer_count):
             layer = self.layer_list[i]
-            output = layer.forward(input)
+            output = layer.forward(input, train)
             input = output
         # end for
         self.output = output
         return self.output
 
     def inference(self, X):
-        output = self.__forward(X, istest=True)
+        output = self.__forward(X, train=False)
         return output
 
     def __backward(self, X, Y):
@@ -66,7 +66,7 @@ class NeuralNet(object):
                 return LayerIndexFlags.MiddleLayer
 
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
-    def train(self, dataReader, checkpoint=0.1, test=True):
+    def train(self, dataReader, checkpoint=0.1, need_test=True):
 
         t0 = time.time()
 
@@ -87,7 +87,7 @@ class NeuralNet(object):
                 if self.params.optimizer_name == OptimizerName.Nag:
                     self.__pre_update()
                 # get z from x,y
-                self.__forward(batch_x)
+                self.__forward(batch_x, train=True)
                 # calculate gradient of w and b
                 self.__backward(batch_x, batch_y)
                 # final update w,b
@@ -110,7 +110,7 @@ class NeuralNet(object):
         t1 = time.time()
         print("time used:", t1 - t0)
 
-        if test:
+        if need_test:
             print("testing...")
             c,n = self.Test(dataReader)
             print(str.format("rate={0} / {1} = {2}", c, n, c / n))
@@ -133,7 +133,7 @@ class NeuralNet(object):
             self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, None, None)
             return None
         else:
-            self.__forward(vld_x)
+            self.__forward(vld_x, train=False)
             loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
             if self.params.loss_func_name == LossFunctionName.MSE:
                 accuracy_vld = self.params.eps / loss_vld
@@ -152,7 +152,7 @@ class NeuralNet(object):
         max_iteration = max(dataReader.num_test//test_batch,1)
         for i in range(max_iteration):
             x, y = dataReader.GetBatchTestSamples(test_batch, i)
-            self.__forward(x)
+            self.__forward(x, train=False)
             correct += self.__CalAccuracy(self.output, y, 3)
         #end for
         return correct, dataReader.num_test

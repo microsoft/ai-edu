@@ -70,7 +70,7 @@ if __name__ == '__main__':
     sigmoid2 = ClassificationLayer(Sigmoid())
     net.add_layer(sigmoid2, "sigmoid2")
 
-    net.train(dataReader, checkpoint=10, test=False)
+    net.train(dataReader, checkpoint=10, need_test=False)
     net.ShowLossHistory()
     
     ShowResult(net, params.toString())

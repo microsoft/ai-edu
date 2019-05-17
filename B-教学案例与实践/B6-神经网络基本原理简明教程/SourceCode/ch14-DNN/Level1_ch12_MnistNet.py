@@ -62,7 +62,7 @@ if __name__ == '__main__':
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1)
+    net.train(dataReader, checkpoint=1, need_test=True)
     
     net.ShowLossHistory(0, None, 0, 1)
     

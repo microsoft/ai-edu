@@ -54,16 +54,15 @@ class NeuralNet(object):
             layer = self.layer_list[i]
             layer.update()
 
-    def __get_layer_index(self, idx):
-        if self.layer_count == 1:
-            return LayerIndexFlags.SingleLayer
-        else:
-            if idx == self.layer_count - 1:
-                return LayerIndexFlags.LastLayer
-            elif idx == 0:
-                return LayerIndexFlags.FirstLayer
-            else:
-                return LayerIndexFlags.MiddleLayer
+    def __get_l2_cost_from_fc_layer(self):
+        l2_cost = 0
+        for i in range(self.layer_count-1,-1,-1):
+            layer = self.layer_list[i]
+            if isinstance(layer, FcLayer):
+                l2_cost += np.sum(np.square(layer.weights.W))
+            # end if
+        # end for
+        return l2_cost * self.params.lambd
 
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
     def train(self, dataReader, checkpoint=0.1, need_test=True):
@@ -101,7 +100,7 @@ class NeuralNet(object):
                         break                
                 #end if
             # end for
-            #self.save_parameters()
+            #self.save_parameters()  # 这里会显著降低性能，因为频繁的磁盘操作，而且可能会有文件读写失败
             dataReader.Shuffle()
             if loss_validation is not None and loss_validation <= self.params.eps:
                 break
@@ -119,8 +118,17 @@ class NeuralNet(object):
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
+
+        # l2 cost
+        l2_cost = 0
+        if self.params.regular_name == RegularMethod.L2:
+            l2_cost = self.__get_l2_cost_from_fc_layer()
+
         # calculate train loss
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
+        if self.params.regular_name == RegularMethod.L2:
+            loss_train += l2_cost / train_y.shape[1]
+
         if self.params.loss_func_name == LossFunctionName.MSE:
             accuracy_train = self.params.eps / loss_train
         elif self.params.loss_func_name == LossFunctionName.CrossEntropy3:
@@ -131,11 +139,14 @@ class NeuralNet(object):
         # calculate validation loss
         vld_x, vld_y = dataReader.GetDevSet()
         if vld_x is None or vld_y is None:
-            self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, None, None)
-            return None
+            loss_vld = None
+            accuracy_vld = None
         else:
             self.__forward(vld_x, train=False)
             loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
+            if self.params.regular_name == RegularMethod.L2:
+                loss_vld += l2_cost / vld_y.shape[1]
+
             if self.params.loss_func_name == LossFunctionName.MSE:
                 accuracy_vld = self.params.eps / loss_vld
             elif self.params.loss_func_name == LossFunctionName.CrossEntropy2:
@@ -143,10 +154,11 @@ class NeuralNet(object):
             elif self.params.loss_func_name == LossFunctionName.CrossEntropy3:
                 accuracy_vld = self.__CalAccuracy(self.output, vld_y, 3) / vld_y.shape[1]
             print("loss_valid=%.4f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
-            self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
-            return loss_vld
         # end if
+        self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
+        return loss_vld
         
+       
     def Test(self, dataReader):
         correct = 0
         test_batch = 1000

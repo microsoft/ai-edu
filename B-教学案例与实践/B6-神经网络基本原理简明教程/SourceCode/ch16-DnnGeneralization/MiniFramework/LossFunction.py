@@ -63,7 +63,9 @@ class CLossHistory(object):
         axes.set_title("Loss")
         axes.set_ylabel("loss")
         axes.set_xlabel("iteration")
-        #plt.show()
+        if xmin != None or xmax != None or ymin != None or ymax != None:
+            axes.axis([xmin, xmax, ymin, ymax])
+
         
         axes = plt.subplot(1,2,2)
         p2, = axes.plot(self.iteration_history_train, self.accuracy_history_train)

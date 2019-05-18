@@ -1,16 +1,24 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
+from enum import Enum
 
 from MiniFramework.LossFunction import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.Optimizer import *
+
+class RegularMethod(Enum):
+    L0 = 0,
+    L1 = 1,
+    L2 = 2
+
 
 # this class is for two-layer NN only
 class CParameters(object):
     def __init__(self, eta=0.1, max_epoch=10000, batch_size=5, eps = 0.1,
                  lossFuncName=LossFunctionName.MSE, 
                  initMethod=InitialMethod.Zero, 
-                 optimizerName=OptimizerName.SGD):
+                 optimizerName=OptimizerName.SGD,
+                 regularName=RegularMethod.L0, lambd=0.0):
 
         self.eta = eta
         self.max_epoch = max_epoch
@@ -20,10 +28,12 @@ class CParameters(object):
         else:
             self.batch_size = batch_size
         # end if
+        self.eps = eps
         self.loss_func_name = lossFuncName
         self.init_method = initMethod
         self.optimizer_name = optimizerName
-        self.eps = eps
+        self.regular_name = regularName
+        self.lambd = lambd
 
 
     def toString(self):

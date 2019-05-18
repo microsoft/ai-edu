@@ -13,6 +13,8 @@ class FcLayer(CLayer):
         self.output_size = output_size
         self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer_name, param.eta)
         self.weights.InitializeWeights()
+        self.regular_name = param.regular_name
+        self.lambd = param.lambd
 
     def forward(self, input, train=True):
         self.input_shape = input.shape
@@ -27,10 +29,15 @@ class FcLayer(CLayer):
     def backward(self, delta_in, idx):
         dZ = delta_in
         m = self.x.shape[1]
-        self.weights.dW = np.dot(dZ, self.x.T) / m
+        if self.regular_name == RegularMethod.L2:
+            self.weights.dW = (np.dot(dZ, self.x.T) + self.lambd * self.weights.W) / m
+        elif self.regular_name == RegularMethod.L1:
+            self.weights.dW = np.dot(dZ, self.x.T) / m
+        else:
+            self.weights.dW = np.dot(dZ, self.x.T) / m
+        # end if
         self.weights.dB = np.sum(dZ, axis=1, keepdims=True) / m
         # calculate delta_out for lower level
-        #if flag == LayerIndexFlags.FirstLayer:
         if idx == 0:
             return None
         

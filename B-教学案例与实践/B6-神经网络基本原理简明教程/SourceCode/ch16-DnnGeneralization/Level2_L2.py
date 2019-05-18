@@ -21,7 +21,7 @@ test_label_file = 'test-labels-10'
 
 def LoadData():
     mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    mdr.ReadLessData(2000)
+    mdr.ReadLessData(10000)
     mdr.Normalize()
     mdr.GenerateDevSet()
     return mdr
@@ -48,7 +48,7 @@ def L2Net(num_input, num_hidden1, num_hidden2, num_output, params):
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=20)
+    net.train(dataReader, checkpoint=1)
     
     net.ShowLossHistory(0, None, 0, 5)
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     num_hidden1 = 64
     num_hidden2 = 32
     num_output = 10
-    max_epoch = 1000
+    max_epoch = 100
     batch_size = 100
     learning_rate = 0.2
     eps = 0.08

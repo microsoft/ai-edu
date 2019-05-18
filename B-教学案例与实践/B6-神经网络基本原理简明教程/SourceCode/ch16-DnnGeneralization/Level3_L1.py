@@ -11,100 +11,85 @@ from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DropoutLayer import *
+from MiniFramework.DataReader import *
 
-from MnistImageDataReader import *
-
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
+x_data_name = "X16.dat"
+y_data_name = "Y16.dat"
 
 def LoadData():
-    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    mdr.ReadLessData(2000)
-    mdr.Normalize()
-    mdr.GenerateDevSet()
-    return mdr
+    dataReader = DataReader(x_data_name, y_data_name)
+    dataReader.ReadData()
+    dataReader.Normalize()
+    return dataReader
 
 
-def OverFitNet(num_input, num_hidden1, num_hidden2, num_output, params):
+def L2Net(num_input, num_hidden1, num_hidden2, num_output, params):
     net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
 
-    sigmoid = ActivatorLayer(Relu())
-    net.add_layer(sigmoid, "sigmoid")
+    relu1 = ActivatorLayer(Tanh())
+    net.add_layer(relu1, "relu1")
 
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
 
-    tanh = ActivatorLayer(Relu())
-    net.add_layer(tanh, "tanh")
+    relu2 = ActivatorLayer(Tanh())
+    net.add_layer(relu2, "relu2")
 
     fc3 = FcLayer(num_hidden2, num_output, params)
     net.add_layer(fc3, "fc3")
 
-    softmax = ActivatorLayer(Softmax())
+    softmax = ActivatorLayer(Sigmoid())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=10)
+    net.train(dataReader, checkpoint=1, need_test=False)
     
-    net.ShowLossHistory(0, None, 0, 1)
-
-def DropoutNet(num_input, num_hidden1, num_hidden2, num_output, params):
-    net = NeuralNet(params)
-
-    fc1 = FcLayer(num_input, num_hidden1, params)
-    net.add_layer(fc1, "fc1")
-
-    sigmoid = ActivatorLayer(Relu())
-    net.add_layer(sigmoid, "sigmoid")
-
-    fc2 = FcLayer(num_hidden1, num_hidden2, params)
-    net.add_layer(fc2, "fc2")
-
-    tanh = ActivatorLayer(Relu())
-    net.add_layer(tanh, "tanh")
-
-    dp1 = DropoutLayer(num_hidden2, 0.5)
-    net.add_layer(dp1, "dp1")
-
-    fc3 = FcLayer(num_hidden2, num_output, params)
-    net.add_layer(fc3, "fc3")
-
-    dp2 = DropoutLayer(num_output, 0.5)
-    net.add_layer(dp2, "dp2")
+    net.ShowLossHistory()
+    plot_decision_boundary(dataReader, net)
 
 
-    softmax = ActivatorLayer(Softmax())
-    net.add_layer(softmax, "softmax")
-
-    net.train(dataReader, checkpoint=10, need_test=True)
+def plot_decision_boundary(dataReader, net):
+    X = dataReader.X
+    Y = dataReader.Y
+    # Set min and max values and give it some padding
+    x_min, x_max = X[0, :].min() - .5, X[0, :].max() + .5
+    y_min, y_max = X[1, :].min() - .5, X[1, :].max() + .5
+    h = 0.01
+    # Generate a grid of points with distance h between them
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+    # Predict the function value for the whole gid
+    Z = net.inference(np.c_[xx.ravel(), yy.ravel()].T)#
+    Z = np.reshape(Z, xx.shape)
+    # Plot the contour and training examples
+    plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral)
     
-    net.ShowLossHistory(0, None, 0, 1)
+    for i in range(200):
+        if Y[0,i] == 0:
+            plt.plot(X[0,i], X[1,i], 'o', c='g')
+        else:
+            plt.plot(X[0,i], X[1,i], 'x', c='r')
+
+    plt.show()
 
 
 if __name__ == '__main__':
-
     dataReader = LoadData()
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
-    num_hidden1 = 64
-    num_hidden2 = 32
-    num_output = 10
+    num_hidden1 = 8
+    num_hidden2 = 4
+    num_output = 1
     max_epoch = 1000
-    batch_size = 100
-    learning_rate = 0.2
-    eps = 0.08
+    batch_size = 10
+    learning_rate = 0.1
+    eps = 0.01
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        InitialMethod.Xavier, 
-                        OptimizerName.SGD)
+                        LossFunctionName.CrossEntropy2, InitialMethod.Xavier, OptimizerName.SGD
+                        )
 
+    L2Net(num_input, num_hidden1, num_hidden2, num_output, params)
 
-
-    OverFitNet(num_input, num_hidden1, num_hidden2, num_output, params)
-    DropoutNet(num_input, num_hidden1, num_hidden2, num_output, params)

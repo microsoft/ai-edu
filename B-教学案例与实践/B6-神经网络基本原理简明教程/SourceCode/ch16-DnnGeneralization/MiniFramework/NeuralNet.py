@@ -94,7 +94,7 @@ class NeuralNet(object):
                 
                 total_iteration = epoch * max_iteration + iteration               
                 if total_iteration % checkpoint_iteration == 0:
-                    self.save_parameters()
+                    #self.save_parameters()
                     loss_validation = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
                     if loss_validation is not None and loss_validation <= self.params.eps:
                         break                
@@ -109,6 +109,8 @@ class NeuralNet(object):
 
         t1 = time.time()
         print("time used:", t1 - t0)
+
+        self.save_parameters()
 
         if need_test:
             print("testing...")
@@ -175,7 +177,7 @@ class NeuralNet(object):
         if mode == 1:
             pass
         elif mode == 2:
-            a[a>0]=1
+            a[a>=0.5]=1
             r = (a == y)
             correct = r.sum()
             return correct

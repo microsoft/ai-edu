@@ -9,7 +9,8 @@ from MiniFramework.Optimizer import *
 class RegularMethod(Enum):
     L0 = 0,
     L1 = 1,
-    L2 = 2
+    L2 = 2,
+    EarlyStop = 4
 
 
 # this class is for two-layer NN only
@@ -29,14 +30,16 @@ class CParameters(object):
             self.batch_size = batch_size
         # end if
         self.eps = eps
-        self.loss_func_name = lossFuncName
+        self.loss_func = lossFuncName
         self.init_method = initMethod
-        self.optimizer_name = optimizerName
-        self.regular_name = regularName
+        self.optimizer = optimizerName
+        self.regular = regularName
         self.lambd = lambd
 
 
     def toString(self):
-        title = str.format("bz:{0},eta:{1},init:{2},op:{3}", self.batch_size, self.eta, self.init_method.name, self.optimizer_name.name)
+        title = str.format("bz:{0},eta:{1},init:{2},op:{3}", self.batch_size, self.eta, self.init_method.name, self.optimizer.name)
+        if self.regular != RegularMethod.L0:
+            title += str.format(",rgl:{0},lambd:{1}", self.regular.name, self.lambd)
         return title
 

@@ -21,36 +21,56 @@ test_label_file = 'test-labels-10'
 
 def LoadData():
     mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    mdr.ReadLessData(10000)
+    mdr.ReadLessData(1000)
     mdr.Normalize()
     mdr.GenerateDevSet()
     return mdr
 
 
-def OverFitNet(num_input, num_hidden1, num_hidden2, num_output, params):
+def OverFitNet(num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
     net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-
     relu1 = ActivatorLayer(Relu())
     net.add_layer(relu1, "relu1")
-
+    """
+    drop1 = DropoutLayer(num_hidden1, 0.3)
+    net.add_layer(drop1, "dp1")
+    """
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-
     relu2 = ActivatorLayer(Relu())
     net.add_layer(relu2, "relu2")
-
-    fc3 = FcLayer(num_hidden2, num_output, params)
+    """
+    drop2 = DropoutLayer(num_hidden2, 0.3)
+    net.add_layer(drop2, "dp2")
+    """
+    fc3 = FcLayer(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
+    relu3 = ActivatorLayer(Relu())
+    net.add_layer(relu3, "relu3")
+    """
+    drop3 = DropoutLayer(num_hidden3, 0.3)
+    net.add_layer(drop1, "dp3")
+    """
+    fc4 = FcLayer(num_hidden3, num_hidden4, params)
+    net.add_layer(fc4, "fc4")
+    relu4 = ActivatorLayer(Relu())
+    net.add_layer(relu4, "relu4")
+    """
+    drop4 = DropoutLayer(num_hidden4, 0.3)
+    net.add_layer(drop4, "dp4")
+    """
 
+    fc5 = FcLayer(num_hidden4, num_output, params)
+    net.add_layer(fc5, "fc5")
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1)
+    net.train(dataReader, checkpoint=5)
     
-    net.ShowLossHistory(0, None, 0, 1)
+    net.ShowLossHistory()
 
 
 if __name__ == '__main__':
@@ -59,20 +79,21 @@ if __name__ == '__main__':
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
-    num_hidden1 = 64
-    num_hidden2 = 32
+    num_hidden = 64
     num_output = 10
-    max_epoch = 100
+    max_epoch = 500
     batch_size = 100
-    learning_rate = 0.2
+    learning_rate = 0.1
     eps = 0.08
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        InitialMethod.Xavier, 
-                        OptimizerName.SGD)
+                        LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD
+                        #)
+                        ,RegularMethod.EarlyStop, lambd=5)
+                        #,RegularMethod.L1, lambd=0.1)
+                        #,RegularMethod.L2, lambd=2)
 
 
 
-    OverFitNet(num_input, num_hidden1, num_hidden2, num_output, params)
+    OverFitNet(num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
 

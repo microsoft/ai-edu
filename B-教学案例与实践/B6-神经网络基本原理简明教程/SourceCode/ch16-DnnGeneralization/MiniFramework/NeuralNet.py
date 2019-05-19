@@ -54,24 +54,33 @@ class NeuralNet(object):
             layer = self.layer_list[i]
             layer.update()
 
-    def __get_l2_cost_from_fc_layer(self):
-        l2_cost = 0
+    def __get_regular_cost_from_fc_layer(self, regularName):
+        if regularName != RegularMethod.L1 and regularName != RegularMethod.L2:
+            return 0
+
+        regular_cost = 0
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             if isinstance(layer, FcLayer):
-                l2_cost += np.sum(np.square(layer.weights.W))
+                if regularName == RegularMethod.L1:
+                    regular_cost += np.sum(np.abs(layer.weights.W))
+                elif regularName == RegularMethod.L2:
+                    regular_cost += np.sum(np.square(layer.weights.W))
             # end if
         # end for
-        return l2_cost * self.params.lambd
+        return regular_cost * self.params.lambd
 
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
     def train(self, dataReader, checkpoint=0.1, need_test=True):
 
         t0 = time.time()
 
-        self.loss_history = CLossHistory()
-        loss = 0 
-        self.lossFunc = CLossFunction(self.params.loss_func_name)
+        if self.params.regular == RegularMethod.EarlyStop:
+           self.loss_history = CLossHistory(True, self.params.lambd)
+        else:
+           self.loss_history = CLossHistory()
+
+        self.lossFunc = CLossFunction(self.params.loss_func)
         # if num_example=200, batch_size=10, then iteration=200/10=20
         if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_train:
             self.params.batch_size = dataReader.num_train
@@ -83,7 +92,7 @@ class NeuralNet(object):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.params.batch_size, iteration)
                 # for optimizers which need pre-update weights
-                if self.params.optimizer_name == OptimizerName.Nag:
+                if self.params.optimizer == OptimizerName.Nag:
                     self.__pre_update()
                 # get z from x,y
                 self.__forward(batch_x, train=True)
@@ -95,14 +104,14 @@ class NeuralNet(object):
                 total_iteration = epoch * max_iteration + iteration               
                 if total_iteration % checkpoint_iteration == 0:
                     #self.save_parameters()
-                    loss_validation = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
-                    if loss_validation is not None and loss_validation <= self.params.eps:
+                    need_stop = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
+                    if need_stop:
                         break                
                 #end if
             # end for
             #self.save_parameters()  # 这里会显著降低性能，因为频繁的磁盘操作，而且可能会有文件读写失败
             dataReader.Shuffle()
-            if loss_validation is not None and loss_validation <= self.params.eps:
+            if need_stop:
                 break
             # end if
         # end for
@@ -121,21 +130,18 @@ class NeuralNet(object):
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
 
-        # l2 cost
-        l2_cost = 0
-        if self.params.regular_name == RegularMethod.L2:
-            l2_cost = self.__get_l2_cost_from_fc_layer()
+        # l1/l2 cost
+        regular_cost = self.__get_regular_cost_from_fc_layer(self.params.regular)
 
         # calculate train loss
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
-        if self.params.regular_name == RegularMethod.L2:
-            loss_train += l2_cost / train_y.shape[1]
+        loss_train += regular_cost / train_y.shape[1]
 
-        if self.params.loss_func_name == LossFunctionName.MSE:
+        if self.params.loss_func == LossFunctionName.MSE:
             accuracy_train = self.params.eps / loss_train
-        elif self.params.loss_func_name == LossFunctionName.CrossEntropy3:
+        elif self.params.loss_func == LossFunctionName.CrossEntropy3:
             accuracy_train = self.__CalAccuracy(self.output, train_y, 3) / train_y.shape[1]
-        elif self.params.loss_func_name == LossFunctionName.CrossEntropy2:
+        elif self.params.loss_func == LossFunctionName.CrossEntropy2:
             accuracy_train = self.__CalAccuracy(self.output, train_y, 2) / train_y.shape[1]
         print("loss_train=%.4f, accuracy_train=%f" %(loss_train, accuracy_train))
         # calculate validation loss
@@ -146,19 +152,21 @@ class NeuralNet(object):
         else:
             self.__forward(vld_x, train=False)
             loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
-            if self.params.regular_name == RegularMethod.L2:
-                loss_vld += l2_cost / vld_y.shape[1]
+            loss_vld += regular_cost / vld_y.shape[1]
 
-            if self.params.loss_func_name == LossFunctionName.MSE:
+            if self.params.loss_func == LossFunctionName.MSE:
                 accuracy_vld = self.params.eps / loss_vld
-            elif self.params.loss_func_name == LossFunctionName.CrossEntropy2:
+            elif self.params.loss_func == LossFunctionName.CrossEntropy2:
                 accuracy_vld = self.__CalAccuracy(self.output, vld_y, 2) / vld_y.shape[1]
-            elif self.params.loss_func_name == LossFunctionName.CrossEntropy3:
+            elif self.params.loss_func == LossFunctionName.CrossEntropy3:
                 accuracy_vld = self.__CalAccuracy(self.output, vld_y, 3) / vld_y.shape[1]
             print("loss_valid=%.4f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
         # end if
-        self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
-        return loss_vld
+        need_stop = self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
+        if loss_vld <= self.params.eps:
+            need_stop = True
+
+        return need_stop
         
        
     def Test(self, dataReader):

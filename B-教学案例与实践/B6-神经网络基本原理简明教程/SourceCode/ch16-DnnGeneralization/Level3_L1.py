@@ -29,13 +29,13 @@ def L2Net(num_input, num_hidden1, num_hidden2, num_output, params):
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
 
-    relu1 = ActivatorLayer(Tanh())
+    relu1 = ActivatorLayer(Relu())
     net.add_layer(relu1, "relu1")
 
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
 
-    relu2 = ActivatorLayer(Tanh())
+    relu2 = ActivatorLayer(Relu())
     net.add_layer(relu2, "relu2")
 
     fc3 = FcLayer(num_hidden2, num_output, params)
@@ -44,7 +44,7 @@ def L2Net(num_input, num_hidden1, num_hidden2, num_output, params):
     softmax = ActivatorLayer(Sigmoid())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1, need_test=False)
+    net.train(dataReader, checkpoint=10, need_test=False)
     
     net.ShowLossHistory()
     plot_decision_boundary(dataReader, net)
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     num_hidden1 = 8
     num_hidden2 = 4
     num_output = 1
-    max_epoch = 1000
+    max_epoch = 10000
     batch_size = 10
     learning_rate = 0.1
     eps = 0.01

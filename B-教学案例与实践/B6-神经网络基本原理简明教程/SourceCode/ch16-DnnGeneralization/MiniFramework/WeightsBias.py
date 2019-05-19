@@ -17,7 +17,7 @@ class WeightsBias(object):
         self.num_input = n_input
         self.num_output = n_output
         self.init_method = init_method
-        self.optimizer_name = optimizer_name
+        self.optimizer = optimizer_name
         self.eta = eta
         self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
         self.result_value_filename = str.format("{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
@@ -46,11 +46,11 @@ class WeightsBias(object):
         # end if
 
     def __CreateOptimizers(self):
-        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer)
+        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer)
 
     def pre_Update(self):
-        if self.optimizer_name == OptimizerName.Nag:
+        if self.optimizer == OptimizerName.Nag:
             self.W = self.oW1.pre_update(self.W)
             self.B = self.oB1.pre_update(self.B)
         # end if

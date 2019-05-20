@@ -11,23 +11,12 @@ from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DropoutLayer import *
-
 from MnistImageDataReader import *
 
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
-
-def LoadData():
-    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    mdr.ReadLessData(1000)
-    mdr.Normalize()
-    mdr.GenerateDevSet()
-    return mdr
+from Level0_OverFitNet import *
 
 
-def OverFitNet(num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
+def DropoutNet(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
     net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -35,7 +24,7 @@ def OverFitNet(num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, nu
     relu1 = ActivatorLayer(Relu())
     net.add_layer(relu1, "relu1")
     
-    drop1 = DropoutLayer(num_hidden1, 0.3)
+    drop1 = DropoutLayer(num_hidden1, 0.1)
     net.add_layer(drop1, "dp1")
     
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
@@ -51,7 +40,7 @@ def OverFitNet(num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, nu
     relu3 = ActivatorLayer(Relu())
     net.add_layer(relu3, "relu3")
     
-    drop3 = DropoutLayer(num_hidden3, 0.3)
+    drop3 = DropoutLayer(num_hidden3, 0.5)
     net.add_layer(drop1, "dp3")
     
     fc4 = FcLayer(num_hidden3, num_hidden4, params)
@@ -86,14 +75,11 @@ if __name__ == '__main__':
     learning_rate = 0.1
     eps = 0.08
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD
-                        #)
-                        ,RegularMethod.EarlyStop, lambd=5)
-                        #,RegularMethod.L1, lambd=0.1)
-                        #,RegularMethod.L2, lambd=2)
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,
+        LossFunctionName.CrossEntropy3, 
+        InitialMethod.Xavier, 
+        OptimizerName.SGD)
 
-
-
-    OverFitNet(num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
+    DropoutNet(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
 

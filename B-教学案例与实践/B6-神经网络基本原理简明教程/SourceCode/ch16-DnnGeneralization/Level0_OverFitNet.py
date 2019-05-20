@@ -26,7 +26,7 @@ def LoadData():
     mdr.GenerateDevSet()
     return mdr
 
-def Net(num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
+def Net(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
     net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -78,4 +78,4 @@ if __name__ == '__main__':
         InitialMethod.Xavier, 
         OptimizerName.SGD)
 
-    Net(num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
+    Net(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)

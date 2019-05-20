@@ -35,7 +35,7 @@ class CLossHistory(object):
         self.min_loss_index = -1
         self.early_stop = need_earlyStop
         self.patience = patience
-        self.patience_count = 0
+        self.patience_counter = 0
         self.last_vld_loss = float("inf")
 
     def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld):
@@ -50,11 +50,11 @@ class CLossHistory(object):
 
         if self.early_stop:
             if loss_vld < self.last_vld_loss:
-                self.patience_count = 0
+                self.patience_counter = 0
                 self.last_vld_loss = loss_vld
             else:
-                self.patience_count += 1
-                if self.patience_count >= self.patience:
+                self.patience_counter += 1
+                if self.patience_counter >= self.patience:
                     return True     # need to stop
             # end if
         return False

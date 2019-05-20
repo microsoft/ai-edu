@@ -72,7 +72,10 @@ if __name__ == '__main__':
     learning_rate = 0.1
     eps = 0.08
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD)
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,                        
+        LossFunctionName.CrossEntropy3, 
+        InitialMethod.Xavier, 
+        OptimizerName.SGD)
 
     Net(num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)

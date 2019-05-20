@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_OverFitNet.py</StartupFile>
+    <StartupFile>Level0_OverFitNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level1_OverFitNet.py" />
+    <Compile Include="Level3_EarlyStop.py" />
+    <Compile Include="Level0_OverFitNet.py" />
     <Compile Include="Level3_L1.py" />
     <Compile Include="Level2_L2.py" />
     <Compile Include="Level4_Dropout.py" />

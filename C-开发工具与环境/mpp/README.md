@@ -5,3 +5,8 @@ Jupyter
 Docker
 ============
 使用内置Jupyter服务的Docker镜像:caapi/ai
+
+Provision
+=========
+Windows环境安装：launch.windows.txt
+

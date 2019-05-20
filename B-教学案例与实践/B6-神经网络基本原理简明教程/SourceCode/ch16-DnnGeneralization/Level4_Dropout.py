@@ -32,7 +32,7 @@ def DropoutNet(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num
     relu2 = ActivatorLayer(Relu())
     net.add_layer(relu2, "relu2")
     
-    drop2 = DropoutLayer(num_hidden2, 0.3)
+    drop2 = DropoutLayer(num_hidden2, 0.5)
     net.add_layer(drop2, "dp2")
     
     fc3 = FcLayer(num_hidden2, num_hidden3, params)
@@ -48,7 +48,7 @@ def DropoutNet(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num
     relu4 = ActivatorLayer(Relu())
     net.add_layer(relu4, "relu4")
     
-    drop4 = DropoutLayer(num_hidden4, 0.3)
+    drop4 = DropoutLayer(num_hidden4, 0.5)
     net.add_layer(drop4, "dp4")
     
 

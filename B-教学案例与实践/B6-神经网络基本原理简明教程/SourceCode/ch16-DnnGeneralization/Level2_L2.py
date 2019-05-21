@@ -12,45 +12,7 @@ from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DropoutLayer import *
 
-from MnistImageDataReader import *
-
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
-
-def LoadData():
-    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    mdr.ReadLessData(10000)
-    mdr.Normalize()
-    mdr.GenerateDevSet()
-    return mdr
-
-
-def L2Net(num_input, num_hidden1, num_hidden2, num_output, params):
-    net = NeuralNet(params)
-
-    fc1 = FcLayer(num_input, num_hidden1, params)
-    net.add_layer(fc1, "fc1")
-
-    relu1 = ActivatorLayer(Relu())
-    net.add_layer(relu1, "relu1")
-
-    fc2 = FcLayer(num_hidden1, num_hidden2, params)
-    net.add_layer(fc2, "fc2")
-
-    relu2 = ActivatorLayer(Relu())
-    net.add_layer(relu2, "relu2")
-
-    fc3 = FcLayer(num_hidden2, num_output, params)
-    net.add_layer(fc3, "fc3")
-
-    softmax = ActivatorLayer(Softmax())
-    net.add_layer(softmax, "softmax")
-
-    net.train(dataReader, checkpoint=1)
-    
-    net.ShowLossHistory(0, None, 0, 5)
+from Level0_OverFitNet import *
 
 if __name__ == '__main__':
 
@@ -58,17 +20,19 @@ if __name__ == '__main__':
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
-    num_hidden1 = 64
-    num_hidden2 = 32
+    num_hidden = 64
     num_output = 10
-    max_epoch = 100
+    max_epoch = 500
     batch_size = 100
-    learning_rate = 0.2
+    learning_rate = 0.1
     eps = 0.08
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD,
-                        RegularMethod.L2, lambd=10)
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,
+        LossFunctionName.CrossEntropy3, 
+        InitialMethod.Xavier, 
+        OptimizerName.SGD,
+        RegularMethod.L2, lambd=0.5)
 
-    L2Net(num_input, num_hidden1, num_hidden2, num_output, params)
+    Net(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
 

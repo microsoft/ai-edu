@@ -21,19 +21,21 @@ test_label_file = 'test-labels-10'
 
 def LoadData():
     mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    mdr.ReadLessData(500)
+    #mdr.ReadLessData(1000)
+    mdr.ReadData()
     mdr.Normalize()
-    mdr.GenerateDevSet()
+    mdr.GenerateDevSet(k=10)
     return mdr
 
-def Net(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
+#def Net(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
+def Net(dataReader, num_input, num_hidden, num_output, params):
     net = NeuralNet(params)
 
-    fc1 = FcLayer(num_input, num_hidden1, params)
+    fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
     relu1 = ActivatorLayer(Relu())
     net.add_layer(relu1, "relu1")
-
+    """
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
     relu2 = ActivatorLayer(Relu())
@@ -48,13 +50,13 @@ def Net(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden
     net.add_layer(fc4, "fc4")
     relu4 = ActivatorLayer(Relu())
     net.add_layer(relu4, "relu4")
-
-    fc5 = FcLayer(num_hidden4, num_output, params)
+    """
+    fc5 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc5, "fc5")
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=5)
+    net.train(dataReader, checkpoint=1, need_test=False)
     
     net.ShowLossHistory()
 
@@ -65,10 +67,10 @@ if __name__ == '__main__':
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
-    num_hidden = 64
+    num_hidden = 30
     num_output = 10
-    max_epoch = 500
-    batch_size = 100
+    max_epoch = 20
+    batch_size = 10
     learning_rate = 0.1
     eps = 0.08
 
@@ -78,4 +80,5 @@ if __name__ == '__main__':
         InitialMethod.Xavier, 
         OptimizerName.SGD)
 
-    Net(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
+    #Net(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
+    Net(dataReader, num_input, num_hidden, num_output, params)

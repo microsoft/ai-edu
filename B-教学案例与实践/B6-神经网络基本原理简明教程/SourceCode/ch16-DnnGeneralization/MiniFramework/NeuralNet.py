@@ -70,6 +70,22 @@ class NeuralNet(object):
         # end for
         return regular_cost * self.params.lambd
 
+    def __get_weights_from_fc_layer(self):
+        weights = 0
+        total = 0
+        zeros = 0
+        littles = 0
+        for i in range(self.layer_count-1,-1,-1):
+            layer = self.layer_list[i]
+            if isinstance(layer, FcLayer):
+                weights += np.sum(np.abs(layer.weights.W))
+                zeros += len(np.where(np.abs(layer.weights.W)<=0.0001)[0])
+                littles += len(np.where(np.abs(layer.weights.W)<=0.01)[0])
+                total += np.size(layer.weights.W)
+            # end if
+        # end for
+        return weights, zeros, littles, total
+
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
     def train(self, dataReader, checkpoint=0.1, need_test=True):
 
@@ -115,11 +131,18 @@ class NeuralNet(object):
                 break
             # end if
         # end for
+        self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
 
         t1 = time.time()
         print("time used:", t1 - t0)
 
         self.save_parameters()
+
+        weights, zeros, littles, total = self.__get_weights_from_fc_layer()
+        print("total weights abs sum=", weights)
+        print("total weights =", total)
+        print("little weights =", littles)
+        print("zero weights =", zeros)
 
         if need_test:
             print("testing...")

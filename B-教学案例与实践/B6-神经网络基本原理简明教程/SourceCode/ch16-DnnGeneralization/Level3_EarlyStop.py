@@ -24,8 +24,8 @@ if __name__ == '__main__':
     num_input = num_feature
     num_hidden = 64
     num_output = 10
-    max_epoch = 500
-    batch_size = 100
+    max_epoch = 200
+    batch_size = 20
     learning_rate = 0.1
     eps = 0.08
 

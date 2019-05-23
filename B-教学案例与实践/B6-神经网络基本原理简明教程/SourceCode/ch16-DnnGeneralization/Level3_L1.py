@@ -20,10 +20,10 @@ if __name__ == '__main__':
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
-    num_hidden = 64
+    num_hidden = 30
     num_output = 10
     max_epoch = 200
-    batch_size = 20
+    batch_size = 100
     learning_rate = 0.1
     eps = 0.08
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         LossFunctionName.CrossEntropy3, 
         InitialMethod.Xavier, 
         OptimizerName.SGD,
-        RegularMethod.L1, lambd=0.0045)
+        RegularMethod.L1, lambd=0.15)
 
-    Net(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
+    Net(dataReader, num_input, num_hidden, num_output, params)
 

@@ -21,8 +21,8 @@ test_label_file = 'test-labels-10'
 
 def LoadData():
     mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    #mdr.ReadLessData(1000)
-    mdr.ReadData()
+    mdr.ReadLessData(1000)
+    #mdr.ReadData()
     mdr.Normalize()
     mdr.GenerateDevSet(k=10)
     return mdr
@@ -35,22 +35,22 @@ def Net(dataReader, num_input, num_hidden, num_output, params):
     net.add_layer(fc1, "fc1")
     relu1 = ActivatorLayer(Relu())
     net.add_layer(relu1, "relu1")
-    """
-    fc2 = FcLayer(num_hidden1, num_hidden2, params)
+    
+    fc2 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc2, "fc2")
     relu2 = ActivatorLayer(Relu())
     net.add_layer(relu2, "relu2")
 
-    fc3 = FcLayer(num_hidden2, num_hidden3, params)
+    fc3 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc3, "fc3")
     relu3 = ActivatorLayer(Relu())
     net.add_layer(relu3, "relu3")
 
-    fc4 = FcLayer(num_hidden3, num_hidden4, params)
+    fc4 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc4, "fc4")
     relu4 = ActivatorLayer(Relu())
     net.add_layer(relu4, "relu4")
-    """
+    
     fc5 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc5, "fc5")
     softmax = ActivatorLayer(Softmax())
@@ -69,8 +69,8 @@ if __name__ == '__main__':
     num_input = num_feature
     num_hidden = 30
     num_output = 10
-    max_epoch = 20
-    batch_size = 10
+    max_epoch = 200
+    batch_size = 100
     learning_rate = 0.1
     eps = 0.08
 

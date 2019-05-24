@@ -22,18 +22,18 @@ if __name__ == '__main__':
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
     num_input = num_feature
-    num_hidden = 64
+    num_hidden = 30
     num_output = 10
     max_epoch = 200
-    batch_size = 20
+    batch_size = 100
     learning_rate = 0.1
-    eps = 0.08
+    eps = 1e-5
 
     params = CParameters(
         learning_rate, max_epoch, batch_size, eps,
         LossFunctionName.CrossEntropy3, 
         InitialMethod.Xavier, 
         OptimizerName.SGD,
-        RegularMethod.EarlyStop, lambd=5)
+        RegularMethod.EarlyStop, lambd=8)
 
-    Net(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
+    Net(dataReader, num_input, num_hidden, num_output, params)

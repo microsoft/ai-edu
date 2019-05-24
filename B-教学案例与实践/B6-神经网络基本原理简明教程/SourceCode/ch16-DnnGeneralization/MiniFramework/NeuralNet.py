@@ -157,6 +157,7 @@ class NeuralNet(object):
         regular_cost = self.__get_regular_cost_from_fc_layer(self.params.regular)
 
         # calculate train loss
+        self.__forward(train_x, train=False)
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
         loss_train += regular_cost / train_y.shape[1]
 

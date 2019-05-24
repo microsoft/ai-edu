@@ -56,7 +56,7 @@ def Net(dataReader, num_input, num_hidden, num_output, params):
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1, need_test=False)
+    net.train(dataReader, checkpoint=1, need_test=True)
     
     net.ShowLossHistory()
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     num_input = num_feature
     num_hidden = 30
     num_output = 10
-    max_epoch = 200
+    max_epoch = 100
     batch_size = 100
     learning_rate = 0.1
     eps = 0.08

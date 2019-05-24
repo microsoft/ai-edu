@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_L2.py</StartupFile>
+    <StartupFile>Level5_DataAugmentation.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,9 +21,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Level5_GenerateData.py" />
+    <Compile Include="Level5_DataAugmentation.py" />
     <Compile Include="Level3_EarlyStop.py" />
     <Compile Include="Level0_OverFitNet.py" />
-    <Compile Include="Level3_L1.py" />
+    <Compile Include="Level1_L1.py" />
     <Compile Include="Level2_L2.py" />
     <Compile Include="Level4_Dropout.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py">
@@ -40,6 +42,9 @@
     <Compile Include="MiniFramework\NeuralNet.py" />
     <Compile Include="MiniFramework\Parameters.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
+    <Compile Include="MnistAugmentationReader.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MnistImageDataReader.py" />
   </ItemGroup>
   <ItemGroup>

@@ -40,10 +40,10 @@ class MnistImageDataReader(DataReader):
         self.mode = mode    # image or vector
 
     def ReadLessData(self, count):
-        self.XTrainRaw = self.__ReadImageFile(self.train_image_file)
-        self.YTrainRaw = self.__ReadLabelFile(self.train_label_file)
-        self.XTestRaw = self.__ReadImageFile(self.test_image_file)
-        self.YTestRaw = self.__ReadLabelFile(self.test_label_file)
+        self.XTrainRaw = self.ReadImageFile(self.train_image_file)
+        self.YTrainRaw = self.ReadLabelFile(self.train_label_file)
+        self.XTestRaw = self.ReadImageFile(self.test_image_file)
+        self.YTestRaw = self.ReadLabelFile(self.test_label_file)
 
         self.XTrainRaw = self.XTrainRaw[0:count]
         self.YTrainRaw = self.YTrainRaw[0:count]
@@ -58,10 +58,10 @@ class MnistImageDataReader(DataReader):
 
 
     def ReadData(self):
-        self.XTrainRaw = self.__ReadImageFile(self.train_image_file)
-        self.YTrainRaw = self.__ReadLabelFile(self.train_label_file)
-        self.XTestRaw = self.__ReadImageFile(self.test_image_file)
-        self.YTestRaw = self.__ReadLabelFile(self.test_label_file)
+        self.XTrainRaw = self.ReadImageFile(self.train_image_file)
+        self.YTrainRaw = self.ReadLabelFile(self.train_label_file)
+        self.XTestRaw = self.ReadImageFile(self.test_image_file)
+        self.YTestRaw = self.ReadLabelFile(self.test_label_file)
         self.num_example = self.XTrainRaw.shape[0]
         self.num_category = len(np.unique(self.YTrainRaw))
         self.num_test = self.XTestRaw.shape[0]
@@ -72,7 +72,7 @@ class MnistImageDataReader(DataReader):
 
     # output array: num_images * channel * 28 * 28
     # due to gray image instead of color, so channel = 1
-    def __ReadImageFile(self, image_file_name):
+    def ReadImageFile(self, image_file_name):
         # header
         f = open(image_file_name, "rb")
         a = f.read(4)
@@ -96,7 +96,7 @@ class MnistImageDataReader(DataReader):
         f.close()
         return image_data
 
-    def __ReadLabelFile(self, lable_file_name):
+    def ReadLabelFile(self, lable_file_name):
         f = open(lable_file_name, "rb")
         f.read(4)
         a = f.read(4)
@@ -116,13 +116,16 @@ class MnistImageDataReader(DataReader):
         self.NormalizeY()
 
     def NormalizeX(self):
-        self.X = self.__NormalizeData(self.XTrainRaw).astype(np.float32)
-        self.XTestSet = self.__NormalizeData(self.XTestRaw).astype(np.float32)
+        if self.XTrainRaw is not None:
+            self.X = self.__NormalizeData(self.XTrainRaw).astype(np.float32)
+        if self.XTestRaw is not None:
+            self.XTestSet = self.__NormalizeData(self.XTestRaw).astype(np.float32)
 
     def NormalizeY(self):
         self.Y = self.ToOneHot(self.YTrainRaw)
         # no need to OneHot test set, we only need to get [0~9] from this set, instead of onehot encoded
-        self.YTestSet = self.ToOneHot(self.YTestRaw)
+        if self.YTestRaw is not None:
+            self.YTestSet = self.ToOneHot(self.YTestRaw)
 
     def ToOneHot(self, dataSet):
         num = dataSet.shape[0]

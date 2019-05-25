@@ -27,8 +27,7 @@ def LoadData():
     mdr.GenerateDevSet(k=10)
     return mdr
 
-#def Net(dataReader, num_input, num_hidden1, num_hidden2, num_hidden3, num_hidden4, num_output, params):
-def Net(dataReader, num_input, num_hidden, num_output, params):
+def Net(dataReader, num_input, num_hidden, num_output, params, show_history=True):
     net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden, params)
@@ -57,8 +56,10 @@ def Net(dataReader, num_input, num_hidden, num_output, params):
     net.add_layer(softmax, "softmax")
 
     net.train(dataReader, checkpoint=1, need_test=True)
+    if show_history:
+        net.ShowLossHistory()
     
-    net.ShowLossHistory()
+    return net
 
 
 if __name__ == '__main__':
@@ -80,5 +81,4 @@ if __name__ == '__main__':
         InitialMethod.Xavier, 
         OptimizerName.SGD)
 
-    #Net(dataReader, num_input, num_hidden, num_hidden, num_hidden, num_hidden, num_output, params)
     Net(dataReader, num_input, num_hidden, num_output, params)

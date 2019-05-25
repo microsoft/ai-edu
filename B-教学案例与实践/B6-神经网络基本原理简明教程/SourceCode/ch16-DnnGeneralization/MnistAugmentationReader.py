@@ -9,7 +9,7 @@ from MnistImageDataReader import *
 
 class MnistAugmentationReader(MnistImageDataReader):
     def ReadData(self):
-        data = np.load("data.npz")
+        data = np.load("level5_data.npz")
         image = data["data"] 
         label = data["label"]
         assert(image.shape[0] == label.shape[0])

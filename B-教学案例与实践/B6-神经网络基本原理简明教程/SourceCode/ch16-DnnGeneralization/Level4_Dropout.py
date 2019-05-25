@@ -15,7 +15,6 @@ from MnistImageDataReader import *
 
 from Level0_OverFitNet import *
 
-
 def DropoutNet(dataReader, num_input, num_hidden, num_output, params):
     net = NeuralNet(params)
 

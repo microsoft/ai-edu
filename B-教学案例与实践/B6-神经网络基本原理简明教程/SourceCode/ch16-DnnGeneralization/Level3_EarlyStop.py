@@ -15,7 +15,6 @@ from MnistImageDataReader import *
 
 from Level0_OverFitNet import *
 
-
 if __name__ == '__main__':
 
     dataReader = LoadData()

@@ -42,11 +42,22 @@ class DataReader(object):
             self.num_category = len(np.unique(self.YRawData))
 
             self.num_train = self.num_example
-            self.num_test = self.num_example    # no sperate test example
+            self.num_test = self.num_example    # neo sperate test example
 
             return self.XRawData, self.YRawData
         # end if
         return None,None
+
+    def SetData(self, X, Y):
+        self.XRawData = X
+        self.YRawData = Y
+        self.num_example = self.XRawData.shape[1]
+        self.num_feature = self.XRawData.shape[0]
+        self.num_category = len(np.unique(self.YRawData))
+
+        self.num_train = self.num_example
+        self.num_test = self.num_example    # no seperate test example
+        return self.XRawData, self.YRawData
 
     def Normalize(self, normalize_x=False, normalize_y=False, to_one_hot = False):
         if normalize_x:

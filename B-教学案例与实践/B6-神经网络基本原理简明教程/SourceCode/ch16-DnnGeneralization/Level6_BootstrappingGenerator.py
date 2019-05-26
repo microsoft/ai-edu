@@ -28,5 +28,5 @@ def GenerateDataSet(count=10):
     # end for
 
 if __name__=="__main__":
-    GenerateDataSet(10)
+    GenerateDataSet(9)
   

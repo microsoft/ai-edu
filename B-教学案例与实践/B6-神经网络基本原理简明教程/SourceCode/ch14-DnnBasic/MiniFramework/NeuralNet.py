@@ -152,40 +152,36 @@ class NeuralNet(object):
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
-
+        m_train = train_x.shape[0]
         # l1/l2 cost
         regular_cost = self.__get_regular_cost_from_fc_layer(self.params.regular)
-
         # calculate train loss
         self.__forward(train_x, train=False)
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
-        loss_train += regular_cost / train_y.shape[1]
+        loss_train += regular_cost / m_train
 
         if self.params.loss_func == LossFunctionName.MSE:
-            accuracy_train = self.params.eps / loss_train
-        elif self.params.loss_func == LossFunctionName.CrossEntropy3:
-            accuracy_train = self.__CalAccuracy(self.output, train_y, 3) / train_y.shape[1]
+            accuracy_train = self.__CalAccuracy(self.output, train_y, 1) / m_train
         elif self.params.loss_func == LossFunctionName.CrossEntropy2:
-            accuracy_train = self.__CalAccuracy(self.output, train_y, 2) / train_y.shape[1]
+            accuracy_train = self.__CalAccuracy(self.output, train_y, 2) / m_train
+        elif self.params.loss_func == LossFunctionName.CrossEntropy3:
+            accuracy_train = self.__CalAccuracy(self.output, train_y, 3) / m_train
         print("loss_train=%.4f, accuracy_train=%f" %(loss_train, accuracy_train))
         # calculate validation loss
-        vld_x, vld_y = dataReader.GetDevSet()
-        if vld_x is None or vld_y is None:
-            loss_vld = None
-            accuracy_vld = None
-        else:
-            self.__forward(vld_x, train=False)
-            loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
-            loss_vld += regular_cost / vld_y.shape[1]
+        vld_x, vld_y = dataReader.GetValidationSet()
+        m_vld = vld_x.shape[0]
+        self.__forward(vld_x, train=False)
+        loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
+        loss_vld += regular_cost / m_vld
 
-            if self.params.loss_func == LossFunctionName.MSE:
-                accuracy_vld = self.params.eps / loss_vld
-            elif self.params.loss_func == LossFunctionName.CrossEntropy2:
-                accuracy_vld = self.__CalAccuracy(self.output, vld_y, 2) / vld_y.shape[1]
-            elif self.params.loss_func == LossFunctionName.CrossEntropy3:
-                accuracy_vld = self.__CalAccuracy(self.output, vld_y, 3) / vld_y.shape[1]
-            print("loss_valid=%.4f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
-        # end if
+        if self.params.loss_func == LossFunctionName.MSE:
+            accuracy_vld = self.__CalAccuracy(self.output, vld_y, 1) / m_vld
+        elif self.params.loss_func == LossFunctionName.CrossEntropy2:
+            accuracy_vld = self.__CalAccuracy(self.output, vld_y, 2) / m_vld
+        elif self.params.loss_func == LossFunctionName.CrossEntropy3:
+            accuracy_vld = self.__CalAccuracy(self.output, vld_y, 3) / m_vld
+        print("loss_valid=%.4f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
+
         need_stop = self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
         if loss_vld <= self.params.eps:
             need_stop = True
@@ -200,14 +196,16 @@ class NeuralNet(object):
         for i in range(max_iteration):
             x, y = dataReader.GetBatchTestSamples(test_batch, i)
             self.__forward(x, train=False)
-            correct += self.__CalAccuracy(self.output, y, 3)
+            correct += self.__CalAccuracy(self.output, y, 1)
         #end for
         return correct, dataReader.num_test
 
     # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
     def __CalAccuracy(self, a, y, mode):
         if mode == 1:
-            pass
+            r = np.isclose(a, y, atol=1e-2)
+            correct = r.sum()
+            return correct
         elif mode == 2:
             a[a>=0.5]=1
             r = (a == y)

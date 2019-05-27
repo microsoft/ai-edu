@@ -9,11 +9,7 @@ from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
-x_data_name = "X09.dat"
-y_data_name = "Y09.dat"
-
 import csv
-
 
 data_file_name = "../../Data/PM25_data_20100101_20141231.csv"
 

@@ -19,8 +19,8 @@ class WeightsBias(object):
         self.init_method = init_method
         self.optimizer = optimizer_name
         self.eta = eta
-        self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
-        self.result_value_filename = str.format("{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
+        self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_input, self.num_output, self.init_method.name)
+        self.result_value_filename = str.format("{0}_{1}_{2}_result.npy", self.num_input, self.num_output, self.init_method.name)
 
     def InitializeWeights(self, create_new = False):
         if create_new:
@@ -64,7 +64,7 @@ class WeightsBias(object):
 
     def __LoadInitialValue(self):
         self.W = np.load(self.initial_value_filename)
-        self.B = np.zeros((self.num_output, 1))
+        self.B = np.zeros((1, self.num_output))
 
     def SaveResultValue(self, name):
         np.save(name + "_w_" + self.result_value_filename, self.W)
@@ -78,18 +78,18 @@ class WeightsBias(object):
     def InitialParameters(num_input, num_output, method):
         if method == InitialMethod.Zero:
             # zero
-            W = np.zeros((num_output, num_input))
+            W = np.zeros((num_input, num_output))
         elif method == InitialMethod.Normal:
             # normalize
-            W = np.random.normal(size=(num_output, num_input))
+            W = np.random.normal(size=(num_input, num_output))
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_input), size=(num_output, num_input))
+            W = np.random.normal(0, np.sqrt(2/num_output), size=(num_input, num_output))
         elif method == InitialMethod.Xavier:
             # xavier
             W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
                                   np.sqrt(6/(num_output+num_input)),
-                                  size=(num_output,num_input))
+                                  size=(num_input, num_output))
         # end if
-        B = np.zeros((num_output, 1))
+        B = np.zeros((1, num_output))
         return W, B
 

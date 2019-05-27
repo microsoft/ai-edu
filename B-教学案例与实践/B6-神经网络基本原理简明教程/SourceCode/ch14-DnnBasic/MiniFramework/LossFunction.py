@@ -113,7 +113,7 @@ class CLossFunction(object):
 
     # fcFunc: feed forward calculation
     def CheckLoss(self, Y, A):
-        m = Y.shape[1]
+        m = Y.shape[0]
         if self.func_name == LossFunctionName.MSE:
             loss = self.MSE(A, Y, m)
         elif self.func_name == LossFunctionName.CrossEntropy2:

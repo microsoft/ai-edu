@@ -203,7 +203,7 @@ class NeuralNet(object):
     # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
     def __CalAccuracy(self, a, y, mode):
         if mode == 1:
-            r = np.isclose(a, y, atol=1e-2)
+            r = np.isclose(a, y, 1e-2)
             correct = r.sum()
             return correct
         elif mode == 2:

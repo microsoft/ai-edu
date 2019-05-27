@@ -27,20 +27,20 @@ if __name__ == '__main__':
     dr = LoadData()
     
     num_input = dr.num_feature
-    num_hidden1 = 16
+    num_hidden1 = 12
     num_hidden2 = 4
     num_output = 1
 
     max_epoch = 2000
     batch_size = 32
-    learning_rate = 0.5
+    learning_rate = 0.1
     eps = 0.001
 
     params = CParameters(
         learning_rate, max_epoch, batch_size, eps,
         LossFunctionName.MSE, 
         InitialMethod.Xavier, 
-        OptimizerName.Adam)
+        OptimizerName.Momentum)
 
     net = NeuralNet(params)
 

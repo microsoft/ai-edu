@@ -9,15 +9,9 @@ from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
-import csv
 
-data_file_name = "../../Data/PM25_data_20100101_20141231.csv"
+data_file_name = "../../Data/"
 
-def LoadData():
-    with open(data_file_name, newline='') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            print(row)
 
 def ShowResult(net, dataReader, title):
     # draw train data

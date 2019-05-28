@@ -251,7 +251,7 @@ class NeuralNet(object):
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
-            layer.load_parameters(name)
+            layer.load_parameters(self.subfolder, name)
 
     def ShowLossHistory(self, xmin=None, xmax=None, ymin=None, ymax=None):
         self.loss_history.ShowLossHistory(self.params, xmin, xmax, ymin, ymax)

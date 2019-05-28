@@ -20,7 +20,6 @@ class WeightsBias(object):
         self.optimizer = optimizer_name
         self.eta = eta
         self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_input, self.num_output, self.init_method.name)
-        self.result_value_filename = str.format("{0}_{1}_{2}_result.npy", self.num_input, self.num_output, self.init_method.name)
 
     def InitializeWeights(self, create_new = False):
         if create_new:
@@ -60,19 +59,22 @@ class WeightsBias(object):
         self.B = self.oB.update(self.B, self.dB)
 
     def __SaveInitialValue(self):
+
         np.save(self.initial_value_filename, self.W)
 
     def __LoadInitialValue(self):
         self.W = np.load(self.initial_value_filename)
         self.B = np.zeros((1, self.num_output))
 
-    def SaveResultValue(self, name):
-        np.save(name + "_w_" + self.result_value_filename, self.W)
-        np.save(name + "_b_" + self.result_value_filename, self.B)
+    def SaveResultValue(self, folder, name):
+        file_name = str.format("{0}\\{1}.npz", folder, name)
+        np.savez(file_name, weights=self.W, bias=self.B)
 
-    def LoadResultValue(self, name):
-        self.W = np.load(name + "_w_" + self.result_value_filename)
-        self.B = np.load(name + "_b_" + self.result_value_filename)
+    def LoadResultValue(self, folder, name):
+        file_name = str.format("{0}\\{1}.npz", folder, name)
+        data = np.load(file_name)
+        self.W = data["weights"]
+        self.B = data["bias"]
 
     @staticmethod
     def InitialParameters(num_input, num_output, method):

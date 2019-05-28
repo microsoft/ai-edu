@@ -31,8 +31,8 @@ if __name__ == '__main__':
     num_hidden2 = 4
     num_output = 1
 
-    max_epoch = 2000
-    batch_size = 32
+    max_epoch = 200
+    batch_size = 10
     learning_rate = 0.1
     eps = 0.001
 

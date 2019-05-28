@@ -4,20 +4,36 @@
 
 import numpy as np
 import time
+import math
+import os
+import sys
 
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer import *
 from MiniFramework.Parameters import *
 
 class NeuralNet(object):
-    def __init__(self, params):
+    def __init__(self, params, model_name):
+        self.model_name = model_name
         self.params = params
         self.layer_list = []
         self.layer_name = []
         self.output = None
         self.layer_count = 0
+        self.subfolder = os.getcwd() + "\\" + self.__create_subfolder()
+        print(self.subfolder)
+
+    def __create_subfolder(self):
+        if self.model_name != None:
+            path = self.model_name.strip()
+            path = path.rstrip("\\")
+            isExists = os.path.exists(path)
+            if not isExists:
+                os.makedirs(path)
+            return path
 
     def add_layer(self, layer, name=""):
+        layer.initialize(self.subfolder)
         self.layer_list.append(layer)
         self.layer_name.append(name)
         self.layer_count += 1
@@ -101,7 +117,7 @@ class NeuralNet(object):
         if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_train:
             self.params.batch_size = dataReader.num_train
         # end if
-        max_iteration = dataReader.num_train // self.params.batch_size
+        max_iteration = math.ceil(dataReader.num_train / self.params.batch_size)
         checkpoint_iteration = (int)(max_iteration * checkpoint)
         for epoch in range(self.params.max_epoch):
             for iteration in range(max_iteration):
@@ -191,7 +207,7 @@ class NeuralNet(object):
        
     def Test(self, dataReader):
         correct = 0
-        test_batch = 1000
+        test_batch = 10
         max_iteration = max(dataReader.num_test//test_batch,1)
         for i in range(max_iteration):
             x, y = dataReader.GetBatchTestSamples(test_batch, i)
@@ -203,7 +219,7 @@ class NeuralNet(object):
     # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
     def __CalAccuracy(self, a, y, mode):
         if mode == 1:
-            r = np.isclose(a, y, 1e-2)
+            r = np.isclose(a, y, atol=1e-1)
             correct = r.sum()
             return correct
         elif mode == 2:
@@ -228,7 +244,7 @@ class NeuralNet(object):
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
-            layer.save_parameters(name)
+            layer.save_parameters(self.subfolder, name)
 
     # load weights for the most low loss moment
     def load_parameters(self):

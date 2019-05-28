@@ -174,15 +174,15 @@ class DataReader(object):
     def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        batch_X = self.XTrain[start:end,:].reshape(batch_size, self.num_feature)
-        batch_Y = self.YTrain[start:end,:].reshape(batch_size, -1)
+        batch_X = self.XTrain[start:end,:]
+        batch_Y = self.YTrain[start:end,:]
         return batch_X, batch_Y
 
     def GetBatchTestSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        batch_X = self.XTest[start:end,:].reshape(batch_size, self.num_feature)
-        batch_Y = self.YTest[start:end,:].reshape(batch_size, -1)
+        batch_X = self.XTest[start:end,:]
+        batch_Y = self.YTest[start:end,:]
         return batch_X, batch_Y
 
     # permutation only affect along the first axis, so we need transpose the array first

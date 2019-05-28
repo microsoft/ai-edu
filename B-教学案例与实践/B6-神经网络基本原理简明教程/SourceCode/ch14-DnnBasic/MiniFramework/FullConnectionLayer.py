@@ -56,8 +56,8 @@ class FcLayer(CLayer):
     def update(self):
         self.weights.Update()
         
-    def save_parameters(self, name):
-        self.weights.SaveResultValue(name)
+    def save_parameters(self, folder, name):
+        self.weights.SaveResultValue(folder, name)
 
-    def load_parameters(self, name):
-        self.weights.LoadResultValue(name)
+    def load_parameters(self, folder, name):
+        self.weights.LoadResultValue(folder, name)

@@ -12,9 +12,11 @@ class FcLayer(CLayer):
         self.input_size = input_size
         self.output_size = output_size
         self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer, param.eta)
-        self.weights.InitializeWeights()
         self.regular = param.regular
         self.lambd = param.lambd
+
+    def initialize(self, folder):
+        self.weights.InitializeWeights(folder)
 
     def forward(self, input, train=True):
         self.input_shape = input.shape

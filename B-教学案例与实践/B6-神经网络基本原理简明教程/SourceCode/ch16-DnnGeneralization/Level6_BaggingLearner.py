@@ -50,7 +50,7 @@ def train(dataReader):
 
 if __name__ == '__main__':
     nets = []
-    net_count = 10
+    net_count = 9
     for i in range(net_count):
         dataReader = LoadData(i)
         net = train(dataReader)

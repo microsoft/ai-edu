@@ -59,7 +59,6 @@ def ShowResult(net, title):
 
 if __name__ == '__main__':
     dataReader = LoadData()
-    #ShowData(dataReader)
     num_input = dataReader.num_feature
     num_hidden1 = 8
     num_output = 3
@@ -77,7 +76,7 @@ if __name__ == '__main__':
     net = NeuralNet(params)
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    relu1 = ActivatorLayer(Sigmoid())
+    relu1 = ActivatorLayer(Relu())
     net.add_layer(relu1, "relu1")
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")

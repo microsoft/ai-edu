@@ -3,8 +3,6 @@
 
 import numpy as np
 from enum import Enum
-from numba import jitclass
-from numba import float64
 
 class OptimizerName(Enum):
     SGD = 0,
@@ -109,16 +107,6 @@ class RMSProp(Optimizer):
         alpha = self.lr / np.sqrt(self.eps + self.r)
         theta = theta - alpha * grad
         return theta
-
-spec = [
-    ('lr', float64),
-    ('p1', float64),
-    ('p2', float64),
-    ('eps', float64),
-    ('t', float64),
-    ('m', float64[:,:]),
-    ('v', float64[:,:])
-    ]
 
 #@jitclass(spec)
 class Adam(Optimizer):

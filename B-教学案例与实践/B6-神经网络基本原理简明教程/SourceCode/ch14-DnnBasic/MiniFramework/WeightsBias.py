@@ -17,12 +17,12 @@ class WeightsBias(object):
         self.num_input = n_input
         self.num_output = n_output
         self.init_method = init_method
-        self.optimizer_name = optimizer_name
+        self.optimizer = optimizer_name
         self.eta = eta
-        self.initial_value_filename = str.format("w_{0}_{1}_{2}_init.npy", self.num_output, self.num_input, self.init_method.name)
-        self.result_value_filename = str.format("{0}_{1}_{2}_result.npy", self.num_output, self.num_input, self.init_method.name)
+        self.initial_value_filename = str.format("w_{0}_{1}_{2}_init", self.num_input, self.num_output, self.init_method.name)
 
-    def InitializeWeights(self, create_new = False):
+    def InitializeWeights(self, folder, create_new = False):
+        self.folder = folder
         if create_new:
             self.__CreateNew()
         else:
@@ -38,7 +38,8 @@ class WeightsBias(object):
         self.__SaveInitialValue()
         
     def __LoadExistingParameters(self):
-        w_file = Path(self.initial_value_filename)
+        file_name = str.format("{0}\\{1}.npz", self.folder, self.initial_value_filename)
+        w_file = Path(file_name)
         if w_file.exists():
             self.__LoadInitialValue()
         else:
@@ -46,11 +47,11 @@ class WeightsBias(object):
         # end if
 
     def __CreateOptimizers(self):
-        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer)
+        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer)
 
     def pre_Update(self):
-        if self.optimizer_name == OptimizerName.Nag:
+        if self.optimizer == OptimizerName.Nag:
             self.W = self.oW1.pre_update(self.W)
             self.B = self.oB1.pre_update(self.B)
         # end if
@@ -60,36 +61,44 @@ class WeightsBias(object):
         self.B = self.oB.update(self.B, self.dB)
 
     def __SaveInitialValue(self):
-        np.save(self.initial_value_filename, self.W)
+        file_name = str.format("{0}\\{1}.npz", self.folder, self.initial_value_filename)
+        np.savez(file_name, weights=self.W, bias=self.B)
 
     def __LoadInitialValue(self):
-        self.W = np.load(self.initial_value_filename)
-        self.B = np.zeros((self.num_output, 1))
+        file_name = str.format("{0}\\{1}.npz", self.folder, self.initial_value_filename)
+        data = np.load(file_name)
+        self.W = data["weights"]
+        self.B = data["bias"]
 
-    def SaveResultValue(self, name):
-        np.save(name + "_w_" + self.result_value_filename, self.W)
-        np.save(name + "_b_" + self.result_value_filename, self.B)
+    def SaveResultValue(self, folder, name):
+        file_name = str.format("{0}\\{1}.npz", folder, name)
+        np.savez(file_name, weights=self.W, bias=self.B)
+        print(self.W)
+        print(self.B)
+        print(np.sum(np.abs(self.W), axis=1))
 
-    def LoadResultValue(self, name):
-        self.W = np.load(name + "_w_" + self.result_value_filename)
-        self.B = np.load(name + "_b_" + self.result_value_filename)
+    def LoadResultValue(self, folder, name):
+        file_name = str.format("{0}\\{1}.npz", folder, name)
+        data = np.load(file_name)
+        self.W = data["weights"]
+        self.B = data["bias"]
 
     @staticmethod
     def InitialParameters(num_input, num_output, method):
         if method == InitialMethod.Zero:
             # zero
-            W = np.zeros((num_output, num_input))
+            W = np.zeros((num_input, num_output))
         elif method == InitialMethod.Normal:
             # normalize
-            W = np.random.normal(size=(num_output, num_input))
+            W = np.random.normal(size=(num_input, num_output))
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_input), size=(num_output, num_input))
+            W = np.random.normal(0, np.sqrt(2/num_output), size=(num_input, num_output))
         elif method == InitialMethod.Xavier:
             # xavier
             W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
                                   np.sqrt(6/(num_output+num_input)),
-                                  size=(num_output,num_input))
+                                  size=(num_input, num_output))
         # end if
-        B = np.zeros((num_output, 1))
+        B = np.zeros((1, num_output))
         return W, B
 

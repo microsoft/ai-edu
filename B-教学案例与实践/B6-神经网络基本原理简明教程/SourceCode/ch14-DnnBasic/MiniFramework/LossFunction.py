@@ -21,7 +21,7 @@ class CTrace(object):
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class CLossHistory(object):
-    def __init__(self):
+    def __init__(self, need_earlyStop = False, patience = 5):
         # loss history
         self.loss_history_train = []
         self.accuracy_history_train = []
@@ -30,9 +30,13 @@ class CLossHistory(object):
 
         self.loss_history_val = []
         self.accuracy_history_val = []
+       
+        # for early stop
         self.min_loss_index = -1
-        # 初始化一个极大值,在后面的肯定会被更小的loss值覆盖
-        #self.min_trace = CTrace(100000, -1, -1, -1)
+        self.early_stop = need_earlyStop
+        self.patience = patience
+        self.patience_counter = 0
+        self.last_vld_loss = float("inf")
 
     def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld):
         self.iteration_history_train.append(total_iteration)
@@ -44,12 +48,15 @@ class CLossHistory(object):
         if accuracy_vld is not None:
             self.accuracy_history_val.append(accuracy_vld)
 
-        """
-        if loss_val < self.min_trace.loss:
-            self.min_trace = CTrace(epoch, iteration, loss_val, accuracy_val)
-            self.minimal_loss_index = len(self.loss_history_val) - 1
-            return True
-        """
+        if self.early_stop:
+            if loss_vld < self.last_vld_loss:
+                self.patience_counter = 0
+                self.last_vld_loss = loss_vld
+            else:
+                self.patience_counter += 1
+                if self.patience_counter >= self.patience:
+                    return True     # need to stop
+            # end if
         return False
 
     # 图形显示损失函数值历史记录
@@ -63,7 +70,9 @@ class CLossHistory(object):
         axes.set_title("Loss")
         axes.set_ylabel("loss")
         axes.set_xlabel("iteration")
-        #plt.show()
+        if xmin != None or xmax != None or ymin != None or ymax != None:
+            axes.axis([xmin, xmax, ymin, ymax])
+
         
         axes = plt.subplot(1,2,2)
         p2, = axes.plot(self.iteration_history_train, self.accuracy_history_train)
@@ -104,7 +113,7 @@ class CLossFunction(object):
 
     # fcFunc: feed forward calculation
     def CheckLoss(self, Y, A):
-        m = Y.shape[1]
+        m = Y.shape[0]
         if self.func_name == LossFunctionName.MSE:
             loss = self.MSE(A, Y, m)
         elif self.func_name == LossFunctionName.CrossEntropy2:

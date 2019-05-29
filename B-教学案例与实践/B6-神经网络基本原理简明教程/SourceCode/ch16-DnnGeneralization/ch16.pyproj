@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level6_BaggingLearner.py</StartupFile>
+    <StartupFile>Level4_Dropout2.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Level4_Dropout2.py" />
     <Compile Include="Level6_BaggingLearner.py" />
     <Compile Include="Level6_BootstrappingGenerator.py" />
     <Compile Include="Level5_DataAugmentationGenerator.py" />

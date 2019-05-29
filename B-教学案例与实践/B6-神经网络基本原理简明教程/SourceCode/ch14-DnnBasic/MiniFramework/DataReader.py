@@ -5,77 +5,91 @@ import numpy as np
 from pathlib import Path
 from enum import Enum
 
-# we assume data format looks like:
-# example-> 1, 2, 3, 4
-# feature1  x  x  x  x
-# feature2  x  x  x  x
-#-------------------------
-# label     y  y  y  y
 
+class YNormalizationMethod(Enum):
+    Nothing = 0,
+    Regression = 1,
+    BinaryClassifier = 2,
+    MultipleClassifier = 3
 
-class DataNormalization(Enum):
-    NormalizeX = 1,
-    NormalizeY = 2,
-    NormalizePredicate = 3
+"""
+X:
+x1: feature1 feature2 feature3...
+x2: feature1 feature2 feature3...
+x3: feature1 feature2 feature3...
+...
 
+Y:
+[if regression, value]
+y1
+y2
+y3
+...
+
+[if binary classification, 0/1]
+0
+1
+1
+...
+
+[if multiple classification, e.g. 4 category, one-hot]
+0, 1, 0, 0
+1, 0, 0, 0
+0, 0, 1, 0
+...
+
+"""
 class DataReader(object):
-    def __init__(self, x_file_name, y_file_name):
-        self.x_file_name = x_file_name
-        self.y_file_name = y_file_name
-        self.num_example = -1
-        self.num_feature = -1
-        self.num_category = -1
-        self.num_validation = 0
-        self.num_test = 0
+    def __init__(self, train_file, test_file):
+        self.train_file_name = train_file
+        self.test_file_name = test_file
         self.num_train = 0
+        self.num_test = 0
+        self.num_validation = 0
+        self.num_feature = 0
+        self.num_category = 0
+        self.XTrain = None
+        self.YTrain = None
+        self.XTest = None
+        self.YTest = None
 
     # read data from file
     def ReadData(self):
-        Xfile = Path(self.x_file_name)
-        Yfile = Path(self.y_file_name)
-        if Xfile.exists() and Yfile.exists():
-            self.XRawData = np.load(Xfile)
-            self.YRawData = np.load(Yfile)
+        train_file = Path(self.train_file_name)
+        if train_file.exists():
+            data = np.load(self.train_file_name)
+            self.XTrain = data["data"]
+            self.YTrain = data["label"]
+            assert(self.XTrain.shape[0] == self.YTrain.shape[0])
+        #end if
+        test_file = Path(self.test_file_name)
+        if test_file.exists():
+            data = np.load(self.test_file_name)
+            self.XTest = data["data"]
+            self.YTest = data["label"]
+            assert(self.XTest.shape[0] == self.YTest.shape[0])
+        #end if
+        if self.XTrain is not None and self.XTest is not None:
+            assert(self.XTrain.shape[1] == self.XTest.shape[1])
 
-            self.num_example = self.XRawData.shape[1]
-            self.num_feature = self.XRawData.shape[0]
-            self.num_category = len(np.unique(self.YRawData))
-
-            self.num_train = self.num_example
-            self.num_test = self.num_example    # no sperate test example
-
-            return self.XRawData, self.YRawData
-        # end if
-        return None,None
-
-    def Normalize(self, normalize_x=False, normalize_y=False, to_one_hot = False):
-        if normalize_x:
-            self.NormalizeX()
-        else:
-            self.X = self.XRawData
-
-        if normalize_y:
-            if to_one_hot:
-                self.ToOneHot()
-            else:
-                self.Y = self.NormalizeY()
-        else:
-            self.Y = self.YRawData
-
-    # normalize data by extracting range from source data
-    # return: X_new: normalized data with same shape
-    # return: X_norm: 2xN (features)
-    #               [[min1, min2, min3...]
-    #                [range1, range2, range3...]]
+        self.num_train = self.XTrain.shape[0]
+        self.num_test = self.XTest.shape[0]
+        self.num_feature = self.XTrain.shape[1]
+        self.num_category = len(np.unique(self.YTrain))
 
     def NormalizeX(self):
-        self.X = np.zeros(self.XRawData.shape)
-        num_feature = self.XRawData.shape[0]
-        self.X_norm = np.zeros((2,num_feature))
+        if self.XTrain is not None:
+            self.XTrain = self.__NormalizeX(self.XTrain)
+        if self.XTest is not None:
+            self.XTest = self.__NormalizeX(self.XTest)
+
+    def __NormalizeX(self, raw_data):
+        temp_X = np.zeros_like(raw_data)
+        self.X_norm = np.zeros((2, self.num_feature))
         # 按行归一化,即所有样本的同一特征值分别做归一化
-        for i in range(num_feature):
+        for i in range(self.num_feature):
             # get one feature from all examples
-            x = self.XRawData[i,:]
+            x = raw_data[:, i]
             max_value = np.max(x)
             min_value = np.min(x)
             # min value
@@ -83,13 +97,55 @@ class DataReader(object):
             # range value
             self.X_norm[1,i] = max_value - min_value 
             x_new = (x - self.X_norm[0,i]) / self.X_norm[1,i]
-            self.X[i,:] = x_new
+            temp_X[:, i] = x_new
         # end for
-        return self.X
+        return temp_X
 
-    def NormalizeY(self):
-        self.Y = self.YRawData
-        return self.Y
+    def NormalizeY(self, method):
+        if method == YNormalizationMethod.Nothing:
+            pass
+        elif method == YNormalizationMethod.Regression:
+            self.YTrain = self.__NormalizeY(self.YTrain)
+            self.YTest = self.__NormalizeY(self.YTest)
+        elif method == YNormalizationMethod.BinaryClassifier:
+            self.YTrain = self.__ToZeroOne(self.YTrain)
+            self.YTest = self.__ToZeroOne(self.YTest)
+        elif method == YNormalizationMethod.MultipleClassifier:
+            self.YTrain = self.__ToOneHot(self.YTrain)
+            self.YTest = self.__ToOneHot(self.YTest)
+
+    def __NormalizeY(self, raw_data):
+        assert(raw_data.shape[1] == 1)
+        self.Y_norm = np.zeros((2,1))
+        max_value = np.max(raw_data)
+        min_value = np.min(raw_data)
+        # min value
+        self.Y_norm[0, 0] = min_value 
+        # range value
+        self.Y_norm[1, 0] = max_value - min_value 
+        y_new = (raw_data - min_value) / self.Y_norm[1, 0]
+        return y_new
+
+    def __ToOneHot(self, Y):
+        count = Y.shape[0]
+        temp_Y = np.zeros((count, self.num_category))
+        for i in range(count):
+            n = (int)(Y[i,0])
+            temp_Y[i,n] = 1
+        return temp_Y
+
+    # for binary classifier
+    # if use tanh function, need to set negative_value = -1
+    def __ToZeroOne(Y, positive_label=1, negative_label=0, positiva_value=1, negative_value=0):
+        temp_Y = np.zeros_like(Y)
+        for i in range():
+            if Y[i,0] == negative_label:     # 负类的标签设为0
+                temp_Y[i,0] = negative_value
+            elif Y[i,0] == positive_label:   # 正类的标签设为1
+                temp_Y[i,0] = positiva_value
+            # end if
+        # end for
+        return temp_Y
 
     # normalize data by specified range and min_value
     def NormalizePredicateData(self, X_predicate):
@@ -100,61 +156,50 @@ class DataReader(object):
             X_new[i,:] = (x-self.X_norm[0,i])/self.X_norm[1,i]
         return X_new
 
+    # need explicitly call this function to generate validation set
+    def GenerateValidationSet(self, k = 10):
+        self.num_validation = (int)(self.num_train / k)
+        self.num_train = self.num_train - self.num_validation
+        # validation set
+        self.XVld = self.XTrain[0:self.num_validation]
+        self.YVld = self.YTrain[0:self.num_validation]
+        # train set
+        self.XTrain = self.XTrain[self.num_validation:]
+        self.YTrain = self.YTrain[self.num_validation:]
+
+    def GetValidationSet(self):
+        return self.XVld, self.YVld
+
     # 获得批样本数据
     def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        batch_X = self.X[:, start:end].reshape(self.num_feature, batch_size)
-        batch_Y = self.Y[:, start:end].reshape(-1, batch_size)
+        batch_X = self.XTrain[start:end,:]
+        batch_Y = self.YTrain[start:end,:]
         return batch_X, batch_Y
 
-    def GetDevSet(self):
-        return self.X, self.Y
-
     def GetBatchTestSamples(self, batch_size, iteration):
-        return self.GetBatchTrainSamples(batch_size, iteration)
-
-    def ToOneHot(self):
-        self.Y = np.zeros((self.num_category, self.num_example))
-        for i in range(self.num_example):
-            if self.YRawData[0,i] == 1:
-                self.Y[0,i] = 1
-            elif self.YRawData[0,i] == 2:
-                self.Y[1,i] = 1
-            elif self.YRawData[0,i] == 3:
-                self.Y[2,i] = 1
-            # end if
-        # end for
-        return self.Y
-
-    # if use tanh function, need to set negative_value = -1
-    def ToZeroOne(YData, positive_label, negative_label, positiva_value = 1, negative_value = 0):
-        self.Y = np.zeros((1, self.num_example))
-        for i in range(self.num_example):
-            if YData[0,i] == negative_label:     # 负类的标签设为0
-                self.Y[0,i] = negative_value
-            elif YData[0,i] == positive_label:   # 正类的标签设为1
-                self.Y[0,i] = positiva_value
-            # end if
-        # end for
-        return self.Y
+        start = iteration * batch_size
+        end = start + batch_size
+        batch_X = self.XTest[start:end,:]
+        batch_Y = self.YTest[start:end,:]
+        return batch_X, batch_Y
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format
     def Shuffle(self):
         seed = np.random.randint(0,100)
         np.random.seed(seed)
-        XP = np.random.permutation(self.X.T)
+        XP = np.random.permutation(self.XTrain)
         np.random.seed(seed)
-        YP = np.random.permutation(self.Y.T)
-        self.X = XP.T
-        self.Y = YP.T
-        return self.X, self.Y
+        YP = np.random.permutation(self.YTrain)
+        self.XTrain = XP
+        self.YTrain = YP
 
 # unit test
 if __name__ == '__main__':
-    X = np.array([1,2,3,4,5,6,7,8]).reshape(2,4)
-    Y = np.array([7,8,9,0])
+    X = np.array([1,2,3,4,5,6,7,8]).reshape(4,2)
+    Y = np.array([7,8,9,0]).reshape(4,1)
     print(X,Y)
     dp = DataReader()
     X,Y=dp.Shuffle(X,Y)

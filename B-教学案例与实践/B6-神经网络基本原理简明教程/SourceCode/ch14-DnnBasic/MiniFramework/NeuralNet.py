@@ -119,6 +119,7 @@ class NeuralNet(object):
         # end if
         max_iteration = math.ceil(dataReader.num_train / self.params.batch_size)
         checkpoint_iteration = (int)(max_iteration * checkpoint)
+        need_stop = False
         for epoch in range(self.params.max_epoch):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
@@ -134,7 +135,7 @@ class NeuralNet(object):
                 self.__update()
                 
                 total_iteration = epoch * max_iteration + iteration               
-                if total_iteration % checkpoint_iteration == 0:
+                if (total_iteration+1) % checkpoint_iteration == 0:
                     #self.save_parameters()
                     need_stop = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
                     if need_stop:
@@ -162,78 +163,61 @@ class NeuralNet(object):
 
         if need_test:
             print("testing...")
-            c,n = self.Test(dataReader)
-            print(str.format("rate={0} / {1} = {2}", c, n, c / n))
+            accuracy = self.Test(dataReader, self.params.loss_func)
+            print(accuracy)
         # end if
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
-        m_train = train_x.shape[0]
+
         # l1/l2 cost
         regular_cost = self.__get_regular_cost_from_fc_layer(self.params.regular)
+
         # calculate train loss
         self.__forward(train_x, train=False)
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
-        loss_train += regular_cost / m_train
-
-        if self.params.loss_func == LossFunctionName.MSE:
-            accuracy_train = self.__CalAccuracy(self.output, train_y, 1) / m_train
-        elif self.params.loss_func == LossFunctionName.CrossEntropy2:
-            accuracy_train = self.__CalAccuracy(self.output, train_y, 2) / m_train
-        elif self.params.loss_func == LossFunctionName.CrossEntropy3:
-            accuracy_train = self.__CalAccuracy(self.output, train_y, 3) / m_train
+        loss_train = loss_train + regular_cost / train_x.shape[0]
+        accuracy_train = self.__CalAccuracy(self.output, train_y, self.params.loss_func)
         print("loss_train=%.4f, accuracy_train=%f" %(loss_train, accuracy_train))
+
         # calculate validation loss
         vld_x, vld_y = dataReader.GetValidationSet()
-        m_vld = vld_x.shape[0]
         self.__forward(vld_x, train=False)
         loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
-        loss_vld += regular_cost / m_vld
-
-        if self.params.loss_func == LossFunctionName.MSE:
-            accuracy_vld = self.__CalAccuracy(self.output, vld_y, 1) / m_vld
-        elif self.params.loss_func == LossFunctionName.CrossEntropy2:
-            accuracy_vld = self.__CalAccuracy(self.output, vld_y, 2) / m_vld
-        elif self.params.loss_func == LossFunctionName.CrossEntropy3:
-            accuracy_vld = self.__CalAccuracy(self.output, vld_y, 3) / m_vld
+        loss_vld = loss_vld + regular_cost / vld_x.shape[0]
+        accuracy_vld = self.__CalAccuracy(self.output, vld_y, self.params.loss_func)
         print("loss_valid=%.4f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
         need_stop = self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
         if loss_vld <= self.params.eps:
             need_stop = True
-
         return need_stop
-        
-       
-    def Test(self, dataReader):
-        correct = 0
-        test_batch = 10
-        max_iteration = max(dataReader.num_test//test_batch,1)
-        for i in range(max_iteration):
-            x, y = dataReader.GetBatchTestSamples(test_batch, i)
-            self.__forward(x, train=False)
-            correct += self.__CalAccuracy(self.output, y, 1)
-        #end for
-        return correct, dataReader.num_test
+
+    def Test(self, dataReader, loss_func):
+        self.__forward(dataReader.XTest, train=False)
+        correct = self.__CalAccuracy(self.output, dataReader.YTest, loss_func)
+        return correct
 
     # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
-    def __CalAccuracy(self, a, y, mode):
-        if mode == 1:
-            r = np.isclose(a, y, atol=1e-1)
-            correct = r.sum()
-            return correct
-        elif mode == 2:
+    def __CalAccuracy(self, a, y, loss_func):
+        assert(a.shape == y.shape)
+        m = a.shape[0]
+        if loss_func == LossFunctionName.MSE:
+            var = np.var(y)
+            mse = np.sum((a-y)**2)/a.shape[0]
+            r2 = 1 - mse / var
+            return r2
+        elif loss_func == LossFunctionName.CrossEntropy2:
             a[a>=0.5]=1
             r = (a == y)
             correct = r.sum()
-            return correct
-        else:
+            return correct/m
+        elif loss_func == LossFunctionName.CrossEntropy3:
             ra = np.argmax(a, axis=0)
             ry = np.argmax(y, axis=0)
             r = (ra == ry)
             correct = r.sum()
-            return correct
-
+            return correct/m
 
     def inference(self, X):
         self.__forward(X)

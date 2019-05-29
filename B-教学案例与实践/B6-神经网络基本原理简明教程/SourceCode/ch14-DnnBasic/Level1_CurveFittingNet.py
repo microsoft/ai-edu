@@ -42,13 +42,13 @@ if __name__ == '__main__':
 
     max_epoch = 10000
     batch_size = 10
-    learning_rate = 0.1
+    learning_rate = 0.5
     eps = 0.001
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,
                         LossFunctionName.MSE, 
                         InitialMethod.Xavier, 
-                        OptimizerName.Momentum)
+                        OptimizerName.SGD)
 
     net = NeuralNet(params, "Level1_CurveFittingNet")
     fc1 = FcLayer(num_input, num_hidden1, params)

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_PM25Regression.py</StartupFile>
+    <StartupFile>Level1_CurveFittingNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,8 +26,8 @@
     <Compile Include="Level1_PM25DataProcessor.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level2_IncomeClassifier.py" />
     <Compile Include="Level3_MultipleClassificationNet.py" />
-    <Compile Include="Level2_BinaryClassificationNet.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py">
       <SubType>Code</SubType>
     </Compile>

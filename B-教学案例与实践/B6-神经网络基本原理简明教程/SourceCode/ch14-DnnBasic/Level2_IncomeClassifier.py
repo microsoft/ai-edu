@@ -1,6 +1,11 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import numpy as np
+from pathlib import Path
+import matplotlib.pyplot as plt
+import math
+
 from MiniFramework.NeuralNet import *
 from MiniFramework.Optimizer import *
 from MiniFramework.LossFunction import *
@@ -9,55 +14,50 @@ from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
-import numpy as np
-
-train_file = "../../Data/PM25_Train.npz"
-test_file = "../../Data/PM25_Test.npz"
+train_file = "../../Data/Income_Train.npz"
+test_file = "../../Data/Income_Train.npz"
 
 def LoadData():
     dr = DataReader(train_file, test_file)
     dr.ReadData()
     dr.NormalizeX()
-    dr.NormalizeY(YNormalizationMethod.Regression)
+    #dr.NormalizeY(YNormalizationMethod.BinaryClassifier)
     dr.Shuffle()
     dr.GenerateValidationSet()
     return dr
+
 
 if __name__ == '__main__':
     dr = LoadData()
     
     num_input = dr.num_feature
-    num_hidden1 = 32
-    num_hidden2 = 4
+    num_hidden = 32
     num_output = 1
 
-    max_epoch = 10000
-    batch_size = 10
-    learning_rate = 0.01
+    max_epoch = 1000
+    batch_size = 16
+    learning_rate = 0.1
     eps = 0.001
 
     params = CParameters(
         learning_rate, max_epoch, batch_size, eps,
-        LossFunctionName.MSE, 
-        InitialMethod.MSRA, 
+        LossFunctionName.CrossEntropy2,
+        InitialMethod.Xavier, 
         OptimizerName.SGD)
 
-    net = NeuralNet(params, "PM25")
+    net = NeuralNet(params, "Income")
 
-    fc1 = FcLayer(num_input, num_hidden1, params)
+    fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
     sigmoid1 = ActivatorLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
     
-    fc2 = FcLayer(num_hidden1, num_hidden2, params)
+    fc2 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc2, "fc2")
-    sigmoid2 = ActivatorLayer(Relu())
-    net.add_layer(sigmoid2, "sigmoid2")
-    
-    fc3 = FcLayer(num_hidden2, num_output, params)
-    net.add_layer(fc3, "fc3")
+    sigmoid1 = ActivatorLayer(Sigmoid())
+    net.add_layer(sigmoid1, "sigmoid1")
 
-    net.load_parameters()
+    #net.load_parameters()
 
     net.train(dr, checkpoint=10, need_test=True)
     net.ShowLossHistory()

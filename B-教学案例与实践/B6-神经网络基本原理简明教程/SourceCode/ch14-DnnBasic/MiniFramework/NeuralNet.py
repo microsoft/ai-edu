@@ -225,6 +225,7 @@ class NeuralNet(object):
 
     # save weights value when got low loss than before
     def save_parameters(self):
+        print("save parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
@@ -232,6 +233,7 @@ class NeuralNet(object):
 
     # load weights for the most low loss moment
     def load_parameters(self):
+        print("load parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]

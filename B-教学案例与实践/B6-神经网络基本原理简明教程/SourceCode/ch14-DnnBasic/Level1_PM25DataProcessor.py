@@ -25,22 +25,22 @@ class PM25DataProcessor(object):
         i = 0
         with open(csv_file, newline='') as f:
             reader = csv.reader(f)
-            array = np.zeros((1,10))
+            array_x = np.zeros((1,10))
             array_y = np.zeros((1,1))
             for row in reader:
                 if row[5] == 'NA' or row[5] == 'pm2.5':
                     continue
                 # don't need to read 'No' and 'Year'
-                array[0,0] = row[2]
-                array[0,1] = row[3]
-                array[0,2] = row[4]
-                array[0,3] = row[6]
-                array[0,4] = row[7]
-                array[0,5] = row[8]
-                array[0,6] = self.convertWindDirectionToNumber(row[9])
-                array[0,7] = row[10]
-                array[0,8] = row[11]
-                array[0,9] = row[12]
+                array_x[0,0] = row[2]
+                array_x[0,1] = row[3]
+                array_x[0,2] = row[4]
+                array_x[0,3] = row[6]
+                array_x[0,4] = row[7]
+                array_x[0,5] = row[8]
+                array_x[0,6] = self.convertWindDirectionToNumber(row[9])
+                array_x[0,7] = row[10]
+                array_x[0,8] = row[11]
+                array_x[0,9] = row[12]
                 array_y[0,0] = row[5]
 
                 if int(row[1]) < 2014:

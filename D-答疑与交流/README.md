@@ -89,10 +89,8 @@
 <a name="Azure-Student-Account"></a>
 
 11. 如何申请Azure的学生账号？
-    
-<a name="Azure-Student-Account-Global"></a>
 
-    1. 使用全球版：
+    1. 使用全球版：<a name="Azure-Student-Account-Global"></a>
         1. 登录[Azure 全球版学生入口](https://azure.microsoft.com/zh-cn/free/students/)，点击立即激活
 
         ![](./Images/3.PNG)
@@ -107,9 +105,7 @@
 
         ![](./Images/6.PNG)
 
-<a name="Azure-Student-Account-China"></a>
-
-    2. 使用世纪互联中国版：
+    2. 使用世纪互联中国版：<a name="Azure-Student-Account-China"></a>
         1. 打开[https://mspil.cn](https://mspil.cn)并注册账户，验证学生身份，具体申请流程参考下图
 
         ![](./Images/1.jpg)

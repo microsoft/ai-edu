@@ -52,36 +52,45 @@ class DataReader(object):
         self.YTrain = None
         self.XTest = None
         self.YTest = None
+        self.XTrainRaw = None
+        self.YTrainRaw = None
+        self.XTestRaw = None
+        self.YTestRaw = None
 
     # read data from file
     def ReadData(self):
         train_file = Path(self.train_file_name)
         if train_file.exists():
             data = np.load(self.train_file_name)
-            self.XTrain = data["data"]
-            self.YTrain = data["label"]
-            assert(self.XTrain.shape[0] == self.YTrain.shape[0])
+            self.XTrainRaw = data["data"]
+            self.YTrainRaw = data["label"]
+            assert(self.XTrainRaw.shape[0] == self.YTrainRaw.shape[0])
         #end if
         test_file = Path(self.test_file_name)
         if test_file.exists():
             data = np.load(self.test_file_name)
-            self.XTest = data["data"]
-            self.YTest = data["label"]
-            assert(self.XTest.shape[0] == self.YTest.shape[0])
+            self.XTestRaw = data["data"]
+            self.YTestRaw = data["label"]
+            assert(self.XTestRaw.shape[0] == self.YTestRaw.shape[0])
         #end if
-        if self.XTrain is not None and self.XTest is not None:
-            assert(self.XTrain.shape[1] == self.XTest.shape[1])
+        if self.XTrainRaw is not None and self.XTestRaw is not None:
+            assert(self.XTrainRaw.shape[1] == self.XTestRaw.shape[1])
 
-        self.num_train = self.XTrain.shape[0]
-        self.num_test = self.XTest.shape[0]
-        self.num_feature = self.XTrain.shape[1]
-        self.num_category = len(np.unique(self.YTrain))
+        self.num_train = self.XTrainRaw.shape[0]
+        self.num_test = self.XTestRaw.shape[0]
+        self.num_feature = self.XTrainRaw.shape[1]
+        self.num_category = len(np.unique(self.YTrainRaw))
+
+        self.XTrain = self.XTrainRaw
+        self.YTrain = self.YTrainRaw
+        self.XTest = self.XTestRaw
+        self.YTest = self.YTestRaw
 
     def NormalizeX(self):
-        if self.XTrain is not None:
-            self.XTrain = self.__NormalizeX(self.XTrain)
-        if self.XTest is not None:
-            self.XTest = self.__NormalizeX(self.XTest)
+        if self.XTrainRaw is not None:
+            self.XTrain = self.__NormalizeX(self.XTrainRaw)
+        if self.XTestRaw is not None:
+            self.XTest = self.__NormalizeX(self.XTestRaw)
 
     def __NormalizeX(self, raw_data):
         temp_X = np.zeros_like(raw_data)
@@ -105,14 +114,14 @@ class DataReader(object):
         if method == YNormalizationMethod.Nothing:
             pass
         elif method == YNormalizationMethod.Regression:
-            self.YTrain = self.__NormalizeY(self.YTrain)
-            self.YTest = self.__NormalizeY(self.YTest)
+            self.YTrain = self.__NormalizeY(self.YTrainRaw)
+            self.YTest = self.__NormalizeY(self.YTestRaw)
         elif method == YNormalizationMethod.BinaryClassifier:
-            self.YTrain = self.__ToZeroOne(self.YTrain)
-            self.YTest = self.__ToZeroOne(self.YTest)
+            self.YTrain = self.__ToZeroOne(self.YTrainRaw)
+            self.YTest = self.__ToZeroOne(self.YTestRaw)
         elif method == YNormalizationMethod.MultipleClassifier:
-            self.YTrain = self.__ToOneHot(self.YTrain)
-            self.YTest = self.__ToOneHot(self.YTest)
+            self.YTrain = self.__ToOneHot(self.YTrainRaw)
+            self.YTest = self.__ToOneHot(self.YTestRaw)
 
     def __NormalizeY(self, raw_data):
         assert(raw_data.shape[1] == 1)
@@ -125,6 +134,10 @@ class DataReader(object):
         self.Y_norm[1, 0] = max_value - min_value 
         y_new = (raw_data - min_value) / self.Y_norm[1, 0]
         return y_new
+
+    def DeNormalizeY(self, predict_data):
+        real_value = predict_data * self.Y_norm[1,0] + self.Y_norm[0,0]
+        return real_value
 
     def __ToOneHot(self, Y):
         count = Y.shape[0]

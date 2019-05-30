@@ -31,23 +31,24 @@ class PM25DataProcessor(object):
                 if row[5] == 'NA' or row[5] == 'pm2.5':
                     continue
                 # don't need to read 'No' and 'Year'
-                array_x[0,0] = row[2]
-                array_x[0,1] = row[3]
-                array_x[0,2] = row[4]
-                array_x[0,3] = row[6]
-                array_x[0,4] = row[7]
-                array_x[0,5] = row[8]
+                array_x[0,0] = row[2]   # month
+                array_x[0,1] = row[3]   # day
+                array_x[0,2] = row[4]   # hour
+                array_x[0,3] = row[6]   # DEWP
+                array_x[0,4] = row[7]   # TEMP
+                array_x[0,5] = row[8]   # PRES
                 array_x[0,6] = self.convertWindDirectionToNumber(row[9])
-                array_x[0,7] = row[10]
-                array_x[0,8] = row[11]
-                array_x[0,9] = row[12]
-                array_y[0,0] = row[5]
+                array_x[0,7] = row[10]  # WindSpeed
+                array_x[0,8] = row[11]  # snow
+                array_x[0,9] = row[12]  # rain
+                array_y[0,0] = self.convertPM25ValueToGrade((int)(row[5]))   # label
 
-                if int(row[1]) < 2014:
+                day = int(row[3])
+                if day % 7 != 0:
                     if self.XTrainData is None:
-                        self.XTrainData = array
+                        self.XTrainData = array_x
                     else:
-                        self.XTrainData = np.vstack((self.XTrainData, array))
+                        self.XTrainData = np.vstack((self.XTrainData, array_x))
                     #end if
                     if self.YTrainData is None:
                         self.YTrainData = array_y[0,0]
@@ -56,9 +57,9 @@ class PM25DataProcessor(object):
                     #end if
                 else:
                     if self.XTestData is None:
-                        self.XTestData = array
+                        self.XTestData = array_x
                     else:
-                        self.XTestData = np.vstack((self.XTestData, array))
+                        self.XTestData = np.vstack((self.XTestData, array_x))
                     #end if
                     if self.YTestData is None:
                         self.YTestData = array_y[0,0]
@@ -73,6 +74,20 @@ class PM25DataProcessor(object):
             print(self.XTrainData.shape, self.YTrainData.shape, self.XTestData.shape, self.YTestData.shape)
             np.savez(train_data, data=self.XTrainData, label=self.YTrainData)
             np.savez(test_data, data=self.XTestData, label=self.YTestData)
+
+    def convertPM25ValueToGrade(self, value):
+        if value <= 35:
+            return 0
+        elif value <= 75:
+            return 1
+        elif value <= 115:
+            return 2
+        elif value <= 150:
+            return 3
+        elif value <= 250:
+            return 4
+        else:
+            return 5
 
     def convertWindDirectionToNumber(self, wd):
         if wd == 'cv':

@@ -75,7 +75,7 @@ class WeightsBias(object):
         np.savez(file_name, weights=self.W, bias=self.B)
         print(self.W)
         print(self.B)
-        print(np.sum(np.abs(self.W), axis=1))
+        print(np.sum(np.abs(self.W), axis=0))
 
     def LoadResultValue(self, folder, name):
         file_name = str.format("{0}\\{1}.npz", folder, name)

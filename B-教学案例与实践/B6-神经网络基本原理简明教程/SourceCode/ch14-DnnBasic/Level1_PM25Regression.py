@@ -47,8 +47,9 @@ if __name__ == '__main__':
     dr = LoadData()
 
     num_input = dr.num_feature
-    num_hidden1 = 16
-    num_hidden2 = 8
+    num_hidden1 = 32
+    num_hidden2 = 16
+    num_hidden3 = 8
     num_output = 1
 
     max_epoch = 10000
@@ -73,9 +74,17 @@ if __name__ == '__main__':
     net.add_layer(fc2, "fc2")
     sigmoid2 = ActivatorLayer(Relu())
     net.add_layer(sigmoid2, "sigmoid2")
-    
-    fc3 = FcLayer(num_hidden2, num_output, params)
+
+    fc3 = FcLayer(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
+    sigmoid3 = ActivatorLayer(Relu())
+    net.add_layer(sigmoid3, "sigmoid3")
+
+    
+    fc4 = FcLayer(num_hidden3, num_output, params)
+    net.add_layer(fc4, "fc4")
+
+    ShowResult(net, dr)
 
     net.load_parameters()
 

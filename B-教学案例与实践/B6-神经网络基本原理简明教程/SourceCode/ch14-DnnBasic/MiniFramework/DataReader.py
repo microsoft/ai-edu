@@ -87,9 +87,15 @@ class DataReader(object):
         self.YTest = self.YTestRaw
 
     def NormalizeX(self):
-        if self.XTrainRaw is not None:
+        if self.XTrainRaw is not None and self.XTestRaw is not None:
+            x_merge = np.vstack((self.XTrainRaw, self.XTestRaw))
+            x_merge_norm = self.__NormalizeX(x_merge)
+            train_count = self.XTrainRaw.shape[0]
+            self.XTrain = x_merge_norm[0:train_count,:]
+            self.XTest = x_merge_norm[train_count:,:]
+        elif self.XTrainRaw is not None:
             self.XTrain = self.__NormalizeX(self.XTrainRaw)
-        if self.XTestRaw is not None:
+        elif self.XTestRaw is not None:
             self.XTest = self.__NormalizeX(self.XTestRaw)
 
     def __NormalizeX(self, raw_data):
@@ -114,8 +120,16 @@ class DataReader(object):
         if method == YNormalizationMethod.Nothing:
             pass
         elif method == YNormalizationMethod.Regression:
-            self.YTrain = self.__NormalizeY(self.YTrainRaw)
-            self.YTest = self.__NormalizeY(self.YTestRaw)
+            if self.YTrain is not None and self.YTest is not None:
+                y_merge = np.vstack((self.YTrainRaw, self.YTestRaw))
+                y_merge_norm = self.__NormalizeY(y_merge)
+                train_count = self.YTrainRaw.shape[0]
+                self.YTrain = y_merge_norm[0:train_count,:]
+                self.YTest = y_merge_norm[train_count:,:]
+            elif self.XTrainRaw is not None:
+                self.YTrain = self.__NormalizeY(self.YTrainRaw)
+            elif self.XTestRaw is not None:
+                self.YTest = self.__NormalizeY(self.YTestRaw)
         elif method == YNormalizationMethod.BinaryClassifier:
             self.YTrain = self.__ToZeroOne(self.YTrainRaw)
             self.YTest = self.__ToZeroOne(self.YTestRaw)

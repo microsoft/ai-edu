@@ -41,7 +41,7 @@ class PM25DataProcessor(object):
                 array_x[0,7] = row[10]  # WindSpeed
                 array_x[0,8] = row[11]  # snow
                 array_x[0,9] = row[12]  # rain
-                array_y[0,0] = self.convertPM25ValueToGrade((int)(row[5]))   # label
+                array_y[0,0] = (int)(row[5])   # label
 
                 day = int(row[3])
                 if day % 7 != 0:

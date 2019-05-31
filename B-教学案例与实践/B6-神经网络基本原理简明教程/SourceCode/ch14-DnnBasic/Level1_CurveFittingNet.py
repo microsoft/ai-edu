@@ -25,6 +25,15 @@ def ShowResult(net, dataReader, title):
     plt.title(title)
     plt.show()
 
+def ShowResult2(net, dr):
+    y_test_real = net.inference(dr.XTest)
+    plt.scatter(y_test_real, y_test_real-dr.YTestRaw, marker='o', label='test data')
+#    y_train_result = dr.DeNormalizeY(net.inference(dr.XTrain[0:100,:]))
+#    plt.scatter(y_train_result, y_train_result-dr.YTestRaw[0:100,:], marker='s', label='train data')
+
+    plt.show()
+
+
 def LoadData():
     dr = DataReader(train_file, test_file)
     dr.ReadData()
@@ -42,13 +51,13 @@ if __name__ == '__main__':
 
     max_epoch = 10000
     batch_size = 10
-    learning_rate = 0.1
+    learning_rate = 0.5
     eps = 0.001
 
     params = CParameters(learning_rate, max_epoch, batch_size, eps,
                         LossFunctionName.MSE, 
                         InitialMethod.Xavier, 
-                        OptimizerName.Momentum)
+                        OptimizerName.SGD)
 
     net = NeuralNet(params, "Level1_CurveFittingNet")
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -58,7 +67,12 @@ if __name__ == '__main__':
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
 
+    #net.load_parameters()
+    #ShowResult(net, dataReader, params.toString())
+    #ShowResult2(net, dataReader)
+
     net.train(dataReader, checkpoint=100, need_test=True)
     net.ShowLossHistory()
     
     ShowResult(net, dataReader, params.toString())
+    ShowResult2(net, dataReader)

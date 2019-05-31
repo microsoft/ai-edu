@@ -32,11 +32,10 @@ class FcLayer(CLayer):
         dZ = delta_in
         m = self.x.shape[0]
         if self.regular == RegularMethod.L2:
-            self.weights.dW = (np.dot(dZ, self.x.T) + self.lambd * self.weights.W) / m
+            self.weights.dW = (np.dot(self.x.T, dZ) + self.lambd * self.weights.W) / m
         elif self.regular == RegularMethod.L1:
-            self.weights.dW = (np.dot(dZ, self.x.T) + self.lambd * np.sign(self.weights.W)) / m
+            self.weights.dW = (np.dot(self.x.T, dZ) + self.lambd * np.sign(self.weights.W)) / m
         else:
-            #self.weights.dW = np.dot(dZ, self.x.T) / m
             self.weights.dW = np.dot(self.x.T, dZ) / m
         # end if
         self.weights.dB = np.sum(dZ, axis=0, keepdims=True) / m

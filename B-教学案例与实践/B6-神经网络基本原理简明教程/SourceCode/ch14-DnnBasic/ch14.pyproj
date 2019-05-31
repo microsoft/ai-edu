@@ -26,8 +26,12 @@
     <Compile Include="Level1_PM25DataProcessor.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level2_IncomeClassifier.py" />
+    <Compile Include="Level2_XorDataClassifier.py" />
+    <Compile Include="Level3_FontDataProcessor.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level3_MultipleClassificationNet.py" />
-    <Compile Include="Level2_BinaryClassificationNet.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py">
       <SubType>Code</SubType>
     </Compile>

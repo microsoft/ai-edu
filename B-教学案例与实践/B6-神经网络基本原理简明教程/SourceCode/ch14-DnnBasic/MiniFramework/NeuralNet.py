@@ -8,6 +8,8 @@ import math
 import os
 import sys
 
+from sklearn.metrics import r2_score
+
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer import *
 from MiniFramework.Parameters import *
@@ -196,6 +198,11 @@ class NeuralNet(object):
     def Test(self, dataReader, loss_func):
         self.__forward(dataReader.XTest, train=False)
         correct = self.__CalAccuracy(self.output, dataReader.YTest, loss_func)
+        print(correct)
+
+        r2=r2_score(dataReader.YTest, self.output)
+        print(r2)
+
         return correct
 
     # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
@@ -208,8 +215,8 @@ class NeuralNet(object):
             r2 = 1 - mse / var
             return r2
         elif loss_func == LossFunctionName.CrossEntropy2:
-            a[a>=0.5]=1
-            r = (a == y)
+            b = np.round(a)
+            r = (b == y)
             correct = r.sum()
             return correct/m
         elif loss_func == LossFunctionName.CrossEntropy3:
@@ -220,11 +227,12 @@ class NeuralNet(object):
             return correct/m
 
     def inference(self, X):
-        self.__forward(X)
+        self.__forward(X, train=False)
         return self.output
 
     # save weights value when got low loss than before
     def save_parameters(self):
+        print("save parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
@@ -232,6 +240,7 @@ class NeuralNet(object):
 
     # load weights for the most low loss moment
     def load_parameters(self):
+        print("load parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]

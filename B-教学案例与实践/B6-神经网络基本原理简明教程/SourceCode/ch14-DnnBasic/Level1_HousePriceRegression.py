@@ -7,6 +7,7 @@ from MiniFramework.LossFunction import *
 from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
+from MiniFramework.BatchNormLayer import *
 from MiniFramework.DataReader import *
 
 import numpy as np
@@ -54,26 +55,30 @@ if __name__ == '__main__':
 
     max_epoch = 1000
     batch_size = 32
-    learning_rate = 0.1
+    learning_rate = 0.01
     eps = 0.001
 
     params = CParameters(
         learning_rate, max_epoch, batch_size, eps,
         LossFunctionName.MSE, 
-        InitialMethod.MSRA, 
-        OptimizerName.SGD)
+        InitialMethod.Xavier, 
+        OptimizerName.Momentum)
 
     net = NeuralNet(params, "House")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    sigmoid1 = ActivatorLayer(Relu())
+    sigmoid1 = ActivatorLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
-    
+   
+
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
+    #b1 = BnLayer(num_hidden2)
+    #net.add_layer(b1)
     sigmoid2 = ActivatorLayer(Relu())
     net.add_layer(sigmoid2, "sigmoid2")
+
 
     fc3 = FcLayer(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
@@ -91,6 +96,12 @@ if __name__ == '__main__':
     #ShowResult(net, dr)
 
     net.train(dr, checkpoint=10, need_test=True)
+
+    output = net.inference(dr.XTest)
+    real_output = dr.DeNormalizeY(output)
+    mse = np.sum((dr.YTestRaw - real_output)**2)/dr.YTest.shape[0]
+    print("mse=", mse)
+
     net.ShowLossHistory()
 
     ShowResult(net, dr)

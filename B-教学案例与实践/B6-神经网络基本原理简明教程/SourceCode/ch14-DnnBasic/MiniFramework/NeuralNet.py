@@ -199,12 +199,6 @@ class NeuralNet(object):
         self.__forward(dataReader.XTest, train=False)
         correct = self.__CalAccuracy(self.output, dataReader.YTest, loss_func)
         print(correct)
-
-        real_output = dataReader.DeNormalizeY(self.output)
-
-        mse = np.sum((dataReader.YTestRaw - real_output)**2)/dataReader.YTest.shape[0]
-        print("mse=", mse)
-
         return correct
 
     # mode: 1=fitting, 2=binary classifier, 3=multiple classifier

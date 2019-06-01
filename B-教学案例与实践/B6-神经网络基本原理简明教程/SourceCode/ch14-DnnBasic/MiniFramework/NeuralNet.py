@@ -200,8 +200,10 @@ class NeuralNet(object):
         correct = self.__CalAccuracy(self.output, dataReader.YTest, loss_func)
         print(correct)
 
-        r2=r2_score(dataReader.YTest, self.output)
-        print(r2)
+        real_output = dataReader.DeNormalizeY(self.output)
+
+        mse = np.sum((dataReader.YTestRaw - real_output)**2)/dataReader.YTest.shape[0]
+        print("mse=", mse)
 
         return correct
 

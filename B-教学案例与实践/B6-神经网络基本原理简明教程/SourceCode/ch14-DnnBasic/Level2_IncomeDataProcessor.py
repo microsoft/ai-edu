@@ -29,7 +29,7 @@ native_country_list = ["United-States","Cambodia","England","Puerto-Rico","Canad
 label = ["<=50K", ">50K"]
 
 class IncomeDataProcessor(object):
-    def PrepareData(self, csv_file, mode):
+    def PrepareData(self, csv_file, data_npz):
         self.XData = None
         self.YData = None
         i = 0
@@ -76,12 +76,9 @@ class IncomeDataProcessor(object):
                 if i % 100 == 0:
                     print(i)
             #end for
-            if mode == "train":
-                np.savez(train_data_npz, data=self.XData, label=self.YData)
-            else:
-                np.savez(test_data_npz, data=self.XData, label=self.YData)
+            np.savez(data_npz, data=self.XData, label=self.YData)
 
 if __name__ == '__main__':
     dr = IncomeDataProcessor()
-    dr.PrepareData(train_data, "train")
-    dr.PrepareData(train_data, "test")
+    dr.PrepareData(train_data, train_data_npz)
+    dr.PrepareData(test_data, test_data_npz)

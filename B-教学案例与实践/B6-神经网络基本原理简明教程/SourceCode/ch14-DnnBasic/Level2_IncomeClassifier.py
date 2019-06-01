@@ -15,7 +15,7 @@ from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
 train_file = "../../Data/Income_Train.npz"
-test_file = "../../Data/Income_Train.npz"
+test_file = "../../Data/Income_Test.npz"
 
 def LoadData():
     dr = DataReader(train_file, test_file)

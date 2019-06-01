@@ -15,7 +15,7 @@ train_file = "../../Data/PM25_Train.npz"
 test_file = "../../Data/PM25_Test.npz"
 
 
-class PM25DataReader(DataReader):
+class HouseDataReader(DataReader):
     def Drop(self):
         self.XTrain = np.delete(self.XTrain, [0,1,8,9], axis=1)
         self.XTrainRaw = np.delete(self.XTrainRaw, [0,1,8,9], axis=1)
@@ -25,9 +25,9 @@ class PM25DataReader(DataReader):
 
 
 def LoadData():
-    dr = PM25DataReader(train_file, test_file)
+    dr = HouseDataReader(train_file, test_file)
     dr.ReadData()
-    dr.Drop()
+    #dr.Drop()
     dr.NormalizeX()
     dr.NormalizeY(YNormalizationMethod.Regression)
     dr.Shuffle()
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     num_hidden3 = 8
     num_output = 1
 
-    max_epoch = 10000
+    max_epoch = 1000
     batch_size = 32
     learning_rate = 0.1
     eps = 0.001
@@ -63,7 +63,7 @@ if __name__ == '__main__':
         InitialMethod.MSRA, 
         OptimizerName.SGD)
 
-    net = NeuralNet(params, "PM25")
+    net = NeuralNet(params, "House")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
@@ -84,11 +84,11 @@ if __name__ == '__main__':
     fc4 = FcLayer(num_hidden3, num_output, params)
     net.add_layer(fc4, "fc4")
 
-    ShowResult(net, dr)
+    #ShowResult(net, dr)
 
     net.load_parameters()
 
-    ShowResult(net, dr)
+    #ShowResult(net, dr)
 
     net.train(dr, checkpoint=10, need_test=True)
     net.ShowLossHistory()

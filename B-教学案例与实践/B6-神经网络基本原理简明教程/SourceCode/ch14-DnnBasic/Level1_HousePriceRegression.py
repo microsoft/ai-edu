@@ -11,9 +11,10 @@ from MiniFramework.BatchNormLayer import *
 from MiniFramework.DataReader import *
 
 import numpy as np
+import csv
 
-train_file = "../../Data/PM25_Train.npz"
-test_file = "../../Data/PM25_Test.npz"
+train_file = "../../Data/house_Train.npz"
+test_file = "../../Data/house_Test.npz"
 
 
 class HouseDataReader(DataReader):
@@ -32,7 +33,7 @@ def LoadData():
     dr.NormalizeX()
     dr.NormalizeY(YNormalizationMethod.Regression)
     dr.Shuffle()
-    dr.GenerateValidationSet()
+    dr.GenerateValidationSet(k=10)
     return dr
 
 def ShowResult(net, dr):
@@ -44,6 +45,16 @@ def ShowResult(net, dr):
 
     plt.show()
 
+def Inference(net, dr):
+    output = net.inference(dr.XTest)
+    real_output = dr.DeNormalizeY(output)
+    with open('house_predict.csv','w', newline='') as csvfile:
+        f = csv.writer(csvfile, delimiter=' ')
+        f.writerow('price')
+        for i in range(real_output.shape[0]):
+            f.writerow(real_output[i])
+
+
 if __name__ == '__main__':
     dr = LoadData()
 
@@ -53,18 +64,18 @@ if __name__ == '__main__':
     num_hidden3 = 8
     num_output = 1
 
-    max_epoch = 1000
-    batch_size = 32
-    learning_rate = 0.01
-    eps = 0.001
+    max_epoch = 10000
+    batch_size = 16
+    learning_rate = 0.005
+    eps = 1e-6
 
     params = CParameters(
         learning_rate, max_epoch, batch_size, eps,
         LossFunctionName.MSE, 
         InitialMethod.Xavier, 
-        OptimizerName.Momentum)
+        OptimizerName.SGD)
 
-    net = NeuralNet(params, "House")
+    net = NeuralNet(params, "HouseSingle")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
@@ -92,16 +103,17 @@ if __name__ == '__main__':
     #ShowResult(net, dr)
 
     net.load_parameters()
-
+    #Inference(net, dr)
+    #exit()
     #ShowResult(net, dr)
 
     net.train(dr, checkpoint=10, need_test=True)
-
+    
     output = net.inference(dr.XTest)
     real_output = dr.DeNormalizeY(output)
-    mse = np.sum((dr.YTestRaw - real_output)**2)/dr.YTest.shape[0]
+    mse = np.sum((dr.YTestRaw - real_output)**2)/dr.YTest.shape[0]/10000
     print("mse=", mse)
-
+    
     net.ShowLossHistory()
 
     ShowResult(net, dr)

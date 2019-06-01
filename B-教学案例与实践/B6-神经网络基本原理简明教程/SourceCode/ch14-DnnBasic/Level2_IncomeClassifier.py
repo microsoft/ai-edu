@@ -50,19 +50,18 @@ if __name__ == '__main__':
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    sigmoid1 = ActivatorLayer(Relu())
-    net.add_layer(sigmoid1, "sigmoid1")
+    a1 = ActivatorLayer(Relu())
+    net.add_layer(a1, "relu1")
     
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    sigmoid2 = ActivatorLayer(Relu())
-    net.add_layer(sigmoid2, "sigmoid2")
+    a2 = ActivatorLayer(Relu())
+    net.add_layer(a2, "relu2")
 
     fc3 = FcLayer(num_hidden2, num_output, params)
     net.add_layer(fc3, "fc3")
     sigmoid3 = ClassificationLayer(Sigmoid())
     net.add_layer(sigmoid3, "sigmoid3")
-
 
     net.load_parameters()
 

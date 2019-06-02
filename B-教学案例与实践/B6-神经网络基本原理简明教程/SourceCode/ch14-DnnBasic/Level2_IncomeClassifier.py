@@ -15,7 +15,7 @@ from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
 train_file = "../../Data/Income_Train.npz"
-test_file = "../../Data/Income_Train.npz"
+test_file = "../../Data/Income_Test.npz"
 
 def LoadData():
     dr = DataReader(train_file, test_file)
@@ -31,10 +31,11 @@ if __name__ == '__main__':
     dr = LoadData()
     
     num_input = dr.num_feature
-    num_hidden = 32
+    num_hidden1 = 32
+    num_hidden2 = 8
     num_output = 1
 
-    max_epoch = 1000
+    max_epoch = 100
     batch_size = 16
     learning_rate = 0.1
     eps = 0.001
@@ -47,17 +48,22 @@ if __name__ == '__main__':
 
     net = NeuralNet(params, "Income")
 
-    fc1 = FcLayer(num_input, num_hidden, params)
+    fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    sigmoid1 = ActivatorLayer(Sigmoid())
-    net.add_layer(sigmoid1, "sigmoid1")
+    a1 = ActivatorLayer(Relu())
+    net.add_layer(a1, "relu1")
     
-    fc2 = FcLayer(num_hidden, num_output, params)
+    fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    sigmoid1 = ActivatorLayer(Sigmoid())
-    net.add_layer(sigmoid1, "sigmoid1")
+    a2 = ActivatorLayer(Relu())
+    net.add_layer(a2, "relu2")
+
+    fc3 = FcLayer(num_hidden2, num_output, params)
+    net.add_layer(fc3, "fc3")
+    sigmoid3 = ClassificationLayer(Sigmoid())
+    net.add_layer(sigmoid3, "sigmoid3")
 
     #net.load_parameters()
 
-    net.train(dr, checkpoint=10, need_test=True)
+    net.train(dr, checkpoint=1, need_test=True)
     net.ShowLossHistory()

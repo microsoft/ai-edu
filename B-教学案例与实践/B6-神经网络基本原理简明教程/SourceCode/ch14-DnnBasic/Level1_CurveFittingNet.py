@@ -13,26 +13,22 @@ from MiniFramework.DataReader import *
 train_file = "../../Data/09_Train.npz"
 test_file = "../../Data/09_Test.npz"
 
+def ShowResult(net, dr):
+    fig = plt.figure(figsize=(12,5))
 
-def ShowResult(net, dataReader, title):
-    # draw train data
-    plt.plot(dataReader.XTrain[:,0], dataReader.YTrain[:,0], '.', c='b')
-    plt.plot(dataReader.XTest[:,0], dataReader.YTest[:,0], '.', c='g')
+    axes = plt.subplot(1,2,1)
+    axes.plot(dr.XTest[:,0], dr.YTest[:,0], '.', c='g')
     # create and draw visualized validation data
     TX = np.linspace(0,1,100).reshape(100,1)
     TY = net.inference(TX)
-    plt.plot(TX, TY, 'x', c='r')
-    plt.title(title)
-    plt.show()
+    axes.plot(TX, TY, 'x', c='r')
+    axes.set_title("fitting result")
 
-def ShowResult2(net, dr):
+    axes = plt.subplot(1,2,2)
     y_test_real = net.inference(dr.XTest)
-    plt.scatter(y_test_real, y_test_real-dr.YTestRaw, marker='o', label='test data')
-#    y_train_result = dr.DeNormalizeY(net.inference(dr.XTrain[0:100,:]))
-#    plt.scatter(y_train_result, y_train_result-dr.YTestRaw[0:100,:], marker='s', label='train data')
-
+    axes.scatter(y_test_real, y_test_real-dr.YTestRaw, marker='o', label='test data')
+    axes.set_title("difference")
     plt.show()
-
 
 def LoadData():
     dr = DataReader(train_file, test_file)
@@ -43,7 +39,7 @@ def LoadData():
     dr.GenerateValidationSet()
     return dr
 
-if __name__ == '__main__':
+def model():
     dataReader = LoadData()
     num_input = 1
     num_hidden1 = 4
@@ -54,10 +50,11 @@ if __name__ == '__main__':
     learning_rate = 0.5
     eps = 0.001
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.MSE, 
-                        InitialMethod.Xavier, 
-                        OptimizerName.SGD)
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,
+        LossFunctionName.MSE, 
+        InitialMethod.Xavier, 
+        OptimizerName.SGD)
 
     net = NeuralNet(params, "Level1_CurveFittingNet")
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -74,5 +71,8 @@ if __name__ == '__main__':
     net.train(dataReader, checkpoint=100, need_test=True)
     net.ShowLossHistory()
     
-    ShowResult(net, dataReader, params.toString())
-    ShowResult2(net, dataReader)
+    #ShowResult(net, dataReader, params.toString())
+    ShowResult(net, dataReader)
+
+if __name__ == '__main__':
+    model()

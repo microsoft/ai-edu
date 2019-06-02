@@ -134,7 +134,7 @@ class CLossFunction(object):
     # for binary classifier
     def CE2(self, A, Y, count):
         p1 = 1 - Y
-        p2 = np.log(1 - A)
+        p2 = np.log(1 - A + 1e-5)
         p3 = np.log(A)
 
         p4 = np.multiply(p1 ,p2)

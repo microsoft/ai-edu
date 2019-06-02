@@ -28,7 +28,7 @@ class FcLayer(CLayer):
         return self.z
 
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
-    def backward(self, delta_in, idx):
+    def backward(self, delta_in, layer_idx):
         dZ = delta_in
         m = self.x.shape[0]
         if self.regular == RegularMethod.L2:
@@ -40,7 +40,7 @@ class FcLayer(CLayer):
         # end if
         self.weights.dB = np.sum(dZ, axis=0, keepdims=True) / m
         # calculate delta_out for lower level
-        if idx == 0:
+        if layer_idx == 0:
             return None
         
         #delta_out = np.dot(self.weights.W.T, dZ)

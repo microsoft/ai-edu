@@ -43,7 +43,7 @@ class BnLayer(CLayer):
         # end if
         return self.z
 
-    def backward(self, delta_in):
+    def backward(self, delta_in, layer_idx):
         assert(delta_in.ndim == 2 or delta_in.ndim == 4)  # fc or cv
         m = self.x.shape[0]
         # calculate d_beta, b_gamma

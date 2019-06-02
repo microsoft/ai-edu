@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_PM25Regression.py</StartupFile>
+    <StartupFile>Level1_HousePriceRegression.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,11 +21,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level2_IncomeDataProcessor.py" />
-    <Compile Include="Level1_PM25Regression.py" />
-    <Compile Include="Level1_PM25DataProcessor.py">
+    <Compile Include="Level1_HouseDataProcessor.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level1_HousePriceRegression.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level2_IncomeDataProcessor.py" />
     <Compile Include="Level2_IncomeClassifier.py" />
     <Compile Include="Level2_XorDataClassifier.py" />
     <Compile Include="Level3_FontDataProcessor.py">

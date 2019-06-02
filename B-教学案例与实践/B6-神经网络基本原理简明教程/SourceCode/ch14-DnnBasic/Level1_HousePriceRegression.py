@@ -8,6 +8,7 @@ from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.BatchNormLayer import *
+from MiniFramework.DropoutLayer import *
 from MiniFramework.DataReader import *
 
 import numpy as np
@@ -55,18 +56,19 @@ def Inference(net, dr):
             f.writerow(real_output[i])
 
 
-if __name__ == '__main__':
+def model_dropout():
     dr = LoadData()
 
     num_input = dr.num_feature
-    num_hidden1 = 32
-    num_hidden2 = 16
-    num_hidden3 = 8
+    num_hidden1 = 90
+    num_hidden2 = 45
+    num_hidden3 = 30
+    num_hidden4 = 15
     num_output = 1
 
-    max_epoch = 10000
+    max_epoch = 5000
     batch_size = 16
-    learning_rate = 0.005
+    learning_rate = 0.01
     eps = 1e-6
 
     params = CParameters(
@@ -75,28 +77,95 @@ if __name__ == '__main__':
         InitialMethod.Xavier, 
         OptimizerName.SGD)
 
+    net = NeuralNet(params, "HouseSingleDropout")
+
+    fc1 = FcLayer(num_input, num_hidden1, params)
+    net.add_layer(fc1, "fc1")
+    r1 = ActivatorLayer(Relu())
+    net.add_layer(r1, "r1")
+    d1 = DropoutLayer(num_hidden1, 0.3)
+    net.add_layer(d1, "d1")
+
+    fc2 = FcLayer(num_hidden1, num_hidden2, params)
+    net.add_layer(fc2, "fc2")
+    r2 = ActivatorLayer(Relu())
+    net.add_layer(r2, "r2")
+    d2 = DropoutLayer(num_hidden2, 0.3)
+    net.add_layer(d2, "d2")
+
+    fc3 = FcLayer(num_hidden2, num_hidden3, params)
+    net.add_layer(fc3, "fc3")
+    r3 = ActivatorLayer(Relu())
+    net.add_layer(r3, "r3")
+    d3 = DropoutLayer(num_hidden3, 0.25)
+    net.add_layer(d3, "d3")
+
+    fc4 = FcLayer(num_hidden3, num_hidden4, params)
+    net.add_layer(fc4, "fc4")
+    r4 = ActivatorLayer(Relu())
+    net.add_layer(r4, "r4")
+    d4 = DropoutLayer(num_hidden4, 0.1)
+    net.add_layer(d4, "d4")
+    
+    fc5 = FcLayer(num_hidden4, num_output, params)
+    net.add_layer(fc5, "fc5")
+
+
+    #ShowResult(net, dr)
+
+    net.load_parameters()
+    #Inference(net, dr)
+    #exit()
+    #ShowResult(net, dr)
+
+    net.train(dr, checkpoint=10, need_test=True)
+    
+    output = net.inference(dr.XTest)
+    real_output = dr.DeNormalizeY(output)
+    mse = np.sum((dr.YTestRaw - real_output)**2)/dr.YTest.shape[0]/10000
+    print("mse=", mse)
+    
+    net.ShowLossHistory()
+
+    ShowResult(net, dr)
+
+def model():
+    dr = LoadData()
+
+    num_input = dr.num_feature
+    num_hidden1 = 32
+    num_hidden2 = 16
+    num_hidden3 = 8
+    num_output = 1
+
+    max_epoch = 1000
+    batch_size = 16
+    learning_rate = 0.01
+    eps = 1e-6
+
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,
+        LossFunctionName.MSE, 
+        InitialMethod.Xavier, 
+        OptimizerName.Momentum)
+
     net = NeuralNet(params, "HouseSingle")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
     sigmoid1 = ActivatorLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
-   
 
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    #b1 = BnLayer(num_hidden2)
-    #net.add_layer(b1)
     sigmoid2 = ActivatorLayer(Relu())
     net.add_layer(sigmoid2, "sigmoid2")
-
 
     fc3 = FcLayer(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
     sigmoid3 = ActivatorLayer(Relu())
     net.add_layer(sigmoid3, "sigmoid3")
 
-    
     fc4 = FcLayer(num_hidden3, num_output, params)
     net.add_layer(fc4, "fc4")
 
@@ -117,3 +186,7 @@ if __name__ == '__main__':
     net.ShowLossHistory()
 
     ShowResult(net, dr)
+
+
+if __name__ == '__main__':
+    model_dropout()

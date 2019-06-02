@@ -180,7 +180,7 @@ class NeuralNet(object):
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
         loss_train = loss_train + regular_cost / train_x.shape[0]
         accuracy_train = self.__CalAccuracy(self.output, train_y, self.params.loss_func)
-        print("loss_train=%.4f, accuracy_train=%f" %(loss_train, accuracy_train))
+        print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
 
         # calculate validation loss
         vld_x, vld_y = dataReader.GetValidationSet()
@@ -188,7 +188,7 @@ class NeuralNet(object):
         loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
         loss_vld = loss_vld + regular_cost / vld_x.shape[0]
         accuracy_vld = self.__CalAccuracy(self.output, vld_y, self.params.loss_func)
-        print("loss_valid=%.4f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
+        print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
         need_stop = self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
         if loss_vld <= self.params.eps:

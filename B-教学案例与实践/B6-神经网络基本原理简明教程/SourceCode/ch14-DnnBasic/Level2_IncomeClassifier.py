@@ -63,7 +63,7 @@ if __name__ == '__main__':
     sigmoid3 = ClassificationLayer(Sigmoid())
     net.add_layer(sigmoid3, "sigmoid3")
 
-    net.load_parameters()
+    #net.load_parameters()
 
     net.train(dr, checkpoint=1, need_test=True)
     net.ShowLossHistory()

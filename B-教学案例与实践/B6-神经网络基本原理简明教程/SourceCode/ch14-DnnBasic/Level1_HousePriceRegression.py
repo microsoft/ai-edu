@@ -60,13 +60,13 @@ def model_dropout():
     dr = LoadData()
 
     num_input = dr.num_feature
-    num_hidden1 = 90
-    num_hidden2 = 45
-    num_hidden3 = 30
-    num_hidden4 = 15
+    num_hidden1 = 64
+    num_hidden2 = 32
+    num_hidden3 = 16
+    num_hidden4 = 8
     num_output = 1
 
-    max_epoch = 5000
+    max_epoch = 10000
     batch_size = 16
     learning_rate = 0.01
     eps = 1e-6
@@ -77,13 +77,13 @@ def model_dropout():
         InitialMethod.Xavier, 
         OptimizerName.SGD)
 
-    net = NeuralNet(params, "HouseSingleDropout")
+    net = NeuralNet(params, "HouseSingleDropout2")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
     r1 = ActivatorLayer(Relu())
     net.add_layer(r1, "r1")
-    d1 = DropoutLayer(num_hidden1, 0.3)
+    d1 = DropoutLayer(num_hidden1, 0.2)
     net.add_layer(d1, "d1")
 
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
@@ -97,7 +97,7 @@ def model_dropout():
     net.add_layer(fc3, "fc3")
     r3 = ActivatorLayer(Relu())
     net.add_layer(r3, "r3")
-    d3 = DropoutLayer(num_hidden3, 0.25)
+    d3 = DropoutLayer(num_hidden3, 0.2)
     net.add_layer(d3, "d3")
 
     fc4 = FcLayer(num_hidden3, num_hidden4, params)
@@ -113,7 +113,7 @@ def model_dropout():
 
     #ShowResult(net, dr)
 
-    net.load_parameters()
+    #net.load_parameters()
     #Inference(net, dr)
     #exit()
     #ShowResult(net, dr)
@@ -136,9 +136,10 @@ def model():
     num_hidden1 = 32
     num_hidden2 = 16
     num_hidden3 = 8
+    num_hidden4 = 4
     num_output = 1
 
-    max_epoch = 1000
+    max_epoch = 10000
     batch_size = 16
     learning_rate = 0.01
     eps = 1e-6
@@ -153,25 +154,31 @@ def model():
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    sigmoid1 = ActivatorLayer(Sigmoid())
-    net.add_layer(sigmoid1, "sigmoid1")
+    r1 = ActivatorLayer(Relu())
+    net.add_layer(r1, "r1")
 
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    sigmoid2 = ActivatorLayer(Relu())
-    net.add_layer(sigmoid2, "sigmoid2")
+    r2 = ActivatorLayer(Relu())
+    net.add_layer(r2, "r2")
 
     fc3 = FcLayer(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
-    sigmoid3 = ActivatorLayer(Relu())
-    net.add_layer(sigmoid3, "sigmoid3")
+    r3 = ActivatorLayer(Relu())
+    net.add_layer(r3, "r3")
 
-    fc4 = FcLayer(num_hidden3, num_output, params)
+    fc4 = FcLayer(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
+    r4 = ActivatorLayer(Relu())
+    net.add_layer(r4, "r4")
+
+    fc5 = FcLayer(num_hidden4, num_output, params)
+    net.add_layer(fc5, "fc5")
+
 
     #ShowResult(net, dr)
 
-    net.load_parameters()
+    #net.load_parameters()
     #Inference(net, dr)
     #exit()
     #ShowResult(net, dr)
@@ -189,4 +196,4 @@ def model():
 
 
 if __name__ == '__main__':
-    model_dropout()
+    model()

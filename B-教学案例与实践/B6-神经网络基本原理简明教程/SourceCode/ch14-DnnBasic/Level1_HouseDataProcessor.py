@@ -69,7 +69,7 @@ class HouseSingleDataProcessor(object):
         i = 0
         with open(csv_file, newline='') as f:
             reader = csv.reader(f)
-            array_x = np.zeros((1,14))
+            array_x = np.zeros((1,13))
             array_y = np.zeros((1,1))
             for row in reader:
                 if i == 0:
@@ -92,7 +92,7 @@ class HouseSingleDataProcessor(object):
                 #array_x[0,11] = row[15]  # year renovate
                 array_x[0,11] = row[17]  # latitude
                 array_x[0,12] = row[18]  # longitude
-                array_x[0,13] = row[0]  # sale date
+                #array_x[0,13] = row[0]  # sale date
 
 
                 array_y[0,0] = (float)(row[2])   # label

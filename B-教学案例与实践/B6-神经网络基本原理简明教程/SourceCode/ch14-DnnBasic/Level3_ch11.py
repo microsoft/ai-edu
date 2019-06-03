@@ -27,13 +27,13 @@ def LoadData():
     return dr
 
 def ShowData(dataReader):
-    for i in range(dataReader.X.shape[1]):
-        if dataReader.Y[0,i] == 1:
-            plt.plot(dataReader.X[0,i], dataReader.X[1,i], '^', c='g')
-        elif dataReader.Y[1,i] == 1:
-            plt.plot(dataReader.X[0,i], dataReader.X[1,i], 'x', c='r')
-        elif dataReader.Y[2,i] == 1:
-            plt.plot(dataReader.X[0,i], dataReader.X[1,i], '.', c='b')
+    for i in range(dataReader.XTrain.shape[0]):
+        if dataReader.YTrain[i,0] == 1:
+            plt.plot(dataReader.XTrain[i,0], dataReader.XTrain[i,1], '^', c='g')
+        elif dataReader.YTrain[i,1] == 1:
+            plt.plot(dataReader.XTrain[i,0], dataReader.XTrain[i,1], 'x', c='r')
+        elif dataReader.YTrain[i,2] == 1:
+            plt.plot(dataReader.XTrain[i,0], dataReader.XTrain[i,1], '.', c='b')
         # end if
     # end for
     plt.xlabel("x1")
@@ -41,26 +41,16 @@ def ShowData(dataReader):
     plt.show()
 
 def ShowResult(net, title):
-    print("waiting for 10 seconds...")
+    fig = plt.figure(figsize=(5,5))
     count = 50
-    x1 = np.linspace(0,1,count)
-    x2 = np.linspace(0,1,count)
-    for i in range(count):
-        for j in range(count):
-            x = np.array([x1[i],x2[j]]).reshape(2,1)
-            output = net.inference(x)
-            r = np.argmax(output, axis=0)
-            if r == 0:
-                plt.plot(x[0,0], x[1,0], 's', c='m')
-            elif r == 1:
-                plt.plot(x[0,0], x[1,0], 's', c='y')
-            # end if
-        # end for
-    # end for
-    plt.title(title)
-    #plt.show()
+    x = np.linspace(0,1,count)
+    y = np.linspace(0,1,count)
+    X,Y = np.meshgrid(x,y)
+    z = net.inference(np.c_[X.ravel(),Y.ravel()])
+    Z = np.max(z,axis=1).reshape(X.shape)
+    plt.contourf(X,Y,Z)
 
-if __name__ == '__main__':
+def model():
     dataReader = LoadData()
     num_input = dataReader.num_feature
     num_hidden1 = 8
@@ -71,25 +61,29 @@ if __name__ == '__main__':
     learning_rate = 0.1
     eps = 0.06
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        InitialMethod.Xavier, 
-                        OptimizerName.SGD)
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,
+        LossFunctionName.CrossEntropy3, 
+        InitialMethod.Xavier, 
+        OptimizerName.SGD)
 
     net = NeuralNet(params, "chinabank")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    s1 = ActivatorLayer(Sigmoid())
-    net.add_layer(s1, "sigmoid1")
+    r1 = ActivatorLayer(Sigmoid())
+    net.add_layer(r1, "Relu1")
 
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
     softmax1 = ClassificationLayer(Softmax())
     net.add_layer(softmax1, "softmax1")
 
-    net.train(dataReader, checkpoint=1, need_test=True)
+    net.train(dataReader, checkpoint=10, need_test=True)
     net.ShowLossHistory()
     
     ShowResult(net, params.toString())
     ShowData(dataReader)
+
+if __name__ == '__main__':
+    model()

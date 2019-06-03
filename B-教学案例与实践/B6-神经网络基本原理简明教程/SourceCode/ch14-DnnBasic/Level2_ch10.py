@@ -28,6 +28,7 @@ class XOR_DataReader(DataReader):
         self.num_train = 4
         self.num_feature = 2
         self.num_category = 1
+        self.num_test = 4
         
         self.XVld = self.XTrain
         self.YVld = self.YTrain
@@ -35,22 +36,24 @@ class XOR_DataReader(DataReader):
         self.XTest = self.XTrain
         self.YTest = self.YTrain
 
-def ShowResult2D(net):
+def ShowResult(net, dr):
+    fig = plt.figure(figsize=(5,5))
     count = 50
-    x1 = np.linspace(0,1,count)
-    x2 = np.linspace(0,1,count)
-    for i in range(count):
-        for j in range(count):
-            x = np.array([x1[i],x2[j]]).reshape(1,2)
-            output = net.inference(x)
-            if output[0,0] >= 0.5:
-                plt.plot(x[0,0], x[0,1], 's', c='m')
-            else:
-                plt.plot(x[0,0], x[0,1], 's', c='y')
-            # end if
-        # end for
-    # end for
+    x = np.linspace(0,1,count)
+    y = np.linspace(0,1,count)
+    X,Y = np.meshgrid(x,y)
+    z = net.inference(np.c_[X.ravel(),Y.ravel()])
+    Z = z.reshape(X.shape)
+    plt.contourf(X,Y,Z)
+
+    for i in range(dr.num_test):
+        if dr.YTest[i,0] == 0:
+            plt.scatter(dr.XTest[i,0],dr.XTest[i,1], marker='o', c='r')
+        else:
+            plt.scatter(dr.XTest[i,0],dr.XTest[i,1], marker='^', c='g')
+
     plt.show()
+
 #end def
 
 if __name__ == '__main__':
@@ -88,4 +91,4 @@ if __name__ == '__main__':
 
     net.train(dr, checkpoint=100, need_test=True)
     net.ShowLossHistory()
-    ShowResult2D(net)
+    ShowResult(net, dr)

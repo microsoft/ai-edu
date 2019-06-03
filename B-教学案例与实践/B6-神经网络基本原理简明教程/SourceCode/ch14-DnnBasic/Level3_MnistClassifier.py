@@ -10,11 +10,10 @@ from MiniFramework.ActivatorLayer import *
 
 from MnistImageDataReader import *
 
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
-
+train_image_file = '../../Data/train-images-10'
+train_label_file = '../../Data/train-labels-10'
+test_image_file = '../../Data/test-images-10'
+test_label_file = '../../Data/test-labels-10'
 
 def LoadData():
     mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
@@ -37,12 +36,13 @@ if __name__ == '__main__':
     learning_rate = 0.2
     eps = 0.08
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        InitialMethod.MSRA, 
-                        OptimizerName.SGD)
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,
+        LossFunctionName.CrossEntropy3, 
+        InitialMethod.MSRA, 
+        OptimizerName.SGD)
 
-    net = NeuralNet(params)
+    net = NeuralNet(params, "Mnist")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")

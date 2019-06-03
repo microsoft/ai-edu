@@ -216,8 +216,8 @@ class NeuralNet(object):
             correct = r.sum()
             return correct/m
         elif loss_func == LossFunctionName.CrossEntropy3:
-            ra = np.argmax(a, axis=0)
-            ry = np.argmax(y, axis=0)
+            ra = np.argmax(a, axis=1)
+            ry = np.argmax(y, axis=1)
             r = (ra == ry)
             correct = r.sum()
             return correct/m

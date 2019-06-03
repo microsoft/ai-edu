@@ -116,13 +116,13 @@ class MnistImageDataReader(DataReader):
         self.NormalizeY()
 
     def NormalizeX(self):
-        self.X = self.__NormalizeData(self.XTrainRaw).astype(np.float32)
-        self.XTestSet = self.__NormalizeData(self.XTestRaw).astype(np.float32)
+        self.XTrain = self.__NormalizeData(self.XTrainRaw).astype(np.float32)
+        self.XTest = self.__NormalizeData(self.XTestRaw).astype(np.float32)
 
     def NormalizeY(self):
-        self.Y = self.ToOneHot(self.YTrainRaw)
+        self.YTrain = self.ToOneHot(self.YTrainRaw)
         # no need to OneHot test set, we only need to get [0~9] from this set, instead of onehot encoded
-        self.YTestSet = self.ToOneHot(self.YTestRaw)
+        self.YTest = self.ToOneHot(self.YTestRaw)
 
     def ToOneHot(self, dataSet):
         num = dataSet.shape[0]
@@ -144,11 +144,11 @@ class MnistImageDataReader(DataReader):
     def GenerateDevSet(self, k = 10):
         self.num_validation = (int)(self.num_example / k)
         # dev set
-        self.XDevSet = self.X[0:self.num_validation]
-        self.YDevSet = self.Y[0:self.num_validation]
+        self.XVld = self.XTrain[0:self.num_validation]
+        self.YVld = self.YTrain[0:self.num_validation]
         # train set
-        self.XTrainSet = self.X[self.num_validation:]
-        self.YTrainSet = self.Y[self.num_validation:]
+        self.XTrain = self.XTrain[self.num_validation:]
+        self.YTrain = self.YTrain[self.num_validation:]
         
         self.num_train = self.num_example - self.num_validation
 
@@ -156,74 +156,51 @@ class MnistImageDataReader(DataReader):
         start = iteration * batch_size
         end = start + batch_size
         if self.num_validation == 0:
-            batch_X = self.X[start:end]
-            batch_Y = self.Y[start:end]
+            batch_X = self.XTrain[start:end]
+            batch_Y = self.YTrain[start:end]
         else:
-            batch_X = self.XTrainSet[start:end]
-            batch_Y = self.YTrainSet[start:end]
+            batch_X = self.XTrain[start:end]
+            batch_Y = self.YTrain[start:end]
         # end if
 
         if self.mode == "vector":
-            return batch_X.reshape(batch_size, -1).T, batch_Y.T
+            return batch_X.reshape(batch_size, -1), batch_Y
         elif self.mode == "image":
-            return batch_X, batch_Y.T
+            return batch_X, batch_Y
 
     # recommend not use this function in DeepLearning
-    def GetBatchValidationSamples(self, batch_size, iteration):
-        start = iteration * batch_size
-        end = start + batch_size
-        if self.num_validation == 0:
-            batch_X = self.X[start:end]
-            batch_Y = self.Y[start:end]
-        else:
-            batch_X = self.XDevSet[start:end]
-            batch_Y = self.YDevSet[start:end]
-        # end if
+    def GetValidationSet(self):
+        batch_X = self.XVld
+        batch_Y = self.YVld
         if self.mode == "vector":
-            return batch_X.reshape(batch_size, -1).T, batch_Y.T
+            return batch_X.reshape(self.num_validation, -1), batch_Y
         elif self.mode == "image":
-            return batch_X, batch_Y.T
+            return batch_X, batch_Y
 
-    def GetDevSet(self):
-        batch_X = self.XDevSet
-        batch_Y = self.YDevSet
-        if self.mode == "vector":
-            return batch_X.reshape(self.num_validation, -1).T, batch_Y.T
-        elif self.mode == "image":
-            return batch_X, batch_Y.T
 
+    
 
     def GetBatchTestSamples(self, batch_size, iteration):
         start = iteration * batch_size
         end = start + batch_size
-        batch_X = self.XTestSet[start:end]
-        batch_Y = self.YTestSet[start:end]
+        batch_X = self.XTest[start:end]
+        batch_Y = self.YTest[start:end]
 
         if self.mode == "vector":
-            return batch_X.reshape(batch_size, -1).T, batch_Y.T
+            return batch_X.reshape(batch_size, -1), batch_Y
         elif self.mode == "image":
-            return batch_X, batch_Y.T
+            return batch_X, batch_Y
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format
     # suggest to call this function for each epoch
     def Shuffle(self):
-        if self.num_validation == 0:
-            seed = np.random.randint(0,100)
-            np.random.seed(seed)
-            XP = np.random.permutation(self.X)
-            np.random.seed(seed)
-            YP = np.random.permutation(self.Y)
-            self.X = XP
-            self.Y = YP
-            return self.X, self.Y
-        else:
-            seed = np.random.randint(0,100)
-            np.random.seed(seed)
-            XP = np.random.permutation(self.XTrainSet)
-            np.random.seed(seed)
-            YP = np.random.permutation(self.YTrainSet)
-            self.XTrainSet = XP
-            self.YTrainSet = YP
-            return self.XTrainSet, self.YTrainSet
+        seed = np.random.randint(0,100)
+        np.random.seed(seed)
+        XP = np.random.permutation(self.XTrain)
+        np.random.seed(seed)
+        YP = np.random.permutation(self.YTrain)
+        self.XTrainSet = XP
+        self.YTrainSet = YP
+        return self.XTrain, self.YTrain
 

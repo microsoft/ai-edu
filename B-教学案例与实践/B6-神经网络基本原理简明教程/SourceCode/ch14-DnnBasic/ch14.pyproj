@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_ch11.py</StartupFile>
+    <StartupFile>Level3_MnistClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -46,7 +46,7 @@
     <Compile Include="MiniFramework\Parameters.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="Level1_ch09.py" />
-    <Compile Include="Level4_MnistNet3.py" />
+    <Compile Include="Level3_MnistClassifier.py" />
     <Compile Include="MnistImageDataReader.py" />
   </ItemGroup>
   <ItemGroup>

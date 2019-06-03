@@ -197,6 +197,9 @@ class DataReader(object):
     def GetValidationSet(self):
         return self.XVld, self.YVld
 
+    def GetTestSet(self):
+        return self.XTest, self.YTest
+
     # 获得批样本数据
     def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size

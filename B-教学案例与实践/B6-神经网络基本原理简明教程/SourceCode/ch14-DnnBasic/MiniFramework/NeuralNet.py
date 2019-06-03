@@ -196,8 +196,9 @@ class NeuralNet(object):
         return need_stop
 
     def Test(self, dataReader, loss_func):
-        self.__forward(dataReader.XTest, train=False)
-        correct = self.__CalAccuracy(self.output, dataReader.YTest, loss_func)
+        x,y = dataReader.GetTestSet()
+        self.__forward(x, train=False)
+        correct = self.__CalAccuracy(self.output, y, loss_func)
         print(correct)
         return correct
 

@@ -178,7 +178,8 @@ class MnistImageDataReader(DataReader):
             return batch_X, batch_Y
 
 
-    
+    def GetTestSet(self):
+        pass
 
     def GetBatchTestSamples(self, batch_size, iteration):
         start = iteration * batch_size

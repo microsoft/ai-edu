@@ -75,7 +75,7 @@ def model_dropout():
         learning_rate, max_epoch, batch_size, eps,
         LossFunctionName.MSE, 
         InitialMethod.Xavier, 
-        OptimizerName.SGD)
+        OptimizerName.Momentum)
 
     net = NeuralNet(params, "HouseSingleDropout2")
 
@@ -139,7 +139,7 @@ def model():
     num_hidden4 = 4
     num_output = 1
 
-    max_epoch = 10000
+    max_epoch = 1000
     batch_size = 16
     learning_rate = 0.01
     eps = 1e-6
@@ -178,7 +178,7 @@ def model():
 
     #ShowResult(net, dr)
 
-    #net.load_parameters()
+    net.load_parameters()
     #Inference(net, dr)
     #exit()
     #ShowResult(net, dr)

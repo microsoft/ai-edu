@@ -14,14 +14,17 @@ from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
-x_data_name = "X11.dat"
-y_data_name = "Y11.dat"
+train_file = "../../Data/11_Train.npz"
+test_file = "../../Data/11_Test.npz"
 
 def LoadData():
-    dataReader = DataReader(x_data_name, y_data_name)
-    dataReader.ReadData()
-    dataReader.Normalize(normalize_x = True, normalize_y = True, to_one_hot = True)
-    return dataReader
+    dr = DataReader(train_file, test_file)
+    dr.ReadData()
+    dr.NormalizeX()
+    dr.NormalizeY(YNormalizationMethod.MultipleClassifier, base=1)
+    dr.Shuffle()
+    dr.GenerateValidationSet()
+    return dr
 
 def ShowData(dataReader):
     for i in range(dataReader.X.shape[1]):
@@ -73,17 +76,19 @@ if __name__ == '__main__':
                         InitialMethod.Xavier, 
                         OptimizerName.SGD)
 
-    net = NeuralNet(params)
+    net = NeuralNet(params, "chinabank")
+
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    relu1 = ActivatorLayer(Relu())
-    net.add_layer(relu1, "relu1")
+    s1 = ActivatorLayer(Sigmoid())
+    net.add_layer(s1, "sigmoid1")
+
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
     softmax1 = ClassificationLayer(Softmax())
     net.add_layer(softmax1, "softmax1")
 
-    net.train(dataReader, checkpoint=10, need_test=False)
+    net.train(dataReader, checkpoint=1, need_test=True)
     net.ShowLossHistory()
     
     ShowResult(net, params.toString())

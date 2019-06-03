@@ -61,12 +61,12 @@ def model_dropout():
 
     num_input = dr.num_feature
     num_hidden1 = 64
-    num_hidden2 = 32
-    num_hidden3 = 16
+    num_hidden2 = 64
+    num_hidden3 = 64
     num_hidden4 = 8
     num_output = 1
 
-    max_epoch = 10000
+    max_epoch = 1000
     batch_size = 16
     learning_rate = 0.01
     eps = 1e-6
@@ -77,7 +77,7 @@ def model_dropout():
         InitialMethod.Xavier, 
         OptimizerName.Momentum)
 
-    net = NeuralNet(params, "HouseSingleDropout2")
+    net = NeuralNet(params, "HouseSingleDropout64")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
@@ -113,7 +113,7 @@ def model_dropout():
 
     #ShowResult(net, dr)
 
-    #net.load_parameters()
+    net.load_parameters()
     #Inference(net, dr)
     #exit()
     #ShowResult(net, dr)
@@ -196,4 +196,4 @@ def model():
 
 
 if __name__ == '__main__':
-    model()
+    model_dropout()

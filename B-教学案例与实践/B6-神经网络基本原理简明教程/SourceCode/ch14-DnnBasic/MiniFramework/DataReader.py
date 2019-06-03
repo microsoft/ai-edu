@@ -113,7 +113,7 @@ class DataReader(object):
         # end for
         return temp_X
 
-    def NormalizeY(self, method):
+    def NormalizeY(self, method, base=0):
         if method == YNormalizationMethod.Nothing:
             pass
         elif method == YNormalizationMethod.Regression:
@@ -134,8 +134,8 @@ class DataReader(object):
             self.YTrain = self.__ToZeroOne(self.YTrainRaw)
             self.YTest = self.__ToZeroOne(self.YTestRaw)
         elif method == YNormalizationMethod.MultipleClassifier:
-            self.YTrain = self.__ToOneHot(self.YTrainRaw)
-            self.YTest = self.__ToOneHot(self.YTestRaw)
+            self.YTrain = self.__ToOneHot(self.YTrainRaw, base)
+            self.YTest = self.__ToOneHot(self.YTestRaw, base)
 
     def __NormalizeY(self, raw_data):
         assert(raw_data.shape[1] == 1)
@@ -153,12 +153,12 @@ class DataReader(object):
         real_value = predict_data * self.Y_norm[1,0] + self.Y_norm[0,0]
         return real_value
 
-    def __ToOneHot(self, Y):
+    def __ToOneHot(self, Y, base):
         count = Y.shape[0]
         temp_Y = np.zeros((count, self.num_category))
         for i in range(count):
             n = (int)(Y[i,0])
-            temp_Y[i,n] = 1
+            temp_Y[i,n-base] = 1
         return temp_Y
 
     # for binary classifier

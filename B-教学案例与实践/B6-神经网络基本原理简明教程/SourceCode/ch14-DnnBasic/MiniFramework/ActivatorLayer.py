@@ -96,9 +96,11 @@ class Relu(CActivator):
 
 class Softmax(CActivator):
     def forward(self, z):
+        print(z)
         shift_z = z - np.max(z, axis=0)
         exp_z = np.exp(shift_z)
         a = exp_z / np.sum(exp_z, axis=0)
+
         return a
 
     # softmax层，相当于最后一层，直接A-Y，不需要做反向求导

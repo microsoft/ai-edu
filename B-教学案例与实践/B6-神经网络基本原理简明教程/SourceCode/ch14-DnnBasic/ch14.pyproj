@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_MnistClassifier.py</StartupFile>
+    <StartupFile>Level3_ch11.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ExtendedDataReader\CifarImageReader.py" />
     <Compile Include="Level1_HouseDataProcessor.py">
       <SubType>Code</SubType>
     </Compile>
@@ -46,11 +47,15 @@
     <Compile Include="MiniFramework\Parameters.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="Level1_ch09.py" />
-    <Compile Include="Level3_MnistClassifier.py" />
-    <Compile Include="MnistImageDataReader.py" />
+    <Compile Include="Level3_Cifar10Classifier.py" />
+    <Compile Include="ExtendedDataReader\MnistImageDataReader.py" />
+    <Compile Include="ExtendedDataReader\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />
+    <Folder Include="ExtendedDataReader\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

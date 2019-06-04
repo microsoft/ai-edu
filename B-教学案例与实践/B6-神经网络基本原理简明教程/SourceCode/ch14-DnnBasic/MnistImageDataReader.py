@@ -164,7 +164,7 @@ class MnistImageDataReader(DataReader):
         # end if
 
         if self.mode == "vector":
-            return batch_X.reshape(batch_size, -1), batch_Y
+            return batch_X.reshape(-1, 784), batch_Y
         elif self.mode == "image":
             return batch_X, batch_Y
 
@@ -177,9 +177,11 @@ class MnistImageDataReader(DataReader):
         elif self.mode == "image":
             return batch_X, batch_Y
 
-
     def GetTestSet(self):
-        pass
+        if self.mode == "vector":
+            return self.XTest.reshape(self.num_test,-1), self.YTest
+        elif self.mode == "image":
+            return self.XTest, self.YTest
 
     def GetBatchTestSamples(self, batch_size, iteration):
         start = iteration * batch_size

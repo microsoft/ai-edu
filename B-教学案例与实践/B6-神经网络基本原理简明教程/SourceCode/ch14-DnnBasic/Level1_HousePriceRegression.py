@@ -66,7 +66,7 @@ def model_dropout():
     num_hidden4 = 8
     num_output = 1
 
-    max_epoch = 1000
+    max_epoch = 2000
     batch_size = 16
     learning_rate = 0.01
     eps = 1e-6
@@ -75,7 +75,8 @@ def model_dropout():
         learning_rate, max_epoch, batch_size, eps,
         LossFunctionName.MSE, 
         InitialMethod.Xavier, 
-        OptimizerName.Momentum)
+        OptimizerName.Momentum,
+        RegularMethod.L1, 0.001)
 
     net = NeuralNet(params, "HouseSingleDropout64")
 
@@ -83,29 +84,29 @@ def model_dropout():
     net.add_layer(fc1, "fc1")
     r1 = ActivatorLayer(Relu())
     net.add_layer(r1, "r1")
-    d1 = DropoutLayer(num_hidden1, 0.2)
-    net.add_layer(d1, "d1")
+    #d1 = DropoutLayer(num_hidden1, 0.2)
+    #net.add_layer(d1, "d1")
 
     fc2 = FcLayer(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
     r2 = ActivatorLayer(Relu())
     net.add_layer(r2, "r2")
-    d2 = DropoutLayer(num_hidden2, 0.3)
-    net.add_layer(d2, "d2")
+    #d2 = DropoutLayer(num_hidden2, 0.3)
+    #net.add_layer(d2, "d2")
 
     fc3 = FcLayer(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
     r3 = ActivatorLayer(Relu())
     net.add_layer(r3, "r3")
-    d3 = DropoutLayer(num_hidden3, 0.2)
-    net.add_layer(d3, "d3")
+    #d3 = DropoutLayer(num_hidden3, 0.2)
+    #net.add_layer(d3, "d3")
 
     fc4 = FcLayer(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
     r4 = ActivatorLayer(Relu())
     net.add_layer(r4, "r4")
-    d4 = DropoutLayer(num_hidden4, 0.1)
-    net.add_layer(d4, "d4")
+    #d4 = DropoutLayer(num_hidden4, 0.1)
+    #net.add_layer(d4, "d4")
     
     fc5 = FcLayer(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")

@@ -196,8 +196,9 @@ class NeuralNet(object):
         return need_stop
 
     def Test(self, dataReader, loss_func):
-        self.__forward(dataReader.XTest, train=False)
-        correct = self.__CalAccuracy(self.output, dataReader.YTest, loss_func)
+        x,y = dataReader.GetTestSet()
+        self.__forward(x, train=False)
+        correct = self.__CalAccuracy(self.output, y, loss_func)
         print(correct)
         return correct
 
@@ -216,8 +217,8 @@ class NeuralNet(object):
             correct = r.sum()
             return correct/m
         elif loss_func == LossFunctionName.CrossEntropy3:
-            ra = np.argmax(a, axis=0)
-            ry = np.argmax(y, axis=0)
+            ra = np.argmax(a, axis=1)
+            ry = np.argmax(y, axis=1)
             r = (ra == ry)
             correct = r.sum()
             return correct/m

@@ -66,10 +66,13 @@ class DataReader(object):
             self.YTrainRaw = data["label"]
             assert(self.XTrainRaw.shape[0] == self.YTrainRaw.shape[0])
             self.num_train = self.XTrainRaw.shape[0]
-            self.XTrain = self.XTrainRaw
-            self.YTrain = self.YTrainRaw
             self.num_feature = self.XTrainRaw.shape[1]
             self.num_category = len(np.unique(self.YTrainRaw))
+            # this is for if no normalize requirment
+            self.XTrain = self.XTrainRaw
+            self.YTrain = self.YTrainRaw
+        else:
+            raise Exception("Cannot find train file!!!")
         #end if
 
         test_file = Path(self.test_file_name)
@@ -79,21 +82,20 @@ class DataReader(object):
             self.YTestRaw = data["label"]
             assert(self.XTestRaw.shape[0] == self.YTestRaw.shape[0])
             self.num_test = self.XTestRaw.shape[0]
+            # this is for if no normalize requirment
             self.XTest = self.XTestRaw
             self.YTest = self.YTestRaw
+        else:
+            raise Exception("Cannot find test file!!!")
         #end if
 
+    # merge train/test data first, normalize, then split again
     def NormalizeX(self):
-        if self.XTrainRaw is not None and self.XTestRaw is not None:
-            x_merge = np.vstack((self.XTrainRaw, self.XTestRaw))
-            x_merge_norm = self.__NormalizeX(x_merge)
-            train_count = self.XTrainRaw.shape[0]
-            self.XTrain = x_merge_norm[0:train_count,:]
-            self.XTest = x_merge_norm[train_count:,:]
-        elif self.XTrainRaw is not None:
-            self.XTrain = self.__NormalizeX(self.XTrainRaw)
-        elif self.XTestRaw is not None:
-            self.XTest = self.__NormalizeX(self.XTestRaw)
+        x_merge = np.vstack((self.XTrainRaw, self.XTestRaw))
+        x_merge_norm = self.__NormalizeX(x_merge)
+        train_count = self.XTrainRaw.shape[0]
+        self.XTrain = x_merge_norm[0:train_count,:]
+        self.XTest = x_merge_norm[train_count:,:]
 
     def __NormalizeX(self, raw_data):
         temp_X = np.zeros_like(raw_data)
@@ -113,29 +115,21 @@ class DataReader(object):
         # end for
         return temp_X
 
-    def NormalizeY(self, method):
+    def NormalizeY(self, method, base=0):
         if method == YNormalizationMethod.Nothing:
             pass
         elif method == YNormalizationMethod.Regression:
-            if self.YTrain is not None and self.YTest is not None:
-                #self.YTrain = self.__NormalizeY(self.YTrainRaw)
-                
-                y_merge = np.vstack((self.YTrainRaw, self.YTestRaw))
-                y_merge_norm = self.__NormalizeY(y_merge)
-                train_count = self.YTrainRaw.shape[0]
-                self.YTrain = y_merge_norm[0:train_count,:]
-                self.YTest = y_merge_norm[train_count:,:]
-                
-            elif self.XTrainRaw is not None:
-                self.YTrain = self.__NormalizeY(self.YTrainRaw)
-            elif self.XTestRaw is not None:
-                self.YTest = self.__NormalizeY(self.YTestRaw)
+            y_merge = np.vstack((self.YTrainRaw, self.YTestRaw))
+            y_merge_norm = self.__NormalizeY(y_merge)
+            train_count = self.YTrainRaw.shape[0]
+            self.YTrain = y_merge_norm[0:train_count,:]
+            self.YTest = y_merge_norm[train_count:,:]                
         elif method == YNormalizationMethod.BinaryClassifier:
-            self.YTrain = self.__ToZeroOne(self.YTrainRaw)
-            self.YTest = self.__ToZeroOne(self.YTestRaw)
+            self.YTrain = self.__ToZeroOne(self.YTrainRaw, base)
+            self.YTest = self.__ToZeroOne(self.YTestRaw, base)
         elif method == YNormalizationMethod.MultipleClassifier:
-            self.YTrain = self.__ToOneHot(self.YTrainRaw)
-            self.YTest = self.__ToOneHot(self.YTestRaw)
+            self.YTrain = self.__ToOneHot(self.YTrainRaw, base)
+            self.YTest = self.__ToOneHot(self.YTestRaw, base)
 
     def __NormalizeY(self, raw_data):
         assert(raw_data.shape[1] == 1)
@@ -153,12 +147,12 @@ class DataReader(object):
         real_value = predict_data * self.Y_norm[1,0] + self.Y_norm[0,0]
         return real_value
 
-    def __ToOneHot(self, Y):
+    def __ToOneHot(self, Y, base=0):
         count = Y.shape[0]
         temp_Y = np.zeros((count, self.num_category))
         for i in range(count):
             n = (int)(Y[i,0])
-            temp_Y[i,n] = 1
+            temp_Y[i,n-base] = 1
         return temp_Y
 
     # for binary classifier
@@ -197,6 +191,9 @@ class DataReader(object):
     def GetValidationSet(self):
         return self.XVld, self.YVld
 
+    def GetTestSet(self):
+        return self.XTest, self.YTest
+
     # 获得批样本数据
     def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size
@@ -205,12 +202,12 @@ class DataReader(object):
         batch_Y = self.YTrain[start:end,:]
         return batch_X, batch_Y
 
-    def GetBatchTestSamples(self, batch_size, iteration):
-        start = iteration * batch_size
-        end = start + batch_size
-        batch_X = self.XTest[start:end,:]
-        batch_Y = self.YTest[start:end,:]
-        return batch_X, batch_Y
+    #def GetBatchTestSamples(self, batch_size, iteration):
+    #    start = iteration * batch_size
+    #    end = start + batch_size
+    #    batch_X = self.XTest[start:end,:]
+    #    batch_Y = self.YTest[start:end,:]
+    #    return batch_X, batch_Y
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format

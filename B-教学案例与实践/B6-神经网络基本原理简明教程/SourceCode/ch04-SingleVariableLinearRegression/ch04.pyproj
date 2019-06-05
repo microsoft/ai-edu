@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4-BatchGradientDescent.py</StartupFile>
+    <StartupFile>Level4_SingleGradientDescent.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,10 +21,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level1-LeastSquare.py" />
-    <Compile Include="Level2-GradientDescent.py" />
-    <Compile Include="Level4-BatchGradientDescent.py" />
-    <Compile Include="Level3-NeuralNetwork.py">
+    <Compile Include="Level4_FullBatchGradientDescent.py" />
+    <Compile Include="Level4_MiniBatchGradientDescent.py" />
+    <Compile Include="Level4_Base.py" />
+    <Compile Include="SimpleDataReader.py" />
+    <Compile Include="Level1_LeastSquare.py" />
+    <Compile Include="Level2_GradientDescent.py" />
+    <Compile Include="Level4_SingleGradientDescent.py" />
+    <Compile Include="Level3_NeuralNetwork.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level5_LogicNotGate.py">

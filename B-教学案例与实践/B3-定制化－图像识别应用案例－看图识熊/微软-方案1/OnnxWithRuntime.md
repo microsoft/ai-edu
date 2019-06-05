@@ -95,7 +95,7 @@ if (isSuccess)
             var color = bitmap.GetPixel(x, y);
 
             // 使用Netron查看模型的输入发现
-            // 需要依次放置227 *227的蓝色分量、227*227的绿色分量、227*227的红色分量
+            // 需要依次放置224 *224的蓝色分量、224*224的绿色分量、224*224的红色分量
             imageArray[y * imageSize + x] = color.B;
             imageArray[y * imageSize + x + 1 * imageSize * imageSize] = color.G;
             imageArray[y * imageSize + x + 2 * imageSize * imageSize] = color.R;

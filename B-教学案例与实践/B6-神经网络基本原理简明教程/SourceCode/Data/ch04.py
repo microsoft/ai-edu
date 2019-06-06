@@ -27,7 +27,7 @@ def CreateSampleData(m):
     return X, Y
 
 if __name__ == '__main__':
-    X,Y = CreateSampleData(500)
+    X,Y = CreateSampleData(100)
     plt.scatter(X,Y,s=10)
     plt.title("Air Conditioner Power")
     plt.xlabel("Number of Servers(K)")

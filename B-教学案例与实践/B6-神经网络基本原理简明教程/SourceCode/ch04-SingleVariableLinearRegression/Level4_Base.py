@@ -5,6 +5,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
+from matplotlib.colors import LogNorm
 
 from SimpleDataReader import *
 
@@ -108,64 +109,27 @@ def CheckLoss(dataReader, W, B):
     loss = LOSS.sum()/m/2
     return loss
 
-def loss_contour(dataReader,loss_history):
+def loss_contour(dataReader,loss_history,batch_size,iteration):
     last_loss, result_w, result_b = loss_history.GetLast()
     X,Y=dataReader.GetWholeTrainSamples()
-    w = np.linspace(result_w-1,result_w+1)
-    b = np.linspace(result_b-1,result_b+1)
+    len1 = 50
+    len2 = 50
+    w = np.linspace(result_w-1,result_w+1,len1)
+    b = np.linspace(result_b-1,result_b+1,len2)
     W,B = np.meshgrid(w,b)
-    Z = np.dot(X, W.ravel().reshape(1,2500)) + B.ravel().reshape(1,2500)
-    plt.contour(X,Y,Z)
+    len = len1 * len2
+    X,Y = dataReader.GetWholeTrainSamples()
+    m = X.shape[0]
+    Z = np.dot(X, W.ravel().reshape(1,len)) + B.ravel().reshape(1,len)
+    Loss1 = (Z - Y)**2
+    Loss2 = Loss1.sum(axis=0,keepdims=True)/m
+    Loss3 = Loss2.reshape(len1, len2)
+    plt.contour(W,B,Loss3,levels=np.logspace(-5, 5, 100), norm=LogNorm(), cmap=plt.cm.jet)
+    show_wb_history(loss_history, result_w, result_b, batch_size, iteration)
+    plt.show()
 
-def loss_2d(dataReader,loss_history,batch_size,epoch):
 
-    x,y=dataReader.GetWholeTrainSamples()
-    n = dataReader.num_train
-
-    last_loss, result_w, result_b = loss_history.GetLast()
-
-    # show contour of loss
-    s = 150
-    W = np.linspace(result_w-1,result_w+1,s)
-    B = np.linspace(result_b-1,result_b+1,s)
-    LOSS = np.zeros((s,s))
-    for i in range(len(W)):
-        for j in range(len(B)):
-            w = W[i]
-            b = B[j]
-            a = np.dot(x, w) + b
-            loss = CheckLoss(dataReader,w,b)
-            LOSS[i,j] = np.round(loss, 2)
-        # end for j
-    # end for i
-    print("please wait for 20 seconds...")
-    while(True):
-        X = []
-        Y = []
-        is_first = True
-        loss = 0
-        for i in range(len(W)):
-            for j in range(len(B)):
-                if LOSS[i,j] != 0:
-                    if is_first:
-                        loss = LOSS[i,j]
-                        X.append(W[i])
-                        Y.append(B[j])
-                        LOSS[i,j] = 0
-                        is_first = False
-                    elif LOSS[i,j] == loss:
-                        X.append(W[i])
-                        Y.append(B[j])
-                        LOSS[i,j] = 0
-                    # end if
-                # end if
-            # end for j
-        # end for i
-        if is_first == True:
-            break
-        plt.plot(X,Y,'.')
-    # end while
-
+def show_wb_history(loss_history, result_w, result_b, batch_size, iteration):
     # show w,b trace
     w_history = loss_history.w_history
     b_history = loss_history.b_history
@@ -173,10 +137,9 @@ def loss_2d(dataReader,loss_history,batch_size,epoch):
 
     plt.xlabel("w")
     plt.ylabel("b")
-    title = str.format("bz={0}, Epoch={1}, Loss={2:.3f}, W={3:.3f}, B={4:.3f}", batch_size, epoch, last_loss, result_w, result_b)
+    title = str.format("batchsize={0}, iteration={1}, w={2:.3f}, b={3:.3f}", batch_size, iteration, result_w, result_b)
     plt.title(title)
     plt.axis([result_w-1,result_w+1,result_b-1,result_b+1])
-    plt.show()
 
 
 def train(params):
@@ -203,7 +166,7 @@ def train(params):
             dW, dB = BackPropagationBatch(batch_x, batch_y, batch_z)
             # update w,b
             W, B = UpdateWeights(W, B, dW, dB, params.eta)
-            if iteration % 10 == 0:
+            if iteration % 2 == 0:
                 loss = CheckLoss(sdr,W,B)
                 print(epoch, iteration, loss, W, B)
                 loss_history.AddLossHistory(epoch*max_iteration+iteration, loss, W[0,0], B[0,0])
@@ -218,13 +181,11 @@ def train(params):
             break
     # end for
     loss_history.ShowLossHistory(params)
-    #ShowResult(X, Y, W, B, epoch)
     print(W,B)
 
     x = 346/1000
     result = ForwardCalculationBatch(W, B, x)
     print("346 machines need the power of the air-conditioner=",result)
     
-    #loss_2d(sdr,loss_history,params.batch_size,epoch)
-    loss_contour(sdr, loss_history)
+    loss_contour(sdr, loss_history, params.batch_size, epoch*max_iteration+iteration)
 

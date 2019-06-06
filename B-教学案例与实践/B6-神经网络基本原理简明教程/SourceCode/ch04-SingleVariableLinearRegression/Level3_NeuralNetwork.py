@@ -27,6 +27,7 @@ def UpdateWeights(w, b, dW, dB, eta):
     return w,b
 
 def ShowResult(dataReader, w, b):
+    print("w=%f,b=%f" %(w,b))
     X,Y = dataReader.GetWholeTrainSamples()
     # draw sample data
     plt.plot(X, Y, "b.")
@@ -38,7 +39,6 @@ def ShowResult(dataReader, w, b):
     plt.xlabel("Number of Servers(K)")
     plt.ylabel("Power of Air Conditioner(KW)")
     plt.show()
-    print("w=%f,b=%f" %(w,b))
 
 if __name__ == '__main__':
 
@@ -61,8 +61,7 @@ if __name__ == '__main__':
         # update w,b
         w, b = UpdateWeights(w, b, dW, dB, eta)
 
-    ShowResult(sdr, w, b)
-
     # predication
     result = ForwardCalculation(w,b,0.346)
     print("result=", result)
+    ShowResult(sdr, w, b)

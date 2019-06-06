@@ -29,7 +29,7 @@ if __name__ == '__main__':
         x = X[i]
         y = Y[i]
         # get z from x,y
-        z = w*x+b
+        z = x*w+b
         # calculate gradient of w and b
         dz = z - y
         db = dz
@@ -38,4 +38,5 @@ if __name__ == '__main__':
         w = w - eta * dw
         b = b - eta * db
 
-    print(w,b)
+    print("w=", w)    
+    print("b=", b)

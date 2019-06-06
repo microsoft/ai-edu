@@ -11,7 +11,7 @@ def ReadData():
     return X,Y
 
 def ForwardCalculation(w,b,x):
-    z = w * x + b
+    z = x * w + b
     return z
 
 def BackPropagation(x,y,z):
@@ -26,7 +26,7 @@ def UpdateWeights(w, b, dW, dB, eta):
     return w,b
 
 def CheckLoss(w, b, X, Y, count):
-    Z = w * X + b
+    Z = ForwardCalculation(w,b,X)
     LOSS = (Z - Y)**2
     loss = LOSS.sum()/count/2
     return loss

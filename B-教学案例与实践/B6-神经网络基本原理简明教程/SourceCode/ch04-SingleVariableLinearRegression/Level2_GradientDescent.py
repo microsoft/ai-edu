@@ -6,16 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-x_data_name = "X04.dat"
-y_data_name = "Y04.dat"
-
-from SimpleDataReader import *
-
-file_name = "../../data/ch04.npz"
+from HelperClass.SimpleDataReader import *
 
 if __name__ == '__main__':
 
-    reader = SimpleDataReader(file_name)
+    reader = SimpleDataReader()
     reader.ReadData()
     X,Y = reader.GetWholeTrainSamples()
 

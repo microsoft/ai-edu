@@ -5,6 +5,7 @@ import numpy as np
 from pathlib import Path
 from enum import Enum
 
+file_name = "../../data/ch04.npz"
 
 class YNormalizationMethod(Enum):
     Nothing = 0,
@@ -40,8 +41,8 @@ y3
 
 """
 class SimpleDataReader(object):
-    def __init__(self, train_file):
-        self.train_file_name = train_file
+    def __init__(self):
+        self.train_file_name = file_name
         self.num_train = 0
         self.XTrain = None
         self.YTrain = None

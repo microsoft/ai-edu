@@ -7,9 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from SimpleDataReader import *
-
-file_name = "../../data/ch04.npz"
+from HelperClass.SimpleDataReader import *
 
 # 根据公式8
 def method1(X,Y,m):
@@ -43,7 +41,7 @@ def calculate_b(X,Y,w,m):
 
 if __name__ == '__main__':
 
-    reader = SimpleDataReader(file_name)
+    reader = SimpleDataReader()
     reader.ReadData()
     X,Y = reader.GetWholeTrainSamples()
     m = X.shape[0]

@@ -7,9 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from SimpleDataReader import *
-
-file_name = "../../data/ch04.npz"
+from HelperClass.SimpleDataReader import *
 
 def ForwardCalculation(w,b,x):
     z = np.dot(x, w) + b
@@ -41,7 +39,7 @@ def ShowResult(dataReader, w, b):
 
 if __name__ == '__main__':
 
-    sdr = SimpleDataReader(file_name)
+    sdr = SimpleDataReader()
     sdr.ReadData()
 
     # learning rate

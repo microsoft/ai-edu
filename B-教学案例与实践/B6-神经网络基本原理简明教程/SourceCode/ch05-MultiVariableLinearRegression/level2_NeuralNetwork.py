@@ -8,6 +8,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
+from SimpleDataReader import *
+
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class CData(object):
     def __init__(self, loss, w, b, epoch, iteration):
@@ -16,17 +18,6 @@ class CData(object):
         self.b = b
         self.epoch = epoch
         self.iteration = iteration
-
-# 加载数据
-def ReadData():
-    Xfile = Path("X05.dat")
-    Yfile = Path("Y05.dat")
-    if Xfile.exists() & Yfile.exists():
-        XData = np.load(Xfile)
-        YData = np.load(Yfile)
-        return XData,YData
-    
-    return None,None
 
 # 前向计算
 def ForwardCalculationBatch(W, B, batch_X):
@@ -57,14 +48,7 @@ def CheckLoss(W, B, X, Y):
     loss = LOSS.sum()/m/2
     return loss
 
-# 获得批样本数据
-def GetBatchSamples(X,Y,batch_size,iteration):
-    num_feature = X.shape[0]
-    start = iteration * batch_size
-    end = start + batch_size
-    batch_X = X[0:num_feature, start:end].reshape(num_feature, batch_size)
-    batch_Y = Y[0, start:end].reshape(1, batch_size)
-    return batch_X, batch_Y
+
 
 # 初始化权重值
 def InitialWeights(num_input, num_output, flag):

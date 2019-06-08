@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_MiniBatchGradientDescent.py</StartupFile>
+    <StartupFile>Level2_GradientDescent.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

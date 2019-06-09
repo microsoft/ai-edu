@@ -16,10 +16,7 @@ if __name__ == '__main__':
 
     eta = 0.1
     w, b = 0.0, 0.0
-    #w,b = np.random.random(),np.random.random()
-    # count of samples
-    num_example = X.shape[0]
-    for i in range(num_example):
+    for i in range(reader.num_train):
         # get x and y value for one sample
         x = X[i]
         y = Y[i]

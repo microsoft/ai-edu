@@ -5,6 +5,8 @@ from Level4_Base import *
 from HelperClass.HyperParameters import *
 
 if __name__ == '__main__':
-
-    params = HyperParameters(eta=0.1, max_epoch=50, batch_size=1, eps = 0.02)
-    train(params)
+    sdr = SimpleDataReader()
+    sdr.ReadData()
+    params = HyperParameters(eta=0.1, max_epoch=100, batch_size=1, eps = 0.02)
+    net = NeuralNet(params)
+    net.train(sdr)

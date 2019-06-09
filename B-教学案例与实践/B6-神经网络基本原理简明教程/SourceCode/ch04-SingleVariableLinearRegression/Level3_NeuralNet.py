@@ -5,7 +5,6 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from pathlib import Path
 
 from HelperClass.SimpleDataReader import *
 
@@ -15,17 +14,17 @@ class NeuralNet(object):
         self.w = 0
         self.b = 0
 
-    def forward(self, x):
-        z = np.dot(x, self.w) + self.b
+    def __forward(self, x):
+        z = x * self.w + self.b
         return z
 
-    def backward(self, x,y,z):
+    def __backward(self, x,y,z):
         dz = z - y
         db = dz
-        dw = np.dot(x, dz)
+        dw = x * dz
         return dw, db
 
-    def update(self, dw, db):
+    def __update(self, dw, db):
         self.w = self.w - self.eta * dw
         self.b = self.b - self.eta * db
 
@@ -34,15 +33,15 @@ class NeuralNet(object):
             # get x and y value for one sample
             x,y = dataReader.GetSingleTrainSample(i)
             # get z from x,y
-            z = self.forward(x)
+            z = self.__forward(x)
             # calculate gradient of w and b
-            dw, db = self.backward(x, y, z)
+            dw, db = self.__backward(x, y, z)
             # update w,b
-            self.update(dw, db)
+            self.__update(dw, db)
         # end for
 
     def inference(self, x):
-        return self.forward(x)
+        return self.__forward(x)
 
 # end class
 
@@ -61,14 +60,14 @@ def ShowResult(net, dataReader):
 
 
 if __name__ == '__main__':
-
+    # read data
     sdr = SimpleDataReader()
     sdr.ReadData()
-
+    # create net
     eta = 0.1
     net = NeuralNet(eta)
     net.train(sdr)
-
+    # result
     print("w=%f,b=%f" %(net.w, net.b))
     # predication
     result = net.inference(0.346)

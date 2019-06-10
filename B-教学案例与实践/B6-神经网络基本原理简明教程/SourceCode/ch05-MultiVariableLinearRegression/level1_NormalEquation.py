@@ -27,11 +27,9 @@ if __name__ == '__main__':
     b=e[0,0]
     w1=e[1,0]
     w2=e[2,0]
-    w3=e[3,0]
     print("w1=", w1)
     print("w2=", w2)
-    print("w3=", w3)
     print("b=", b)
     # inference
-    z = w1 * 2 + w2 * 5 + w3 * 93 + b
+    z = w1 * 15 + w2 * 93 + b
     print("z=",z)

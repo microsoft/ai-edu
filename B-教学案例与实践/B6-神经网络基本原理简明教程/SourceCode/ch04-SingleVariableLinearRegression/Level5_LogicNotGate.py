@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from HelperClass.SimpleDataReader import *
-from Level4_Base import *
+from HelperClass.NeuralNet import *
 
 class LogicNotGateDataReader(SimpleDataReader):
     # x=0,y=1; x=1,y=0
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     sdr.ReadData()
     # create net
     params = HyperParameters(eta=0.1, max_epoch=1000, batch_size=1, eps = 1e-8)
-    net = NeuralNet(params)
+    net = NeuralNet(params, 1, 1)
     net.train(sdr)
     # result
     print("w=%f,b=%f" %(net.W, net.B))

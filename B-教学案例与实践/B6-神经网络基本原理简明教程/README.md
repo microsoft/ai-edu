@@ -62,8 +62,8 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 |网络结构名称|网络结构图|应用领域|
 |---|----|----|
-|单入<br>单出<br>一层|<img src="./Images/4/Setup.jpg"/>|一元线性回归|
-|多入<br>单出<br>一层|<img src="./Images/5/setup.jpg"/>|多元线性回归|
+|单入<br>单出<br>一层|<img src="./Images/4/Setup.png"/>|一元线性回归|
+|多入<br>单出<br>一层|<img src="./Images/5/setup.png"/>|多元线性回归|
 |多入<br>单出<br>一层|<img src="./Images/6/BinaryClassifierNN.png"/>|线性二分类<br>|
 |多入<br>多出<br>一层|<img src="./Images/7/MultipleClassifierNN.png"/>|线性多分类<br>|
 |单入<br>单出<br>两层|<img src="./Images/9/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|

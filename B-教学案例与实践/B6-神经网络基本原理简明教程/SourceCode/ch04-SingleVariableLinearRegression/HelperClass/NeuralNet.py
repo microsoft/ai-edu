@@ -12,10 +12,10 @@ from HelperClass.HyperParameters import *
 from HelperClass.TrainingHistory import *
 
 class NeuralNet(object):
-    def __init__(self, params):
+    def __init__(self, params, input_size, output_size):
         self.params = params
-        self.W = np.zeros((1,1))
-        self.B = np.zeros((1,1))
+        self.W = np.zeros((input_size, output_size))
+        self.B = np.zeros((1, output_size))
 
     def __forwardBatch(self, batch_x):
         Z = np.dot(batch_x, self.W) + self.B

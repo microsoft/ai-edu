@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level5_LogicNotGate.py</StartupFile>
+    <StartupFile>Level4_SingleGradientDescent.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -32,7 +32,7 @@
     </Compile>
     <Compile Include="Level4_FullBatchGradientDescent.py" />
     <Compile Include="Level4_MiniBatchGradientDescent.py" />
-    <Compile Include="Level4_Base.py" />
+    <Compile Include="HelperClass\NeuralNet.py" />
     <Compile Include="HelperClass\SimpleDataReader.py" />
     <Compile Include="Level1_LeastSquare.py" />
     <Compile Include="Level2_GradientDescent.py" />

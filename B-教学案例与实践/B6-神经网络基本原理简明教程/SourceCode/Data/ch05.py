@@ -8,10 +8,6 @@ from mpl_toolkits.mplot3d import Axes3D
 
 file_name = "../../data/ch05.npz"
 
-# y = w1*x1 + w2*x2 + w3*x3 + b
-# W1 = 朝向：1,2,3,4 = N,W,E,S
-# W2 = 位置几环：2,3,4,5,6
-# W3 = 面积:平米
 def TargetFunction(x1,x2):
     w1,w2,b = 2,5,10
     return w1*(20-x1) + w2*x2 + b

@@ -1,0 +1,126 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+import numpy as np
+from pathlib import Path
+from enum import Enum
+
+file_name = "../../data/ch05.npz"
+
+class YNormalizationMethod(Enum):
+    Nothing = 0,
+    Regression = 1,
+    BinaryClassifier = 2,
+    MultipleClassifier = 3
+
+"""
+X:
+x1: feature1 feature2 feature3...
+x2: feature1 feature2 feature3...
+x3: feature1 feature2 feature3...
+...
+
+Y:
+[if regression, value]
+y1
+y2
+y3
+...
+
+[if binary classification, 0/1]
+0
+1
+1
+...
+
+[if multiple classification, e.g. 4 category, one-hot]
+0, 1, 0, 0
+1, 0, 0, 0
+0, 0, 1, 0
+...
+
+"""
+class SimpleDataReader(object):
+    def __init__(self):
+        self.train_file_name = file_name
+        self.num_train = 0
+        self.XTrain = None
+        self.YTrain = None
+        self.XRaw = None
+        self.YRaw = None
+
+    # read data from file
+    def ReadData(self):
+        train_file = Path(self.train_file_name)
+        if train_file.exists():
+            data = np.load(self.train_file_name)
+            self.XRaw = data["data"]
+            self.YRaw = data["label"]
+            self.num_train = self.XRaw.shape[0]
+            self.XTrain = self.XRaw
+            self.YTrain = self.YRaw
+        else:
+            raise Exception("Cannot find train file!!!")
+        #end if
+
+    # normalize data by extracting range from source data
+    # return: X_new: normalized data with same shape
+    # return: X_norm: 2xn
+    #               [[min1, min2, min3...]
+    #                [range1, range2, range3...]]
+    def NormalizeX(self):
+        X_new = np.zeros(self.XRaw.shape)
+        num_feature = self.XRaw.shape[1]
+        self.X_norm = np.zeros((2,num_feature))
+        # 按列归一化,即所有样本的同一特征值分别做归一化
+        for i in range(num_feature):
+            # get one feature from all examples
+            col_i = self.XRaw[:,i]
+            max_value = np.max(col_i)
+            min_value = np.min(col_i)
+            # min value
+            self.X_norm[0,i] = min_value 
+            # range value
+            self.X_norm[1,i] = max_value - min_value 
+            new_col = (col_i - self.X_norm[0,i])/(self.X_norm[1,i])
+            X_new[:,i] = new_col
+        #end for
+        self.XTrain = X_new
+
+    # normalize data by self range and min_value
+    def NormalizePredicateData(self, X_raw):
+        X_new = np.zeros(X_raw.shape)
+        n = X_raw.shape[1]
+        for i in range(n):
+            col_i = X_raw[:,i]
+            X_new[:,i] = (col_i - self.X_norm[0,i]) / self.X_norm[1,i]
+        return X_new
+
+    # get batch training data
+    def GetSingleTrainSample(self, iteration):
+        x = self.XTrain[iteration]
+        y = self.YTrain[iteration]
+        return x, y
+
+    # get batch training data
+    def GetBatchTrainSamples(self, batch_size, iteration):
+        start = iteration * batch_size
+        end = start + batch_size
+        batch_X = self.XTrain[start:end,:]
+        batch_Y = self.YTrain[start:end,:]
+        return batch_X, batch_Y
+
+    def GetWholeTrainSamples(self):
+        return self.XTrain, self.YTrain
+
+
+    # permutation only affect along the first axis, so we need transpose the array first
+    # see the comment of this class to understand the data format
+    def Shuffle(self):
+        seed = np.random.randint(0,100)
+        np.random.seed(seed)
+        XP = np.random.permutation(self.XTrain)
+        np.random.seed(seed)
+        YP = np.random.permutation(self.YTrain)
+        self.XTrain = XP
+        self.YTrain = YP

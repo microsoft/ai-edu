@@ -65,13 +65,14 @@ class SimpleDataReader(object):
 
     # normalize data by extracting range from source data
     # return: X_new: normalized data with same shape
-    # return: X_norm: 2xn
-    #               [[min1, min2, min3...]
-    #                [range1, range2, range3...]]
+    # return: X_norm: N x 2
+    #               [[min1, range1]
+    #                [min2, range2]
+    #                [min3, range3]]
     def NormalizeX(self):
         X_new = np.zeros(self.XRaw.shape)
         num_feature = self.XRaw.shape[1]
-        self.X_norm = np.zeros((2,num_feature))
+        self.X_norm = np.zeros((num_feature,2))
         # 按列归一化,即所有样本的同一特征值分别做归一化
         for i in range(num_feature):
             # get one feature from all examples
@@ -79,10 +80,10 @@ class SimpleDataReader(object):
             max_value = np.max(col_i)
             min_value = np.min(col_i)
             # min value
-            self.X_norm[0,i] = min_value 
+            self.X_norm[i,0] = min_value 
             # range value
-            self.X_norm[1,i] = max_value - min_value 
-            new_col = (col_i - self.X_norm[0,i])/(self.X_norm[1,i])
+            self.X_norm[i,1] = max_value - min_value 
+            new_col = (col_i - self.X_norm[i,0])/(self.X_norm[i,1])
             X_new[:,i] = new_col
         #end for
         self.XTrain = X_new
@@ -93,8 +94,11 @@ class SimpleDataReader(object):
         n = X_raw.shape[1]
         for i in range(n):
             col_i = X_raw[:,i]
-            X_new[:,i] = (col_i - self.X_norm[0,i]) / self.X_norm[1,i]
+            X_new[:,i] = (col_i - self.X_norm[i,0]) / self.X_norm[i,1]
         return X_new
+
+    def GetDataRange(self):
+        return self.X_norm
 
     # get batch training data
     def GetSingleTrainSample(self, iteration):

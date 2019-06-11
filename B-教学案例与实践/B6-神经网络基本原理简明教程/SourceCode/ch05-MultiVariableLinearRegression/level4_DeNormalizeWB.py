@@ -6,7 +6,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 from HelperClass.NeuralNet import *
-from level3_DataNormalization import *
 
 # get real weights
 def DeNormalizeWeightsBias(net, dataReader):
@@ -37,5 +36,3 @@ if __name__ == '__main__':
     x = np.array([x1,x2]).reshape(1,2)
     z = np.dot(x, W_real) + B_real
     print("Z=", z)
-
-    ShowResult(net, reader)

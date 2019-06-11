@@ -2,35 +2,25 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-from pathlib import Path
-import matplotlib.pyplot as plt
-from level5_NormalizePredicateData import *
-
-def NormalizeXYData(XData, YData):
-    X, X_norm = NormalizeData(XData)
-    Y, Y_norm = NormalizeData(YData)
-    return X, X_norm, Y, Y_norm
-
-# try to give the answer for the price of west(2)，5th ring(5)，93m2
-def Inference(W, B, X_norm, Y_norm):
-    xt = np.array([2,5,93]).reshape(3,1)
-    xt_new = NormalizePredicateData(xt, X_norm)
-    z = ForwardCalculationBatch(W, B, xt_new)
-    # 根据公式2
-    zz = z * Y_norm[1,0] + Y_norm[0,0]
-    return z, zz
+from HelperClass.NeuralNet import *
 
 # main
 if __name__ == '__main__':
-    # hyper parameters
-    # SGD, MiniBatch, FullBatch
-
-    method = "SGD"
-
-    # read data
-    raw_X, raw_Y = ReadData()
-    X, X_norm, Y, Y_norm = NormalizeXYData(raw_X, raw_Y)
-    w, b = train(method, X, Y)
-    z,zz = Inference(w, b, X_norm, Y_norm)
+    # data
+    reader = SimpleDataReader()
+    reader.ReadData()
+    reader.NormalizeX()
+    reader.NormalizeY()
+    # net
+    params = HyperParameters(eta=0.01, max_epoch=200, batch_size=10, eps=1e-5)
+    net = NeuralNet(params, 2, 1)
+    net.train(reader, checkpoint=0.1)
+    # inference
+    x1 = 15
+    x2 = 93
+    x = np.array([x1,x2]).reshape(1,2)
+    x_new = reader.NormalizePredicateData(x)
+    z = net.inference(x_new)
     print("z=", z)
-    print("zz=", zz)
+    Z_real = z * reader.Y_norm[0,1] + reader.Y_norm[0,0]
+    print("Z_real=", Z_real)

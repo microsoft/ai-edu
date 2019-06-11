@@ -2,39 +2,42 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-from pathlib import Path
 import matplotlib.pyplot as plt
-from level2_NeuralNetwork import *
+from mpl_toolkits.mplot3d import Axes3D
 
-# normalize data by extracting range from source data
-# return: X_new: normalized data with same shape
-# return: X_norm: 2xn
-#               [[min1, min2, min3...]
-#                [range1, range2, range3...]]
-def NormalizeData(X):
-    X_new = np.zeros(X.shape)
-    num_feature = X.shape[0]
-    X_norm = np.zeros((2,num_feature))
-    # 按行归一化,即所有样本的同一特征值分别做归一化
-    for i in range(num_feature):
-        # get one feature from all examples
-        x = X[i,:]
-        max_value = np.max(x)
-        min_value = np.min(x)
-        # min value
-        X_norm[0,i] = min_value 
-        # range value
-        X_norm[1,i] = max_value - min_value 
-        x_new = (x - X_norm[0,i])/(X_norm[1,i])
-        X_new[i,:] = x_new
-    return X_new, X_norm
+from HelperClass.NeuralNet import *
 
-# 主程序
+def ShowResult(net, reader):
+    # draw example points
+    X,Y = reader.GetWholeTrainSamples()
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    ax.scatter(X[:,0],X[:,1],Y)
+    # draw fitting surface
+    p = np.linspace(0,1)
+    q = np.linspace(0,1)
+    P,Q = np.meshgrid(p,q)
+    R = np.hstack((P.ravel().reshape(2500,1), Q.ravel().reshape(2500,1)))
+    Z = net.inference(R)
+    Z = Z.reshape(50,50)
+    ax.plot_surface(P,Q,Z, cmap='rainbow')
+    plt.show()
+
+
 if __name__ == '__main__':
-    # hyper parameters
-    # SGD, MiniBatch, FullBatch
-    method = "SGD"
-    # read data
-    raw_X, Y = ReadData()
-    X,X_norm = NormalizeData(raw_X)
-    w, b = train(method,X,Y)
+    # data
+    reader = SimpleDataReader()
+    reader.ReadData()
+    reader.NormalizeX()
+    # net
+    params = HyperParameters(eta=0.1, max_epoch=10, batch_size=1, eps = 1e-5)
+    #params = HyperParameters(eta=0.01, max_epoch=500, batch_size=10, eps = 1e-5)
+    net = NeuralNet(params, 2, 1)
+    net.train(reader, checkpoint=0.1)
+    # inference
+    x1 = 15
+    x2 = 93
+    x = np.array([x1,x2]).reshape(1,2)
+    print("z=", net.inference(x))
+
+    ShowResult(net, reader)

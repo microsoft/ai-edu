@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4-BatchGradientDescent.py</StartupFile>
+    <StartupFile>Level4_SingleGradientDescent.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,15 +21,31 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level1-LeastSquare.py" />
-    <Compile Include="Level2-GradientDescent.py" />
-    <Compile Include="Level4-BatchGradientDescent.py" />
-    <Compile Include="Level3-NeuralNetwork.py">
+    <Compile Include="HelperClass\HyperParameters.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelperClass\TrainingHistory.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelperClass\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level4_FullBatchGradientDescent.py" />
+    <Compile Include="Level4_MiniBatchGradientDescent.py" />
+    <Compile Include="HelperClass\NeuralNet.py" />
+    <Compile Include="HelperClass\SimpleDataReader.py" />
+    <Compile Include="Level1_LeastSquare.py" />
+    <Compile Include="Level2_GradientDescent.py" />
+    <Compile Include="Level4_SingleGradientDescent.py" />
+    <Compile Include="Level3_NeuralNet.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level5_LogicNotGate.py">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HelperClass\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -2,19 +2,15 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-from pathlib import Path
-import matplotlib.pyplot as plt
-
 from HelperClass.NeuralNet import *
 
 # get real weights
 def DeNormalizeWeightsBias(net, dataReader):
     W_real = np.zeros_like(net.W)
-    X_Norm = dataReader.GetDataRange()
     for i in range(W_real.shape[0]):
-        W_real[i,0] = net.W[i,0] / X_Norm[i,1]
-
-    B_real = net.B - W_real[0,0]*X_Norm[0,0] - W_real[1,0]*X_Norm[1,0]
+        W_real[i,0] = net.W[i,0] / dataReader.X_norm[i,1]
+    #end for
+    B_real = net.B - W_real[0,0] * dataReader.X_norm[0,0] - W_real[1,0] * dataReader.X_norm[1,0]
     return W_real, B_real
 
 if __name__ == '__main__':

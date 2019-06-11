@@ -44,10 +44,10 @@ class SimpleDataReader(object):
     def __init__(self):
         self.train_file_name = file_name
         self.num_train = 0
-        self.XTrain = None
-        self.YTrain = None
-        self.XRaw = None
-        self.YRaw = None
+        self.XTrain = None  # normalized x, if not normalized, same as YRaw
+        self.YTrain = None  # normalized y, if not normalized, same as YRaw
+        self.XRaw = None    # raw x
+        self.YRaw = None    # raw y
 
     # read data from file
     def ReadData(self):
@@ -97,8 +97,16 @@ class SimpleDataReader(object):
             X_new[:,i] = (col_i - self.X_norm[i,0]) / self.X_norm[i,1]
         return X_new
 
-    def GetDataRange(self):
-        return self.X_norm
+    def NormalizeY(self):
+        self.Y_norm = np.zeros((1,2))
+        max_value = np.max(self.YRaw)
+        min_value = np.min(self.YRaw)
+        # min value
+        self.Y_norm[0, 0] = min_value 
+        # range value
+        self.Y_norm[0, 1] = max_value - min_value 
+        y_new = (self.YRaw - min_value) / self.Y_norm[0, 1]
+        self.YTrain = y_new
 
     # get batch training data
     def GetSingleTrainSample(self, iteration):

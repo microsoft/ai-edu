@@ -2,7 +2,6 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-
 from HelperClass.NeuralNet import *
 
 if __name__ == '__main__':
@@ -11,7 +10,7 @@ if __name__ == '__main__':
     reader.ReadData()
     reader.NormalizeX()
     # net
-    params = HyperParameters(eta=0.01, max_epoch=200, batch_size=10, eps = 1e-5)
+    params = HyperParameters(eta=0.01, max_epoch=100, batch_size=10, eps = 1e-5)
     net = NeuralNet(params, 2, 1)
     net.train(reader, checkpoint=0.1)
     # inference

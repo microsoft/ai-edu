@@ -1,18 +1,13 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 import numpy as np
-from pathlib import Path
-
-from SimpleDataReader import *
-
-file_name = "../../data/ch05.npz"
-
-def LoadData():
-    reader = SimpleDataReader(file_name)
-    reader.ReadData()
-    X,Y = reader.GetWholeTrainSamples()
-    return X, Y
+from HelperClass.SimpleDataReader import *
 
 if __name__ == '__main__':
-    X,Y = LoadData()
+    reader = SimpleDataReader()
+    reader.ReadData()
+    X,Y = reader.GetWholeTrainSamples()
     num_example = X.shape[0]
     one = np.ones((num_example,1))
     x = np.column_stack((one, (X[0:num_example,:])))

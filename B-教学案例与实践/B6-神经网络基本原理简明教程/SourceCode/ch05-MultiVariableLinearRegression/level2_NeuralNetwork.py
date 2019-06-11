@@ -4,8 +4,6 @@
 # warning: 运行本程序将会得到失败的结果，这是by design的，是为了讲解课程内容，后面的程序中会有补救的方法
 
 import numpy as np
-from pathlib import Path
-import matplotlib.pyplot as plt
 from HelperClass.NeuralNet import *
 
 if __name__ == '__main__':

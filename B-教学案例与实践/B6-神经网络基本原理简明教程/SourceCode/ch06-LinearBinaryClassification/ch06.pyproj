@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_BinaryClassification.py</StartupFile>
+    <StartupFile>Level2_ShowBinaryResult.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -37,8 +37,6 @@
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level0_BaseClassification.py" />
-    <Compile Include="Level1_BinaryClassification - Copy.py" />
     <Compile Include="Level2_ShowBinaryResult.py" />
     <Compile Include="Level5_LogicAndGate.py" />
     <Compile Include="Level5_LogicGateBase.py" />

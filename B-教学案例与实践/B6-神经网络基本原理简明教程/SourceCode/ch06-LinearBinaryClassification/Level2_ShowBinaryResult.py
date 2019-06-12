@@ -29,7 +29,7 @@ def ShowResult(X,Y,W,B,xt):
 
     b12 = -B[0,0]/W[0,1]
     w12 = -W[0,0]/W[0,1]
-
+    print(w12,b12)
     x = np.linspace(0,1,10)
     y = w12 * x + b12
     plt.plot(x,y)

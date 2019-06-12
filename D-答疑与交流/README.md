@@ -21,6 +21,8 @@
 [深度学习有关参考书或者网络课程](#Other-Learning-Material)
 
 [如何申请Azure学生账号](#Azure-Student-Account)
+ - [使用全球版](#Azure-Student-Account-Global)
+ - [使用世纪互联中国版](#Azure-Student-Account-China)
 
 
 <a name="GPUSupport"></a>
@@ -88,18 +90,7 @@
 
 11. 如何申请Azure的学生账号？
 
-    1. 使用世纪互联中国版：
-        1. 打开[https://mspil.cn](https://mspil.cn)并注册账户，验证学生身份，具体申请流程参考下图
-
-        ![](./Images/1.jpg)
-
-        2. 完成申请流程后，会收到如下邮件：
-
-        ![](./Images/2.PNG)
-
-        3. 利用子账户和对应密码登录[portal.azure.cn](https://portal.azure.cn)，并创建所需资源
-    
-    2. 使用全球版：
+    1. 使用全球版：<a name="Azure-Student-Account-Global"></a>
         1. 登录[Azure 全球版学生入口](https://azure.microsoft.com/zh-cn/free/students/)，点击立即激活
 
         ![](./Images/3.PNG)
@@ -113,3 +104,14 @@
         4. 验证成功后即可进入以下界面，按需求创建虚拟机即可（若未进入该界面，可点击该[链接](https://portal.azure.com/)）
 
         ![](./Images/6.PNG)
+
+    2. 使用世纪互联中国版：<a name="Azure-Student-Account-China"></a>
+        1. 打开[https://mspil.cn](https://mspil.cn)并注册账户，验证学生身份，具体申请流程参考下图
+
+        ![](./Images/1.jpg)
+
+        2. 完成申请流程后，会收到如下邮件：
+
+        ![](./Images/2.PNG)
+
+        3. 利用子账户和对应密码登录[portal.azure.cn](https://portal.azure.cn)，并创建所需资源

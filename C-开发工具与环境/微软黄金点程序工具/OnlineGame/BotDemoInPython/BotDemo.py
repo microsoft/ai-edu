@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
 
-# Use `pip install pyswagger` to install pyswagger
+# Use `pip install pyswagger requests` to install pyswagger and requests
 from pyswagger import App
 from pyswagger.contrib.client.requests import Client
 

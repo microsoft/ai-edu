@@ -24,7 +24,21 @@
     <Compile Include="Activators.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HelperClass\Activators.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelperClass\HyperParameters.py" />
+    <Compile Include="HelperClass\LossFunction.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelperClass\NeuralNet.py" />
+    <Compile Include="HelperClass\SimpleDataReader.py" />
+    <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level0_BaseClassification.py" />
+    <Compile Include="Level1_BinaryClassification - Copy.py" />
     <Compile Include="Level2_ShowBinaryResult.py" />
     <Compile Include="Level5_LogicAndGate.py" />
     <Compile Include="Level5_LogicGateBase.py" />
@@ -34,6 +48,9 @@
     <Compile Include="Level4_TanhAsBinaryClassifier.py" />
     <Compile Include="Level4_TanhWithCrossEntropy_Curve.py" />
     <Compile Include="Level1_BinaryClassification.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HelperClass\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

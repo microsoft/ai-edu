@@ -2,73 +2,49 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-import matplotlib.pyplot as plt
-from pathlib import Path
-import math
-from Level0_BaseClassification import *
 
-x_data_name = "X06.dat"
-y_data_name = "Y06.dat"
+from HelperClass.NeuralNet import *
+from HelperClass.HyperParameters import *
 
-def ToBool(YData):
-    num_example = YData.shape[1]
-    Y = np.zeros((1, num_example))
-    for i in range(num_example):
-        if YData[0,i] == 0:     # 第一类的标签设为0
-            Y[0,i] = 0
-        elif YData[0,i] == 1:   # 第二类的标签设为1
-            Y[0,i] = 1
-        # end if
-    # end for
-    return Y
+def ShowResult(net, dataReader):
+    fig = plt.figure(figsize=(6.5,6.5))
+    X,Y = dataReader.GetWholeTrainSamples()
+    for i in range(200):
+        if Y[i,0] == 1:
+            plt.scatter(X[i,0], X[i,1], marker='x', c='g')
+        else:
+            plt.scatter(X[i,0], X[i,1], marker='o', c='r')
+        #end if
+    #end for
 
-def Sigmoid(x):
-    s=1/(1+np.exp(-x))
-    return s
-
-# 前向计算
-def ForwardCalculationBatch(W, B, batch_X):
-    Z = np.dot(W, batch_X) + B
-    A = Sigmoid(Z)
-    return A
-
-# 计算损失函数值
-def CheckLoss(W, B, X, Y):
-    m = X.shape[1]
-    A = ForwardCalculationBatch(W,B,X)
+    x = np.array([0.58,0.92,0.62,0.55,0.39,0.29]).reshape(3,2)
+    a = net.inference(x)
+    print("A=", a)
+    for i in range(3):
+        if a[i,0] > 0.5:
+            plt.scatter(x[i,0], x[i,1], marker='^', c='g', s=100)
+        else:
+            plt.scatter(x[i,0], x[i,1], marker='^', c='r', s=100)
+        #end if
+    #end for
     
-    p1 = 1 - Y
-    p2 = np.log(1-A)
-    p3 = np.log(A)
-
-    p4 = np.multiply(p1 ,p2)
-    p5 = np.multiply(Y, p3)
-
-    LOSS = np.sum(-(p4 + p5))  #binary classification
-    loss = LOSS / m
-    return loss
-
-def Inference(W,B,X_norm,xt):
-    xt_normalized = NormalizePredicateData(xt, X_norm)
-    A = ForwardCalculationBatch(W,B,xt_normalized)
-    return A, xt_normalized
+    plt.show()
+    
 
 # 主程序
 if __name__ == '__main__':
-    # SGD, MiniBatch, FullBatch
-    method = "SGD"
-    # read data
-    XData,YData = ReadData(x_data_name, y_data_name)
-    X, X_norm = NormalizeData(XData)
-    Y = ToBool(YData)
-    W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
-    print("W=",W)
-    print("B=",B)
-    xt = np.array([5,1,6,9,5,5]).reshape(2,3,order='F')
-    result, xt_norm = Inference(W,B,X_norm,xt)
-    print("result=", result)
-    print(np.around(result))
+    # data
+    reader = SimpleDataReader()
+    reader.ReadData()
+    # net
+    params = HyperParameters(eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
+    input = 2
+    output = 1
+    net = NeuralNet(params, input, output)
+    net.train(reader, checkpoint=1)
 
+    # inference
+    ShowResult(net, reader)
 
 
 

@@ -2,11 +2,52 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-import matplotlib.pyplot as plt
-from pathlib import Path
-import math
-from Level0_BaseClassification import *
-from Level1_BinaryClassification import *
+
+from HelperClass.NeuralNet import *
+from HelperClass.HyperParameters import *
+
+def ShowResult(net, dataReader):
+    fig = plt.figure(figsize=(6.5,6.5))
+    X,Y = dataReader.GetWholeTrainSamples()
+    for i in range(200):
+        if Y[i,0] == 1:
+            plt.scatter(X[i,0], X[i,1], marker='x', c='g')
+        else:
+            plt.scatter(X[i,0], X[i,1], marker='o', c='r')
+        #end if
+    #end for
+
+    x = np.array([0.58,0.92,0.62,0.55,0.39,0.29]).reshape(3,2)
+    a = net.inference(x)
+    print("A=", a)
+    for i in range(3):
+        if a[i,0] > 0.5:
+            plt.scatter(x[i,0], x[i,1], marker='^', c='g', s=100)
+        else:
+            plt.scatter(x[i,0], x[i,1], marker='^', c='r', s=100)
+        #end if
+    #end for
+    
+    plt.show()
+    
+
+# 主程序
+if __name__ == '__main__':
+    # data
+    reader = SimpleDataReader()
+    reader.ReadData()
+    # net
+    params = HyperParameters(eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
+    input = 2
+    output = 1
+    net = NeuralNet(params, input, output)
+    net.train(reader, checkpoint=1)
+
+    # inference
+    ShowResult(net, reader)
+
+
+
 
 def ShowData(X,Y):
     for i in range(X.shape[1]):
@@ -39,24 +80,5 @@ def ShowResult(X,Y,W,B,xt):
 
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.show()
-
-# 主程序
-if __name__ == '__main__':
-    # SGD, MiniBatch, FullBatch
-    method = "SGD"
-    # read data
-    XData,YData = ReadData(x_data_name, y_data_name)
-    X, X_norm = NormalizeData(XData)
-    ShowData(XData, YData)
-    Y = ToBool(YData)
-    W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
-    print("W=",W)
-    print("B=",B)
-    xt = np.array([5,1,6,9,5,5]).reshape(2,3,order='F')
-    result, xt_norm = Inference(W,B,X_norm,xt)
-    print("result=",result)
-    print(np.around(result))
-    ShowResult(X,YData,W,B,xt_norm)
-
 
 

@@ -46,7 +46,7 @@ if __name__ == '__main__':
     reader = SimpleDataReader()
     reader.ReadData()
     # net
-    params = HyperParameters(eta=0.1, max_epoch=100, batch_size=1, eps=1e-3, net_type=NetType.BinaryClassifier)
+    params = HyperParameters(eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
     input = 2
     output = 1
     net = NeuralNet(params, input, output)

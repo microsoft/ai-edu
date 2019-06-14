@@ -58,6 +58,7 @@ class LossFunction(object):
 
     # for binary tanh classifier
     def CE2_tanh(self, A, Y, count):
+        #p = (1-Y) * np.log(1-A) + (1+Y) * np.log(1+A)
         p = (1-Y) * np.log((1-A)/2) + (1+Y) * np.log((1+A)/2)
         LOSS = np.sum(-p)
         loss = LOSS / count

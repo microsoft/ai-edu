@@ -9,7 +9,8 @@ from HelperClass.HyperParameters import *
 def draw_split_line(net,):
     b12 = -net.B[0,0]/net.W[1,0]
     w12 = -net.W[0,0]/net.W[1,0]
-    print(w12,b12)
+    print("w12=", w12)
+    print("b12=", b12)
     x = np.linspace(0,1,10)
     y = w12 * x + b12
     plt.plot(x,y)
@@ -46,10 +47,10 @@ if __name__ == '__main__':
     reader = SimpleDataReader()
     reader.ReadData()
     # net
-    params = HyperParameters(eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
-    input = 2
-    output = 1
-    net = NeuralNet(params, input, output)
+    params = HyperParameters(eta=0.1, max_epoch=10000, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
+    num_input = 2
+    num_output = 1
+    net = NeuralNet(params, num_input, num_output)
     net.train(reader, checkpoint=1)
 
     # show result
@@ -57,11 +58,3 @@ if __name__ == '__main__':
     draw_predicate_data(net)
     draw_split_line(net)
     plt.show()
-
-
-
-
-
-
-
-

@@ -7,6 +7,7 @@ class NetType(Enum):
     Fitting = 1,
     BinaryClassifier = 2,
     MultipleClassifier = 3,
+    BinaryTanh = 4,
 
 class HyperParameters(object):
     def __init__(self, eta=0.1, max_epoch=1000, batch_size=5, eps=0.1, net_type=NetType.Fitting):

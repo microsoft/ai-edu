@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_ShowBinaryResult.py</StartupFile>
+    <StartupFile>Level4_TanhAsBinaryClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -37,15 +37,12 @@
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2_ShowBinaryResult.py" />
-    <Compile Include="Level5_LogicAndGate.py" />
-    <Compile Include="Level5_LogicGateBase.py" />
-    <Compile Include="Level5_LogicNandGate.py" />
-    <Compile Include="Level5_LogicNorGate.py" />
-    <Compile Include="Level5_LogicOrGate.py" />
+    <Compile Include="Level3_ShowBinaryResult.py" />
+    <Compile Include="Level5_TanhAsBinaryClassifier - Copy.py" />
+    <Compile Include="Level4_LogicGateBase.py" />
     <Compile Include="Level4_TanhAsBinaryClassifier.py" />
-    <Compile Include="Level4_TanhWithCrossEntropy_Curve.py" />
-    <Compile Include="Level1_BinaryClassification.py" />
+    <Compile Include="Level5_TanhWithCrossEntropy_Curve.py" />
+    <Compile Include="Level2_BinaryClassification.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelperClass\" />

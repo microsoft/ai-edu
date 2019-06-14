@@ -20,7 +20,7 @@ class NeuralNet(object):
         self.W = np.zeros((input_size, output_size))
         self.B = np.zeros((1, output_size))
 
-    def __forwardBatch(self, batch_x):
+    def forwardBatch(self, batch_x):
         Z = np.dot(batch_x, self.W) + self.B
         if self.params.net_type == NetType.BinaryClassifier:
             A = Sigmoid().forward(Z)
@@ -28,19 +28,19 @@ class NeuralNet(object):
         else:
             return Z
 
-    def __backwardBatch(self, batch_x, batch_y, batch_a):
+    def backwardBatch(self, batch_x, batch_y, batch_a):
         m = batch_x.shape[0]
         dZ = batch_a - batch_y
         dB = dZ.sum(axis=0, keepdims=True)/m
         dW = np.dot(batch_x.T, dZ)/m
         return dW, dB
 
-    def __update(self, dW, dB):
+    def update(self, dW, dB):
         self.W = self.W - self.params.eta * dW
         self.B = self.B - self.params.eta * dB
 
     def inference(self, x):
-        return self.__forwardBatch(x)
+        return self.forwardBatch(x)
 
     def train(self, dataReader, checkpoint=0.1):
         # calculate loss to decide the stop condition
@@ -59,15 +59,15 @@ class NeuralNet(object):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.params.batch_size, iteration)
                 # get z from x,y
-                batch_a = self.__forwardBatch(batch_x)
+                batch_a = self.forwardBatch(batch_x)
                 # calculate gradient of w and b
-                dW, dB = self.__backwardBatch(batch_x, batch_y, batch_a)
+                dW, dB = self.backwardBatch(batch_x, batch_y, batch_a)
                 # update w,b
-                self.__update(dW, dB)
+                self.update(dW, dB)
 
                 total_iteration = epoch * max_iteration + iteration
                 if (total_iteration+1) % checkpoint_iteration == 0:
-                    loss = self.__checkLoss(loss_function, dataReader)
+                    loss = self.checkLoss(loss_function, dataReader)
                     print(epoch, iteration, loss)
                     loss_history.AddLossHistory(epoch*max_iteration+iteration, loss)
                     if loss < self.params.eps:
@@ -83,9 +83,9 @@ class NeuralNet(object):
         print("B=", self.B)
 
 
-    def __checkLoss(self, loss_fun, dataReader):
+    def checkLoss(self, loss_fun, dataReader):
         X,Y = dataReader.GetWholeTrainSamples()
         m = X.shape[0]
-        A = self.__forwardBatch(X)
+        A = self.forwardBatch(X)
         loss = loss_fun.CheckLoss(A, Y)
         return loss

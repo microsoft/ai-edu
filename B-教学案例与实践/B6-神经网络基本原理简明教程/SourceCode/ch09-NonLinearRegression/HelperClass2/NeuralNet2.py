@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-# multiple iteration, loss calculation, stop condition, predication
 import numpy as np
 import time
 import math
@@ -73,7 +72,7 @@ class NeuralNet2(object):
 
     def inference(self, x):
         self.forward(x)
-        return self.A2
+        return self.output
 
     def train(self, dataReader, checkpoint, need_test):
         # calculate loss to decide the stop condition

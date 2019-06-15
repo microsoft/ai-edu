@@ -4,8 +4,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.NeuralNet2 import *
-from HelperClass.DataReader import *
+from HelperClass2.NeuralNet2 import *
+from HelperClass2.DataReader import *
 
 x_data_name = "../../Data/ch09.train.npz"
 y_data_name = "../../Data/ch09.test.npz"

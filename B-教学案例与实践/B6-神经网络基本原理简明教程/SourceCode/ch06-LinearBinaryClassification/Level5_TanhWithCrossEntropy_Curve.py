@@ -43,5 +43,5 @@ def draw_tanh_seperator(fun, label, x, y):
 
 if __name__ == '__main__':
     draw_cross_entropy()
-    draw_tanh_seperator(CTanh(), "Tanh", [-5,5], [0,0])
-    draw_tanh_seperator(CSigmoid(), "Sigmoid", [-5,5],[0.5,0.5])
+    draw_tanh_seperator(CTanh(), "Tanh Function", [-5,5], [0,0])
+    draw_tanh_seperator(CSigmoid(), "Logistic Function", [-5,5],[0.5,0.5])

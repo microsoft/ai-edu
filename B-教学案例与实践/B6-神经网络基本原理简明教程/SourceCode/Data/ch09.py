@@ -22,7 +22,7 @@ def CreateSampleData(num_train, num_test):
     np.savez(train_data_name, data=x1, label=y1)
 
     # create test data
-    x2 = np.linspace(0,1,num_test)
+    x2 = np.linspace(0,1,num_test).reshape(num_test,1)
     y2 = TargetFunction(x2)
     np.savez(test_data_name, data=x2, label=y2)
 

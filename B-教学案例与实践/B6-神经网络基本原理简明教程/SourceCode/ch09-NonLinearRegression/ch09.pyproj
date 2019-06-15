@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Polynomial.py</StartupFile>
+    <StartupFile>Level1_CurveFitting.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,33 +21,26 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py">
+    <Compile Include="HelperClass\Activators.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass\Activators.py" />
     <Compile Include="HelperClass\DataReader.py" />
-    <Compile Include="HelperClass\HyperParameters.py" />
     <Compile Include="HelperClass\LossFunction.py" />
-    <Compile Include="HelperClass\NeuralNet.py" />
-    <Compile Include="HelperClass\SimpleDataReader.py" />
-    <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\NeuralNet2.py" />
+    <Compile Include="HelperClass\TrainingTrace.py" />
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level0_TwoLayerFittingNet.py" />
     <Compile Include="Level1_CurveFitting.py" />
     <Compile Include="Level2_TuneParams.py" />
     <Compile Include="Level3_BestLrSeeking.py" />
-    <Compile Include="LossFunction.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Parameters.py">
+    <Compile Include="HelperClass\HyperParameters.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Polynomial.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="WeightsBias.py" />
+    <Compile Include="HelperClass\WeightsBias.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelperClass\" />

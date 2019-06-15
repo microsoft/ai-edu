@@ -20,8 +20,6 @@ class LossFunction(object):
             loss = self.CE2(A, Y, m)
         elif self.net_type == NetType.MultipleClassifier:
             loss = self.CE3(A, Y, m)
-        elif self.net_type == NetType.BinaryTanh:
-            loss = self.CE2_tanh(A, Y, m)
         #end if
         return loss
     # end def

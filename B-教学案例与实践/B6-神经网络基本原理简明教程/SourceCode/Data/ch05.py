@@ -30,24 +30,6 @@ def CreateSampleData(m):
         np.savez(file_name, data=X, label=Y)
     return X, Y
 
-def NormalizeData(X):
-    X_new = np.zeros(X.shape)
-    num_feature = X.shape[1]
-    X_norm = np.zeros((2,num_feature))
-    # 按行归一化,即所有样本的同一特征值分别做归一化
-    for i in range(num_feature):
-        # get one feature from all examples
-        x = X[:,i]
-        max_value = np.max(x)
-        min_value = np.min(x)
-        # min value
-        X_norm[0,i] = min_value 
-        # range value
-        X_norm[1,i] = max_value - min_value 
-        x_new = (x - X_norm[0,i])/(X_norm[1,i])
-        X_new[:,i] = x_new
-    return X_new, X_norm
-
 if __name__ == '__main__':
     X,Y = CreateSampleData(1000)
 
@@ -61,16 +43,8 @@ if __name__ == '__main__':
     print(Y.min())
     print(Y.mean())
 
-
     fig = plt.figure()
     ax = Axes3D(fig)
     ax.scatter(X[:,0],X[:,1],Y)
-    #plt.show()
-
-    XNew, _ = NormalizeData(X)
-    YNew, _ = NormalizeData(Y)
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.scatter(XNew[:,0],XNew[:,1],YNew)
     plt.show()
     

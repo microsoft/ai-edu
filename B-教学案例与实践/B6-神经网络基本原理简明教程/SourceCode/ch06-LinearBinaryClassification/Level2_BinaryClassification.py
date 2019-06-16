@@ -13,10 +13,10 @@ if __name__ == '__main__':
     reader = SimpleDataReader()
     reader.ReadData()
     # net
-    params = HyperParameters(eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
     num_input = 2
     num_output = 1
-    net = NeuralNet(params, num_input, num_output)
+    params = HyperParameters(num_input, num_output, eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
+    net = NeuralNet(params)
     net.train(reader, checkpoint=1)
 
     # inference

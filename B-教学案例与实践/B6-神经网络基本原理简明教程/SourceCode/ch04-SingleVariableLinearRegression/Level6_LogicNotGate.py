@@ -37,8 +37,8 @@ if __name__ == '__main__':
     sdr = LogicNotGateDataReader()
     sdr.ReadData()
     # create net
-    params = HyperParameters(eta=0.1, max_epoch=1000, batch_size=1, eps = 1e-8)
-    net = NeuralNet(params, 1, 1)
+    params = HyperParameters(1, 1, eta=0.1, max_epoch=1000, batch_size=1, eps = 1e-8)
+    net = NeuralNet(params)
     net.train(sdr)
     # result
     print("w=%f,b=%f" %(net.W, net.B))

@@ -38,7 +38,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level3_ShowBinaryResult.py" />
-    <Compile Include="Level4_LogicGateBase.py" />
+    <Compile Include="Level4_LogicGates.py" />
     <Compile Include="Level4_TanhAsBinaryClassifier.py" />
     <Compile Include="Level5_TanhWithCrossEntropy_Curve.py" />
     <Compile Include="Level2_BinaryClassification.py" />

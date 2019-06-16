@@ -72,10 +72,10 @@ def train(reader, title):
     draw_source_data(reader, title)
     plt.show()
     # net train
-    params = HyperParameters(eta=0.5, max_epoch=10000, batch_size=1, eps=2e-3, net_type=NetType.BinaryClassifier)
     num_input = 2
     num_output = 1
-    net = NeuralNet(params, num_input, num_output)
+    params = HyperParameters(num_input, num_output, eta=0.5, max_epoch=10000, batch_size=1, eps=2e-3, net_type=NetType.BinaryClassifier)
+    net = NeuralNet(params)
     net.train(reader, checkpoint=1)
     # test
     print(Test(net, reader))

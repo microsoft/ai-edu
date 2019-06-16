@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_Poly_Complex.py</StartupFile>
+    <StartupFile>Level3_CurveFitting.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,7 +26,6 @@
     </Compile>
     <Compile Include="HelperClass2\DataReader.py" />
     <Compile Include="HelperClass2\LossFunction.py" />
-    <Compile Include="HelperClass2\NeuralNet.py" />
     <Compile Include="HelperClass2\NeuralNet2.py" />
     <Compile Include="HelperClass2\TrainingTrace.py" />
     <Compile Include="HelperClass2\__init__.py">
@@ -42,9 +41,9 @@
     <Compile Include="Level2_Poly_Complex.py" />
     <Compile Include="Level1_Poly_Sin.py" />
     <Compile Include="Level3_CurveFitting.py" />
-    <Compile Include="Level2_TuneParams.py" />
-    <Compile Include="Level3_BestLrSeeking.py" />
-    <Compile Include="HelperClass2\HyperParameters.py">
+    <Compile Include="Level4_TuneParams.py" />
+    <Compile Include="Level4_BestLrSeeking.py" />
+    <Compile Include="HelperClass2\HyperParameters2.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HelperClass2\WeightsBias.py" />

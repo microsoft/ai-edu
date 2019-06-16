@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-from HelperClass.HyperParameters import *
+from HelperClass2.HyperParameters2 import *
 
 class WeightsBias(object):
     def __init__(self, n_input, n_output, init_method, eta):

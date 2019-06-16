@@ -16,7 +16,7 @@ class InitialMethod(Enum):
 
 
 # this class is for two-layer NN only
-class HyperParameters(object):
+class HyperParameters2(object):
     def __init__(self, n_input, n_hidden, n_output, 
                  eta=0.1, max_epoch=10000, batch_size=5, eps = 0.1, 
                  net_type = NetType.Fitting,

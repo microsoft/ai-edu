@@ -7,12 +7,12 @@ import math
 import os
 import sys
 
-from HelperClass.HyperParameters import *
-from HelperClass.DataReader import *
-from HelperClass.TrainingTrace import *
-from HelperClass.LossFunction import *
-from HelperClass.Activators import *
-from HelperClass.WeightsBias import *
+from HelperClass2.HyperParameters2 import *
+from HelperClass2.DataReader import *
+from HelperClass2.TrainingTrace import *
+from HelperClass2.LossFunction import *
+from HelperClass2.Activators import *
+from HelperClass2.WeightsBias import *
 
 class NeuralNet2(object):
     def __init__(self, hp, model_name):
@@ -108,6 +108,7 @@ class NeuralNet2(object):
             if need_stop:
                 break
         # end for
+        self.SaveResult()
         #self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
         if need_test:
             print("testing...")
@@ -160,6 +161,14 @@ class NeuralNet2(object):
             ry = np.argmax(y, axis=1)
             r = (ra == ry)
             correct = r.sum()
+
+    def SaveResult(self):
+        self.wb1.SaveResultValue(self.subfolder, "wb1")
+        self.wb2.SaveResultValue(self.subfolder, "wb2")
+
+    def LoadResult(self):
+        self.wb1.LoadResultValue(self.subfolder, "wb1")
+        self.wb2.LoadResultValue(self.subfolder, "wb2")
 
     def ShowTrainingTrace(self):
         self.loss_trace.ShowLossHistory(self.hp)

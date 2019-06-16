@@ -14,8 +14,10 @@ class DataReaderEx(SimpleDataReader):
     def Add(self):
         X = self.XTrain[:,]**2
         self.XTrain = np.hstack((self.XTrain, X))
-        #X = self.XTrain[:,0:1]**3
-        #self.XTrain = np.hstack((self.XTrain, X))
+        X = self.XTrain[:,0:1]**3
+        self.XTrain = np.hstack((self.XTrain, X))
+        X = self.XTrain[:,0:1]**4
+        self.XTrain = np.hstack((self.XTrain, X))
 
 
 def ShowResult(net, dataReader, title):
@@ -25,7 +27,8 @@ def ShowResult(net, dataReader, title):
     # create and draw visualized validation data
     TX1 = np.linspace(0,1,100).reshape(100,1)
     TX = np.hstack((TX1, TX1[:,]**2))
-    #TX = np.hstack((TX, TX1[:,]**3))
+    TX = np.hstack((TX, TX1[:,]**3))
+    TX = np.hstack((TX, TX1[:,]**4))
 
     TY = net.inference(TX)
     plt.plot(TX1, TY, 'x', c='r')
@@ -40,9 +43,9 @@ if __name__ == '__main__':
     print(dataReader.XTrain.shape)
 
     # net
-    params = HyperParameters(eta=0.2, max_epoch=5000, batch_size=10, eps=0.03, net_type=NetType.Fitting)
-    num_input = 2
+    num_input = 4
     num_output = 1
-    net = NeuralNet(params, num_input, num_output)
+    params = HyperParameters(num_input, num_output, eta=0.2, max_epoch=10000, batch_size=10, eps=0.005, net_type=NetType.Fitting)
+    net = NeuralNet(params)
     net.train(dataReader, checkpoint=10)
     ShowResult(net, dataReader, params.toString())

@@ -15,10 +15,10 @@ from HelperClass.LossFunction import *
 
 
 class NeuralNet(object):
-    def __init__(self, params, input_size, output_size):
+    def __init__(self, params):
         self.params = params
-        self.W = np.zeros((input_size, output_size))
-        self.B = np.zeros((1, output_size))
+        self.W = np.zeros((self.params.input_size, self.params.output_size))
+        self.B = np.zeros((1, self.params.output_size))
 
     def forwardBatch(self, batch_x):
         Z = np.dot(batch_x, self.W) + self.B

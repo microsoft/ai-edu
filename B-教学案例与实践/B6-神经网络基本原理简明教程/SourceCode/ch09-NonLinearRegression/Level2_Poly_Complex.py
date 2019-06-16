@@ -53,9 +53,10 @@ if __name__ == '__main__':
     print(dataReader.XTrain.shape)
 
     # net
-    params = HyperParameters(eta=0.2, max_epoch=1000000, batch_size=10, eps=1e-3, net_type=NetType.Fitting)
     num_input = 8
-    num_output = 1
-    net = NeuralNet(params, num_input, num_output)
-    net.train(dataReader, checkpoint=1000)
+    num_output = 1    
+    params = HyperParameters(num_input, num_output, eta=0.2, max_epoch=50000, batch_size=10, eps=1e-3, net_type=NetType.Fitting)
+    #params = HyperParameters(eta=0.2, max_epoch=1000000, batch_size=10, eps=1e-3, net_type=NetType.Fitting)
+    net = NeuralNet(params)
+    net.train(dataReader, checkpoint=500)
     ShowResult(net, dataReader, "Polynomial")

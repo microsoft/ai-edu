@@ -53,18 +53,20 @@ class NeuralNet2(object):
     def backward(self, batch_x, batch_y, batch_a):
         # 批量下降，需要除以样本数量，否则会造成梯度爆炸
         m = batch_x.shape[0]
-        # 第二层的梯度输入
-        dZ2 = self.A2 - batch_y  # 公式1
-        # 第二层的权重和偏移
-        self.wb2.dW = np.dot(self.A1.T, dZ2)/m    # 公式2
-        self.wb2.dB = np.sum(dZ2, axis=0, keepdims=True)/m   # 公式3
-        # 第一层的梯度输入
+        # 第二层的梯度输入 公式5
+        dZ2 = self.A2 - batch_y
+        # 第二层的权重和偏移 公式6
+        self.wb2.dW = np.dot(self.A1.T, dZ2)/m 
+        # 公式7 对于多样本计算，需要在横轴上做sum，得到平均值
+        self.wb2.dB = np.sum(dZ2, axis=0, keepdims=True)/m 
+        # 第一层的梯度输入 公式8
         d1 = np.dot(dZ2, self.wb2.W.T) 
-        # 第一层的dZ
-        dZ1,_ = Sigmoid().backward(None, self.A1, d1)    # 公式4
-        # 第一层的权重和偏移
-        self.wb1.dW = np.dot(batch_x.T, dZ1)/m   # 公式5
-        self.wb1.dB = np.sum(dZ1, axis=0, keepdims=True)/m   # 公式6
+        # 第一层的dZ 公式10
+        dZ1,_ = Sigmoid().backward(None, self.A1, d1)
+        # 第一层的权重和偏移 公式11
+        self.wb1.dW = np.dot(batch_x.T, dZ1)/m
+        # 公式12 对于多样本计算，需要在横轴上做sum，得到平均值
+        self.wb1.dB = np.sum(dZ1, axis=0, keepdims=True)/m 
 
     def update(self):
         self.wb1.Update()

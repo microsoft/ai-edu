@@ -1,29 +1,46 @@
+
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-from pathlib import Path
 import matplotlib.pyplot as plt
-import math
+from mpl_toolkits.mplot3d import Axes3D
 
-from LossFunction import * 
-from Parameters import *
-from Level0_TwoLayerFittingNet import *
-from DataReader import * 
+from HelperClass2.NeuralNet2 import *
+from HelperClass2.DataReader import *
 
-x_data_name = "X09.dat"
-y_data_name = "Y09.dat"
+x_data_name = "../../Data/ch09.train.npz"
+y_data_name = "../../Data/ch09.test.npz"
 
-def ShowResult(net, X, Y, title, wb1, wb2):
+def ShowResult(net, dataReader, title):
     # draw train data
-    plt.plot(X[0,:], Y[0,:], '.', c='b')
+    X,Y = dataReader.XTrain, dataReader.YTrain
+    plt.plot(X[:,0], Y[:,0], '.', c='b')
     # create and draw visualized validation data
-    TX = np.linspace(0,1,100).reshape(1,100)
-    dict_cache = net.ForwardCalculationBatch(TX, wb1, wb2)
-    TY = dict_cache["Output"]
+    TX = np.linspace(0,1,100).reshape(100,1)
+    TY = net.inference(TX)
     plt.plot(TX, TY, 'x', c='r')
     plt.title(title)
     plt.show()
+#end def
+
+if __name__ == '__main__':
+    dataReader = DataReader(x_data_name, y_data_name)
+    dataReader.ReadData()
+    dataReader.GenerateValidationSet()
+
+    n_input, n_hidden, n_output = 1, 2, 1
+    eta, batch_size, max_epoch = 0.5, 10, 100000
+    eps = 0.001
+
+    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)
+    net = NeuralNet2(hp, "complex_121")
+
+    net.train(dataReader, 50, True)
+    net.ShowTrainingTrace()
+    ShowResult(net, dataReader, hp.toString())
+
+
 
 
 def train(ne, batch, eta):

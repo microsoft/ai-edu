@@ -78,7 +78,7 @@ if __name__ == '__main__':
     print(net.wb2.W)
     print(net.wb2.B)
 
-    #net.train(dataReader, 50, True)
+    net.train(dataReader, 50, True)
     #net.ShowTrainingTrace()
     #ShowResult(net, dataReader, hp.toString())
     #ShowResult3D(net, hp.toString())

@@ -87,12 +87,12 @@ class TrainingTrace(object):
             axes.axis([xmin, xmax, ymin, ymax])
         return title
 
-    def Dump(self, name):
-        f = open(name, 'wb')
+    def Dump(self, file_name):
+        f = open(file_name, 'wb')
         pickle.dump(self, f)
 
-    def Load(name):
-        f = open(name, 'rb')
+    def Load(file_name):
+        f = open(file_name, 'rb')
         lh = pickle.load(f)
         return lh
 

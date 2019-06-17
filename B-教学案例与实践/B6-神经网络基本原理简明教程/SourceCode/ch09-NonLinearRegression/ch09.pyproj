@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_CurveFitting.py</StartupFile>
+    <StartupFile>Level3_NN_Sin.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -40,7 +40,8 @@
     </Compile>
     <Compile Include="Level2_Poly_Complex.py" />
     <Compile Include="Level1_Poly_Sin.py" />
-    <Compile Include="Level3_CurveFitting.py" />
+    <Compile Include="Level3_CurveFitting - Copy.py" />
+    <Compile Include="Level3_NN_Sin.py" />
     <Compile Include="Level4_TuneParams.py" />
     <Compile Include="Level4_BestLrSeeking.py" />
     <Compile Include="HelperClass2\HyperParameters2.py">

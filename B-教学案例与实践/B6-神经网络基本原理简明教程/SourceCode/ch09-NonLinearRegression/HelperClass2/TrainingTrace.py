@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from enum import Enum
+import pickle
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class TrainingTrace(object):
@@ -75,6 +76,24 @@ class TrainingTrace(object):
         plt.show()
         return title
 
+    def ShowLossHistory4(self, axes, params, xmin=None, xmax=None, ymin=None, ymax=None):
+        p2, = axes.plot(self.epoch_seq, self.loss_train)
+        p1, = axes.plot(self.epoch_seq, self.loss_val)
+        title = params.toString()
+        axes.set_title(title)
+        axes.set_xlabel("epoch")
+        axes.set_ylabel("loss")
+        if xmin != None and ymin != None:
+            axes.axis([xmin, xmax, ymin, ymax])
+        return title
 
+    def Dump(self, name):
+        f = open(name, 'wb')
+        pickle.dump(self, f)
+
+    def Load(name):
+        f = open(name, 'rb')
+        lh = pickle.load(f)
+        return lh
 
 # end class

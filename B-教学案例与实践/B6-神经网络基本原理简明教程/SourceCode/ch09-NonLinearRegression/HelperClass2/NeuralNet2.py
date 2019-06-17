@@ -174,3 +174,6 @@ class NeuralNet2(object):
 
     def ShowTrainingTrace(self):
         self.loss_trace.ShowLossHistory(self.hp)
+
+    def GetTrainingTrace(self):
+        return self.loss_trace

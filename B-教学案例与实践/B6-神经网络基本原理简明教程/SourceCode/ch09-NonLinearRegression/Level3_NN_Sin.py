@@ -23,44 +23,6 @@ def ShowResult(net, dataReader, title):
     plt.show()
 #end def
 
-def ShowResult3D(net, title):
-    # draw train data
-    # create and draw visualized validation data
-    TX = np.linspace(0,1,100).reshape(100,1)
-    TY = net.inference(TX)
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    plt.plot(TX,np.zeros(TX.shape),'x',c='g')
-    plt.plot(net.Z1[:,0],net.Z1[:,1],'.',c='black')
-    print(net.A1)
-    #print(net.Z2)
-    plt.plot(net.A1[:,0],net.A1[:,1],'.',c='r')
-    plt.plot(net.A1[:,0],net.A1[:,1],net.Z2[:,0],'.',c='b')
-    plt.show()
-
-#end def
-
-
-def ShowResult2D(net, title):
-    # draw train data
-    # create and draw visualized validation data
-    TX = np.linspace(0,1,100).reshape(100,1)
-    TY = net.inference(TX)
-    fig = plt.figure()
-    
-    plt.plot(TX,np.zeros((100,1)),'x',c='cyan')
-    plt.plot(TX,net.Z2[:,0],'.',c='black')
-    #plt.plot(net.A1[:,0],net.A1[:,1],'.',c='cyan')
-    plt.plot(TX,net.Z1[:,0],'.',c='r')
-    plt.plot(TX,net.Z1[:,1],'.',c='g')
-    #plt.plot(TX,net.Z1[:,2],'.',c='b')
-    plt.plot(TX,net.A1[:,0],'.',c='r')
-    plt.plot(TX,net.A1[:,1],'.',c='g')
-    #plt.plot(TX,net.A1[:,2],'.',c='b')
-    #plt.plot(net.Z2[:,0],net.A1[:,0],'.',c='r')
-    #plt.plot(net.A1[:,1],net.Z2[:,0],'.',c='g')
-    plt.show()
-
 if __name__ == '__main__':
     dataReader = DataReader(x_data_name, y_data_name)
     dataReader.ReadData()
@@ -73,18 +35,6 @@ if __name__ == '__main__':
     hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)
     net = NeuralNet2(hp, "sin_121")
 
-    #net.LoadResult()
-    print(net.wb1.W)
-    print(net.wb1.B)
-    print(net.wb2.W)
-    print(net.wb2.B)
-
     net.train(dataReader, 50, True)
     net.ShowTrainingTrace()
     ShowResult(net, dataReader, hp.toString())
-    #ShowResult3D(net, hp.toString())
-    #ShowResult2D(net, hp.toString())
-    #print(net.wb1.W)
-    #print(net.wb1.B)
-    #print(net.wb2.W)
-    #print(net.wb2.B)

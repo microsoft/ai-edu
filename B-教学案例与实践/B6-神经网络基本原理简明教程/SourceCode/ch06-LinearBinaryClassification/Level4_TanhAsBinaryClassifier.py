@@ -14,7 +14,7 @@ class TanhNeuralNet(NeuralNet):
     def forwardBatch(self, batch_x):
         Z = np.dot(batch_x, self.W) + self.B
         if self.params.net_type == NetType.BinaryClassifier:
-            A = Sigmoid().forward(Z)
+            A = Logistic().forward(Z)
             return A
         elif self.params.net_type == NetType.BinaryTanh:
             A = Tanh().forward(Z)

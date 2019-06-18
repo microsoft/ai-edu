@@ -28,8 +28,8 @@ if __name__ == '__main__':
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
 
-    n_input, n_hidden, n_output = 1, 2, 1
-    eta, batch_size, max_epoch = 0.5, 10, 100000
+    n_input, n_hidden, n_output = 1, 8, 1
+    eta, batch_size, max_epoch = 0.5, 10, 10000
     eps = 0.001
 
     hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)

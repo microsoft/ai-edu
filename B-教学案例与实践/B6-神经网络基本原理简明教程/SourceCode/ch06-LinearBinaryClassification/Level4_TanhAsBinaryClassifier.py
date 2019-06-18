@@ -68,10 +68,10 @@ if __name__ == '__main__':
     reader.ReadData()
     reader.ToZeroOne()
     # net
-    params = HyperParameters(eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryTanh)
     num_input = 2
     num_output = 1
-    net = TanhNeuralNet(params, num_input, num_output)
+    params = HyperParameters(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryTanh)
+    net = TanhNeuralNet(params)
     net.train(reader, checkpoint=1)
 
     # show result

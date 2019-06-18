@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_CurveFitting.py</StartupFile>
+    <StartupFile>Level5_TuneParams.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,21 +21,39 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py">
+    <Compile Include="HelperClass2\Activators.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataReader.py" />
-    <Compile Include="Level0_TwoLayerFittingNet.py" />
-    <Compile Include="Level1_CurveFitting.py" />
-    <Compile Include="Level2_TuneParams.py" />
-    <Compile Include="Level3_BestLrSeeking.py" />
-    <Compile Include="LossFunction.py">
+    <Compile Include="HelperClass2\DataReader.py" />
+    <Compile Include="HelperClass2\LossFunction.py" />
+    <Compile Include="HelperClass2\NeuralNet2.py" />
+    <Compile Include="HelperClass2\TrainingTrace.py" />
+    <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Parameters.py">
+    <Compile Include="HelperClass\HyperParameters.py" />
+    <Compile Include="HelperClass\NeuralNet.py" />
+    <Compile Include="HelperClass\SimpleDataReader.py" />
+    <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="WeightsBias.py" />
+    <Compile Include="Level2_Poly_Complex.py" />
+    <Compile Include="Level1_Poly_Sin.py" />
+    <Compile Include="Level5_NN_Sin.py" />
+    <Compile Include="Level5_Polynomial.py" />
+    <Compile Include="Level4_NN_Complex.py" />
+    <Compile Include="Level3_NN_Sin.py" />
+    <Compile Include="Level5_TuneParams.py" />
+    <Compile Include="Level6_BestLrSeeking.py" />
+    <Compile Include="HelperClass2\HyperParameters2.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelperClass2\WeightsBias.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HelperClass2\" />
+    <Folder Include="HelperClass\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

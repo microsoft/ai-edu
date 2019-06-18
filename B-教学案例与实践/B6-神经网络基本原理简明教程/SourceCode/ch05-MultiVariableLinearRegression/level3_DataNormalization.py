@@ -30,9 +30,9 @@ if __name__ == '__main__':
     reader.ReadData()
     reader.NormalizeX()
     # net
-    params = HyperParameters(eta=0.1, max_epoch=10, batch_size=1, eps = 1e-5)
-    #params = HyperParameters(eta=0.01, max_epoch=500, batch_size=10, eps = 1e-5)
-    net = NeuralNet(params, 2, 1)
+    params = HyperParameters(2, 1, eta=0.1, max_epoch=10, batch_size=1, eps = 1e-5)
+    #params = HyperParameters(2, 1, eta=0.01, max_epoch=500, batch_size=10, eps = 1e-5)
+    net = NeuralNet(params)
     net.train(reader, checkpoint=0.1)
     # inference
     x1 = 15

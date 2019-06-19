@@ -14,3 +14,8 @@ class Softmax(object):
         exp_z = np.exp(shift_z)
         a = exp_z / np.sum(exp_z, axis=1, keepdims=True)
         return a
+
+if __name__ == '__main__':
+    z = np.array([[3,1,-3],[1,-3,3]]).reshape(2,3)
+    a = Softmax().forward(z)
+    print(a)

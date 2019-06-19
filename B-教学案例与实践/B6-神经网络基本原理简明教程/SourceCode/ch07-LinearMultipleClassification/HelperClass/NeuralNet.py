@@ -25,6 +25,9 @@ class NeuralNet(object):
         if self.params.net_type == NetType.BinaryClassifier:
             A = Logistic().forward(Z)
             return A
+        elif self.params.net_type == NetType.MultipleClassifier:
+            A = Softmax().forward(Z)
+            return A
         else:
             return Z
 

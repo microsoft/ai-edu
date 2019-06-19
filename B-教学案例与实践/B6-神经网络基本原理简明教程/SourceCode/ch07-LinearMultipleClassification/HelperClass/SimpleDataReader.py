@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 from enum import Enum
 
-file_name = "../../data/ch06.npz"
+file_name = "../../data/ch07.npz"
 
 class YNormalizationMethod(Enum):
     Nothing = 0,
@@ -106,6 +106,15 @@ class SimpleDataReader(object):
         # range value
         self.Y_norm[0, 1] = max_value - min_value 
         y_new = (self.YRaw - min_value) / self.Y_norm[0, 1]
+        self.YTrain = y_new
+
+    def ToOneHot(self, num_category, base=0):
+        count = self.YRaw.shape[0]
+        self.num_category = num_category
+        y_new = np.zeros((count, self.num_category))
+        for i in range(count):
+            n = (int)(self.YRaw[i,0])
+            y_new[i,n-base] = 1
         self.YTrain = y_new
 
     # get batch training data

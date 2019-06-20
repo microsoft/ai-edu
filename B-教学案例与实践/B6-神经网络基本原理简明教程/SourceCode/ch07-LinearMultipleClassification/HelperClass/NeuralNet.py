@@ -71,7 +71,7 @@ class NeuralNet(object):
                 total_iteration = epoch * max_iteration + iteration
                 if (total_iteration+1) % checkpoint_iteration == 0:
                     loss = self.checkLoss(loss_function, dataReader)
-                    print(epoch, iteration, loss)
+                    print(epoch, total_iteration, loss)
                     loss_history.AddLossHistory(epoch*max_iteration+iteration, loss)
                     if loss < self.params.eps:
                         break

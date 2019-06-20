@@ -45,21 +45,18 @@ def ShowResult(net,X,Y,xt):
 
     x = np.linspace(0,1,2)
     y = w13 * x + b13
-    p13, = plt.plot(x,y)
+    p13, = plt.plot(x,y,c='g')
 
     x = np.linspace(0,1,2)
     y = w23 * x + b23
-    p23, = plt.plot(x,y)
+    p23, = plt.plot(x,y,c='r')
 
     x = np.linspace(0,1,2)
     y = w12 * x + b12
-    p12, = plt.plot(x,y)
+    p12, = plt.plot(x,y,c='b')
 
     plt.legend([p13,p23,p12], ["13","23","12"])
 
-#    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
-#    plt.title(title)
-    
     for i in range(xt.shape[0]):
         plt.plot(xt[i,0], xt[i,1], 'o')
 

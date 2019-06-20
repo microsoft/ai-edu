@@ -25,6 +25,9 @@ class NeuralNet(object):
         if self.params.net_type == NetType.BinaryClassifier:
             A = Logistic().forward(Z)
             return A
+        elif self.params.net_type == NetType.MultipleClassifier:
+            A = Softmax().forward(Z)
+            return A
         else:
             return Z
 
@@ -68,7 +71,7 @@ class NeuralNet(object):
                 total_iteration = epoch * max_iteration + iteration
                 if (total_iteration+1) % checkpoint_iteration == 0:
                     loss = self.checkLoss(loss_function, dataReader)
-                    print(epoch, iteration, loss)
+                    print(epoch, total_iteration, loss)
                     loss_history.AddLossHistory(epoch*max_iteration+iteration, loss)
                     if loss < self.params.eps:
                         break

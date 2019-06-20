@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-from Activators import *
+from HelperClass.Activators import *
 
 # modified cross entropy function for tanh
 def target_function2(a,y):
@@ -43,5 +43,5 @@ def draw_tanh_seperator(fun, label, x, y):
 
 if __name__ == '__main__':
     draw_cross_entropy()
-    draw_tanh_seperator(CTanh(), "Tanh Function", [-5,5], [0,0])
-    draw_tanh_seperator(CSigmoid(), "Logistic Function", [-5,5],[0.5,0.5])
+    draw_tanh_seperator(Tanh(), "Tanh Function", [-5,5], [0,0])
+    draw_tanh_seperator(Logistic(), "Logistic Function", [-5,5],[0.5,0.5])

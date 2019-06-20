@@ -38,13 +38,13 @@
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level2_Poly_Complex.py" />
-    <Compile Include="Level1_Poly_Sin.py" />
+    <Compile Include="Level3_Polynomial_Complex.py" />
+    <Compile Include="Level2_Polynomial_Sin.py" />
     <Compile Include="Level5_NN_Sin.py" />
     <Compile Include="Level5_Polynomial.py" />
     <Compile Include="Level4_NN_Complex.py" />
-    <Compile Include="Level3_NN_Sin.py" />
-    <Compile Include="Level5_TuneParams.py" />
+    <Compile Include="Level4_NN_Sin.py" />
+    <Compile Include="Level6_TuneParams.py" />
     <Compile Include="Level6_BestLrSeeking.py" />
     <Compile Include="HelperClass2\HyperParameters2.py">
       <SubType>Code</SubType>

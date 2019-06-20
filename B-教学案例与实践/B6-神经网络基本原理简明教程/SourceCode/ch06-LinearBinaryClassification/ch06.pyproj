@@ -21,9 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="HelperClass\Activators.py">
       <SubType>Code</SubType>
     </Compile>

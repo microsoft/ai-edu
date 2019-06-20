@@ -21,9 +21,20 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level0_BaseClassification.py" />
+    <Compile Include="HelperClass\Activators.py" />
+    <Compile Include="HelperClass\HyperParameters.py" />
+    <Compile Include="HelperClass\LossFunction.py" />
+    <Compile Include="HelperClass\NeuralNet.py" />
+    <Compile Include="HelperClass\SimpleDataReader.py" />
+    <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level2_ShowMultipleResult.py" />
     <Compile Include="Level1_MultipleClassification.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HelperClass\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

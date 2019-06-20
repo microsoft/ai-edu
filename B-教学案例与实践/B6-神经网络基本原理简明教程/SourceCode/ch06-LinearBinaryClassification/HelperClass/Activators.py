@@ -3,7 +3,7 @@
 
 import numpy as np
 
-class Sigmoid(object):
+class Logistic(object):
     def forward(self, z):
         a = 1.0 / (1.0 + np.exp(-z))
         return a

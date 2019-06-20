@@ -6,38 +6,42 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import math
 
-from Level0_BaseClassification import *
-from Level1_MultipleClassification import *
+from HelperClass.NeuralNet import *
+from HelperClass.SimpleDataReader import *
+from HelperClass.HyperParameters import *
 
 def ShowData(X,Y):
-    for i in range(X.shape[1]):
-        if Y[0,i] == 1:
-            plt.plot(X[0,i], X[1,i], '.', c='r')
-        elif Y[0,i] == 2:
-            plt.plot(X[0,i], X[1,i], 'x', c='g')
-        elif Y[0,i] == 3:
-            plt.plot(X[0,i], X[1,i], '^', c='b')
+    for i in range(X.shape[0]):
+        if Y[i,0] == 1:
+            plt.plot(X[i,0], X[i,1], '.', c='r')
+        elif Y[i,0] == 2:
+            plt.plot(X[i,0], X[i,1], 'x', c='g')
+        elif Y[i,0] == 3:
+            plt.plot(X[i,0], X[i,1], '^', c='b')
+        # end if
+    # end for
+    plt.show()
+
+def ShowResult(net,X,Y,xt):
+    for i in range(X.shape[0]):
+        category = np.argmax(Y[i])
+        if category == 0:
+            plt.plot(X[i,0], X[i,1], '.', c='r')
+        elif category == 1:
+            plt.plot(X[i,0], X[i,1], 'x', c='g')
+        elif category == 2:
+            plt.plot(X[i,0], X[i,1], '^', c='b')
         # end if
     # end for
 
-def ShowRawData(X,Y):
-    ShowData(X,Y)
-    plt.show()
+    b13 = (net.B[0,0] - net.B[0,2])/(net.W[1,2] - net.W[1,0])
+    w13 = (net.W[0,0] - net.W[0,2])/(net.W[1,2] - net.W[1,0])
 
-def ShowLineResult(X,Y,W,B,xt):
+    b23 = (net.B[0,2] - net.B[0,1])/(net.W[1,1] - net.W[1,2])
+    w23 = (net.W[0,2] - net.W[0,1])/(net.W[1,1] - net.W[1,2])
 
-    ShowAreaResult(X,Y,W,B)
-
-    ShowData(X,Y)
-
-    b12 = (B[1,0] - B[0,0])/(W[0,1] - W[1,1])
-    w12 = (W[1,0] - W[0,0])/(W[0,1] - W[1,1])
-
-    b23 = (B[2,0] - B[1,0])/(W[1,1] - W[2,1])
-    w23 = (W[2,0] - W[1,0])/(W[1,1] - W[2,1])
-
-    b13 = (B[2,0] - B[0,0])/(W[0,1] - W[2,1])
-    w13 = (W[2,0] - W[0,0])/(W[0,1] - W[2,1])
+    b12 = (net.B[0,1] - net.B[0,0])/(net.W[1,0] - net.W[1,1])
+    w12 = (net.W[0,1] - net.W[0,0])/(net.W[1,0] - net.W[1,1])
 
     x = np.linspace(0,1,2)
     y = w13 * x + b13
@@ -52,51 +56,36 @@ def ShowLineResult(X,Y,W,B,xt):
     p12, = plt.plot(x,y)
 
     plt.legend([p13,p23,p12], ["13","23","12"])
+
+#    title = str.format("eta:{0}, iteration:{1}, eps:{2}", eta, iteration, eps)
+#    plt.title(title)
     
-    for i in range(xt.shape[1]):
-        plt.plot(xt[0,i], xt[1,i], 'o')
+    for i in range(xt.shape[0]):
+        plt.plot(xt[i,0], xt[i,1], 'o')
 
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.show()
 
-
-def ShowAreaResult(X,Y,W,B):
-    count = 50
-    x1 = np.linspace(0,1,count)
-    x2 = np.linspace(0,1,count)
-    for i in range(count):
-        for j in range(count):
-            x = np.array([x1[i],x2[j]]).reshape(2,1)
-            A = ForwardCalculationBatch(W,B,x)
-            r = np.argmax(A,axis=0)
-            if r == 0:
-                plt.plot(x[0,0], x[1,0], 's', c='y')
-            elif r == 1:
-                plt.plot(x[0,0], x[1,0], 's', c='k')
-            elif r == 2:
-                plt.plot(x[0,0], x[1,0], 's', c='w')
-            # end if
-        # end for
-    # end for
-
-
 # 主程序
 if __name__ == '__main__':
-    # SGD, MiniBatch, FullBatch
-    method = "SGD"
-    # read data
-    XData,YData = ReadData(x_data_name, y_data_name)
-    X, X_norm = NormalizeData(XData)
-    ShowRawData(XData, YData)
     num_category = 3
-    Y = ToOneHot(YData, num_category)
-    W, B = train(method, X, Y, ForwardCalculationBatch, CheckLoss)
+    reader = SimpleDataReader()
+    reader.ReadData()
 
-    print("W=",W)
-    print("B=",B)
-    xt = np.array([5,1,7,6,5,6,2,7]).reshape(2,4,order='F')
-    a, xt_norm, r = Inference(W,B,X_norm,xt)
-    print("Probility=", a)
-    print("Result=",r)
-    ShowLineResult(X,YData,W,B,xt_norm)
+    ShowData(reader.XRaw, reader.YRaw)
+
+    reader.NormalizeX()
+    reader.ToOneHot(num_category, base=1)
+
+    num_input = 2
+    params = HyperParameters(num_input, num_category, eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.MultipleClassifier)
+    net = NeuralNet(params)
+    net.train(reader, checkpoint=1)
+
+    xt_raw = np.array([5,1,7,6,5,6,2,7]).reshape(4,2)
+    xt = reader.NormalizePredicateData(xt_raw)
+    output = net.inference(xt)
+    print(output)
+
+    ShowResult(net, reader.XTrain, reader.YTrain, xt)
 

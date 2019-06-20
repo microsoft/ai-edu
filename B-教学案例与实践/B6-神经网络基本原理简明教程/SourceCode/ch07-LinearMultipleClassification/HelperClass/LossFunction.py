@@ -20,8 +20,6 @@ class LossFunction(object):
             loss = self.CE2(A, Y, m)
         elif self.net_type == NetType.MultipleClassifier:
             loss = self.CE3(A, Y, m)
-        elif self.net_type == NetType.BinaryTanh:
-            loss = self.CE2_tanh(A, Y, m)
         #end if
         return loss
     # end def
@@ -49,18 +47,9 @@ class LossFunction(object):
 
     # for multiple classifier
     def CE3(self, A, Y, count):
-        p1 = np.log(A+1e-7)
+        p1 = np.log(A)
         p2 =  np.multiply(Y, p1)
         LOSS = np.sum(-p2) 
-        loss = LOSS / count
-        return loss
-    # end def
-
-    # for binary tanh classifier
-    def CE2_tanh(self, A, Y, count):
-        #p = (1-Y) * np.log(1-A) + (1+Y) * np.log(1+A)
-        p = (1-Y) * np.log((1-A)/2) + (1+Y) * np.log((1+A)/2)
-        LOSS = np.sum(-p)
         loss = LOSS / count
         return loss
     # end def

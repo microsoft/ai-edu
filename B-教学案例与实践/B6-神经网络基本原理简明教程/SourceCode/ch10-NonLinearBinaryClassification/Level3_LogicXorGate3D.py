@@ -6,21 +6,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from LossFunction import * 
-from Activators import *
-from Level0_TwoLayerClassificationNet import *
-from DataReader import * 
-from WeightsBias import *
-
 from Level1_LogicXorGate import *
 
-def SaveWeights(wb1, wb2):
-    np.save("xor_3d_w1.npy", wb1.W)
-    np.save("xor_3d_b1.npy", wb1.B)
-    np.save("xor_3d_w2.npy", wb2.W)
-    np.save("xor_3d_b2.npy", wb2.B)
 
-def ShowResult3D(net, dataReader, wb1, wb2):
+def ShowResult3D(net, dataReader):
     fig = plt.figure()
     ax = Axes3D(fig)
     count = 50
@@ -31,120 +20,90 @@ def ShowResult3D(net, dataReader, wb1, wb2):
 
     for i in range(count):
         for j in range(count):
-            input = np.array([x[i],y[j]]).reshape(2,1)
-            dict_cache = net.ForwardCalculationBatch2(input, wb1, wb2)
-            Z[i,j] = dict_cache["Output"][0,0]
+            input = np.array([x[i],y[j]]).reshape(1,2)
+            output = net.inference(input)
+            Z[i,j] = output[0,0]
             # end if
         # end for
     # end for
     ax.plot_surface(X,Y,Z,cmap='rainbow')
-    ax.contour(X,Y,Z, zdim='z', offset=0)
     ax.set_zlim(0,1)
+
+    for i in range(dataReader.num_train):
+        if dataReader.YTrain[i,0] == 0:
+            ax.scatter(dataReader.XTrain[i,0],dataReader.XTrain[i,1],dataReader.YTrain[i,0],marker='^',c='r')
+        else:
+            ax.scatter(dataReader.XTrain[i,0],dataReader.XTrain[i,1],dataReader.YTrain[i,0],marker='o',c='g')
+
     plt.show()
 
-def train():
 
-    dataReader = XOR_DataReader()
-    dataReader.ReadData()
-    
-    n_input, n_output = dataReader.num_feature, dataReader.num_category
-    n_hidden = 3
-    eta, batch_size, max_epoch = 0.1, 1, 10000
-    eps = 0.005
+def ShowProcess3D(net, dataReader):
+    net.inference(dataReader.XTrain)
 
-    params = CParameters(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, LossFunctionName.CrossEntropy2)
-
-    loss_history = CLossHistory()
-    net = TwoLayerClassificationNet()
-
-    #ShowData(XData, YData)
-
-    wb1, wb2 = net.train(dataReader, params, loss_history, net.ForwardCalculationBatch2)
-
-    trace = loss_history.GetMinimalLossData()
-    print(trace.toString())
-    title = loss_history.ShowLossHistory(params)
-
-    print(wb1.toString())
-    print(wb2.toString())
-
-    print("wait for 10 seconds...")
-
-    ShowResult2D(net, trace.wb1, trace.wb2, title)
-    ShowData(dataReader.X, dataReader.Y)
-
-    Test(dataReader, net, wb1, wb2)
-
-    SaveWeights(wb1, wb2)
-
-    return net, dataReader, wb1, wb2
-
-def LoadWeights(wb1, wb2):
-    wb1 = WeightsBias(2,2,0.1,InitialMethod.Xavier)
-    wb2 = WeightsBias(1,2,0.1,InitialMethod.Xavier)
-    wb1.W = np.load("xor_3d_w1.npy")
-    wb1.B = np.load("xor_3d_b1.npy")
-    wb2.W = np.load("xor_3d_w2.npy")
-    wb2.B = np.load("xor_3d_b2.npy")
-
-
-def ShowProcess3D(net, dataReader, wb1, wb2):
-    dict_cache = net.ForwardCalculationBatch2(dataReader.X, wb1, wb2)
-    Z1=dict_cache["Z1"]
-    A1=dict_cache["A1"]
-    Z2=dict_cache["Z2"]
-    A2=dict_cache["A2"]
-
-    for i in range(dataReader.num_example):
-        if dataReader.Y[0,i] == 0:
-            plt.plot(dataReader.X[0,i],dataReader.X[1,i],'^',c='r')
+    for i in range(dataReader.num_train):
+        if dataReader.YTrain[i,0] == 0:
+            plt.plot(dataReader.XTrain[i,0],dataReader.XTrain[i,1],marker='^',c='r')
         else:
-            plt.plot(dataReader.X[0,i],dataReader.X[1,i],'o',c='g')
+            plt.plot(dataReader.XTrain[i,0],dataReader.XTrain[i,1],marker='o',c='g')
     plt.grid()
     plt.title("X1:X2")
     plt.show()
 
     fig = plt.figure()
     ax = Axes3D(fig)
-    for i in range(dataReader.num_example):
-        if dataReader.Y[0,i] == 0:
-            ax.scatter(Z1[0,i],Z1[1,i],Z1[2,i],c='r')
-            #ax.plot(Z1[0,i],Z1[1,i],Z1[2,i],c='r')
+    for i in range(dataReader.num_train):
+        if dataReader.YTrain[i,0] == 0:
+            ax.scatter(net.Z1[i,0],net.Z1[i,1],net.Z1[i,2],marker='^',c='r')
         else:
-            ax.scatter(Z1[0,i],Z1[1,i],Z1[2,i],c='g')
-            #ax.plot(Z1[0,i],Z1[1,i],Z1[2,i],c='g')
+            ax.scatter(net.Z1[i,0],net.Z1[i,1],net.Z1[i,2],marker='o',c='g')
     plt.grid()
-    plt.title("Z1")
+    plt.title("net.Z1")
     plt.show()
 
     fig = plt.figure()
     ax = Axes3D(fig)
-    for i in range(dataReader.num_example):
-        if dataReader.Y[0,i] == 0:
-            ax.scatter(A1[0,i],A1[1,i],A1[2,i],'^',c='r')
-            #plt.plot(A1[0,i],A1[1,i],A1[2,i],'^',c='r')
+    for i in range(dataReader.num_train):
+        if dataReader.YTrain[i,0] == 0:
+            ax.scatter(net.A1[i,0],net.A1[i,1],net.A1[i,2],marker='^',c='r')
         else:
-            ax.scatter(A1[0,i],A1[1,i],A1[2,i],'o',c='g')
-            #plt.plot(A1[0,i],A1[1,i],A1[2,i],'o',c='g')
+            ax.scatter(net.A1[i,0],net.A1[i,1],net.A1[i,2],marker='o',c='g')
     plt.grid()
-    plt.title("A1")
+    plt.title("net.A1")
     plt.show()
 
     x = np.linspace(-6,6)
     a = Sigmoid().forward(x)
     plt.plot(x,a)
 
-    for i in range(dataReader.num_example):
-        if dataReader.Y[0,i] == 0:
-            plt.plot(Z2[0,i],A2[0,i],'^',c='r')
+    for i in range(dataReader.num_train):
+        if dataReader.YTrain[i,0] == 0:
+            plt.plot(net.Z2[i,0],net.A2[i,0],'^',c='r')
         else:
-            plt.plot(Z2[0,i],A2[0,i],'o',c='g')
+            plt.plot(net.Z2[i,0],net.A2[i,0],'o',c='g')
     plt.grid()
     plt.title("Z2:A2")
     plt.show()
 
 
 if __name__ == '__main__':
-    net, dataReader, wb1, wb2 = train()
-    ShowProcess3D(net, dataReader, wb1, wb2)
-    ShowResult3D(net, dataReader, wb1, wb2)
+    dataReader = XOR_DataReader()
+    dataReader.ReadData()
+    dataReader.GenerateValidationSet()
+
+    n_input = dataReader.num_feature
+    n_hidden = 3
+    n_output = 1
+    eta, batch_size, max_epoch = 0.1, 1, 10000
+    eps = 0.005
+
+    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
+    net = NeuralNet2(hp, "xor_231")
+
+    net.train(dataReader, 100, True)
+    net.ShowTrainingTrace()
+
+    print(Test(dataReader, net))
+
+    ShowProcess3D(net, dataReader)
+    ShowResult3D(net, dataReader)

@@ -68,6 +68,7 @@ def ShowData(dataReader):
             plt.plot(X[i,0], X[i,1], '.', c='g')
         # end if
     # end for
+    plt.grid()
     plt.xlabel("x1")
     plt.ylabel("x2")
 
@@ -88,6 +89,9 @@ if __name__ == '__main__':
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
 
+    ShowData(dataReader)
+    plt.show()
+
     n_input = dataReader.num_feature
     n_hidden = 2
     n_output = 1
@@ -101,6 +105,6 @@ if __name__ == '__main__':
     net.ShowTrainingTrace()
 
     print(Test(dataReader, net))
-    ShowData(dataReader)
     ShowResult2D(net, "")
+    ShowData(dataReader)
     plt.show()

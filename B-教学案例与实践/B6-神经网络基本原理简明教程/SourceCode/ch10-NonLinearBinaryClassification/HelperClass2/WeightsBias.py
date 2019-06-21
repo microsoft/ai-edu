@@ -70,6 +70,8 @@ class WeightsBias(object):
     def SaveResultValue(self, folder, name):
         file_name = str.format("{0}\\{1}.npz", folder, name)
         np.savez(file_name, weights=self.W, bias=self.B)
+        print("W=", self.W)
+        print("B=", self.B)
 
     def LoadResultValue(self, folder, name):
         file_name = str.format("{0}\\{1}.npz", folder, name)

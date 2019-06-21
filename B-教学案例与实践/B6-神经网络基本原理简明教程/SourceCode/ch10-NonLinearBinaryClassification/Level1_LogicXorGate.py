@@ -76,8 +76,9 @@ def ShowData(dataReader):
 def Test(dataReader, net):
     print("testing...")
     X,Y = dataReader.GetTestSet()
-    A = net.inference(X)
-    diff = np.abs(A-Y)
+    A2 = net.inference(X)
+    print("A2=",A2)
+    diff = np.abs(A2-Y)
     result = np.where(diff < 1e-2, True, False)
     if result.sum() == dataReader.num_test:
         return True
@@ -105,6 +106,6 @@ if __name__ == '__main__':
     net.ShowTrainingTrace()
 
     print(Test(dataReader, net))
-    ShowResult2D(net, "")
-    ShowData(dataReader)
-    plt.show()
+#    ShowResult2D(net, "")
+#    ShowData(dataReader)
+#    plt.show()

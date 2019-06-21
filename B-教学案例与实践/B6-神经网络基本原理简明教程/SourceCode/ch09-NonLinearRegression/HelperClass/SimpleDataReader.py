@@ -11,6 +11,19 @@ class YNormalizationMethod(Enum):
     BinaryClassifier = 2,
     MultipleClassifier = 3
 
+"""
+X:
+    x1: feature1 feature2 feature3...
+    x2: feature1 feature2 feature3...
+    x3: feature1 feature2 feature3...
+    ......
+
+Y:  [if regression, value]
+    [if binary classification, 0/1]
+    [if multiple classification, e.g. 4 category, one-hot]
+
+"""
+
 class SimpleDataReader(object):
     def __init__(self, file_name):
         self.train_file_name = file_name

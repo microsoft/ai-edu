@@ -21,19 +21,22 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py" />
-    <Compile Include="DataReader.py" />
-    <Compile Include="Level0_TwoLayerClassificationNet.py" />
+    <Compile Include="HelperClass2\Activators.py" />
+    <Compile Include="HelperClass2\DataReader.py" />
+    <Compile Include="HelperClass2\HyperParameters2.py" />
+    <Compile Include="HelperClass2\LossFunction.py" />
+    <Compile Include="HelperClass2\NeuralNet2.py" />
+    <Compile Include="HelperClass2\TrainingTrace.py" />
+    <Compile Include="HelperClass2\WeightsBias.py" />
+    <Compile Include="HelperClass2\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level3_LogicXorGate3D.py" />
     <Compile Include="Level2_HowXorGateWorks2D.py" />
     <Compile Include="Level1_LogicXorGate.py" />
-    <Compile Include="LossFunction.py" />
-    <Compile Include="Parameters.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WeightsBias.py">
-      <SubType>Code</SubType>
-    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HelperClass2\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

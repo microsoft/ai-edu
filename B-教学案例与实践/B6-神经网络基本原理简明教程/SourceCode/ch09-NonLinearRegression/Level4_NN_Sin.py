@@ -8,8 +8,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from HelperClass2.NeuralNet2 import *
 from HelperClass2.DataReader import *
 
-x_data_name = "../../Data/ch08.train.npz"
-y_data_name = "../../Data/ch08.test.npz"
+train_data_name = "../../Data/ch08.train.npz"
+test_data_name = "../../Data/ch08.test.npz"
 
 def ShowResult(net, dataReader, title):
     # draw train data
@@ -24,7 +24,7 @@ def ShowResult(net, dataReader, title):
 #end def
 
 if __name__ == '__main__':
-    dataReader = DataReader(x_data_name, y_data_name)
+    dataReader = DataReader(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
 

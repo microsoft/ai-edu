@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from HelperClass2.NeuralNet2 import *
 from HelperClass2.DataReader import *
 
-x_data_name = "../../Data/ch08.train.npz"
-y_data_name = "../../Data/ch08.test.npz"
+train_data_name = "../../Data/ch08.train.npz"
+test_data_name = "../../Data/ch08.test.npz"
 
 def ShowResult2D(net, title):
     count = 21
@@ -31,28 +31,28 @@ def ShowResult2D(net, title):
     
     fig = plt.figure(figsize=(6,6))
     p1,= plt.plot(TX,np.zeros((count,1)),'.',c='black')
-    p2,= plt.plot(TX,net.Z1[:,0],'+',c='r')
-    p3,= plt.plot(TX,net.A1[:,0],'.',c='r')
+    p2,= plt.plot(TX,net.Z1[:,0],'.',c='r')
+    p3,= plt.plot(TX,net.A1[:,0],'x',c='r')
     plt.legend([p1,p2,p3], ["x","z1","a1"])
     plt.grid()
     plt.show()
 
     fig = plt.figure(figsize=(6,6))
     p1,= plt.plot(TX,np.zeros((count,1)),'.',c='black')
-    p2,= plt.plot(TX,net.Z1[:,1],'+',c='g')
-    p3,= plt.plot(TX,net.A1[:,1],'.',c='g')
+    p2,= plt.plot(TX,net.Z1[:,1],'.',c='g')
+    p3,= plt.plot(TX,net.A1[:,1],'x',c='g')
     plt.legend([p1,p2,p3], ["x","z2","a2"])
     plt.show()
 
     fig = plt.figure(figsize=(6,6))
     p1,= plt.plot(TX,net.A1[:,0],'.',c='r')
     p2,= plt.plot(TX,net.A1[:,1],'.',c='g')
-    p3,= plt.plot(TX,net.Z2[:,0],'.',c='blue')
+    p3,= plt.plot(TX,net.Z2[:,0],'x',c='blue')
     plt.legend([p1,p2,p3], ["a1","a2","z"])
     plt.show()
 
 if __name__ == '__main__':
-    dataReader = DataReader(x_data_name, y_data_name)
+    dataReader = DataReader(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
 

@@ -178,6 +178,29 @@ class DataReader(object):
     def GetTestSet(self):
         return self.XTest, self.YTest
 
+    def GetSetByLabel(self, set_name, label_value):
+        X_source = None
+        Y_source = None
+        if set_name == "train":
+            X_source = self.XTrain
+            Y_source = self.YTrain
+        elif set_name == "test":
+            X_source = self.XTest
+            Y_source = self.YTest
+        idx_list = []
+        for i in range(Y_source.shape[0]):
+            if Y_source[i,0] == label_value:
+                idx_list.append(i)
+            #end if
+        #end for
+        count = len(idx_list)
+        X = np.zeros((count, self.num_feature))
+        for i in range(count):
+            j = idx_list[i]
+            X[i] = X_source[j]
+        #end for
+        return X
+
     # 获得批样本数据
     def GetBatchTrainSamples(self, batch_size, iteration):
         start = iteration * batch_size

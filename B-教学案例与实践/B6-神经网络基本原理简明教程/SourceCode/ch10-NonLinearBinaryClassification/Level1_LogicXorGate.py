@@ -60,12 +60,14 @@ def ShowResult2D(net, title):
 #end def
 
 def ShowData(dataReader):
+    fig = plt.figure(figsize=(6,6))
+
     X,Y=dataReader.GetTestSet()
     for i in range(X.shape[0]):
         if Y[i,0] == 0:
-            plt.plot(X[i,0], X[i,1], '^', c='r')
+            plt.scatter(X[i,0], X[i,1], marker='^', c='r', s=100)
         elif Y[i,0] == 1:
-            plt.plot(X[i,0], X[i,1], '.', c='g')
+            plt.scatter(X[i,0], X[i,1], marker='.', c='b', s=200)
         # end if
     # end for
     plt.grid()

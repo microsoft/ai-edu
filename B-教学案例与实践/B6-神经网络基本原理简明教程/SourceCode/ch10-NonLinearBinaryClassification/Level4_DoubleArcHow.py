@@ -14,14 +14,34 @@ from HelperClass2.NeuralNet2 import *
 train_data_name = "../../Data/ch10.train.npz"
 test_data_name = "../../Data/ch10.test.npz"
 
-def ShowSourceData(dr):
+def DrawSamplePoints(x1, x2, y, title, xlabel, ylabel, show=True):
+    assert(x1.shape[0] == x2.shape[0])
     fig = plt.figure(figsize=(6,6))
+    count = x1.shape[0]
+    for i in range(count):
+        if y[i,0] == 0:
+            plt.scatter(x1[i], x2[i], marker='x', color='r', zorder=10)
+        else:
+            plt.scatter(x1[i], x2[i], marker='.', color='b', zorder=10)
+        #end if
+    #end for
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    if show:
+        plt.show()
 
-    X0 = dr.GetSetByLabel("train", 0)
-    X1 = dr.GetSetByLabel("train", 1)
-    plt.scatter(X0[:,0], X0[:,1], marker='x', color='r')
-    plt.scatter(X1[:,0], X1[:,1], marker='.', color='b')
+def Prepare3DData(net, count):
+    x = np.linspace(0,1,count)
+    y = np.linspace(0,1,count)
+    X, Y = np.meshgrid(x, y)
+    Z = np.zeros((count, count))
+    input = np.hstack((X.ravel().reshape(count*count,1),Y.ravel().reshape(count*count,1)))
+    net.inference(input)
+    return X, Y
 
+def ShowSourceData(dr):
+    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Source Data", "x1", "x2", False)
     # grid
     count=20
     x = np.linspace(0,1,count)
@@ -36,59 +56,39 @@ def ShowSourceData(dr):
     plt.show()
 
 def ShowResult2D(net, dr):
-    fig = plt.figure(figsize=(6,6))
-
+    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Classifier Result", "x1", "x2", False)
     count = 50
-    x = np.linspace(0,1,count)
-    y = np.linspace(0,1,count)
-    X, Y = np.meshgrid(x, y)
-    Z = np.zeros((count, count))
-
-    input = np.hstack((X.ravel().reshape(count*count,1),Y.ravel().reshape(count*count,1)))
-    output = net.inference(input)
-    Z = output.reshape(count,count)
-    plt.contourf(X, Y, Z, cmap=plt.cm.Spectral)
-
-    for i in range(dr.num_train):
-        if dr.YTrain[i,0] == 0:
-            plt.scatter(dr.XTrain[i,0], dr.XTrain[i,1], marker='x', color='r')
-        else:
-            plt.scatter(dr.XTrain[i,0], dr.XTrain[i,1], marker='.', color='b')
-
+    X,Y = Prepare3DData(net, count)
+    Z = net.output.reshape(count,count)
+    plt.contourf(X, Y, Z, cmap=plt.cm.Spectral, zorder=1)
     plt.show()
 
-def ShowTransformation(net, dataReader):
-    X0 = dataReader.GetSetByLabel("train", 0)
-    X1 = dataReader.GetSetByLabel("train", 1)
-
-    # draw z1
-    fig = plt.figure(figsize=(6,6))
-    net.inference(X0)
-    plt.scatter(net.Z1[:,0], net.Z1[:,1], marker='x', color='r')
-    net.inference(X1)
-    plt.scatter(net.Z1[:,0], net.Z1[:,1], marker='.', color='b')
-    plt.show()
-
-    #draw a1
-    fig = plt.figure(figsize=(6,6))
-    net.inference(X0)
-    plt.scatter(net.A1[:,0], net.A1[:,1], marker='x', color='r')
-    net.inference(X1)
-    plt.scatter(net.A1[:,0], net.A1[:,1], marker='.', color='b')
-    #grid
-    count=20
-    x = np.linspace(0,1,count)
-    y = np.linspace(0,1,count)
-    X, Y = np.meshgrid(x, y)
-    input = np.hstack((X.ravel().reshape(count*count,1),Y.ravel().reshape(count*count,1)))
-    net.inference(input)
-    
-    Z = net.A1.reshape(count,count,2)
+def DrawGrid(Z, count):
     for i in range(count):
         for j in range(count):
             plt.plot(Z[:,j,0],Z[:,j,1],'-',c='gray',lw=0.1)
             plt.plot(Z[i,:,0],Z[i,:,1],'-',c='gray',lw=0.1)
+    #end for
 
+def ShowTransformation(net, dr):
+    # draw z1
+    net.inference(dr.XTrain)
+    DrawSamplePoints(net.Z1[:,0], net.Z1[:,1], dr.YTrain, "Classifier Result", "x1", "x2", False)
+    #grid
+    count = 20
+    X,Y = Prepare3DData(net, count)
+    Z = net.Z1.reshape(count,count,2)
+    DrawGrid(Z, count)
+    plt.show()
+
+    #draw a1
+    net.inference(dr.XTrain)
+    DrawSamplePoints(net.A1[:,0], net.A1[:,1], dr.YTrain, "Classifier Result", "x1", "x2", False)
+    #grid
+    count = 20
+    X,Y = Prepare3DData(net, count)
+    Z = net.A1.reshape(count,count,2)
+    DrawGrid(Z, count)
     plt.show()
 
 if __name__ == '__main__':
@@ -109,10 +109,10 @@ if __name__ == '__main__':
 
     hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
     net = NeuralNet2(hp, "Arc_221")
-    #net.LoadResult()
-
-    net.train(dataReader, 5, True)
-    net.ShowTrainingTrace()
+    
+    net.LoadResult()
+    #net.train(dataReader, 5, True)
+    #net.ShowTrainingTrace()
     
     ShowResult2D(net, dataReader)
     ShowTransformation(net, dataReader)

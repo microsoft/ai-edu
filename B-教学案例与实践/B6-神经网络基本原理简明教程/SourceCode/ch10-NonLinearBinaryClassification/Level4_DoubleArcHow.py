@@ -58,15 +58,23 @@ def ShowResult2D(net, dr):
     plt.show()
 
 def ShowTransformation(net, dataReader):
-    fig = plt.figure(figsize=(6,6))
-
     X0 = dataReader.GetSetByLabel("train", 0)
     X1 = dataReader.GetSetByLabel("train", 1)
+
+    # draw z1
+    fig = plt.figure(figsize=(6,6))
+    net.inference(X0)
+    plt.scatter(net.Z1[:,0], net.Z1[:,1], marker='x', color='r')
+    net.inference(X1)
+    plt.scatter(net.Z1[:,0], net.Z1[:,1], marker='.', color='b')
+    plt.show()
+
+    #draw a1
+    fig = plt.figure(figsize=(6,6))
     net.inference(X0)
     plt.scatter(net.A1[:,0], net.A1[:,1], marker='x', color='r')
     net.inference(X1)
     plt.scatter(net.A1[:,0], net.A1[:,1], marker='.', color='b')
-
     #grid
     count=20
     x = np.linspace(0,1,count)

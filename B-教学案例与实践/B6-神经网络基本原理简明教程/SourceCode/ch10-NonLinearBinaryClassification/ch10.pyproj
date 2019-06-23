@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_Sin.py</StartupFile>
+    <StartupFile>Level2_XorGateProcess.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,11 +31,13 @@
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level2_XorGateProcess.py" />
+    <Compile Include="Level2_XorGateHiddenUnits.py" />
+    <Compile Include="Level2_XorGateHow.py" />
     <Compile Include="Level3_LogicXorGate3D.py" />
-    <Compile Include="Level2_HowXorGateWorks2D.py" />
-    <Compile Include="Level1_LogicXorGate.py" />
-    <Compile Include="sin2 - Copy.py" />
-    <Compile Include="Level3_Sin.py">
+    <Compile Include="Level1_XorGateClassifier.py" />
+    <Compile Include="Level4_DoubleArcHow.py" />
+    <Compile Include="Level3_DoubleArcClassifier.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

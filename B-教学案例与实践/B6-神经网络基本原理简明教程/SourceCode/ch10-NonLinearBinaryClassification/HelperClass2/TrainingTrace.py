@@ -17,13 +17,6 @@ class TrainingTrace(object):
         self.loss_val = []
         self.accuracy_val = []
        
-        # for early stop
-        self.min_loss_index = -1
-        self.early_stop = need_earlyStop
-        self.patience = patience
-        self.patience_counter = 0
-        self.last_vld_loss = float("inf")
-
     def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld):
         self.iteration_seq.append(total_iteration)
         self.epoch_seq.append(epoch)
@@ -34,15 +27,6 @@ class TrainingTrace(object):
         if accuracy_vld is not None:
             self.accuracy_val.append(accuracy_vld)
 
-        if self.early_stop:
-            if loss_vld < self.last_vld_loss:
-                self.patience_counter = 0
-                self.last_vld_loss = loss_vld
-            else:
-                self.patience_counter += 1
-                if self.patience_counter >= self.patience:
-                    return True     # need to stop
-            # end if
         return False
 
     # 图形显示损失函数值历史记录
@@ -86,6 +70,9 @@ class TrainingTrace(object):
         if xmin != None and ymin != None:
             axes.axis([xmin, xmax, ymin, ymax])
         return title
+
+    def GetEpochNumber(self):
+        return self.epoch_seq[-1]
 
     def Dump(self, file_name):
         f = open(file_name, 'wb')

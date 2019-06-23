@@ -177,3 +177,6 @@ class NeuralNet2(object):
 
     def GetTrainingTrace(self):
         return self.loss_trace
+
+    def GetEpochNumber(self):
+        return self.loss_trace.GetEpochNumber()

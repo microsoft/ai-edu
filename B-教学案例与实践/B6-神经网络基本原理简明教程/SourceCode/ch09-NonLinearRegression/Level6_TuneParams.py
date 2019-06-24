@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 from HelperClass2.NeuralNet2 import *
 from HelperClass2.DataReader import *
 
-x_data_name = "../../Data/ch09.train.npz"
-y_data_name = "../../Data/ch09.test.npz"
+train_data_name = "../../Data/ch09.train.npz"
+test_data_name = "../../Data/ch09.test.npz"
 
 
 def train(hp, folder):
@@ -53,7 +53,7 @@ def try_hyperParameters(folder, n_hidden, batch_size, eta):
 
 if __name__ == '__main__':
   
-    dataReader = DataReader(x_data_name, y_data_name)
+    dataReader = DataReader(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
     

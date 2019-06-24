@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2ba05392-aaac-4e4d-b640-52fb50b7a190</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ch10.py</StartupFile>
+    <StartupFile>ch11.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -36,6 +36,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ch10.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ch11.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

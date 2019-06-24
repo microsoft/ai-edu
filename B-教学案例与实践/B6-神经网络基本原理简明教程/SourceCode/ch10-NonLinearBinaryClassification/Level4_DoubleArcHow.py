@@ -35,33 +35,10 @@ def Prepare3DData(net, count):
     x = np.linspace(0,1,count)
     y = np.linspace(0,1,count)
     X, Y = np.meshgrid(x, y)
-    Z = np.zeros((count, count))
-    input = np.hstack((X.ravel().reshape(count*count,1),Y.ravel().reshape(count*count,1)))
-    net.inference(input)
+    if net is not None:
+        input = np.hstack((X.ravel().reshape(count*count,1),Y.ravel().reshape(count*count,1)))
+        net.inference(input)
     return X, Y
-
-def ShowSourceData(dr):
-    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Source Data", "x1", "x2", False)
-    # grid
-    count=20
-    x = np.linspace(0,1,count)
-    y = np.linspace(0,1,count)
-    X, Y = np.meshgrid(x, y)
-    assert(X.shape==(count,count))
-    for i in range(count):
-        for j in range(count):
-            plt.plot(X[i],Y[j],'-',c='gray',lw=0.1)
-            plt.plot(Y[i],X[j],'-',c='gray',lw=0.1)
-
-    plt.show()
-
-def ShowResult2D(net, dr):
-    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Classifier Result", "x1", "x2", False)
-    count = 50
-    X,Y = Prepare3DData(net, count)
-    Z = net.output.reshape(count,count)
-    plt.contourf(X, Y, Z, cmap=plt.cm.Spectral, zorder=1)
-    plt.show()
 
 def DrawGrid(Z, count):
     for i in range(count):
@@ -70,10 +47,31 @@ def DrawGrid(Z, count):
             plt.plot(Z[i,:,0],Z[i,:,1],'-',c='gray',lw=0.1)
     #end for
 
-def ShowTransformation(net, dr):
+def ShowSourceData(dr):
+    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Source Data", "x1", "x2", False)
+    # grid
+    count=20
+    X,Y = Prepare3DData(None, count)
+    for i in range(count):
+        for j in range(count):
+            plt.plot(X[i],Y[j],'-',c='gray',lw=0.1)
+            plt.plot(Y[i],X[j],'-',c='gray',lw=0.1)
+        #end for
+    #end for
+    plt.show()
+
+def ShowResult2D(net, dr, epoch):
+    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Classifier Result, epoch=" + str(epoch), "x1", "x2", False)
+    count = 50
+    X,Y = Prepare3DData(net, count)
+    Z = net.output.reshape(count,count)
+    plt.contourf(X, Y, Z, cmap=plt.cm.Spectral, zorder=1)
+    plt.show()
+
+def ShowTransformation(net, dr, epoch):
     # draw z1
     net.inference(dr.XTrain)
-    DrawSamplePoints(net.Z1[:,0], net.Z1[:,1], dr.YTrain, "Classifier Result", "x1", "x2", False)
+    DrawSamplePoints(net.Z1[:,0], net.Z1[:,1], dr.YTrain, "Layer 1 - Linear Transform, epoch=" + str(epoch), "x1", "x2", False)
     #grid
     count = 20
     X,Y = Prepare3DData(net, count)
@@ -83,13 +81,32 @@ def ShowTransformation(net, dr):
 
     #draw a1
     net.inference(dr.XTrain)
-    DrawSamplePoints(net.A1[:,0], net.A1[:,1], dr.YTrain, "Classifier Result", "x1", "x2", False)
+    DrawSamplePoints(net.A1[:,0], net.A1[:,1], dr.YTrain, "Layer 1 - Activation, epoch=" + str(epoch), "x1", "x2", False)
     #grid
     count = 20
     X,Y = Prepare3DData(net, count)
     Z = net.A1.reshape(count,count,2)
     DrawGrid(Z, count)
     plt.show()
+
+
+def train(dataReader, max_epoch):
+    n_input = dataReader.num_feature
+    n_hidden = 2
+    n_output = 1
+    eta, batch_size = 0.1, 5
+    eps = 0.01
+
+    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
+    net = NeuralNet2(hp, "Arc_221_epoch")
+    
+    #net.LoadResult()
+    net.train(dataReader, 5, True)
+    #net.ShowTrainingTrace()
+    
+    ShowTransformation(net, dataReader, max_epoch)
+    ShowResult2D(net, dataReader, max_epoch)
+
 
 if __name__ == '__main__':
     dataReader = DataReader(train_data_name, test_data_name)
@@ -101,19 +118,9 @@ if __name__ == '__main__':
     ShowSourceData(dataReader)
     plt.show()
 
-    n_input = dataReader.num_feature
-    n_hidden = 2
-    n_output = 1
-    eta, batch_size, max_epoch = 0.1, 5, 10000
-    eps = 0.01
-
-    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
-    net = NeuralNet2(hp, "Arc_221")
-    
-    net.LoadResult()
-    #net.train(dataReader, 5, True)
-    #net.ShowTrainingTrace()
-    
-    ShowResult2D(net, dataReader)
-    ShowTransformation(net, dataReader)
-
+    train(dataReader, 20)
+    train(dataReader, 50)
+    train(dataReader, 100)
+    train(dataReader, 150)
+    train(dataReader, 200)
+    train(dataReader, 600)

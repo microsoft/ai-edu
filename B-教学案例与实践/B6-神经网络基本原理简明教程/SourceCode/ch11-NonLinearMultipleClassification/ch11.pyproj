@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_Classifier3.py</StartupFile>
+    <StartupFile>Level2_BankHow.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,28 +21,22 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Activators.py" />
-    <Compile Include="DataReader.py" />
     <Compile Include="HelperClass2\Activators.py" />
     <Compile Include="HelperClass2\DataReader.py" />
     <Compile Include="HelperClass2\HyperParameters2.py" />
     <Compile Include="HelperClass2\LossFunction.py" />
     <Compile Include="HelperClass2\NeuralNet2.py" />
     <Compile Include="HelperClass2\TrainingTrace.py" />
+    <Compile Include="HelperClass2\Visualizer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="HelperClass2\WeightsBias.py" />
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level0_TwoLayerClassificationNet.py" />
+    <Compile Include="Level2_BankHow.py" />
     <Compile Include="Level2_Result3D.py" />
-    <Compile Include="Level1_Classifier3.py" />
-    <Compile Include="LossFunction.py" />
-    <Compile Include="Parameters.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WeightsBias.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Level1_BankClassifier3.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelperClass2\" />

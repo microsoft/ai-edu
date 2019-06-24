@@ -163,6 +163,7 @@ class NeuralNet2(object):
             ry = np.argmax(y, axis=1)
             r = (ra == ry)
             correct = r.sum()
+            return correct/m
 
     def SaveResult(self):
         self.wb1.SaveResultValue(self.subfolder, "wb1")

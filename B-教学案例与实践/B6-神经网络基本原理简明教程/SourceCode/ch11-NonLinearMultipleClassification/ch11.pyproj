@@ -34,8 +34,8 @@
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level2_HiddenUnits.py" />
     <Compile Include="Level2_BankHow.py" />
-    <Compile Include="Level2_Result3D.py" />
     <Compile Include="Level1_BankClassifier3.py" />
   </ItemGroup>
   <ItemGroup>

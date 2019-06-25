@@ -77,6 +77,7 @@ class NeuralNet2(object):
         return self.output
 
     def train(self, dataReader, checkpoint, need_test):
+        t0 = time.time()
         # calculate loss to decide the stop condition
         self.loss_trace = TrainingTrace()
         self.loss_func = LossFunction(self.hp.net_type)
@@ -111,6 +112,10 @@ class NeuralNet2(object):
                 break
         # end for
         self.SaveResult()
+        
+        t1 = time.time()
+        print("time used:", t1 - t0)
+
         #self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
         if need_test:
             print("testing...")
@@ -181,3 +186,6 @@ class NeuralNet2(object):
 
     def GetEpochNumber(self):
         return self.loss_trace.GetEpochNumber()
+
+    def GetLatestAverageLoss(self, count=10):
+        return self.loss_trace.GetLatestAverageLoss(count)

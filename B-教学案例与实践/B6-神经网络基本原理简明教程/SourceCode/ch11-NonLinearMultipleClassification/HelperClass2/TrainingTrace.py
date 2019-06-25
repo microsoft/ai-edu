@@ -74,6 +74,13 @@ class TrainingTrace(object):
     def GetEpochNumber(self):
         return self.epoch_seq[-1]
 
+    def GetLatestAverageLoss(self, count=10):
+        total = len(self.loss_val)
+        if count >= total:
+            count = total
+        tmp = self.loss_val[total-count:total]
+        return sum(tmp)/count
+
     def Dump(self, file_name):
         f = open(file_name, 'wb')
         pickle.dump(self, f)

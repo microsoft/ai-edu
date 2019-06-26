@@ -48,18 +48,10 @@ class SimpleDataReader_tanh(SimpleDataReader):
     #end def
 #end class
 
-def draw_predicate_data(net):
-    x = np.array([0.58,0.92,0.62,0.55,0.39,0.29]).reshape(3,2)
-    a = net.inference(x)
-    print("A=", a)
-    for i in range(3):
-        #if a[i,0] > 0.5:
-        if a[i,0] > 0:
-            plt.scatter(x[i,0], x[i,1], marker='^', c='g', s=100)
-        else:
-            plt.scatter(x[i,0], x[i,1], marker='^', c='r', s=100)
-        #end if
-    #end for
+def draw_source_data(dataReader, show=False):
+    fig = plt.figure(figsize=(6,6))
+    X,Y = dataReader.GetWholeTrainSamples()
+    DrawTwoCategoryPoints(X[:,0], X[:,1], Y[:,0], show=show)
 
 # 主程序
 if __name__ == '__main__':
@@ -75,7 +67,7 @@ if __name__ == '__main__':
     net.train(reader, checkpoint=1)
 
     # show result
-    draw_source_data(net, reader)
-    draw_predicate_data(net)
+    draw_source_data(reader)
+    draw_predicate_data(net, threshold=0)
     draw_split_line(net)
     plt.show()

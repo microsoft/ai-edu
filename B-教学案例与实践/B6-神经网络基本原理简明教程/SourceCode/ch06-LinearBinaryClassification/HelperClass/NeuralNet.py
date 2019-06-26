@@ -53,7 +53,7 @@ class NeuralNet(object):
         checkpoint_iteration = (int)(max_iteration * checkpoint)
 
         for epoch in range(self.params.max_epoch):
-            print("epoch=%d" %epoch)
+            #print("epoch=%d" %epoch)
             dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get x and y value for one sample

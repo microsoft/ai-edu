@@ -26,7 +26,7 @@ def train(n_hidden):
     loss = net.GetLatestAverageLoss()
 
     fig = plt.figure(figsize=(6,6))
-    ShowDataByOneHot2D(dataReader.XTrain[:,0], dataReader.XTrain[:,1], dataReader.YTrain, hp.toString())
+    DrawThreeCategoryPoints(dataReader.XTrain[:,0], dataReader.XTrain[:,1], dataReader.YTrain, hp.toString())
     ShowClassificationResult25D(net, 50, str.format("{0}, loss={1:.3f}", hp.toString(), loss))
     plt.show()
 

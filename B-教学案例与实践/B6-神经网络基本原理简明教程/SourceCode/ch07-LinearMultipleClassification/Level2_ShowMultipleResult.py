@@ -9,20 +9,16 @@ import math
 from HelperClass.NeuralNet import *
 from HelperClass.SimpleDataReader import *
 from HelperClass.HyperParameters import *
+from HelperClass.Visualizer import *
 
 def ShowData(X,Y):
-    for i in range(X.shape[0]):
-        if Y[i,0] == 1:
-            plt.plot(X[i,0], X[i,1], '.', c='r')
-        elif Y[i,0] == 2:
-            plt.plot(X[i,0], X[i,1], 'x', c='g')
-        elif Y[i,0] == 3:
-            plt.plot(X[i,0], X[i,1], '^', c='b')
-        # end if
-    # end for
-    plt.show()
+    fig = plt.figure(figsize=(6,6))
+    DrawThreeCategoryPoints(X[:,0], X[:,1], Y[:], xlabel="x1", ylabel="x2", show=True)
 
-def ShowResult(net,X,Y,xt):
+def ShowResult(X,Y,xt,yt):
+    fig = plt.figure(figsize=(6,6))
+    DrawThreeCategoryPoints(X[:,0], X[:,1], Y[:], xlabel="x1", ylabel="x2", show=False)
+    """
     for i in range(X.shape[0]):
         category = np.argmax(Y[i])
         if category == 0:
@@ -33,7 +29,7 @@ def ShowResult(net,X,Y,xt):
             plt.plot(X[i,0], X[i,1], '^', c='b')
         # end if
     # end for
-
+    """
     b13 = (net.B[0,0] - net.B[0,2])/(net.W[1,2] - net.W[1,0])
     w13 = (net.W[0,0] - net.W[0,2])/(net.W[1,2] - net.W[1,0])
 
@@ -56,23 +52,23 @@ def ShowResult(net,X,Y,xt):
     p12, = plt.plot(x,y,c='b')
 
     plt.legend([p13,p23,p12], ["13","23","12"])
-
-    for i in range(xt.shape[0]):
-        plt.plot(xt[i,0], xt[i,1], 'o')
-
     plt.axis([-0.1,1.1,-0.1,1.1])
-    plt.show()
 
+    DrawThreeCategoryPoints(xt[:,0], xt[:,1], yt[:], xlabel="x1", ylabel="x2", show=True, isPredicate=True)
+    """
+    for i in range(xt.shape[0]):
+        plt.scatter(xt[i,0], xt[i,1], marker='^', s=200)
+    plt.show()
+    """
 # 主程序
 if __name__ == '__main__':
     num_category = 3
     reader = SimpleDataReader()
     reader.ReadData()
-
-    ShowData(reader.XRaw, reader.YRaw)
-
-    reader.NormalizeX()
     reader.ToOneHot(num_category, base=1)
+    # show raw data before normalization
+    ShowData(reader.XRaw, reader.YTrain)
+    reader.NormalizeX()
 
     num_input = 2
     params = HyperParameters(num_input, num_category, eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.MultipleClassifier)
@@ -84,5 +80,4 @@ if __name__ == '__main__':
     output = net.inference(xt)
     print(output)
 
-    ShowResult(net, reader.XTrain, reader.YTrain, xt)
-
+    ShowResult(reader.XTrain, reader.YTrain, xt, output)

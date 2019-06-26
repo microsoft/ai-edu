@@ -6,46 +6,38 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+from HelperClass2.Visualizer import *
 from Level1_XorGateClassifier import *
-    
-def ShowSourceData(dataReader):
-    DrawSamplePoints(dataReader.XTrain[:,0],dataReader.XTrain[:,1],dataReader.YTrain, "XOR Source Data", "x1", "x2")
+
+def ShowDataHelper(x1,x2,y,title,xlabel,ylabel,show,grid=True):
+    fig = plt.figure(figsize=(6,6))
+    if grid:
+        plt.grid()
+    DrawTwoCategoryPoints(x1,x2,y,xlabel,ylabel,title,show)
+
+def ShowSourceData(dataReader, show):
+    ShowDataHelper(
+        dataReader.XTrain[:,0],
+        dataReader.XTrain[:,1],
+        dataReader.YTrain[:,0], 
+        "XOR Source Data", "x1", "x2", show)
 
 def ShowProcess2D(net, dataReader):
     net.inference(dataReader.XTest)
     # show z1    
-    DrawSamplePoints(net.Z1[:,0], net.Z1[:,1], dataReader.YTest, "net.Z1", "Z1[0]", "Z1[1]")
+    ShowDataHelper(net.Z1[:,0], net.Z1[:,1], dataReader.YTest[:,0], "net.Z1", "Z1[0]", "Z1[1]", show=True)
     # show a1
-    DrawSamplePoints(net.A1[:,0], net.A1[:,1], dataReader.YTest, "net.A1", "A1[0]", "A1[1]")
+    ShowDataHelper(net.A1[:,0], net.A1[:,1], dataReader.YTest[:,0], "net.A1", "A1[0]", "A1[1]", show=True)
     # show sigmoid
-    DrawSamplePoints(net.Z2, net.A2, dataReader.YTrain, "Z2->A2", "Z2", "A2", show=False)
+    ShowDataHelper(net.Z2, net.A2, dataReader.YTrain[:,0], "Z2->A2", "Z2", "A2", show=False)
     x = np.linspace(-6,6)
     a = Sigmoid().forward(x)
     plt.plot(x,a)
     plt.show()
 
-def DrawSamplePoints(x1, x2, y, title, xlabel, ylabel, show=True):
-    assert(x1.shape[0] == x2.shape[0])
-    fig = plt.figure(figsize=(6,6))
-    count = x1.shape[0]
-    for i in range(count):
-        if y[i,0] == 0:
-            plt.scatter(x1[i], x2[i], marker='^', color='r', s=200, zorder=10)
-        else:
-            plt.scatter(x1[i], x2[i], marker='o', color='b', s=200, zorder=10)
-        #end if
-    #end for
-    plt.grid()
-    plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    if show:
-        plt.show()
-
-
 def ShowResult2D(net, dr, title):
     print("please wait for a while...")
-    DrawSamplePoints(dr.XTest[:,0], dr.XTest[:,1], dr.YTest, title, "x1", "x2", show=False)
+    ShowDataHelper(dr.XTest[:,0], dr.XTest[:,1], dr.YTest[:,0], title, "x1", "x2", show=False)
     count = 50
     x1 = np.linspace(0,1,count)
     x2 = np.linspace(0,1,count)
@@ -74,7 +66,7 @@ def Prepare3DData(net, count):
     return X,Y,Z
 
 def ShowResultContour(net, dr):
-    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "classification result", "x1", "x2", show=False)
+    ShowDataHelper(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain[:,0], "classification result", "x1", "x2", show=False)
     X,Y,Z = Prepare3DData(net, 50)
     plt.contourf(X, Y, Z, cmap=plt.cm.Spectral)
     plt.show()
@@ -87,10 +79,18 @@ def ShowResult3D(net, dr):
     ax.set_zlim(0,1)
     # draw sample data in 3D space
     for i in range(dr.num_train):
-        if dataReader.YTrain[i,0] == 0:
-            ax.scatter(dataReader.XTrain[i,0],dataReader.XTrain[i,1],dataReader.YTrain[i,0],marker='^',c='r',s=200)
+        if dataReader.YTrain[i,0] == 1:
+            ax.scatter(
+                dataReader.XTrain[i,0],
+                dataReader.XTrain[i,1],
+                dataReader.YTrain[i,0],
+                marker='x',c='r',s=100)
         else:
-            ax.scatter(dataReader.XTrain[i,0],dataReader.XTrain[i,1],dataReader.YTrain[i,0],marker='o',c='b',s=200)
+            ax.scatter(
+                dataReader.XTrain[i,0],
+                dataReader.XTrain[i,1],
+                dataReader.YTrain[i,0],
+                marker='s',c='b',s=100)
 
     plt.show()
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
 
-    ShowSourceData(dataReader)
+    ShowSourceData(dataReader, True)
 
     n_input = dataReader.num_feature
     n_hidden = 2

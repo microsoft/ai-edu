@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level5_TanhWithCrossEntropy_Curve.py</StartupFile>
+    <StartupFile>Level4_TanhAsBinaryClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,6 +31,9 @@
     <Compile Include="HelperClass\NeuralNet.py" />
     <Compile Include="HelperClass\SimpleDataReader.py" />
     <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\Visualizer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>

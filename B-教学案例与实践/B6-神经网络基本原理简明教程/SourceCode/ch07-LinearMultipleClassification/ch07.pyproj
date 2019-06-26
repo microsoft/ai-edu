@@ -27,6 +27,7 @@
     <Compile Include="HelperClass\NeuralNet.py" />
     <Compile Include="HelperClass\SimpleDataReader.py" />
     <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\Visualizer.py" />
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>

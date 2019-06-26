@@ -19,7 +19,7 @@ def Show3D(net, dr):
     net.inference(X)
 
     colors = ['b', 'r', 'g']
-    shapes = ['s', 'x', 'o']
+    shapes = ['o', 'x', 's']
 
     fig = plt.figure(figsize=(6,6))
     ax = Axes3D(fig)

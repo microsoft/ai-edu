@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from HelperClass.NeuralNet import *
-
+from HelperClass.Visualizer import *
 
 class LogicDataReader(SimpleDataReader):
     def Read_Logic_AND_Data(self):
@@ -48,29 +48,23 @@ def Test(net, reader):
     else:
         return False
 
-def draw_split_line(net, reader, title):
+def draw_split_line(net):
     w = -net.W[0,0] / net.W[1,0]
     b = -net.B[0,0] / net.W[1,0]
     x = np.array([-0.1,1.1])
     y = w * x + b
     plt.plot(x,y)
    
-def draw_source_data(reader, title):
+def draw_source_data(reader, title, show=False):
     fig = plt.figure(figsize=(5,5))
     plt.grid()
-    X,Y = reader.GetWholeTrainSamples()
-    for i in range(reader.num_train):
-        if Y[i,0] == 0:
-            plt.scatter(X[i,0],X[i,1],marker="o",c='b',s=64)
-        else:
-            plt.scatter(X[i,0],X[i,1],marker="^",c='r',s=64)
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.title(title)
-    
+    X,Y = reader.GetWholeTrainSamples()
+    DrawTwoCategoryPoints(X[:,0], X[:,1], Y[:,0], title=title, show=show)
 
 def train(reader, title):
-    draw_source_data(reader, title)
-    plt.show()
+    draw_source_data(reader, title, show=True)
     # net train
     num_input = 2
     num_output = 1
@@ -80,8 +74,8 @@ def train(reader, title):
     # test
     print(Test(net, reader))
     # visualize
-    draw_source_data(reader, title)
-    draw_split_line(net, reader, title)
+    draw_source_data(reader, title, show=False)
+    draw_split_line(net)
     plt.show()
 
 if __name__ == '__main__':

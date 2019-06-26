@@ -5,8 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-from HelperClass2.HyperParameters2 import *
-
 def DrawTwoCategoryPoints(X1, X2, Y, xlabel="x1", ylabel="x2", title=None, show=False, isPredicate=False):
     colors = ['b', 'r']
     shapes = ['o', 'x']
@@ -47,20 +45,3 @@ def DrawThreeCategoryPoints(X1, X2, Y_onehot, xlabel="x1", ylabel="x2", title=No
         plt.title(title)
     if show:
         plt.show()
-
-def ShowClassificationResult25D(net, count, title):
-    x = np.linspace(0,1,count)
-    y = np.linspace(0,1,count)
-    X, Y = np.meshgrid(x, y)
-    Z = np.zeros((count, count))
-    input = np.hstack((X.ravel().reshape(count*count,1),Y.ravel().reshape(count*count,1)))
-    output = net.inference(input)
-    if net.hp.net_type == NetType.BinaryClassifier:
-        Z = output.reshape(count,count)
-    elif net.hp.net_type == NetType.MultipleClassifier:
-        sm = np.argmax(output, axis=1)
-        Z = sm.reshape(count,count)
-    plt.contourf(X, Y, Z, cmap=plt.cm.Spectral, zorder=1)
-    plt.xlabel("x1")
-    plt.ylabel("x2")
-    plt.title(title)

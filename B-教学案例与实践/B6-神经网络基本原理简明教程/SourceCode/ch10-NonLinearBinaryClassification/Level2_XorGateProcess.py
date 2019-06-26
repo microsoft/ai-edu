@@ -10,18 +10,18 @@ from Level2_XorGateHow import *
 def ShowProcess2D(net, dataReader, epoch):
     net.inference(dataReader.XTest)
     # show z1    
-    DrawSamplePoints(net.Z1[:,0], net.Z1[:,1], dataReader.YTest, "net.Z1, epoch="+str(epoch), "Z1[0]", "Z1[1]")
+    ShowDataHelper(net.Z1[:,0], net.Z1[:,1], dataReader.YTest[:,0], "net.Z1, epoch="+str(epoch), "Z1[0]", "Z1[1]", show=True)
     # show a1
-    DrawSamplePoints(net.A1[:,0], net.A1[:,1], dataReader.YTest, "net.A1, epoch="+str(epoch), "A1[0]", "A1[1]")
+    ShowDataHelper(net.A1[:,0], net.A1[:,1], dataReader.YTest[:,0], "net.A1, epoch="+str(epoch), "A1[0]", "A1[1]", show=True)
     # show sigmoid
-    DrawSamplePoints(net.Z2, net.A2, dataReader.YTrain, "Z2->A2, epoch="+str(epoch), "Z2", "A2", show=False)
+    ShowDataHelper(net.Z2, net.A2, dataReader.YTrain[:,0], "Z2->A2, epoch="+str(epoch), "Z2", "A2", show=False)
     x = np.linspace(-6,6)
     a = Sigmoid().forward(x)
     plt.plot(x,a)
     plt.show()
 
 def ShowResultContour(net, dr, title):
-    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, title, "x1", "x2", show=False)
+    ShowDataHelper(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain[:,0], title, "x1", "x2", show=False)
     X,Y,Z = Prepare3DData(net, 50)
     plt.contourf(X, Y, Z, cmap=plt.cm.Spectral)
     plt.show()

@@ -27,6 +27,7 @@
     <Compile Include="HelperClass2\LossFunction.py" />
     <Compile Include="HelperClass2\NeuralNet2.py" />
     <Compile Include="HelperClass2\TrainingTrace.py" />
+    <Compile Include="HelperClass2\Visualizer.py" />
     <Compile Include="HelperClass2\WeightsBias.py" />
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>

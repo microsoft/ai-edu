@@ -18,7 +18,7 @@ if __name__ == '__main__':
     dataReader.NormalizeY(YNormalizationMethod.MultipleClassifier, base=1)
 
     fig = plt.figure(figsize=(6,6))
-    ShowDataByOneHot2D(dataReader.XTrainRaw[:,0], dataReader.XTrainRaw[:,1], dataReader.YTrain, "Source Data")
+    DrawThreeCategoryPoints(dataReader.XTrainRaw[:,0], dataReader.XTrainRaw[:,1], dataReader.YTrain, "Source Data")
     plt.show()
 
     dataReader.NormalizeX()
@@ -37,6 +37,6 @@ if __name__ == '__main__':
     net.ShowTrainingTrace()
 
     fig = plt.figure(figsize=(6,6))
-    ShowDataByOneHot2D(dataReader.XTrain[:,0], dataReader.XTrain[:,1], dataReader.YTrain, hp.toString())
+    DrawThreeCategoryPoints(dataReader.XTrain[:,0], dataReader.XTrain[:,1], dataReader.YTrain, hp.toString())
     ShowClassificationResult25D(net, 50, hp.toString())
     plt.show()

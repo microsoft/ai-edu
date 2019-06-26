@@ -10,6 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from HelperClass2.DataReader import *
 from HelperClass2.HyperParameters2 import *
 from HelperClass2.NeuralNet2 import *
+from Level2_XorGateHow import *
 
 train_data_name = "../../Data/ch10.train.npz"
 test_data_name = "../../Data/ch10.test.npz"
@@ -48,7 +49,7 @@ def DrawGrid(Z, count):
     #end for
 
 def ShowSourceData(dr):
-    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Source Data", "x1", "x2", False)
+    ShowDataHelper(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain[:,0], "Source Data", "x1", "x2", False, False)
     # grid
     count=20
     X,Y = Prepare3DData(None, count)
@@ -61,7 +62,8 @@ def ShowSourceData(dr):
     plt.show()
 
 def ShowResult2D(net, dr, epoch):
-    DrawSamplePoints(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain, "Classifier Result, epoch=" + str(epoch), "x1", "x2", False)
+    ShowDataHelper(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain[:,0], 
+                   "Classifier Result, epoch=" + str(epoch), "x1", "x2", False, False)
     count = 50
     X,Y = Prepare3DData(net, count)
     Z = net.output.reshape(count,count)
@@ -71,7 +73,8 @@ def ShowResult2D(net, dr, epoch):
 def ShowTransformation(net, dr, epoch):
     # draw z1
     net.inference(dr.XTrain)
-    DrawSamplePoints(net.Z1[:,0], net.Z1[:,1], dr.YTrain, "Layer 1 - Linear Transform, epoch=" + str(epoch), "x1", "x2", False)
+    ShowDataHelper(net.Z1[:,0], net.Z1[:,1], dr.YTrain[:,0], 
+                   "Layer 1 - Linear Transform, epoch=" + str(epoch), "x1", "x2", False, False)
     #grid
     count = 20
     X,Y = Prepare3DData(net, count)
@@ -81,7 +84,8 @@ def ShowTransformation(net, dr, epoch):
 
     #draw a1
     net.inference(dr.XTrain)
-    DrawSamplePoints(net.A1[:,0], net.A1[:,1], dr.YTrain, "Layer 1 - Activation, epoch=" + str(epoch), "x1", "x2", False)
+    ShowDataHelper(net.A1[:,0], net.A1[:,1], dr.YTrain[:,0], 
+                   "Layer 1 - Activation, epoch=" + str(epoch), "x1", "x2", False, False)
     #grid
     count = 20
     X,Y = Prepare3DData(net, count)

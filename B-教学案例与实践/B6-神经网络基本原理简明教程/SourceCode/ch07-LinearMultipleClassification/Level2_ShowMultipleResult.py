@@ -41,15 +41,15 @@ def ShowResult(X,Y,xt,yt):
 
     x = np.linspace(0,1,2)
     y = w13 * x + b13
-    p13, = plt.plot(x,y,c='g')
+    p13, = plt.plot(x,y,c='r')
 
     x = np.linspace(0,1,2)
     y = w23 * x + b23
-    p23, = plt.plot(x,y,c='r')
+    p23, = plt.plot(x,y,c='b')
 
     x = np.linspace(0,1,2)
     y = w12 * x + b12
-    p12, = plt.plot(x,y,c='b')
+    p12, = plt.plot(x,y,c='g')
 
     plt.legend([p13,p23,p12], ["13","23","12"])
     plt.axis([-0.1,1.1,-0.1,1.1])

@@ -1,9 +1,10 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import numpy as np
+
 from HelperClass3.HyperParameters3 import *
 from HelperClass3.NeuralNet3 import *
-
 
 # Roll all our parameters dictionary into a single vector satisfying our specific required shape.
 def dictionary_to_vector(dict_params):
@@ -46,10 +47,10 @@ def vector_to_dictionary(theta, layer_dims):
     end = 0
     for l in range(1,L):
         end += layer_dims[l]*layer_dims[l-1]
-        dict_params["W" + str(l)] = theta[start:end].reshape((layer_dims[l],layer_dims[l-1]))
+        dict_params["W" + str(l)] = theta[start:end].reshape((layer_dims[l-1],layer_dims[l]))
         start = end
         end += layer_dims[l]*1
-        dict_params["B" + str(l)] = theta[start:end].reshape((layer_dims[l],1))
+        dict_params["B" + str(l)] = theta[start:end].reshape((1,layer_dims[l]))
         start = end
     #end for
     return dict_params
@@ -62,8 +63,8 @@ def CalculateLoss(net, dict_Param, X, Y, count, ):
     net.wb2.B = dict_Param["B2"]
     net.wb3.W = dict_Param["W3"]
     net.wb3.B = dict_Param["B3"]
-    output = net.forward(X)
-    p = Y * np.log(output)
+    net.forward(X)
+    p = Y * np.log(net.output)
     Loss = -np.sum(p) / count
     return Loss
 
@@ -118,9 +119,14 @@ if __name__ == '__main__':
     numerator = np.linalg.norm(d_theta_real - d_theta_approx)  ####np.linalg.norm 二范数
     denominator = np.linalg.norm(d_theta_approx) + np.linalg.norm(d_theta_real)
     difference = numerator / denominator
+    print('diference ={}'.format(difference))
     if difference<1e-7:
-        print('diference ={} \n NO mistake.'.format(difference))
+        print("NO mistake.")
+    elif difference<1e-4:
+        print("Acceptable, but a little bit high.")
+    elif difference<1e-2:
+        print("May has a mistake, you need check code!")
     else:
-        print('diference = {} \n HAS A MISTAKE!!!'.format(difference))
+        print("HAS A MISTAKE!!!")
     
 

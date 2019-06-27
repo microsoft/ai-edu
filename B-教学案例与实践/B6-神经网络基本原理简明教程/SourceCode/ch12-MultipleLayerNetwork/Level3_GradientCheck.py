@@ -81,6 +81,7 @@ if __name__ == '__main__':
     for i in range(n):
         J_theta_plus = np.copy(J_theta)
         J_theta_plus[i][0] = J_theta[i][0] + eps
+        # 多分类交叉熵
         J_plus[i] = CalculateLoss(vector_to_dictionary(J_theta_plus, layer_dims), x, y, n_example, forward3)
 
         J_theta_minus = np.copy(J_theta)

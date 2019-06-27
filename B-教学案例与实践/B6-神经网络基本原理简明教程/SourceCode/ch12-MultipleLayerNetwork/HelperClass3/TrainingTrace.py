@@ -30,14 +30,16 @@ class TrainingTrace(object):
         return False
 
     # 图形显示损失函数值历史记录
-    def ShowLossHistory(self, params, xmin=None, xmax=None, ymin=None, ymax=None):
+    def ShowLossHistory(self, params, x="epoch", xmin=None, xmax=None, ymin=None, ymax=None):
         fig = plt.figure(figsize=(12,5))
 
         axes = plt.subplot(1,2,1)
-        #p2, = axes.plot(self.iteration_seq, self.loss_train)
-        #p1, = axes.plot(self.iteration_seq, self.loss_val)
-        p2, = axes.plot(self.epoch_seq, self.loss_train)
-        p1, = axes.plot(self.epoch_seq, self.loss_val)
+        if x == "iteration":
+            p2, = axes.plot(self.iteration_seq, self.loss_train)
+            p1, = axes.plot(self.iteration_seq, self.loss_val)
+        elif x == "epoch":
+            p2, = axes.plot(self.epoch_seq, self.loss_train)
+            p1, = axes.plot(self.epoch_seq, self.loss_val)
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Loss")
         axes.set_ylabel("loss")
@@ -46,10 +48,12 @@ class TrainingTrace(object):
             axes.axis([xmin, xmax, ymin, ymax])
         
         axes = plt.subplot(1,2,2)
-        #p2, = axes.plot(self.iteration_seq, self.accuracy_train)
-        #p1, = axes.plot(self.iteration_seq, self.accuracy_val)
-        p2, = axes.plot(self.epoch_seq, self.accuracy_train)
-        p1, = axes.plot(self.epoch_seq, self.accuracy_val)
+        if x == "iteration":
+            p2, = axes.plot(self.iteration_seq, self.accuracy_train)
+            p1, = axes.plot(self.iteration_seq, self.accuracy_val)
+        elif x == "epoch":
+            p2, = axes.plot(self.epoch_seq, self.accuracy_train)
+            p1, = axes.plot(self.epoch_seq, self.accuracy_val)
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Accuracy")
         axes.set_ylabel("accuracy")

@@ -5,7 +5,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 from PIL import Image
 
-from Level3_ThreeLayerNet import *
+from HelperClass3.HyperParameters3 import *
+from HelperClass3.NeuralNet3 import *
 
 def ReadImage(img_file_name):
     img = Image.open(img_file_name)
@@ -19,12 +20,11 @@ def ReadImage(img_file_name):
     plt.cla()
     plt.imshow(X_NEW)
     plt.plot()
-    return X_NEW.reshape(-1,1)
+    return X_NEW.reshape(1,-1)
 
 def Inference(img_array):
-    dict_cache = forward3(img_array, dict_param)
-    print(dict_cache["Output"])
-    n = np.argmax(dict_cache["Output"])
+    output = net.inference(img_array)
+    n = np.argmax(output)
     print("------recognize result is: {0} -----", n)
 
 def on_key_press(event):
@@ -68,16 +68,24 @@ def on_mouse_move(event):
         starty = endy
     # end if
 
-
 def LoadNet():
-    W1 = np.load("Level3_w1.npy")
-    B1 = np.load("Level3_b1.npy")
-    W2 = np.load("Level3_w2.npy")
-    B2 = np.load("Level3_b2.npy")
-    W3 = np.load("Level3_w3.npy")
-    B3 = np.load("Level3_b3.npy")
-    dict_param = {"W1":W1, "B1":B1, "W2":W2, "B2":B2, "W3":W3, "B3":B3}
-    return dict_param
+    n_input = 784
+    n_hidden1 = 64
+    n_hidden2 = 16
+    n_output = 10
+    eta = 0.2
+    eps = 0.01
+    batch_size = 128
+    max_epoch = 40
+
+    hp = HyperParameters3(
+        n_input, n_hidden1, n_hidden2, n_output, 
+        eta, max_epoch, batch_size, eps, 
+        NetType.MultipleClassifier, 
+        InitialMethod.Xavier)
+    net = NeuralNet3(hp, "MNIST_64_16")
+    net.LoadResult()
+    return net
    
 if __name__ == "__main__":
     isdraw = False
@@ -90,7 +98,7 @@ if __name__ == "__main__":
     print("the handwriting should full fill the window")
     print("============================================================================")
 
-    dict_param = LoadNet()
+    net = LoadNet()
 
     fig, ax = plt.subplots()
     fig.canvas.mpl_connect('key_press_event', on_key_press)
@@ -99,7 +107,6 @@ if __name__ == "__main__":
     fig.canvas.mpl_connect('motion_notify_event', on_mouse_move)
     
     plt.axis([0,1,0,1])
-#    plt.figure(figsize=(4.8,4.8)) # this is will show the second window(weird)
     plt.show()
 
 

@@ -38,14 +38,17 @@ class NeuralNet3(object):
             return path
 
     def forward(self, batch_x):
-        # layer 1
+        # 公式1
         self.Z1 = np.dot(batch_x, self.wb1.W) + self.wb1.B
+        # 公式2
         self.A1 = Sigmoid().forward(self.Z1)
-        # layer 2
+        # 公式3
         self.Z2 = np.dot(self.A1, self.wb2.W) + self.wb2.B
+        # 公式4
         self.A2 = Tanh().forward(self.Z2)
-        # layer 3
+        # 公式5
         self.Z3 = np.dot(self.A2, self.wb3.W) + self.wb3.B
+        # 公式6
         if self.hp.net_type == NetType.BinaryClassifier:
             self.A3 = Logistic().forward(self.Z3)
         elif self.hp.net_type == NetType.MultipleClassifier:
@@ -55,20 +58,24 @@ class NeuralNet3(object):
         #end if
         self.output = self.A3
 
-    def backward(self, batch_x, batch_y, batch_a):
+    def backward(self, batch_x, batch_y):
         # 批量下降，需要除以样本数量，否则会造成梯度爆炸
         m = batch_x.shape[0]
 
-        # 第三层的梯度输入 公式5
-        dZ3 = self.A3 - batch_y
+        # 第三层的梯度输入 公式7
+        dZ3 = self.output - batch_y
+        # 公式8
         self.wb3.dW = np.dot(self.A2.T, dZ3)/m
+        # 公式9
         self.wb3.dB = np.sum(dZ3, axis=0, keepdims=True)/m 
 
-        # 第二层的梯度输入 公式5
+        # 第二层的梯度输入 公式10
         dA2 = np.dot(dZ3, self.wb3.W.T)
+        # 公式11
         dZ2,_ = Tanh().backward(None, self.A2, dA2)
-        # 第二层的权重和偏移 公式6
+        # 公式12
         self.wb2.dW = np.dot(self.A1.T, dZ2)/m 
+        # 公式13
         self.wb2.dB = np.sum(dZ2, axis=0, keepdims=True)/m 
 
         # 第一层的梯度输入 公式8
@@ -100,15 +107,14 @@ class NeuralNet3(object):
         checkpoint_iteration = (int)(max_iteration * checkpoint)
         need_stop = False
         for epoch in range(self.hp.max_epoch):
-            #print("epoch=%d" %epoch)
             dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
                 # get z from x,y
-                batch_a = self.forward(batch_x)
+                self.forward(batch_x)
                 # calculate gradient of w and b
-                self.backward(batch_x, batch_y, batch_a)
+                self.backward(batch_x, batch_y)
                 # update w,b
                 self.update()
 
@@ -192,8 +198,8 @@ class NeuralNet3(object):
         self.wb2.LoadResultValue(self.subfolder, "wb2")
         self.wb3.LoadResultValue(self.subfolder, "wb3")
 
-    def ShowTrainingTrace(self):
-        self.loss_trace.ShowLossHistory(self.hp)
+    def ShowTrainingTrace(self, xline):
+        self.loss_trace.ShowLossHistory(self.hp, xline)
 
     def GetTrainingTrace(self):
         return self.loss_trace

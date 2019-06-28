@@ -85,7 +85,7 @@ if __name__ == '__main__':
     dict_Param = {"W1": net.wb1.W, "B1": net.wb1.B, "W2": net.wb2.W, "B2": net.wb2.B, "W3": net.wb3.W, "B3": net.wb3.B}
 
     layer_dims = [n_input, n_hidden1, n_hidden2, n_output]
-    n_example = 1
+    n_example = 2
     x = np.random.randn(n_example, n_input)
     #y = np.array([1,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,1,0,0,0,0, 0,0,1,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,1,0,0, 0,0,0,0,0,0,0,0,0,1]).reshape(-1,n_example)
     #y = np.array([1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0]).reshape(-1,n_example)

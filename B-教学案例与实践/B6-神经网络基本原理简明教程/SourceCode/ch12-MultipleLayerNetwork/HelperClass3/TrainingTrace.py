@@ -37,13 +37,15 @@ class TrainingTrace(object):
         if x == "iteration":
             p2, = axes.plot(self.iteration_seq, self.loss_train)
             p1, = axes.plot(self.iteration_seq, self.loss_val)
+            axes.set_xlabel("iteration")
         elif x == "epoch":
             p2, = axes.plot(self.epoch_seq, self.loss_train)
             p1, = axes.plot(self.epoch_seq, self.loss_val)
+            axes.set_xlabel("epoch")
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Loss")
         axes.set_ylabel("loss")
-        axes.set_xlabel("epoch")
+        
         if xmin != None or xmax != None or ymin != None or ymax != None:
             axes.axis([xmin, xmax, ymin, ymax])
         
@@ -51,13 +53,15 @@ class TrainingTrace(object):
         if x == "iteration":
             p2, = axes.plot(self.iteration_seq, self.accuracy_train)
             p1, = axes.plot(self.iteration_seq, self.accuracy_val)
+            axes.set_xlabel("iteration")
         elif x == "epoch":
             p2, = axes.plot(self.epoch_seq, self.accuracy_train)
             p1, = axes.plot(self.epoch_seq, self.accuracy_val)
+            axes.set_xlabel("epoch")
+
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Accuracy")
         axes.set_ylabel("accuracy")
-        axes.set_xlabel("epoch")
         
         title = params.toString()
         plt.suptitle(title)

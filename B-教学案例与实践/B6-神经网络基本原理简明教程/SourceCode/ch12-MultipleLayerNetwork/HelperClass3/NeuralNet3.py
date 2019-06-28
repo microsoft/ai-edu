@@ -74,9 +74,9 @@ class NeuralNet3(object):
         # 公式11
         dZ2,_ = Tanh().backward(None, self.A2, dA2)
         # 公式12
-        self.wb2.dW = np.dot(self.A1.T, dZ2)/m 
+        self.wb2.dW = np.dot(self.A1.T, dZ2)/m
         # 公式13
-        self.wb2.dB = np.sum(dZ2, axis=0, keepdims=True)/m 
+        self.wb2.dB = np.sum(dZ2, axis=0, keepdims=True)/m
 
         # 第一层的梯度输入 公式8
         dA1 = np.dot(dZ2, self.wb2.W.T) 
@@ -84,7 +84,7 @@ class NeuralNet3(object):
         dZ1,_ = Sigmoid().backward(None, self.A1, dA1)
         # 第一层的权重和偏移 公式11
         self.wb1.dW = np.dot(batch_x.T, dZ1)/m
-        self.wb1.dB = np.sum(dZ1, axis=0, keepdims=True)/m 
+        self.wb1.dB = np.sum(dZ1, axis=0, keepdims=True)/m
 
     def update(self):
         self.wb1.Update()

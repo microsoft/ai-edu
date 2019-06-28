@@ -18,14 +18,16 @@ if __name__ == '__main__':
     w, b = 0.0, 0.0
     for i in range(reader.num_train):
         # get x and y value for one sample
-        x = X[i]
-        y = Y[i]
-        # get z from x,y
-        z = x*w+b
-        # calculate gradient of w and b
-        dz = z - y
+        xi = X[i]
+        yi = Y[i]
+        # 公式1
+        zi = xi * w + b
+        # 公式3
+        dz = zi - yi
+        # 公式4
+        dw = dz * xi
+        # 公式5
         db = dz
-        dw = dz * x
         # update w,b
         w = w - eta * dw
         b = b - eta * db

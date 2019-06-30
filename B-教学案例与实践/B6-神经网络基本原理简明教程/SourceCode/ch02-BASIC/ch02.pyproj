@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>81d83d89-23e8-428a-b5d7-3f563a3101bf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_BP_NoneLinear.py</StartupFile>
+    <StartupFile>Level2_BP_NoneLinear.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,15 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level0_BP_Linear.py">
+    <Compile Include="Level1_BP_Linear.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level1_BP_NoneLinear.py" />
-    <Compile Include="Level4_LearningRate.py">
+    <Compile Include="Level2_BP_NoneLinear.py" />
+    <Compile Include="Level5_LearningRate.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level3_GDDoubleVariable.py" />
-    <Compile Include="Level2_GDSingleVariable.py">
+    <Compile Include="Level4_GDDoubleVariable.py" />
+    <Compile Include="Level3_GDSingleVariable.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

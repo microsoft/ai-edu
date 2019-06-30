@@ -14,11 +14,11 @@ from HelperClass.TrainingHistory import *
 class NeuralNet(object):
     def __init__(self, params):
         self.params = params
-        self.W = np.zeros((self.params.input_size, self.params.output_size))
-        self.B = np.zeros((1, self.params.output_size))
+        self.w = np.zeros((self.params.input_size, self.params.output_size))
+        self.b = np.zeros((1, self.params.output_size))
 
     def __forwardBatch(self, batch_x):
-        Z = np.dot(batch_x, self.W) + self.B
+        Z = np.dot(batch_x, self.w) + self.b
         return Z
 
     def __backwardBatch(self, batch_x, batch_y, batch_z):
@@ -29,8 +29,8 @@ class NeuralNet(object):
         return dW, dB
 
     def __update(self, dW, dB):
-        self.W = self.W - self.params.eta * dW
-        self.B = self.B - self.params.eta * dB
+        self.w = self.w - self.params.eta * dW
+        self.b = self.b - self.params.eta * dB
 
     def inference(self, x):
         return self.__forwardBatch(x)
@@ -57,7 +57,7 @@ class NeuralNet(object):
                 if iteration % 2 == 0:
                     loss = self.__checkLoss(dataReader)
                     print(epoch, iteration, loss)
-                    loss_history.AddLossHistory(epoch*max_iteration+iteration, loss, self.W[0,0], self.B[0,0])
+                    loss_history.AddLossHistory(epoch*max_iteration+iteration, loss, self.w[0,0], self.b[0,0])
                     if loss < self.params.eps:
                         break
                     #end if
@@ -67,7 +67,7 @@ class NeuralNet(object):
                 break
         # end for
         loss_history.ShowLossHistory(self.params)
-        print(self.W, self.B)
+        print(self.w, self.b)
    
         self.loss_contour(dataReader, loss_history, self.params.batch_size, epoch*max_iteration+iteration)
 

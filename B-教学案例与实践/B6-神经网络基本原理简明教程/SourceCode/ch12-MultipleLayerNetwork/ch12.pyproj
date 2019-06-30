@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_ThreeLayerNet.py</StartupFile>
+    <StartupFile>Level1_Mnist.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,17 +21,30 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DataReader.py" />
-    <Compile Include="Level1_Base.py" />
-    <Compile Include="Level3_ThreeLayerNet.py" />
-    <Compile Include="Level2_TwoLayerNet.py" />
-    <Compile Include="Level4_GradientCheck.py">
+    <Compile Include="HelperClass3\Activators.py" />
+    <Compile Include="HelperClass3\DataReader.py" />
+    <Compile Include="HelperClass3\HyperParameters3.py" />
+    <Compile Include="HelperClass3\LossFunction.py" />
+    <Compile Include="HelperClass3\MnistImageDataReader.py" />
+    <Compile Include="HelperClass3\NeuralNet3.py" />
+    <Compile Include="HelperClass3\TrainingTrace.py" />
+    <Compile Include="HelperClass3\Visualizer.py" />
+    <Compile Include="HelperClass3\WeightsBias.py" />
+    <Compile Include="HelperClass3\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level5_Inference.py">
+    <Compile Include="Level3_GradientCheck.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MnistDataReader.py" />
+    <Compile Include="Level2_Inference.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level1_Mnist.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HelperClass3\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

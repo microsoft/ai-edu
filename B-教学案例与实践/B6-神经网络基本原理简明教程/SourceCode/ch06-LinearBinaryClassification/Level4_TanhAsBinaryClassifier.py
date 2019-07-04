@@ -64,7 +64,7 @@ if __name__ == '__main__':
     num_output = 1
     params = HyperParameters(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryTanh)
     net = TanhNeuralNet(params)
-    net.train(reader, checkpoint=1)
+    net.train(reader, checkpoint=10)
 
     # show result
     draw_source_data(reader)

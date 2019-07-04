@@ -11,12 +11,12 @@ from MiniFramework.DataReader import *
 
 from ExtendedDataReader.CifarImageReader import *
 
-file_1 = "..\\Data\\data_batch_1.bin"
-file_2 = "..\\Data\\data_batch_2.bin"
-file_3 = "..\\Data\\data_batch_3.bin"
-file_4 = "..\\Data\\data_batch_4.bin"
-file_5 = "..\\Data\\data_batch_5.bin"
-test_file = "..\\Data\\test_batch.bin"
+file_1 = "../../Data/data_batch_1.bin"
+file_2 = "../../Data/data_batch_2.bin"
+file_3 = "../../Data/data_batch_3.bin"
+file_4 = "../../Data/data_batch_4.bin"
+file_5 = "../../Data/data_batch_5.bin"
+test_file = "../../Data/test_batch.bin"
 
 
 def LoadData():
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     r4 = ActivatorLayer(Relu())
     net.add_layer(r4, "r4")
     
-    fc5 = FcLayer(num_hidden1, num_output, params)
+    fc5 = FcLayer(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")

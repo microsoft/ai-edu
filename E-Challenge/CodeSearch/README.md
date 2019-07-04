@@ -30,7 +30,7 @@ Code Search的同学分成了两个组，建议第一组同学实现Python语言
 ### 第一周
 
 * 在Github 上注册自己的账号，学会基本操作，学会 Markdown 的文章写作。把账户地址告诉我们。 
-* 通读下面所有文章，每一个文章列出至少一个你还没能弄懂的问题。每一个同学要把问题写在自己的github 账户中的一个 markdown 文档里面。 请看这个文章： https://www.cnblogs.com/xinz/p/9660404.html  里面的 “提有质量的问题” 部分。 把提问的文档地址告诉我们。
+* 通读下面参考资料中`ML in PL/SE`和`Code Search Related`中的所有文章，每一个文章列出至少一个你还没能弄懂的问题。每一个同学要把问题写在自己的github 账户中的一个 markdown 文档里面。 请看这个文章： https://www.cnblogs.com/xinz/p/9660404.html  里面的 “提有质量的问题” 部分。 把提问的文档地址告诉我们。
 * 读完文章后， 如果你来做有创新性的  Code Search 实用工具， 你能提出什么想法？请按这里的 [NABCD](https://www.cnblogs.com/xinz/archive/2010/12/01/1893323.html) 模板提出想法，其中，请看[这里的介绍](https://www.cnblogs.com/xinz/archive/2013/02/03/2890786.html)，用里面提到的方法去采访你们同学中用Python、JavaScript 的用户，了解他们在写程序过程中的痛点。
 * 将以上GitHub链接回复在[Issue #282](https://github.com/microsoft/ai-edu/issues/282)中。
 * 有任何问题也可以在[Issue #282](https://github.com/microsoft/ai-edu/issues/282)中提出。
@@ -39,7 +39,7 @@ Code Search的同学分成了两个组，建议第一组同学实现Python语言
 
 ### 第二周
 
-交流学习并讨论并制定未来几周的计划，明确要做什么，最终产出什么。
+交流学习并讨论制定未来几周的计划，明确要做什么，最终产出什么。
 
 ### 第三、四周
 

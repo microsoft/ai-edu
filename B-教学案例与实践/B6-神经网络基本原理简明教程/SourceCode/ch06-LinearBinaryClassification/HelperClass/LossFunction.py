@@ -26,6 +26,7 @@ class LossFunction(object):
         return loss
     # end def
 
+    # fitting
     def MSE(self, A, Y, count):
         p1 = A - Y
         LOSS = np.multiply(p1, p1)
@@ -36,7 +37,7 @@ class LossFunction(object):
     # for binary classifier
     def CE2(self, A, Y, count):
         p1 = 1 - Y
-        p2 = np.log(1 - A + 1e-5)
+        p2 = np.log(1 - A)
         p3 = np.log(A)
 
         p4 = np.multiply(p1 ,p2)
@@ -49,7 +50,7 @@ class LossFunction(object):
 
     # for multiple classifier
     def CE3(self, A, Y, count):
-        p1 = np.log(A+1e-7)
+        p1 = np.log(A)
         p2 =  np.multiply(Y, p1)
         LOSS = np.sum(-p2) 
         loss = LOSS / count

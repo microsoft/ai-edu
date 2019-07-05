@@ -70,6 +70,6 @@ if __name__ == '__main__':
     # result
     print("w=%f,b=%f" %(net.w, net.b))
     # predication
-    result = net.inference(0.346)
+    result = net.inference(1.346)
     print("result=", result)
     ShowResult(net, sdr)

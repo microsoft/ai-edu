@@ -8,7 +8,7 @@
 
 本社区注明版权出处的内容适用于[License](./LICENSE.md)版权许可。
 
-联系信息：<msraeduhub@microsoft.com>
+
 
 
 

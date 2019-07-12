@@ -7,6 +7,6 @@ from HelperClass.HyperParameters import *
 if __name__ == '__main__':
     sdr = SimpleDataReader()
     sdr.ReadData()
-    params = HyperParameters(1, 1, eta=0.1, max_epoch=1000, batch_size=-1, eps = 0.02)
+    params = HyperParameters(1, 1, eta=0.5, max_epoch=1000, batch_size=-1, eps = 0.02)
     net = NeuralNet(params)
     net.train(sdr)

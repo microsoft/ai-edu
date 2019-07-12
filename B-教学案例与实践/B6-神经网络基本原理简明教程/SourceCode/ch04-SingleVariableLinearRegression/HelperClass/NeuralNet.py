@@ -102,7 +102,7 @@ class NeuralNet(object):
         plt.plot(w_history,b_history)
         plt.xlabel("w")
         plt.ylabel("b")
-        title = str.format("batchsize={0}, iteration={1}, w={2:.3f}, b={3:.3f}", batch_size, iteration, result_w, result_b)
+        title = str.format("batchsize={0}, iteration={1}, eta={2}, w={3:.3f}, b={4:.3f}", batch_size, iteration, self.params.eta, result_w, result_b)
         plt.title(title)
 
         plt.axis([result_w-1,result_w+1,result_b-1,result_b+1])

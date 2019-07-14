@@ -5,18 +5,16 @@ import numpy as np
 
 from MiniFramework.Layer import *
 from MiniFramework.WeightsBias import *
-from MiniFramework.Parameters import *
+from MiniFramework.HyperParameters import *
 
 class FcLayer(CLayer):
     def __init__(self, input_size, output_size, param):
         self.input_size = input_size
         self.output_size = output_size
-        self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.optimizer, param.eta)
-        self.regular = param.regular
-        self.lambd = param.lambd
+        self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.eta)
 
     def initialize(self, folder):
-        self.weights.InitializeWeights(folder)
+        self.weights.InitializeWeights(folder, False)
 
     def forward(self, input, train=True):
         self.input_shape = input.shape
@@ -31,12 +29,7 @@ class FcLayer(CLayer):
     def backward(self, delta_in, layer_idx):
         dZ = delta_in
         m = self.x.shape[0]
-        if self.regular == RegularMethod.L2:
-            self.weights.dW = (np.dot(self.x.T, dZ) + self.lambd * self.weights.W) / m
-        elif self.regular == RegularMethod.L1:
-            self.weights.dW = (np.dot(self.x.T, dZ) + self.lambd * np.sign(self.weights.W)) / m
-        else:
-            self.weights.dW = np.dot(self.x.T, dZ) / m
+        self.weights.dW = np.dot(self.x.T, dZ) / m
         # end if
         self.weights.dB = np.sum(dZ, axis=0, keepdims=True) / m
         # calculate delta_out for lower level

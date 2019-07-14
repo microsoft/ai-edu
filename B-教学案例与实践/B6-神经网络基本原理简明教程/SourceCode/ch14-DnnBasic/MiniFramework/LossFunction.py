@@ -4,7 +4,7 @@
 import numpy as np
 from enum import Enum
 
-from HelperClass3.HyperParameters3 import *
+from MiniFramework.HyperParameters import *
 
 class LossFunction(object):
     def __init__(self, net_type):

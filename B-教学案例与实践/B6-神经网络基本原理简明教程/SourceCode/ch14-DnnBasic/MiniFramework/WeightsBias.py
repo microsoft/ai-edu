@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-from MiniFramework.HyperParameters4 import *
+from MiniFramework.HyperParameters import *
 
 class WeightsBias(object):
     def __init__(self, n_input, n_output, init_method, eta):

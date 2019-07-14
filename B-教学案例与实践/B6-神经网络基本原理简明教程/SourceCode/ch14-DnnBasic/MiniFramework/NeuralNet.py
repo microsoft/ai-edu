@@ -12,12 +12,14 @@ from sklearn.metrics import r2_score
 
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer import *
-from MiniFramework.Parameters import *
+from MiniFramework.HyperParameters import *
+from MiniFramework.LossFunction import *
+from MiniFramework.TrainingTrace import *
 
 class NeuralNet(object):
     def __init__(self, params, model_name):
         self.model_name = model_name
-        self.params = params
+        self.hp = params
         self.layer_list = []
         self.layer_name = []
         self.output = None
@@ -72,22 +74,6 @@ class NeuralNet(object):
             layer = self.layer_list[i]
             layer.update()
 
-    def __get_regular_cost_from_fc_layer(self, regularName):
-        if regularName != RegularMethod.L1 and regularName != RegularMethod.L2:
-            return 0
-
-        regular_cost = 0
-        for i in range(self.layer_count-1,-1,-1):
-            layer = self.layer_list[i]
-            if isinstance(layer, FcLayer):
-                if regularName == RegularMethod.L1:
-                    regular_cost += np.sum(np.abs(layer.weights.W))
-                elif regularName == RegularMethod.L2:
-                    regular_cost += np.sum(np.square(layer.weights.W))
-            # end if
-        # end for
-        return regular_cost * self.params.lambd
-
     def __get_weights_from_fc_layer(self):
         weights = 0
         total = 0
@@ -106,29 +92,20 @@ class NeuralNet(object):
 
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
     def train(self, dataReader, checkpoint=0.1, need_test=True):
-
         t0 = time.time()
-
-        if self.params.regular == RegularMethod.EarlyStop:
-           self.loss_history = CLossHistory(True, self.params.lambd)
-        else:
-           self.loss_history = CLossHistory()
-
-        self.lossFunc = CLossFunction(self.params.loss_func)
+        self.loss_trace = TrainingTrace()
+        self.lossFunc = LossFunction(self.hp.net_type)
         # if num_example=200, batch_size=10, then iteration=200/10=20
-        if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_train:
-            self.params.batch_size = dataReader.num_train
+        if self.hp.batch_size == -1 or self.hp.batch_size > dataReader.num_train:
+            self.hp.batch_size = dataReader.num_train
         # end if
-        max_iteration = math.ceil(dataReader.num_train / self.params.batch_size)
+        max_iteration = math.ceil(dataReader.num_train / self.hp.batch_size)
         checkpoint_iteration = (int)(max_iteration * checkpoint)
         need_stop = False
-        for epoch in range(self.params.max_epoch):
+        for epoch in range(self.hp.max_epoch):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
-                batch_x, batch_y = dataReader.GetBatchTrainSamples(self.params.batch_size, iteration)
-                # for optimizers which need pre-update weights
-                if self.params.optimizer == OptimizerName.Nag:
-                    self.__pre_update()
+                batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
                 # get z from x,y
                 self.__forward(batch_x, train=True)
                 # calculate gradient of w and b
@@ -165,7 +142,7 @@ class NeuralNet(object):
 
         if need_test:
             print("testing...")
-            accuracy = self.Test(dataReader, self.params.loss_func)
+            accuracy = self.Test(dataReader, self.hp.loss_func)
             print(accuracy)
         # end if
 
@@ -173,25 +150,25 @@ class NeuralNet(object):
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
 
         # l1/l2 cost
-        regular_cost = self.__get_regular_cost_from_fc_layer(self.params.regular)
+       # regular_cost = self.__get_regular_cost_from_fc_layer(self.hp.regular)
 
         # calculate train loss
         self.__forward(train_x, train=False)
         loss_train = self.lossFunc.CheckLoss(train_y, self.output)
-        loss_train = loss_train + regular_cost / train_x.shape[0]
-        accuracy_train = self.__CalAccuracy(self.output, train_y, self.params.loss_func)
+        loss_train = loss_train# + regular_cost / train_x.shape[0]
+        accuracy_train = self.__CalAccuracy(self.output, train_y)
         print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
 
         # calculate validation loss
         vld_x, vld_y = dataReader.GetValidationSet()
         self.__forward(vld_x, train=False)
         loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
-        loss_vld = loss_vld + regular_cost / vld_x.shape[0]
-        accuracy_vld = self.__CalAccuracy(self.output, vld_y, self.params.loss_func)
+        loss_vld = loss_vld #+ regular_cost / vld_x.shape[0]
+        accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
-        need_stop = self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
-        if loss_vld <= self.params.eps:
+        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.eps)
+        if loss_vld <= self.hp.eps:
             need_stop = True
         return need_stop
 
@@ -203,20 +180,20 @@ class NeuralNet(object):
         return correct
 
     # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
-    def __CalAccuracy(self, a, y, loss_func):
+    def __CalAccuracy(self, a, y):
         assert(a.shape == y.shape)
         m = a.shape[0]
-        if loss_func == LossFunctionName.MSE:
+        if self.hp.net_type == NetType.Fitting:
             var = np.var(y)
             mse = np.sum((a-y)**2)/a.shape[0]
             r2 = 1 - mse / var
             return r2
-        elif loss_func == LossFunctionName.CrossEntropy2:
+        elif self.hp.net_type == NetType.BinaryClassifier:
             b = np.round(a)
             r = (b == y)
             correct = r.sum()
             return correct/m
-        elif loss_func == LossFunctionName.CrossEntropy3:
+        elif self.hp.net_type == NetType.MultipleClassifier:
             ra = np.argmax(a, axis=1)
             ry = np.argmax(y, axis=1)
             r = (ra == ry)
@@ -244,4 +221,4 @@ class NeuralNet(object):
             layer.load_parameters(self.subfolder, name)
 
     def ShowLossHistory(self, xmin=None, xmax=None, ymin=None, ymax=None):
-        self.loss_history.ShowLossHistory(self.params, xmin, xmax, ymin, ymax)
+        self.loss_history.ShowLossHistory(self.hp, xmin, xmax, ymin, ymax)

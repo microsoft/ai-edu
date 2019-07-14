@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 from enum import Enum
 
-from MiniFramework.HyperParameters4 import *
+from MiniFramework.HyperParameters import *
 
 """
 X:

@@ -4,11 +4,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from enum import Enum
+import math
 import pickle
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class TrainingTrace(object):
-    def __init__(self, need_earlyStop = False, patience = 5):
+    def __init__(self):
         self.loss_train = []
         self.accuracy_train = []
         self.iteration_seq = []
@@ -17,7 +18,7 @@ class TrainingTrace(object):
         self.loss_val = []
         self.accuracy_val = []
        
-    def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld):
+    def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, eps):
         self.iteration_seq.append(total_iteration)
         self.epoch_seq.append(epoch)
         self.loss_train.append(loss_train)
@@ -26,6 +27,9 @@ class TrainingTrace(object):
             self.loss_val.append(loss_vld)
         if accuracy_vld is not None:
             self.accuracy_val.append(accuracy_vld)
+
+        if math.abs(loss_vld[-1] - loss_vld[-2])<eps:
+            return True
 
         return False
 

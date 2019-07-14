@@ -2,9 +2,6 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 from enum import Enum
 
-from MiniFramework.LossFunction import *
-from MiniFramework.WeightsBias import *
-
 class NetType(Enum):
     Fitting = 1,
     BinaryClassifier = 2,
@@ -17,11 +14,10 @@ class InitialMethod(Enum):
     MSRA = 3
 
 # this class is for two-layer NN only
-class HyperParameters4(object):
-    def __init__(self, eta=0.1, max_epoch=10000, batch_size=5,
+class HyperParameters(object):
+    def __init__(self, eta=0.1, max_epoch=10000, batch_size=5, eps=1e-5,
                  net_type=NetType.Fitting, 
-                 init_method=InitialMethod.Xavier)
-
+                 init_method=InitialMethod.Xavier):
         self.eta = eta
         self.max_epoch = max_epoch
         # if batch_size == -1, it is FullBatch

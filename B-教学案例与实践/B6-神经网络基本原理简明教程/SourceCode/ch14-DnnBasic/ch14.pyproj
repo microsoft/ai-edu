@@ -40,7 +40,7 @@
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MiniFramework\LossFunction.py" />
     <Compile Include="MiniFramework\NeuralNet.py" />
-    <Compile Include="MiniFramework\HyperParameters4.py" />
+    <Compile Include="MiniFramework\HyperParameters.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="Level1_ch09.py" />
     <Compile Include="Level3_Cifar10Classifier.py" />

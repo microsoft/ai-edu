@@ -4,10 +4,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.SimpleDataReader import *
-from HelperClass.NeuralNet import *
+from HelperClass.DataReader10 import *
+from HelperClass.NeuralNet10 import *
 
-class LogicNotGateDataReader(SimpleDataReader):
+class LogicNotGateDataReader(DataReader10):
     # x=0,y=1; x=1,y=0
     def ReadData(self):
         X = np.array([0,1]).reshape(2,1)
@@ -37,11 +37,11 @@ if __name__ == '__main__':
     sdr = LogicNotGateDataReader()
     sdr.ReadData()
     # create net
-    params = HyperParameters(1, 1, eta=0.1, max_epoch=1000, batch_size=1, eps = 1e-8)
-    net = NeuralNet(params)
+    params = HyperParameters10(1, 1, eta=0.1, max_epoch=1000, batch_size=1, eps = 1e-8)
+    net = NeuralNet10(params)
     net.train(sdr)
     # result
-    print("w=%f,b=%f" %(net.W, net.B))
+    print("w=%f,b=%f" %(net.w, net.b))
     # predication
     print(Test(net))
     ShowResult(net)

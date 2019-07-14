@@ -2,18 +2,18 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-from HelperClass.NeuralNet import *
+from HelperClass.NeuralNet11 import *
 
 # main
 if __name__ == '__main__':
     # data
-    reader = SimpleDataReader()
+    reader = DataReader11()
     reader.ReadData()
     reader.NormalizeX()
     reader.NormalizeY()
     # net
-    params = HyperParameters(2, 1, eta=0.01, max_epoch=200, batch_size=10, eps=1e-5)
-    net = NeuralNet(params)
+    params = HyperParameters10(2, 1, eta=0.01, max_epoch=200, batch_size=10, eps=1e-5)
+    net = NeuralNet11(params)
     net.train(reader, checkpoint=0.1)
     # inference
     x1 = 15

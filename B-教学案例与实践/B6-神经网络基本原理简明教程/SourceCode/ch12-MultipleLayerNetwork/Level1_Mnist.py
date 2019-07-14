@@ -10,7 +10,7 @@ if __name__ == '__main__':
     dataReader = MnistImageDataReader(mode="vector")
     dataReader.ReadData()
     dataReader.NormalizeX()
-    dataReader.NormalizeY(YNormalizationMethod.MultipleClassifier, base=0)
+    dataReader.NormalizeY(NetType.MultipleClassifier, base=0)
     dataReader.Shuffle()
     dataReader.GenerateValidationSet(k=12)
 

@@ -6,7 +6,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.SimpleDataReader import *
+from HelperClass.DataReader10 import *
 
 class NeuralNet(object):
     def __init__(self, eta):
@@ -61,7 +61,7 @@ def ShowResult(net, dataReader):
 
 if __name__ == '__main__':
     # read data
-    sdr = SimpleDataReader()
+    sdr = DataReader10()
     sdr.ReadData()
     # create net
     eta = 0.1

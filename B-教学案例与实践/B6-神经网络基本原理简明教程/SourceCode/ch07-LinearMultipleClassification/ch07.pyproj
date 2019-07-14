@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_MultipleClassification.py</StartupFile>
+    <StartupFile>Level2_ShowMultipleResult.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,10 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="HelperClass\Activators.py" />
-    <Compile Include="HelperClass\HyperParameters.py" />
+    <Compile Include="HelperClass\HyperParameters11.py" />
     <Compile Include="HelperClass\LossFunction.py" />
-    <Compile Include="HelperClass\NeuralNet.py" />
-    <Compile Include="HelperClass\SimpleDataReader.py" />
+    <Compile Include="HelperClass\NeuralNet12.py" />
+    <Compile Include="HelperClass\DataReader13.py" />
     <Compile Include="HelperClass\TrainingHistory.py" />
     <Compile Include="HelperClass\Visualizer.py" />
     <Compile Include="HelperClass\__init__.py">

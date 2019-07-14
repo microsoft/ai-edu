@@ -14,7 +14,6 @@ class InitialMethod(Enum):
     Xavier = 2,
     MSRA = 3
 
-
 # this class is for two-layer NN only
 class HyperParameters3(object):
     def __init__(self, n_input, n_hidden1, n_hidden2, n_output, 

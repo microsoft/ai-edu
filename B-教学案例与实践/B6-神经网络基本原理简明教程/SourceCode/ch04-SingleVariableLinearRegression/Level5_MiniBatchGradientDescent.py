@@ -1,8 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from HelperClass.NeuralNet import *
-from HelperClass.HyperParameters import *
+from HelperClass.NeuralNet10 import *
 
 def ShowResult(net, dataReader):
     X,Y = dataReader.GetWholeTrainSamples()
@@ -19,10 +18,10 @@ def ShowResult(net, dataReader):
 
 
 if __name__ == '__main__':
-    sdr = SimpleDataReader()
+    sdr = DataReader10()
     sdr.ReadData()
-    params = HyperParameters(1, 1, eta=0.3, max_epoch=100, batch_size=10, eps = 0.02)
-    net = NeuralNet(params)
+    params = HyperParameters10(1, 1, eta=0.3, max_epoch=100, batch_size=10, eps = 0.02)
+    net = NeuralNet10(params)
     net.train(sdr)    
    
     ShowResult(net, sdr)

@@ -24,31 +24,33 @@
     <Compile Include="HelperClass2\Activators.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass2\DataReader.py" />
+    <Compile Include="HelperClass2\DataReader20.py" />
     <Compile Include="HelperClass2\LossFunction.py" />
-    <Compile Include="HelperClass2\NeuralNet2.py" />
+    <Compile Include="HelperClass2\NeuralNet20.py" />
     <Compile Include="HelperClass2\TrainingTrace.py" />
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass\HyperParameters.py" />
-    <Compile Include="HelperClass\NeuralNet.py" />
-    <Compile Include="HelperClass\SimpleDataReader.py" />
+    <Compile Include="HelperClass\Activators.py" />
+    <Compile Include="HelperClass\HyperParameters11.py" />
+    <Compile Include="HelperClass\LossFunction.py" />
+    <Compile Include="HelperClass\NeuralNet12.py" />
+    <Compile Include="HelperClass\DataReader13.py" />
     <Compile Include="HelperClass\TrainingHistory.py" />
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Level3_Polynomial_Complex.py" />
-    <Compile Include="Level2_Polynomial_Sin.py" />
+    <Compile Include="Level2_Polynomial_Complex.py" />
+    <Compile Include="Level1_Polynomial_Sin.py" />
     <Compile Include="Level5_HowNNWorks.py" />
     <Compile Include="Level5_HowPolynomialWorks.py" />
     <Compile Include="Level4_NN_Complex.py" />
-    <Compile Include="Level4_NN_Sin.py" />
+    <Compile Include="Level3_NN_Sin.py" />
     <Compile Include="Level6_TuneParams.py" />
-    <Compile Include="HelperClass2\HyperParameters2.py">
+    <Compile Include="HelperClass2\HyperParameters20.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass2\WeightsBias.py" />
+    <Compile Include="HelperClass2\WeightsBias20.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelperClass2\" />

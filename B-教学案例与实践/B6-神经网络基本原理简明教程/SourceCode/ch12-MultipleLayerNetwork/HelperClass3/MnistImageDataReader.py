@@ -5,14 +5,14 @@
 
 import numpy as np
 import struct
-from HelperClass3.DataReader import *
+from HelperClass3.DataReader20 import *
 
 train_image_file = '../../Data/train-images-10'
 train_label_file = '../../Data/train-labels-10'
 test_image_file = '../../Data/test-images-10'
 test_label_file = '../../Data/test-labels-10'
 
-class MnistImageDataReader(DataReader):
+class MnistImageDataReader(DataReader20):
     # mode: "image"=Nx1x28x28,  "vector"=1x784
     def __init__(self, mode="image"):
         self.train_image_file = train_image_file

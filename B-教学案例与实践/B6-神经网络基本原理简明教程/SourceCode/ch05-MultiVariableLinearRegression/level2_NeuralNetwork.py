@@ -4,15 +4,15 @@
 # warning: 运行本程序将会得到失败的结果，这是by design的，是为了讲解课程内容，后面的程序中会有补救的方法
 
 import numpy as np
-from HelperClass.NeuralNet import *
+from HelperClass.NeuralNet11 import *
 
 if __name__ == '__main__':
     # data
-    reader = SimpleDataReader()
+    reader = DataReader11()
     reader.ReadData()
     # net
-    params = HyperParameters(2, 1, eta=0.1, max_epoch=10, batch_size=1, eps = 1e-5)
-    net = NeuralNet(params)
+    params = HyperParameters10(2, 1, eta=0.1, max_epoch=10, batch_size=1, eps = 1e-5)
+    net = NeuralNet11(params)
     net.train(reader, checkpoint=0.1)
     # inference
     x1 = 15

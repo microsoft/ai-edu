@@ -22,14 +22,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="HelperClass3\Activators.py" />
-    <Compile Include="HelperClass3\DataReader.py" />
+    <Compile Include="HelperClass3\DataReader20.py" />
     <Compile Include="HelperClass3\HyperParameters3.py" />
     <Compile Include="HelperClass3\LossFunction.py" />
     <Compile Include="HelperClass3\MnistImageDataReader.py" />
     <Compile Include="HelperClass3\NeuralNet3.py" />
-    <Compile Include="HelperClass3\TrainingTrace.py" />
-    <Compile Include="HelperClass3\Visualizer.py" />
-    <Compile Include="HelperClass3\WeightsBias.py" />
+    <Compile Include="HelperClass3\TrainingTrace3.py" />
+    <Compile Include="HelperClass3\Visualizer21.py" />
+    <Compile Include="HelperClass3\WeightsBias20.py" />
     <Compile Include="HelperClass3\__init__.py">
       <SubType>Code</SubType>
     </Compile>

@@ -4,7 +4,7 @@
 import numpy as np
 from enum import Enum
 
-from HelperClass2.HyperParameters2 import *
+from HelperClass2.HyperParameters20 import *
 
 class LossFunction(object):
     def __init__(self, net_type):
@@ -34,7 +34,7 @@ class LossFunction(object):
     # for binary classifier
     def CE2(self, A, Y, count):
         p1 = 1 - Y
-        p2 = np.log(1 - A + 1e-5)
+        p2 = np.log(1 - A)
         p3 = np.log(A)
 
         p4 = np.multiply(p1 ,p2)
@@ -47,18 +47,9 @@ class LossFunction(object):
 
     # for multiple classifier
     def CE3(self, A, Y, count):
-        p1 = np.log(A+1e-7)
+        p1 = np.log(A)
         p2 =  np.multiply(Y, p1)
         LOSS = np.sum(-p2) 
-        loss = LOSS / count
-        return loss
-    # end def
-
-    # for binary tanh classifier
-    def CE2_tanh(self, A, Y, count):
-        #p = (1-Y) * np.log(1-A) + (1+Y) * np.log(1+A)
-        p = (1-Y) * np.log((1-A)/2) + (1+Y) * np.log((1+A)/2)
-        LOSS = np.sum(-p)
         loss = LOSS / count
         return loss
     # end def

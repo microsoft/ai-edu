@@ -74,6 +74,7 @@ class TrainingTrace(object):
     def GetEpochNumber(self):
         return self.epoch_seq[-1]
 
+
     def GetLatestAverageLoss(self, count=10):
         total = len(self.loss_val)
         if count >= total:

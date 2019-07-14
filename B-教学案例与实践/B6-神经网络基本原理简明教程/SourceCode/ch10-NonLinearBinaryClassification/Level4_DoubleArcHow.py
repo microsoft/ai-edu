@@ -7,9 +7,7 @@ import matplotlib.pyplot as plt
 import math
 from mpl_toolkits.mplot3d import Axes3D
 
-from HelperClass2.DataReader import *
-from HelperClass2.HyperParameters2 import *
-from HelperClass2.NeuralNet2 import *
+from HelperClass2.NeuralNet20 import *
 from Level2_XorGateHow import *
 
 train_data_name = "../../Data/ch10.train.npz"
@@ -101,8 +99,8 @@ def train(dataReader, max_epoch):
     eta, batch_size = 0.1, 5
     eps = 0.01
 
-    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
-    net = NeuralNet2(hp, "Arc_221_epoch")
+    hp = HyperParameters20(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
+    net = NeuralNet20(hp, "Arc_221_epoch")
     
     #net.LoadResult()
     net.train(dataReader, 5, True)
@@ -113,7 +111,7 @@ def train(dataReader, max_epoch):
 
 
 if __name__ == '__main__':
-    dataReader = DataReader(train_data_name, test_data_name)
+    dataReader = DataReader20(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.NormalizeX()
     dataReader.Shuffle()

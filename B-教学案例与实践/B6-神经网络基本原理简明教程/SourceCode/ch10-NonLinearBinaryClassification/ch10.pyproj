@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de29cfe-16a6-493d-97b3-e617074af796</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_XorGateHow.py</StartupFile>
+    <StartupFile>Level3_DoubleArcClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,13 +22,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="HelperClass2\Activators.py" />
-    <Compile Include="HelperClass2\DataReader.py" />
-    <Compile Include="HelperClass2\HyperParameters2.py" />
+    <Compile Include="HelperClass2\DataReader20.py" />
+    <Compile Include="HelperClass2\HyperParameters20.py" />
     <Compile Include="HelperClass2\LossFunction.py" />
-    <Compile Include="HelperClass2\NeuralNet2.py" />
+    <Compile Include="HelperClass2\NeuralNet20.py" />
     <Compile Include="HelperClass2\TrainingTrace.py" />
-    <Compile Include="HelperClass2\Visualizer.py" />
-    <Compile Include="HelperClass2\WeightsBias.py" />
+    <Compile Include="HelperClass2\Visualizer20.py" />
+    <Compile Include="HelperClass2\WeightsBias20.py" />
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>

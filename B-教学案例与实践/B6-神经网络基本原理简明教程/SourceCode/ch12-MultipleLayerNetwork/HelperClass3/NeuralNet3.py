@@ -9,10 +9,10 @@ import sys
 
 from HelperClass3.HyperParameters3 import *
 from HelperClass3.MnistImageDataReader import *
-from HelperClass3.TrainingTrace import *
+from HelperClass3.TrainingTrace3 import *
 from HelperClass3.LossFunction import *
 from HelperClass3.Activators import *
-from HelperClass3.WeightsBias import *
+from HelperClass3.WeightsBias20 import *
 
 class NeuralNet3(object):
     def __init__(self, hp, model_name):
@@ -21,11 +21,11 @@ class NeuralNet3(object):
         self.subfolder = os.getcwd() + "\\" + self.__create_subfolder()
         print(self.subfolder)
 
-        self.wb1 = WeightsBias(self.hp.num_input, self.hp.num_hidden1, self.hp.init_method, self.hp.eta)
+        self.wb1 = WeightsBias20(self.hp.num_input, self.hp.num_hidden1, self.hp.init_method, self.hp.eta)
         self.wb1.InitializeWeights(self.subfolder, False)
-        self.wb2 = WeightsBias(self.hp.num_hidden1, self.hp.num_hidden2, self.hp.init_method, self.hp.eta)
+        self.wb2 = WeightsBias20(self.hp.num_hidden1, self.hp.num_hidden2, self.hp.init_method, self.hp.eta)
         self.wb2.InitializeWeights(self.subfolder, False)
-        self.wb3 = WeightsBias(self.hp.num_hidden2, self.hp.num_output, self.hp.init_method, self.hp.eta)
+        self.wb3 = WeightsBias20(self.hp.num_hidden2, self.hp.num_output, self.hp.init_method, self.hp.eta)
         self.wb3.InitializeWeights(self.subfolder, False)
 
     def __create_subfolder(self):
@@ -98,7 +98,7 @@ class NeuralNet3(object):
     def train(self, dataReader, checkpoint, need_test):
         t0 = time.time()
         # calculate loss to decide the stop condition
-        self.loss_trace = TrainingTrace()
+        self.loss_trace = TrainingTrace3()
         self.loss_func = LossFunction(self.hp.net_type)
         loss = 10
         if self.hp.batch_size == -1:
@@ -199,7 +199,7 @@ class NeuralNet3(object):
         self.wb3.LoadResultValue(self.subfolder, "wb3")
 
     def ShowTrainingTrace(self, xline):
-        self.loss_trace.ShowLossHistory(self.hp, xline)
+        self.loss_trace.ShowLossHistory(self.hp, x="epoch")
 
     def GetTrainingTrace(self):
         return self.loss_trace

@@ -4,10 +4,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet41 import *
 from MiniFramework.Optimizer import *
 from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
+from MiniFramework.HyperParameters41 import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DropoutLayer import *
@@ -39,7 +39,7 @@ def train(dataReader):
     learning_rate = 0.1
     eps = 1e-2
 
-    params = CParameters(
+    params = HyperParameters41(
         learning_rate, max_epoch, batch_size, eps,                        
         LossFunctionName.CrossEntropy3, 
         InitialMethod.Xavier, 

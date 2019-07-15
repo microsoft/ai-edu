@@ -5,22 +5,6 @@ import numpy as np
 
 from MiniFramework.Layer import *
 
-# sigmoid and softmax
-class ClassificationLayer(CLayer):
-    def __init__(self, activator):
-        self.activator = activator
-
-    def forward(self, input, train=True):
-        self.input_shape = input.shape
-        self.x = input
-        self.a = self.activator.forward(self.x)
-        return self.a
-
-    # 对分类函数的求导已经和损失函数合并计算了，所以不需要再做，直接回传误差给上一层
-    def backward(self, delta_in, flag):
-        dZ = delta_in
-        return dZ
-
 class ActivatorLayer(CLayer):
     def __init__(self, activator):
         self.activator = activator
@@ -92,16 +76,4 @@ class Relu(CActivator):
         da[z>0] = 1
         dz = da * delta
         return dz, da
-
-
-class Softmax(CActivator):
-    def forward(self, z):
-        shift_z = z - np.max(z, axis=0)
-        exp_z = np.exp(shift_z)
-        a = exp_z / np.sum(exp_z, axis=0)
-        return a
-
-    # softmax层，相当于最后一层，直接A-Y，不需要做反向求导
-    def backward(self, z, a, delta_in):
-        return delta_in, None
 

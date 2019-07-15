@@ -4,81 +4,78 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from MiniFramework.NeuralNet import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
+from MiniFramework.NeuralNet41 import *
 from MiniFramework.ActivatorLayer import *
-from MiniFramework.DropoutLayer import *
 
-from MnistImageDataReader import *
+train_file = "../../Data/ch16.train.npz"
+test_file = "../../Data/ch16.test.npz"
 
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
 
-def LoadData():
-    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
-    mdr.ReadLessData(1000)
-    #mdr.ReadData()
-    mdr.Normalize()
-    mdr.GenerateDevSet(k=10)
-    return mdr
-
-def Net(dataReader, num_input, num_hidden, num_output, params, show_history=True):
-    net = NeuralNet(params)
+def Model(dataReader, num_input, num_hidden, num_output, params):
+    net = NeuralNet41(params, "overfitting")
 
     fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
-    relu1 = ActivatorLayer(Relu())
-    net.add_layer(relu1, "relu1")
+    s1 = ActivatorLayer(Sigmoid())
+    net.add_layer(s1, "s1")
     
     fc2 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc2, "fc2")
-    relu2 = ActivatorLayer(Relu())
+    relu2 = ActivatorLayer(Tanh())
     net.add_layer(relu2, "relu2")
-
+    """
     fc3 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc3, "fc3")
     relu3 = ActivatorLayer(Relu())
     net.add_layer(relu3, "relu3")
-
+    
     fc4 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc4, "fc4")
     relu4 = ActivatorLayer(Relu())
     net.add_layer(relu4, "relu4")
-    
+    """
     fc5 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc5, "fc5")
-    softmax = ActivatorLayer(Softmax())
-    net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1, need_test=True)
-    if show_history:
-        net.ShowLossHistory()
+    net.train(dataReader, checkpoint=100, need_test=True)
+    net.ShowLossHistory(XCoordinate.Epoch)
     
     return net
 
+def ShowResult(net, dr):
+    TX = np.linspace(0,1,100).reshape(100,1)
+    TY = net.inference(TX)
+    plt.plot(TX, TY, c='red')
+    plt.title("fitting result")
+    plt.scatter(dr.XTrain, dr.YTrain)
+    plt.scatter(dr.XTest, dr.YTest)
+    plt.show()
+
+def LoadData():
+    dr = DataReader20(train_file, test_file)
+    dr.ReadData()
+    dr.NormalizeX()
+    dr.NormalizeY(NetType.Fitting)
+    dr.Shuffle()
+    return dr
 
 if __name__ == '__main__':
 
-    dataReader = LoadData()
-    num_feature = dataReader.num_feature
-    num_example = dataReader.num_example
-    num_input = num_feature
-    num_hidden = 30
-    num_output = 10
-    max_epoch = 200
-    batch_size = 100
+    dr = LoadData()
+
+    num_input = dr.num_feature
+    num_hidden = 32
+    num_output = 1
+    max_epoch = 10000
+    batch_size = 5
     learning_rate = 0.1
-    eps = 0.08
+    eps = 1e-6
 
-    params = CParameters(
+    params = HyperParameters41(
         learning_rate, max_epoch, batch_size, eps,                        
-        LossFunctionName.CrossEntropy3, 
-        InitialMethod.Xavier, 
-        OptimizerName.SGD)
+        net_type=NetType.Fitting,
+        init_method=InitialMethod.Xavier, 
+        optimizer_name=OptimizerName.SGD)
 
-    Net(dataReader, num_input, num_hidden, num_output, params)
+    net = Model(dr, num_input, num_hidden, num_output, params)
+    ShowResult(net, dr)

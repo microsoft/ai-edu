@@ -4,8 +4,7 @@
 import numpy as np
 
 from MiniFramework.Layer import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.Parameters import *
+from MiniFramework.WeightsBias30 import *
 
 class DropoutLayer(CLayer):
     def __init__(self, input_size, ratio=0.5):

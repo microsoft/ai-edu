@@ -11,53 +11,55 @@ from MiniFramework.HyperParameters41 import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DropoutLayer import *
+
 from MnistImageDataReader import *
 
-from Level0_OverFitNet import *
+train_image_file = 'train-images-10'
+train_label_file = 'train-labels-10'
+test_image_file = 'test-images-10'
+test_label_file = 'test-labels-10'
 
-def DropoutNet(dataReader, num_input, num_hidden, num_output, params):
+def LoadData():
+    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
+    mdr.ReadLessData(1000)
+    #mdr.ReadData()
+    mdr.Normalize()
+    mdr.GenerateDevSet(k=10)
+    return mdr
+
+def Net(dataReader, num_input, num_hidden, num_output, params, show_history=True):
     net = NeuralNet41(params)
 
     fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
     relu1 = ActivatorLayer(Relu())
     net.add_layer(relu1, "relu1")
-
-    drop1 = DropoutLayer(num_hidden, 0.1)
-    net.add_layer(drop1, "dp1")
-
+    
     fc2 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc2, "fc2")
     relu2 = ActivatorLayer(Relu())
     net.add_layer(relu2, "relu2")
-    
-    drop2 = DropoutLayer(num_hidden, 0.4)
-    net.add_layer(drop2, "dp2")
-    
+
     fc3 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc3, "fc3")
     relu3 = ActivatorLayer(Relu())
     net.add_layer(relu3, "relu3")
-    
-    drop3 = DropoutLayer(num_hidden, 0.45)
-    net.add_layer(drop3, "dp3")
-    
+
     fc4 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc4, "fc4")
     relu4 = ActivatorLayer(Relu())
     net.add_layer(relu4, "relu4")
-    
-    drop4 = DropoutLayer(num_hidden, 0.5)
-    net.add_layer(drop4, "dp4")
     
     fc5 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc5, "fc5")
     softmax = ActivatorLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1)
+    net.train(dataReader, checkpoint=1, need_test=True)
+    if show_history:
+        net.ShowLossHistory()
     
-    net.ShowLossHistory(XCoordinate.Iteration)
+    return net
 
 
 if __name__ == '__main__':
@@ -71,13 +73,12 @@ if __name__ == '__main__':
     max_epoch = 200
     batch_size = 100
     learning_rate = 0.1
-    eps = 1e-5
+    eps = 0.08
 
     params = HyperParameters41(
-        learning_rate, max_epoch, batch_size, eps,
+        learning_rate, max_epoch, batch_size, eps,                        
         LossFunctionName.CrossEntropy3, 
         InitialMethod.Xavier, 
         OptimizerName.SGD)
 
-    DropoutNet(dataReader, num_input, num_hidden, num_output, params)
-
+    Net(dataReader, num_input, num_hidden, num_output, params)

@@ -4,20 +4,38 @@
 
 import numpy as np
 import time
+import os
 
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer import *
-from MiniFramework.Parameters import *
+from MiniFramework.HyperParameters41 import *
+from MiniFramework.TrainingTrace import *
+from MiniFramework.LossFunction import *
+from MiniFramework.EnumDef import *
+from MiniFramework.DataReader20 import *
 
-class NeuralNet(object):
-    def __init__(self, params):
-        self.params = params
+class NeuralNet41(object):
+    def __init__(self, params, model_name):
+        self.model_name = model_name
+        self.hp = params
         self.layer_list = []
         self.layer_name = []
         self.output = None
         self.layer_count = 0
+        self.subfolder = os.getcwd() + "\\" + self.__create_subfolder()
+        print(self.subfolder)
+
+    def __create_subfolder(self):
+        if self.model_name != None:
+            path = self.model_name.strip()
+            path = path.rstrip("\\")
+            isExists = os.path.exists(path)
+            if not isExists:
+                os.makedirs(path)
+            return path
 
     def add_layer(self, layer, name=""):
+        layer.initialize(self.subfolder)
         self.layer_list.append(layer)
         self.layer_name.append(name)
         self.layer_count += 1
@@ -68,7 +86,7 @@ class NeuralNet(object):
                     regular_cost += np.sum(np.square(layer.weights.W))
             # end if
         # end for
-        return regular_cost * self.params.lambd
+        return regular_cost * self.hp.regular_value
 
     def __get_weights_from_fc_layer(self):
         weights = 0
@@ -90,25 +108,26 @@ class NeuralNet(object):
     def train(self, dataReader, checkpoint=0.1, need_test=True):
 
         t0 = time.time()
-
-        if self.params.regular == RegularMethod.EarlyStop:
-           self.loss_history = CLossHistory(True, self.params.lambd)
+        self.lossFunc = LossFunction(self.hp.net_type)
+        if self.hp.regular_name == RegularMethod.EarlyStop:
+            self.loss_trace = TrainingTrace(True, self.hp.regular_value)
         else:
-           self.loss_history = CLossHistory()
+           self.loss_trace = TrainingTrace()
 
-        self.lossFunc = CLossFunction(self.params.loss_func)
         # if num_example=200, batch_size=10, then iteration=200/10=20
-        if self.params.batch_size == -1 or self.params.batch_size > dataReader.num_train:
-            self.params.batch_size = dataReader.num_train
+        if self.hp.batch_size == -1 or self.hp.batch_size > dataReader.num_train:
+            self.hp.batch_size = dataReader.num_train
         # end if
-        max_iteration = dataReader.num_train // self.params.batch_size
+        max_iteration = dataReader.num_train // self.hp.batch_size
         checkpoint_iteration = (int)(max_iteration * checkpoint)
-        for epoch in range(self.params.max_epoch):
+        need_stop = False
+        for epoch in range(self.hp.max_epoch):
+            dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get x and y value for one sample
-                batch_x, batch_y = dataReader.GetBatchTrainSamples(self.params.batch_size, iteration)
+                batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
                 # for optimizers which need pre-update weights
-                if self.params.optimizer == OptimizerName.Nag:
+                if self.hp.optimizer_name == OptimizerName.Nag:
                     self.__pre_update()
                 # get z from x,y
                 self.__forward(batch_x, train=True)
@@ -118,7 +137,7 @@ class NeuralNet(object):
                 self.__update()
                 
                 total_iteration = epoch * max_iteration + iteration               
-                if total_iteration % checkpoint_iteration == 0:
+                if (total_iteration+1) % checkpoint_iteration == 0:
                     #self.save_parameters()
                     need_stop = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
                     if need_stop:
@@ -126,7 +145,6 @@ class NeuralNet(object):
                 #end if
             # end for
             #self.save_parameters()  # 这里会显著降低性能，因为频繁的磁盘操作，而且可能会有文件读写失败
-            dataReader.Shuffle()
             if need_stop:
                 break
             # end if
@@ -146,80 +164,63 @@ class NeuralNet(object):
 
         if need_test:
             print("testing...")
-            c,n = self.Test(dataReader)
-            print(str.format("rate={0} / {1} = {2}", c, n, c / n))
+            accuracy = self.Test(dataReader)
+            print(accuracy)
         # end if
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
 
         # l1/l2 cost
-        regular_cost = self.__get_regular_cost_from_fc_layer(self.params.regular)
+        regular_cost = self.__get_regular_cost_from_fc_layer(self.hp.regular_name)
 
         # calculate train loss
         self.__forward(train_x, train=False)
-        loss_train = self.lossFunc.CheckLoss(train_y, self.output)
-        loss_train += regular_cost / train_y.shape[1]
+        loss_train = self.lossFunc.CheckLoss(self.output, train_y)
+        loss_train = loss_train + regular_cost / train_x.shape[0]
+        accuracy_train = self.__CalAccuracy(self.output, train_y)
+        print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
 
-        if self.params.loss_func == LossFunctionName.MSE:
-            accuracy_train = self.params.eps / loss_train
-        elif self.params.loss_func == LossFunctionName.CrossEntropy3:
-            accuracy_train = self.__CalAccuracy(self.output, train_y, 3) / train_y.shape[1]
-        elif self.params.loss_func == LossFunctionName.CrossEntropy2:
-            accuracy_train = self.__CalAccuracy(self.output, train_y, 2) / train_y.shape[1]
-        print("loss_train=%.4f, accuracy_train=%f" %(loss_train, accuracy_train))
         # calculate validation loss
-        vld_x, vld_y = dataReader.GetDevSet()
-        if vld_x is None or vld_y is None:
-            loss_vld = None
-            accuracy_vld = None
-        else:
-            self.__forward(vld_x, train=False)
-            loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
-            loss_vld += regular_cost / vld_y.shape[1]
+        vld_x, vld_y = dataReader.GetValidationSet()
+        self.__forward(vld_x, train=False)
+        loss_vld = self.lossFunc.CheckLoss(self.output, vld_y)
+        loss_vld = loss_vld + regular_cost / vld_x.shape[0]
+        accuracy_vld = self.__CalAccuracy(self.output, vld_y)
+        print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
-            if self.params.loss_func == LossFunctionName.MSE:
-                accuracy_vld = self.params.eps / loss_vld
-            elif self.params.loss_func == LossFunctionName.CrossEntropy2:
-                accuracy_vld = self.__CalAccuracy(self.output, vld_y, 2) / vld_y.shape[1]
-            elif self.params.loss_func == LossFunctionName.CrossEntropy3:
-                accuracy_vld = self.__CalAccuracy(self.output, vld_y, 3) / vld_y.shape[1]
-            print("loss_valid=%.4f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
         # end if
-        need_stop = self.loss_history.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld)
-        if loss_vld <= self.params.eps:
+        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.eps)
+        if loss_vld <= self.hp.eps:
             need_stop = True
-
         return need_stop
         
-       
     def Test(self, dataReader):
-        correct = 0
-        test_batch = 1000
-        max_iteration = max(dataReader.num_test//test_batch,1)
-        for i in range(max_iteration):
-            x, y = dataReader.GetBatchTestSamples(test_batch, i)
-            self.__forward(x, train=False)
-            correct += self.__CalAccuracy(self.output, y, 3)
-        #end for
-        return correct, dataReader.num_test
+        x,y = dataReader.GetTestSet()
+        self.__forward(x, train=False)
+        correct = self.__CalAccuracy(self.output, y)
+        print(correct)
+        return correct
 
-    # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
-    def __CalAccuracy(self, a, y, mode):
-        if mode == 1:
-            pass
-        elif mode == 2:
-            a[a>=0.5]=1
-            r = (a == y)
+    def __CalAccuracy(self, a, y):
+        assert(a.shape == y.shape)
+        m = a.shape[0]
+        if self.hp.net_type == NetType.Fitting:
+            var = np.var(y)
+            mse = np.sum((a-y)**2)/a.shape[0]
+            r2 = 1 - mse / var
+            return r2
+        elif self.hp.net_type == NetType.BinaryClassifier:
+            b = np.round(a)
+            r = (b == y)
             correct = r.sum()
-            return correct
-        else:
-            ra = np.argmax(a, axis=0)
-            ry = np.argmax(y, axis=0)
+            return correct/m
+        elif self.hp.net_type == NetType.MultipleClassifier:
+            ra = np.argmax(a, axis=1)
+            ry = np.argmax(y, axis=1)
             r = (ra == ry)
             correct = r.sum()
-            return correct
-
+            return correct/m
 
     def inference(self, X):
         self.__forward(X)
@@ -227,17 +228,19 @@ class NeuralNet(object):
 
     # save weights value when got low loss than before
     def save_parameters(self):
+        print("save parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
-            layer.save_parameters(name)
+            layer.save_parameters(self.subfolder, name)
 
     # load weights for the most low loss moment
     def load_parameters(self):
+        print("load parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
             name = self.layer_name[i]
-            layer.load_parameters(name)
+            layer.load_parameters(self.subfolder, name)
 
-    def ShowLossHistory(self, xmin=None, xmax=None, ymin=None, ymax=None):
-        self.loss_history.ShowLossHistory(self.params, xmin, xmax, ymin, ymax)
+    def ShowLossHistory(self, xcoor, xmin=None, xmax=None, ymin=None, ymax=None):
+        self.loss_trace.ShowLossHistory(self.hp.toString(), xcoor, xmin, xmax, ymin, ymax)

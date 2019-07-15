@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_Dropout2.py</StartupFile>
+    <StartupFile>Level0_OverFitNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Level0_OverFitNet - Copy.py" />
     <Compile Include="Level4_Dropout2.py" />
     <Compile Include="Level6_BaggingLearner.py" />
     <Compile Include="Level6_BootstrappingGenerator.py" />
@@ -34,16 +35,21 @@
     <Compile Include="MiniFramework\BatchNormLayer.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MiniFramework\ClassificationLayer.py" />
     <Compile Include="MiniFramework\DataReader.py" />
     <Compile Include="MiniFramework\ActivatorLayer.py" />
+    <Compile Include="MiniFramework\DataReader20.py" />
     <Compile Include="MiniFramework\DropoutLayer.py" />
+    <Compile Include="MiniFramework\EnumDef.py" />
     <Compile Include="MiniFramework\FullConnectionLayer.py" />
     <Compile Include="MiniFramework\Optimizer.py" />
     <Compile Include="MiniFramework\Layer.py" />
+    <Compile Include="MiniFramework\HyperParameters41.py" />
+    <Compile Include="MiniFramework\TrainingTrace.py" />
+    <Compile Include="MiniFramework\WeightsBias30.py" />
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MiniFramework\LossFunction.py" />
-    <Compile Include="MiniFramework\NeuralNet.py" />
-    <Compile Include="MiniFramework\Parameters.py" />
+    <Compile Include="MiniFramework\NeuralNet41.py" />
     <Compile Include="MiniFramework\WeightsBias.py" />
     <Compile Include="MnistBaggingReader.py" />
     <Compile Include="MnistAugmentationReader.py">

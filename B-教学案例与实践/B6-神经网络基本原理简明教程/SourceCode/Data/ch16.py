@@ -37,7 +37,7 @@ def GetSampleData():
         return TrainData, TestData
 
 if __name__ == '__main__':
-    CreateSampleData(200, 100)
+    CreateSampleData(25, 100)
     TrainData, TestData = GetSampleData()
     plt.scatter(TrainData["data"], TrainData["label"], s=1, c='b')
     plt.scatter(TestData["data"], TestData["label"], s=4, c='r')

@@ -4,24 +4,19 @@
 import numpy as np
 from pathlib import Path
 
+from MiniFramework.EnumDef import *
 from MiniFramework.Optimizer import *
 
-class InitialMethod(Enum):
-    Zero = 0,
-    Normal = 1,
-    Xavier = 2,
-    MSRA = 3
-
-class WeightsBias(object):
+class WeightsBias30(object):
     def __init__(self, n_input, n_output, init_method, optimizer_name, eta):
         self.num_input = n_input
         self.num_output = n_output
         self.init_method = init_method
-        self.optimizer = optimizer_name
+        self.optimizer_name = optimizer_name
         self.eta = eta
         self.initial_value_filename = str.format("w_{0}_{1}_{2}_init", self.num_input, self.num_output, self.init_method.name)
 
-    def InitializeWeights(self, folder, create_new = False):
+    def InitializeWeights(self, folder, create_new):
         self.folder = folder
         if create_new:
             self.__CreateNew()
@@ -34,7 +29,7 @@ class WeightsBias(object):
         self.dB = np.zeros(self.B.shape)
 
     def __CreateNew(self):
-        self.W, self.B = WeightsBias.InitialParameters(self.num_input, self.num_output, self.init_method)
+        self.W, self.B = WeightsBias30.InitialParameters(self.num_input, self.num_output, self.init_method)
         self.__SaveInitialValue()
         
     def __LoadExistingParameters(self):
@@ -45,10 +40,10 @@ class WeightsBias(object):
         else:
             self.__CreateNew()
         # end if
-
+    
     def __CreateOptimizers(self):
-        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer)
-        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer)
+        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
 
     def pre_Update(self):
         if self.optimizer == OptimizerName.Nag:
@@ -73,9 +68,8 @@ class WeightsBias(object):
     def SaveResultValue(self, folder, name):
         file_name = str.format("{0}\\{1}.npz", folder, name)
         np.savez(file_name, weights=self.W, bias=self.B)
-        #print(self.W)
-        #print(self.B)
-        #print(np.sum(np.abs(self.W), axis=0))
+        print("W=", self.W)
+        print("B=", self.B)
 
     def LoadResultValue(self, folder, name):
         file_name = str.format("{0}\\{1}.npz", folder, name)
@@ -101,4 +95,3 @@ class WeightsBias(object):
         # end if
         B = np.zeros((1, num_output))
         return W, B
-

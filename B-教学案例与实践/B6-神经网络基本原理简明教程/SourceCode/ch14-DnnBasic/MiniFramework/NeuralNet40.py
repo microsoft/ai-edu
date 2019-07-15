@@ -147,9 +147,6 @@ class NeuralNet40(object):
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
 
-        # l1/l2 cost
-       # regular_cost = self.__get_regular_cost_from_fc_layer(self.hp.regular)
-
         # calculate train loss
         self.__forward(train_x, train=False)
         loss_train = self.lossFunc.CheckLoss(self.output, train_y)
@@ -177,7 +174,6 @@ class NeuralNet40(object):
         print(correct)
         return correct
 
-    # mode: 1=fitting, 2=binary classifier, 3=multiple classifier
     def __CalAccuracy(self, a, y):
         assert(a.shape == y.shape)
         m = a.shape[0]

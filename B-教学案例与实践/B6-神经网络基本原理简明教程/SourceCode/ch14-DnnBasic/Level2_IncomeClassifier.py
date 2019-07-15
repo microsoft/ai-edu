@@ -7,10 +7,6 @@ import matplotlib.pyplot as plt
 import math
 
 from MiniFramework.NeuralNet import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
@@ -27,48 +23,7 @@ def LoadData():
     return dr
 
 
-def model1():
-    dr = LoadData()
-    
-    num_input = dr.num_feature
-    num_hidden1 = 32
-    num_hidden2 = 8
-    num_output = 1
-
-    max_epoch = 100
-    batch_size = 16
-    learning_rate = 0.1
-    eps = 0.001
-
-    params = CParameters(
-        learning_rate, max_epoch, batch_size, eps,
-        LossFunctionName.CrossEntropy2,
-        InitialMethod.Xavier, 
-        OptimizerName.SGD)
-
-    net = NeuralNet(params, "Income")
-
-    fc1 = FcLayer(num_input, num_hidden1, params)
-    net.add_layer(fc1, "fc1")
-    a1 = ActivatorLayer(Relu())
-    net.add_layer(a1, "relu1")
-    
-    fc2 = FcLayer(num_hidden1, num_hidden2, params)
-    net.add_layer(fc2, "fc2")
-    a2 = ActivatorLayer(Relu())
-    net.add_layer(a2, "relu2")
-
-    fc3 = FcLayer(num_hidden2, num_output, params)
-    net.add_layer(fc3, "fc3")
-    sigmoid3 = ClassificationLayer(Sigmoid())
-    net.add_layer(sigmoid3, "sigmoid3")
-
-    #net.load_parameters()
-
-    net.train(dr, checkpoint=1, need_test=True)
-    net.ShowLossHistory()
-
-def model2():
+def model():
     dr = LoadData()
     
     num_input = dr.num_feature
@@ -78,16 +33,15 @@ def model2():
     num_hidden4 = 16
     num_output = 1
 
-    max_epoch = 1000
+    max_epoch = 100
     batch_size = 16
-    learning_rate = 0.01
-    eps = 0.001
+    learning_rate = 0.1
+    eps = 1e-3
 
-    params = CParameters(
+    params = HyperParameters(
         learning_rate, max_epoch, batch_size, eps,
-        LossFunctionName.CrossEntropy2,
-        InitialMethod.Xavier, 
-        OptimizerName.Adam)
+        net_type=NetType.BinaryClassifier,
+        init_method=InitialMethod.Xavier)
 
     net = NeuralNet(params, "Income")
 
@@ -113,14 +67,14 @@ def model2():
 
     fc5 = FcLayer(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")
-    sigmoid5 = ClassificationLayer(Sigmoid())
-    net.add_layer(sigmoid5, "sigmoid5")
+    logistic = ClassificationLayer(Logistic())
+    net.add_layer(logistic, "logistic")
 
     #net.load_parameters()
 
     net.train(dr, checkpoint=10, need_test=True)
-    net.ShowLossHistory()
+    net.ShowLossHistory("epoch")
 
 
 if __name__ == '__main__':
-    model2()
+    model()

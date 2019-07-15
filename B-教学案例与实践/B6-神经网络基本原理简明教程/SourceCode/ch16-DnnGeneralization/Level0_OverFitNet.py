@@ -3,29 +3,32 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import sys, os
-sys.path.append(os.pardir)
 
 from MiniFramework.NeuralNet import *
 from MiniFramework.Optimizer import *
 from MiniFramework.LossFunction import *
-from MiniFramework.HyperParameters3 import *
-from MiniFramework.DataReader import *
+from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DropoutLayer import *
 
-train_data_name = "../../Data/ch16.train.npz"
-test_data_name = "../../Data/ch16.test.npz"
+from MnistImageDataReader import *
+
+train_image_file = 'train-images-10'
+train_label_file = 'train-labels-10'
+test_image_file = 'test-images-10'
+test_label_file = 'test-labels-10'
 
 def LoadData():
-    dr = DataReader(train_data_name, test_data_name)
-    dr.ReadData()
-    dr.GenerateValidationSet(k=10)
-    return dr
+    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
+    mdr.ReadLessData(1000)
+    #mdr.ReadData()
+    mdr.Normalize()
+    mdr.GenerateDevSet(k=10)
+    return mdr
 
-def Net(dataReader, params, num_hidden, show_history=True):
-    net = NeuralNet(params, "aaa")
+def Net(dataReader, num_input, num_hidden, num_output, params, show_history=True):
+    net = NeuralNet(params)
 
     fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
@@ -49,8 +52,8 @@ def Net(dataReader, params, num_hidden, show_history=True):
     
     fc5 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc5, "fc5")
-    softmax = ActivatorLayer(Logistic())
-    net.add_layer(softmax, "logistic")
+    softmax = ActivatorLayer(Softmax())
+    net.add_layer(softmax, "softmax")
 
     net.train(dataReader, checkpoint=1, need_test=True)
     if show_history:
@@ -62,14 +65,20 @@ def Net(dataReader, params, num_hidden, show_history=True):
 if __name__ == '__main__':
 
     dataReader = LoadData()
-    num_feature = 1
+    num_feature = dataReader.num_feature
+    num_example = dataReader.num_example
     num_input = num_feature
     num_hidden = 30
-    num_output = 1
-    max_epoch = 100
-    batch_size = 5
+    num_output = 10
+    max_epoch = 200
+    batch_size = 100
     learning_rate = 0.1
     eps = 0.08
 
-    hp = HyperParameters2(num_input, num_output, learning_rate, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)
-    Net(dataReader, hp, num_hidden, "aaa")
+    params = CParameters(
+        learning_rate, max_epoch, batch_size, eps,                        
+        LossFunctionName.CrossEntropy3, 
+        InitialMethod.Xavier, 
+        OptimizerName.SGD)
+
+    Net(dataReader, num_input, num_hidden, num_output, params)

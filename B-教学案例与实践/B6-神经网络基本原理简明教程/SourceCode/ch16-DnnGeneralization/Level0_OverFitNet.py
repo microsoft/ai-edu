@@ -21,19 +21,19 @@ def Model(dataReader, num_input, num_hidden, num_output, params):
     
     fc2 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc2, "fc2")
-    relu2 = ActivatorLayer(Tanh())
+    relu2 = ActivatorLayer(Sigmoid())
     net.add_layer(relu2, "relu2")
-    """
+    
     fc3 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc3, "fc3")
-    relu3 = ActivatorLayer(Relu())
+    relu3 = ActivatorLayer(Sigmoid())
     net.add_layer(relu3, "relu3")
     
     fc4 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc4, "fc4")
     relu4 = ActivatorLayer(Relu())
     net.add_layer(relu4, "relu4")
-    """
+    
     fc5 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc5, "fc5")
 
@@ -48,7 +48,7 @@ def ShowResult(net, dr):
     plt.plot(TX, TY, c='red')
     plt.title("fitting result")
     plt.scatter(dr.XTrain, dr.YTrain)
-    plt.scatter(dr.XTest, dr.YTest)
+    plt.scatter(dr.XTest, dr.YTest, marker='x')
     plt.show()
 
 def LoadData():
@@ -56,7 +56,7 @@ def LoadData():
     dr.ReadData()
     dr.NormalizeX()
     dr.NormalizeY(NetType.Fitting)
-    dr.Shuffle()
+   # dr.Shuffle()
     return dr
 
 if __name__ == '__main__':
@@ -64,10 +64,10 @@ if __name__ == '__main__':
     dr = LoadData()
 
     num_input = dr.num_feature
-    num_hidden = 32
+    num_hidden = 64
     num_output = 1
     max_epoch = 10000
-    batch_size = 5
+    batch_size = 10
     learning_rate = 0.1
     eps = 1e-6
 

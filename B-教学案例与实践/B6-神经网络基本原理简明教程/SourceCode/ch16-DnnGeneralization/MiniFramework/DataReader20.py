@@ -71,6 +71,7 @@ class DataReader20(object):
             # this is for if no normalize requirment
             self.XTest = self.XTestRaw
             self.YTest = self.YTestRaw
+            # assume there has no validation set
             self.XDev = self.XTest
             self.YDev = self.YTest
         else:

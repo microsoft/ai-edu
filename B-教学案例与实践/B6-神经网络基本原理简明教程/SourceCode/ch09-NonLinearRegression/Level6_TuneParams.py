@@ -5,15 +5,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass2.NeuralNet2 import *
-from HelperClass2.DataReader import *
+from HelperClass2.NeuralNet20 import *
 
 train_data_name = "../../Data/ch09.train.npz"
 test_data_name = "../../Data/ch09.test.npz"
 
-
 def train(hp, folder):
-    net = NeuralNet2(hp, folder)
+    net = NeuralNet20(hp, folder)
     net.train(dataReader, 50, True)
     trace = net.GetTrainingTrace()
     return trace
@@ -40,7 +38,7 @@ def ShowLossHistory(folder, file1, hp1, file2, hp2, file3, hp3, file4, hp4):
 
 
 def try_hyperParameters(folder, n_hidden, batch_size, eta):
-    hp = HyperParameters2(1, n_hidden, 1, eta, 10000, batch_size, 0.001, NetType.Fitting, InitialMethod.Xavier)
+    hp = HyperParameters20(1, n_hidden, 1, eta, 10000, batch_size, 0.001, NetType.Fitting, InitialMethod.Xavier)
     filename = str.format("{0}\\{1}_{2}_{3}.pkl", folder, ne, batch, eta).replace('.', '', 1)
     file = Path(filename)
     if file.exists():
@@ -53,7 +51,7 @@ def try_hyperParameters(folder, n_hidden, batch_size, eta):
 
 if __name__ == '__main__':
   
-    dataReader = DataReader(train_data_name, test_data_name)
+    dataReader = DataReader20(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
     

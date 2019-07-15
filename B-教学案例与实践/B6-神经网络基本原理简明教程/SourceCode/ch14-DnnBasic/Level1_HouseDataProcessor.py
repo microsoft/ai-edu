@@ -13,7 +13,6 @@ test_data_file_name = "../../Data/kc_test.csv"      # download from DC
 train_data = "../../Data/house_Train.npz"
 test_data = "../../Data/house_Test.npz"
 
-
 class HouseDataProcessor(object):
     def PrepareData(self, csv_file, npz_file):
         self.X = None

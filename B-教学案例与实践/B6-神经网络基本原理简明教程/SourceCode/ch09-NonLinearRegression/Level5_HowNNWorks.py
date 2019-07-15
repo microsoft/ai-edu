@@ -4,8 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass2.NeuralNet2 import *
-from HelperClass2.DataReader import *
+from HelperClass2.NeuralNet20 import *
 
 train_data_name = "../../Data/ch08.train.npz"
 test_data_name = "../../Data/ch08.test.npz"
@@ -52,7 +51,7 @@ def ShowResult2D(net, title):
     plt.show()
 
 if __name__ == '__main__':
-    dataReader = DataReader(train_data_name, test_data_name)
+    dataReader = DataReader20(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
 
@@ -60,8 +59,8 @@ if __name__ == '__main__':
     eta, batch_size, max_epoch = 0.05, 10, 5000
     eps = 0.001
 
-    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)
-    net = NeuralNet2(hp, "sin_121")
+    hp = HyperParameters20(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)
+    net = NeuralNet20(hp, "sin_121")
 
     net.LoadResult()
     print(net.wb1.W)

@@ -5,57 +5,39 @@ import numpy as np
 from pathlib import Path
 from enum import Enum
 
-
-class YNormalizationMethod(Enum):
-    Nothing = 0,
-    Regression = 1,
-    BinaryClassifier = 2,
-    MultipleClassifier = 3
+from MiniFramework.HyperParameters import *
 
 """
 X:
-x1: feature1 feature2 feature3...
-x2: feature1 feature2 feature3...
-x3: feature1 feature2 feature3...
-...
+    x1: feature1 feature2 feature3...
+    x2: feature1 feature2 feature3...
+    x3: feature1 feature2 feature3...
+    ......
 
-Y:
-[if regression, value]
-y1
-y2
-y3
-...
-
-[if binary classification, 0/1]
-0
-1
-1
-...
-
-[if multiple classification, e.g. 4 category, one-hot]
-0, 1, 0, 0
-1, 0, 0, 0
-0, 0, 1, 0
-...
-
+Y:  [if regression, value]
+    [if binary classification, 0/1]
+    [if multiple classification, e.g. 4 category, one-hot]
 """
+
 class DataReader(object):
     def __init__(self, train_file, test_file):
         self.train_file_name = train_file
         self.test_file_name = test_file
-        self.num_train = 0
-        self.num_test = 0
-        self.num_validation = 0
-        self.num_feature = 0
-        self.num_category = 0
-        self.XTrain = None
-        self.YTrain = None
-        self.XTest = None
-        self.YTest = None
-        self.XTrainRaw = None
-        self.YTrainRaw = None
-        self.XTestRaw = None
-        self.YTestRaw = None
+        self.num_train = 0        # num of training examples
+        self.num_test = 0         # num of test examples
+        self.num_validation = 0   # num of validation examples
+        self.num_feature = 0      # num of features
+        self.num_category = 0     # num of categories
+        self.XTrain = None        # training feature set
+        self.YTrain = None        # training label set
+        self.XTest = None         # test feature set
+        self.YTest = None         # test label set
+        self.XTrainRaw = None     # training feature set before normalization
+        self.YTrainRaw = None     # training label set before normalization
+        self.XTestRaw = None      # test feature set before normalization
+        self.YTestRaw = None      # test label set before normalization
+        self.XVld = None          # validation feature set
+        self.YVld = None          # validation lable set
 
     # read data from file
     def ReadData(self):
@@ -115,19 +97,17 @@ class DataReader(object):
         # end for
         return temp_X
 
-    def NormalizeY(self, method, base=0):
-        if method == YNormalizationMethod.Nothing:
-            pass
-        elif method == YNormalizationMethod.Regression:
+    def NormalizeY(self, nettype, base=0):
+        if nettype == NetType.Fitting:
             y_merge = np.vstack((self.YTrainRaw, self.YTestRaw))
             y_merge_norm = self.__NormalizeY(y_merge)
             train_count = self.YTrainRaw.shape[0]
             self.YTrain = y_merge_norm[0:train_count,:]
             self.YTest = y_merge_norm[train_count:,:]                
-        elif method == YNormalizationMethod.BinaryClassifier:
+        elif nettype == NetType.BinaryClassifier:
             self.YTrain = self.__ToZeroOne(self.YTrainRaw, base)
             self.YTest = self.__ToZeroOne(self.YTestRaw, base)
-        elif method == YNormalizationMethod.MultipleClassifier:
+        elif nettype == NetType.MultipleClassifier:
             self.YTrain = self.__ToOneHot(self.YTrainRaw, base)
             self.YTest = self.__ToOneHot(self.YTestRaw, base)
 

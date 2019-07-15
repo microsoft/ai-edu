@@ -6,11 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from HelperClass.SimpleDataReader import *
+from HelperClass.DataReader10 import *
 
 if __name__ == '__main__':
 
-    reader = SimpleDataReader()
+    reader = DataReader10()
     reader.ReadData()
     X,Y = reader.GetWholeTrainSamples()
 

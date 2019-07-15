@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>861435cf-1591-4754-8a11-90ac6bd773e6</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_LeastSquare.py</StartupFile>
+    <StartupFile>Level6_LogicNotGate.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelperClass\HyperParameters.py">
+    <Compile Include="HelperClass\HyperParameters10.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HelperClass\TrainingHistory.py">
@@ -32,8 +32,8 @@
     </Compile>
     <Compile Include="Level5_FullBatchGradientDescent.py" />
     <Compile Include="Level5_MiniBatchGradientDescent.py" />
-    <Compile Include="HelperClass\NeuralNet.py" />
-    <Compile Include="HelperClass\SimpleDataReader.py" />
+    <Compile Include="HelperClass\NeuralNet10.py" />
+    <Compile Include="HelperClass\DataReader10.py" />
     <Compile Include="Level1_LeastSquare.py" />
     <Compile Include="Level2_GradientDescent.py" />
     <Compile Include="Level5_SingleGradientDescent.py" />

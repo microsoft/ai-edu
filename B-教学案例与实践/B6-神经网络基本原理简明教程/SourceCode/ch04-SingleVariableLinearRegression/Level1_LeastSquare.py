@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from HelperClass.SimpleDataReader import *
+from HelperClass.DataReader10 import *
 
 # 根据公式15
 def method1(X,Y,m):
@@ -45,7 +45,7 @@ def calculate_b_2(X,Y,w):
 
 if __name__ == '__main__':
 
-    reader = SimpleDataReader()
+    reader = DataReader10()
     reader.ReadData()
     X,Y = reader.GetWholeTrainSamples()
     m = X.shape[0]

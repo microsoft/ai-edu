@@ -6,15 +6,13 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
-from HelperClass2.DataReader import *
-from HelperClass2.HyperParameters2 import *
-from HelperClass2.NeuralNet2 import *
+from HelperClass2.NeuralNet20 import *
 
 # x1=0,x2=0,y=0
 # x1=0,x2=1,y=1
 # x1=1,x2=0,y=1
 # x1=1,x2=1,y=0
-class XOR_DataReader(DataReader):
+class XOR_DataReader(DataReader20):
     def __init__(self):
         pass
 
@@ -63,8 +61,8 @@ if __name__ == '__main__':
     eta, batch_size, max_epoch = 0.1, 1, 10000
     eps = 0.005
 
-    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
-    net = NeuralNet2(hp, "Xor_221")
+    hp = HyperParameters20(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
+    net = NeuralNet20(hp, "Xor_221")
 
     net.train(dataReader, 100, True)
     net.ShowTrainingTrace()

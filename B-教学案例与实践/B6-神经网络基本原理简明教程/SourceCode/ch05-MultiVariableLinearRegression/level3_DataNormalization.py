@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from HelperClass.NeuralNet import *
+from HelperClass.NeuralNet11 import *
 
 def ShowResult(net, reader):
     # draw example points
@@ -26,13 +26,13 @@ def ShowResult(net, reader):
 
 if __name__ == '__main__':
     # data
-    reader = SimpleDataReader()
+    reader = DataReader11()
     reader.ReadData()
     reader.NormalizeX()
     # net
-    params = HyperParameters(2, 1, eta=0.1, max_epoch=10, batch_size=1, eps = 1e-5)
-    #params = HyperParameters(2, 1, eta=0.01, max_epoch=500, batch_size=10, eps = 1e-5)
-    net = NeuralNet(params)
+    params = HyperParameters10(2, 1, eta=0.1, max_epoch=10, batch_size=1, eps = 1e-5)
+    #params = HyperParameters10(2, 1, eta=0.01, max_epoch=500, batch_size=10, eps = 1e-5)
+    net = NeuralNet11(params)
     net.train(reader, checkpoint=0.1)
     # inference
     x1 = 15

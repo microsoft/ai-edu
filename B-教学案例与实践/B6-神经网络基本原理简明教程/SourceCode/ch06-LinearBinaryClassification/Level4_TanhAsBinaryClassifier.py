@@ -4,13 +4,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.NeuralNet import *
+from HelperClass.NeuralNet12 import *
 from HelperClass.Activators import *
-from HelperClass.SimpleDataReader import *
+from HelperClass.DataReader11 import *
 from Level3_ShowBinaryResult import *
 
 # step 1
-class TanhNeuralNet(NeuralNet):
+class TanhNeuralNet(NeuralNet12):
     def forwardBatch(self, batch_x):
         Z = np.dot(batch_x, self.W) + self.B
         if self.params.net_type == NetType.BinaryClassifier:
@@ -33,7 +33,7 @@ class TanhNeuralNet(NeuralNet):
         return dW, dB
 
 
-class SimpleDataReader_tanh(SimpleDataReader):
+class DataReader_tanh(DataReader11):
     def ToZeroOne(self):
         Y = np.zeros((self.num_train, 1))
         for i in range(self.num_train):
@@ -56,13 +56,13 @@ def draw_source_data(dataReader, show=False):
 # 主程序
 if __name__ == '__main__':
     # data
-    reader = SimpleDataReader_tanh()
+    reader = DataReader_tanh()
     reader.ReadData()
     reader.ToZeroOne()
     # net
     num_input = 2
     num_output = 1
-    params = HyperParameters(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryTanh)
+    params = HyperParameters11(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryTanh)
     net = TanhNeuralNet(params)
     net.train(reader, checkpoint=10)
 

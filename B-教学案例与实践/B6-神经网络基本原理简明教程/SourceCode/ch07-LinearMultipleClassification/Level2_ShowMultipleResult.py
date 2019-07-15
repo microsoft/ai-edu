@@ -6,9 +6,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import math
 
-from HelperClass.NeuralNet import *
-from HelperClass.SimpleDataReader import *
-from HelperClass.HyperParameters import *
+from HelperClass.NeuralNet12 import *
 from HelperClass.Visualizer import *
 
 def ShowData(X,Y):
@@ -63,7 +61,7 @@ def ShowResult(X,Y,xt,yt):
 # 主程序
 if __name__ == '__main__':
     num_category = 3
-    reader = SimpleDataReader()
+    reader = DataReader13()
     reader.ReadData()
     reader.ToOneHot(num_category, base=1)
     # show raw data before normalization
@@ -71,8 +69,8 @@ if __name__ == '__main__':
     reader.NormalizeX()
 
     num_input = 2
-    params = HyperParameters(num_input, num_category, eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.MultipleClassifier)
-    net = NeuralNet(params)
+    params = HyperParameters11(num_input, num_category, eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.MultipleClassifier)
+    net = NeuralNet12(params)
     net.train(reader, checkpoint=1)
 
     xt_raw = np.array([5,1,7,6,5,6,2,7]).reshape(4,2)

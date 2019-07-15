@@ -2,16 +2,11 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 from MiniFramework.NeuralNet import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
+from MiniFramework.ActivatorLayer import *
 
-
-train_file = "../../Data/09_Train.npz"
-test_file = "../../Data/09_Test.npz"
+train_file = "../../Data/ch09.train.npz"
+test_file = "../../Data/ch09.test.npz"
 
 def ShowResult(net, dr):
     fig = plt.figure(figsize=(12,5))
@@ -48,13 +43,12 @@ def model():
     max_epoch = 10000
     batch_size = 10
     learning_rate = 0.5
-    eps = 0.001
+    eps = 1e-5
 
-    params = CParameters(
-        learning_rate, max_epoch, batch_size, eps,
-        LossFunctionName.MSE, 
-        InitialMethod.Xavier, 
-        OptimizerName.SGD)
+    params = HyperParameters(
+        learning_rate, max_epoch, batch_size,
+        net_type=NetType.Fitting,
+        init_method=InitialMethod.Xavier)
 
     net = NeuralNet(params, "Level1_CurveFittingNet")
     fc1 = FcLayer(num_input, num_hidden1, params)
@@ -69,7 +63,7 @@ def model():
     #ShowResult2(net, dataReader)
 
     net.train(dataReader, checkpoint=100, need_test=True)
-    net.ShowLossHistory()
+    net.ShowLossHistory("epoch")
     
     #ShowResult(net, dataReader, params.toString())
     ShowResult(net, dataReader)

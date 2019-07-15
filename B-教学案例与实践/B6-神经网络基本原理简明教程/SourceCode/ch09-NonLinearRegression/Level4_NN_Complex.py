@@ -5,8 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from HelperClass2.NeuralNet2 import *
-from HelperClass2.DataReader import *
+from HelperClass2.NeuralNet20 import *
 
 train_data_name = "../../Data/ch09.train.npz"
 test_data_name = "../../Data/ch09.test.npz"
@@ -24,16 +23,16 @@ def ShowResult(net, dataReader, title):
 #end def
 
 if __name__ == '__main__':
-    dataReader = DataReader(train_data_name, test_data_name)
+    dataReader = DataReader20(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
 
-    n_input, n_hidden, n_output = 1, 8, 1
+    n_input, n_hidden, n_output = 1, 3, 1
     eta, batch_size, max_epoch = 0.5, 10, 10000
     eps = 0.001
 
-    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)
-    net = NeuralNet2(hp, "complex_121")
+    hp = HyperParameters20(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.Fitting, InitialMethod.Xavier)
+    net = NeuralNet20(hp, "complex_131")
 
     net.train(dataReader, 50, True)
     net.ShowTrainingTrace()

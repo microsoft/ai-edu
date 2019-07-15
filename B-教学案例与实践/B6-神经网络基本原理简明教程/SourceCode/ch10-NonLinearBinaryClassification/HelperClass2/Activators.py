@@ -68,8 +68,8 @@ class Logistic(CActivator):
 
 class Softmax(CActivator):
     def forward(self, z):
-        shift_z = z - np.max(z, axis=0)
+        shift_z = z - np.max(z, axis=1, keepdims=True)
         exp_z = np.exp(shift_z)
-        a = exp_z / np.sum(exp_z, axis=0)
+        a = exp_z / np.sum(exp_z, axis=1, keepdims=True)
         return a
 

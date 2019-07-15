@@ -7,75 +7,81 @@ import matplotlib.pyplot as plt
 import math
 
 from MiniFramework.NeuralNet import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 
-# x1=0,x2=0,y=0
-# x1=0,x2=1,y=1
-# x1=1,x2=0,y=1
-# x1=1,x2=1,y=0
-class XOR_DataReader(DataReader):
-    def __init__(self):
-        pass
+train_data_name = "../../Data/ch10.train.npz"
+test_data_name = "../../Data/ch10.test.npz"
 
-    def ReadData(self):
-        self.XTrain = np.array([[0,0],[1,1],[0,1],[1,0]])
-        self.YTrain = np.array([0,0,1,1]).reshape(4,1)
-        self.num_train = 4
-        self.num_feature = 2
-        self.num_category = 1
-        self.num_test = 4
-        
-        self.XVld = self.XTrain
-        self.YVld = self.YTrain
+def DrawTwoCategoryPoints(X1, X2, Y, xlabel="x1", ylabel="x2", title=None, show=False, isPredicate=False):
+    colors = ['b', 'r']
+    shapes = ['o', 'x']
+    assert(X1.shape[0] == X2.shape[0] == Y.shape[0])
+    count = X1.shape[0]
+    for i in range(count):
+        j = (int)(round(Y[i]))
+        if j < 0:
+            j = 0
+        if isPredicate:
+            plt.scatter(X1[i], X2[i], color=colors[j], marker='^', s=200, zorder=10)
+        else:
+            plt.scatter(X1[i], X2[i], color=colors[j], marker=shapes[j], zorder=10)
+    # end for
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    if title is not None:
+        plt.title(title)
+    if show:
+        plt.show()
 
-        self.XTest = self.XTrain
-        self.YTest = self.YTrain
+def ShowDataHelper(x1,x2,y,title,xlabel,ylabel,show,grid=True):
+    fig = plt.figure(figsize=(6,6))
+    if grid:
+        plt.grid()
+    DrawTwoCategoryPoints(x1,x2,y,xlabel,ylabel,title,show)
 
-def ShowResult(net, dr):
-    fig = plt.figure(figsize=(5,5))
-    count = 50
+def Prepare3DData(net, count):
     x = np.linspace(0,1,count)
     y = np.linspace(0,1,count)
-    X,Y = np.meshgrid(x,y)
-    z = net.inference(np.c_[X.ravel(),Y.ravel()])
-    Z = z.reshape(X.shape)
-    plt.contourf(X,Y,Z)
+    X, Y = np.meshgrid(x, y)
+    if net is not None:
+        input = np.hstack((X.ravel().reshape(count*count,1),Y.ravel().reshape(count*count,1)))
+        net.inference(input)
+    return X, Y
 
-    for i in range(dr.num_test):
-        if dr.YTest[i,0] == 0:
-            plt.scatter(dr.XTest[i,0],dr.XTest[i,1], marker='o', c='r')
-        else:
-            plt.scatter(dr.XTest[i,0],dr.XTest[i,1], marker='^', c='g')
-
+def ShowResult2D(net, dr):
+    ShowDataHelper(dr.XTrain[:,0], dr.XTrain[:,1], dr.YTrain[:,0], 
+                   "Classifier Result", "x1", "x2", False, False)
+    count = 50
+    X,Y = Prepare3DData(net, count)
+    Z = net.output.reshape(count,count)
+    plt.contourf(X, Y, Z, cmap=plt.cm.Spectral, zorder=1)
     plt.show()
 
 #end def
 
 if __name__ == '__main__':
-    dr = XOR_DataReader()
-    dr.ReadData()
+    dataReader = DataReader(train_data_name, test_data_name)
+    dataReader.ReadData()
+    dataReader.NormalizeX()
+    dataReader.Shuffle()
+    dataReader.GenerateValidationSet()
     
     num_input = 2
     num_hidden = 2
     num_output = 1
 
     max_epoch = 10000
-    batch_size = 1
+    batch_size = 5
     learning_rate = 0.1
-    eps = 0.001
+    eps = 1e-3
 
-    params = CParameters(
+    params = HyperParameters(
         learning_rate, max_epoch, batch_size, eps,
-        LossFunctionName.CrossEntropy2,
-        InitialMethod.Xavier, 
-        OptimizerName.SGD)
+        net_type=NetType.BinaryClassifier,
+        init_method=InitialMethod.Xavier)
 
-    net = NeuralNet(params, "XOR")
+    net = NeuralNet(params, "Arc")
 
     fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
@@ -84,11 +90,11 @@ if __name__ == '__main__':
     
     fc2 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc2, "fc2")
-    sigmoid2 = ClassificationLayer(Sigmoid())
-    net.add_layer(sigmoid2, "sigmoid2")
+    logistic = ClassificationLayer(Logistic())
+    net.add_layer(logistic, "logistic")
 
     #net.load_parameters()
 
-    net.train(dr, checkpoint=100, need_test=True)
-    net.ShowLossHistory()
-    ShowResult(net, dr)
+    net.train(dataReader, checkpoint=10, need_test=True)
+    net.ShowLossHistory("epoch")
+    ShowResult2D(net, dataReader)

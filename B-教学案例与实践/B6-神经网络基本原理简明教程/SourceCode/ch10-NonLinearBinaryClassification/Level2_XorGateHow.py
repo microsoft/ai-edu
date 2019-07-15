@@ -6,7 +6,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from HelperClass2.Visualizer import *
+from HelperClass2.Visualizer20 import *
 from Level1_XorGateClassifier import *
 
 def ShowDataHelper(x1,x2,y,title,xlabel,ylabel,show,grid=True):
@@ -108,8 +108,8 @@ if __name__ == '__main__':
     eta, batch_size, max_epoch = 0.1, 1, 10000
     eps = 0.005
 
-    hp = HyperParameters2(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
-    net = NeuralNet2(hp, "Xor_221")
+    hp = HyperParameters20(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
+    net = NeuralNet20(hp, "Xor_221")
 
     #net.train(dataReader, 100, True)
     #net.ShowTrainingTrace()

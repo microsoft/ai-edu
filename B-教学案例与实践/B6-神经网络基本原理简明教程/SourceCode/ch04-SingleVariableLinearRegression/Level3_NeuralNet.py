@@ -6,7 +6,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.SimpleDataReader import *
+from HelperClass.DataReader10 import *
 
 class NeuralNet(object):
     def __init__(self, eta):
@@ -61,7 +61,7 @@ def ShowResult(net, dataReader):
 
 if __name__ == '__main__':
     # read data
-    sdr = SimpleDataReader()
+    sdr = DataReader10()
     sdr.ReadData()
     # create net
     eta = 0.1
@@ -70,6 +70,6 @@ if __name__ == '__main__':
     # result
     print("w=%f,b=%f" %(net.w, net.b))
     # predication
-    result = net.inference(0.346)
+    result = net.inference(1.346)
     print("result=", result)
     ShowResult(net, sdr)

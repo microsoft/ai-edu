@@ -1,11 +1,15 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+"""
+Version 2.0
+"""
+
 import numpy as np
 from pathlib import Path
 from enum import Enum
 
-from MiniFramework.HyperParameters import *
+from MiniFramework.EnumDef import *
 
 """
 X:
@@ -19,7 +23,7 @@ Y:  [if regression, value]
     [if multiple classification, e.g. 4 category, one-hot]
 """
 
-class DataReader(object):
+class DataReader20(object):
     def __init__(self, train_file, test_file):
         self.train_file_name = train_file
         self.test_file_name = test_file
@@ -182,13 +186,6 @@ class DataReader(object):
         batch_Y = self.YTrain[start:end,:]
         return batch_X, batch_Y
 
-    #def GetBatchTestSamples(self, batch_size, iteration):
-    #    start = iteration * batch_size
-    #    end = start + batch_size
-    #    batch_X = self.XTest[start:end,:]
-    #    batch_Y = self.YTest[start:end,:]
-    #    return batch_X, batch_Y
-
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format
     def Shuffle(self):
@@ -199,12 +196,3 @@ class DataReader(object):
         YP = np.random.permutation(self.YTrain)
         self.XTrain = XP
         self.YTrain = YP
-
-# unit test
-if __name__ == '__main__':
-    X = np.array([1,2,3,4,5,6,7,8]).reshape(4,2)
-    Y = np.array([7,8,9,0]).reshape(4,1)
-    print(X,Y)
-    dp = DataReader()
-    X,Y=dp.Shuffle(X,Y)
-    print(X,Y)

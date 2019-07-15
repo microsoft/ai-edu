@@ -1,6 +1,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+"""
+Version 3.0
+what's new:
+- add n_hidden1 and n_hidden2
+"""
+
 from enum import Enum
 
 class NetType(Enum):
@@ -15,7 +21,7 @@ class InitialMethod(Enum):
     MSRA = 3
 
 # this class is for two-layer NN only
-class HyperParameters3(object):
+class HyperParameters30(object):
     def __init__(self, n_input, n_hidden1, n_hidden2, n_output, 
                  eta=0.1, max_epoch=10000, batch_size=5, eps = 0.1,
                  net_type = NetType.Fitting,

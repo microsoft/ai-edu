@@ -1,20 +1,10 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
-from enum import Enum
 
-class NetType(Enum):
-    Fitting = 1,
-    BinaryClassifier = 2,
-    MultipleClassifier = 3
-
-class InitialMethod(Enum):
-    Zero = 0,
-    Normal = 1,
-    Xavier = 2,
-    MSRA = 3
+from MiniFramework.EnumDef import *
 
 # this class is for two-layer NN only
-class HyperParameters(object):
+class HyperParameters40(object):
     def __init__(self, eta=0.1, max_epoch=10000, batch_size=5, eps=1e-5,
                  net_type=NetType.Fitting, 
                  init_method=InitialMethod.Xavier):

@@ -8,15 +8,13 @@ import math
 import os
 import sys
 
-from sklearn.metrics import r2_score
-
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer import *
-from MiniFramework.HyperParameters import *
+from MiniFramework.HyperParameters40 import *
 from MiniFramework.LossFunction import *
 from MiniFramework.TrainingTrace import *
 
-class NeuralNet(object):
+class NeuralNet40(object):
     def __init__(self, params, model_name):
         self.model_name = model_name
         self.hp = params
@@ -221,4 +219,4 @@ class NeuralNet(object):
             layer.load_parameters(self.subfolder, name)
 
     def ShowLossHistory(self, x, xmin=None, xmax=None, ymin=None, ymax=None):
-        self.loss_trace.ShowLossHistory(self.hp, x, xmin, xmax, ymin, ymax)
+        self.loss_trace.ShowLossHistory(self.hp.toString(), x, xmin, xmax, ymin, ymax)

@@ -4,12 +4,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet41 import *
 from MiniFramework.Optimizer import *
 from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.Activators import *
+from MiniFramework.HyperParameters41 import *
+from MiniFramework.WeightsBias30 import *
+from MiniFramework.ActivatorLayer import *
 
 
 def net(init_method, activator):
@@ -19,25 +19,27 @@ def net(init_method, activator):
     learning_rate = 0.02
     eps = 0.01
 
-    params = CParameters(learning_rate, max_epoch, batch_size, eps,
-                        LossFunctionName.CrossEntropy3, 
-                        init_method,
-                        OptimizerName.SGD)
+    params = HyperParameters41(learning_rate, max_epoch, batch_size, eps,
+                        net_type=NetType.Fitting,
+                        init_method=init_method,
+                        optimizer_name=OptimizerName.SGD)
 
     loss_history = CLossHistory()
 
-    net = NeuralNet(params)
-
-    #num_hidden = [128,112,96,80,64,48,32]
+    net = NeuralNet41(params)
     num_hidden = [128,128,128,128,128,128,128]
-    #num_hidden = [100,100,100,100,100,100]
     count = len(num_hidden)-1
     layers = []
 
     for i in range(count):
-        fc = FcLayer(num_hidden[i], num_hidden[i+1], activator)
+        fc = FcLayer(num_hidden[i], num_hidden[i+1], params)
+        net.add_layer(fc, "fc")
         layers.append(fc)
-        net.add_layer(fc)
+
+        ac = ActivatorLayer(activator)
+        net.add_layer(ac, "activator")
+        layers.append(ac)
+
     
     # 从正态分布中取1000个样本，每个样本有num_hidden[0]个特征值
     # 转置是为了可以和w1做矩阵乘法
@@ -49,7 +51,7 @@ def net(init_method, activator):
     a_value.append(x)
 
     # 依次做所有层的前向计算
-    for i in range(count):
+    for i in range(len(layers)):
         a = layers[i].forward(a_value[i])
         a_value.append(a)
 

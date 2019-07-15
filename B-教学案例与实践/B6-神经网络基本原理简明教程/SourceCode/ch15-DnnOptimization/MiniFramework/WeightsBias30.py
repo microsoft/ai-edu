@@ -4,15 +4,10 @@
 import numpy as np
 from pathlib import Path
 
+from MiniFramework.EnumDef import *
 from MiniFramework.Optimizer import *
 
-class InitialMethod(Enum):
-    Zero = 0,
-    Normal = 1,
-    Xavier = 2,
-    MSRA = 3
-
-class WeightsBias(object):
+class WeightsBias30(object):
     def __init__(self, n_input, n_output, init_method, optimizer_name, eta):
         self.num_input = n_input
         self.num_output = n_output
@@ -34,7 +29,7 @@ class WeightsBias(object):
         self.dB = np.zeros(self.B.shape)
 
     def __CreateNew(self):
-        self.W, self.B = WeightsBias.InitialParameters(self.num_input, self.num_output, self.init_method)
+        self.W, self.B = WeightsBias30.InitialParameters(self.num_input, self.num_output, self.init_method)
         self.__SaveInitialValue()
         
     def __LoadExistingParameters(self):

@@ -4,9 +4,9 @@
 import numpy as np
 from pathlib import Path
 
-from MiniFramework.HyperParameters import *
+from MiniFramework.EnumDef import *
 
-class WeightsBias(object):
+class WeightsBias20(object):
     def __init__(self, n_input, n_output, init_method, eta):
         self.num_input = n_input
         self.num_output = n_output
@@ -21,13 +21,12 @@ class WeightsBias(object):
         else:
             self.__LoadExistingParameters()
         # end if
-        #self.__CreateOptimizers()
 
         self.dW = np.zeros(self.W.shape)
         self.dB = np.zeros(self.B.shape)
 
     def __CreateNew(self):
-        self.W, self.B = WeightsBias.InitialParameters(self.num_input, self.num_output, self.init_method)
+        self.W, self.B = WeightsBias20.InitialParameters(self.num_input, self.num_output, self.init_method)
         self.__SaveInitialValue()
         
     def __LoadExistingParameters(self):

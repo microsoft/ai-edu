@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-from HelperClass3.HyperParameters3 import *
+from HelperClass3.HyperParameters30 import *
 
 class WeightsBias20(object):
     def __init__(self, n_input, n_output, init_method, eta):
@@ -21,7 +21,6 @@ class WeightsBias20(object):
         else:
             self.__LoadExistingParameters()
         # end if
-        #self.__CreateOptimizers()
 
         self.dW = np.zeros(self.W.shape)
         self.dB = np.zeros(self.B.shape)

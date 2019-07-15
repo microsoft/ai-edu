@@ -10,7 +10,7 @@ from LossFunction import *
 from Level0_TwoLayerNet import *
 from DataReader import * 
 from GDOptimizer import *
-from WeightsBias import *
+from WeightsBias30 import *
 
 x_data_name = "X8.dat"
 y_data_name = "Y8.dat"
@@ -40,7 +40,7 @@ def WalkThroughAllOptimizers(option):
     eta, batch_size, max_epoch = option[1], 10, 10000
     eps = 0.001
 
-    params = CParameters(n_input, n_hidden, n_output,
+    params = HyperParameters41(n_input, n_hidden, n_output,
                          eta, max_epoch, batch_size, eps, 
                          InitialMethod.Xavier,
                          option[0])

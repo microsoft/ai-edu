@@ -1,9 +1,10 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet40 import *
 from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader import *
+from MiniFramework.ClassificationLayer import *
+from MiniFramework.DataReader20 import *
 
 from ExtendedDataReader.CifarImageReader import *
 
@@ -41,12 +42,12 @@ if __name__ == '__main__':
     learning_rate = 0.01
     eps = 1e-3
 
-    params = HyperParameters(
+    params = HyperParameters40(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.MSRA)
 
-    net = NeuralNet(params, "Cifar10")
+    net = NeuralNet40(params, "Cifar10")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")

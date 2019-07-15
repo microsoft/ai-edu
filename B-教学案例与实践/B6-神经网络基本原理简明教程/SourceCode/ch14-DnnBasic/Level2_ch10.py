@@ -6,9 +6,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet40 import *
 from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader import *
+from MiniFramework.ClassificationLayer import *
+from MiniFramework.DataReader20 import *
 
 train_data_name = "../../Data/ch10.train.npz"
 test_data_name = "../../Data/ch10.test.npz"
@@ -61,7 +62,7 @@ def ShowResult2D(net, dr):
 #end def
 
 if __name__ == '__main__':
-    dataReader = DataReader(train_data_name, test_data_name)
+    dataReader = DataReader20(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.NormalizeX()
     dataReader.Shuffle()
@@ -76,12 +77,12 @@ if __name__ == '__main__':
     learning_rate = 0.1
     eps = 1e-3
 
-    params = HyperParameters(
+    params = HyperParameters40(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.BinaryClassifier,
         init_method=InitialMethod.Xavier)
 
-    net = NeuralNet(params, "Arc")
+    net = NeuralNet40(params, "Arc")
 
     fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")

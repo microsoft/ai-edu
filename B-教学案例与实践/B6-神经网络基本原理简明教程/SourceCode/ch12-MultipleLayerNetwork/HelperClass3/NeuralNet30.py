@@ -1,20 +1,26 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+"""
+Version 3.0
+what's new:
+- support 3 layers
+"""
+
 import numpy as np
 import time
 import math
 import os
 import sys
 
-from HelperClass3.HyperParameters3 import *
+from HelperClass3.HyperParameters30 import *
 from HelperClass3.MnistImageDataReader import *
 from HelperClass3.TrainingTrace3 import *
 from HelperClass3.LossFunction import *
 from HelperClass3.Activators import *
 from HelperClass3.WeightsBias20 import *
 
-class NeuralNet3(object):
+class NeuralNet30(object):
     def __init__(self, hp, model_name):
         self.hp = hp
         self.model_name = model_name

@@ -6,15 +6,16 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet40 import *
 from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader import *
+from MiniFramework.ClassificationLayer import *
+from MiniFramework.DataReader20 import *
 
 train_file = "../../Data/Income_Train.npz"
 test_file = "../../Data/Income_Test.npz"
 
 def LoadData():
-    dr = DataReader(train_file, test_file)
+    dr = DataReader20(train_file, test_file)
     dr.ReadData()
     dr.NormalizeX()
     #dr.NormalizeY(YNormalizationMethod.BinaryClassifier)
@@ -38,12 +39,12 @@ def model():
     learning_rate = 0.1
     eps = 1e-3
 
-    params = HyperParameters(
+    params = HyperParameters40(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.BinaryClassifier,
         init_method=InitialMethod.Xavier)
 
-    net = NeuralNet(params, "Income")
+    net = NeuralNet40(params, "Income")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")

@@ -7,9 +7,9 @@ import time
 
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer import *
-from MiniFramework.Parameters import *
+from MiniFramework.HyperParameters41 import *
 
-class NeuralNet(object):
+class NeuralNet41(object):
     def __init__(self, params):
         self.params = params
         self.layer_list = []

@@ -8,8 +8,8 @@ from pathlib import Path
 from matplotlib.colors import LogNorm
 
 from MiniFramework.Optimizer import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
+from MiniFramework.HyperParameters41 import *
+from MiniFramework.WeightsBias30 import *
 
 x_data_name = "X04.dat"
 y_data_name = "Y04.dat"
@@ -139,7 +139,7 @@ def show_contour(ax, loss_history, optimizer):
 
 def train(params):    
 
-    wb = WeightsBias(1,1,InitialMethod.Zero, params.optimizer_name, params.eta)
+    wb = WeightsBias30(1,1,InitialMethod.Zero, params.optimizer_name, params.eta)
     wb.InitializeWeights()
 
     # calculate loss to decide the stop condition
@@ -147,8 +147,8 @@ def train(params):
     # read data
     X, Y = ReadData()
     # count of samples
-    num_example = X.shape[1]
-    num_feature = X.shape[0]
+    num_example = X.shape[0]
+    num_feature = X.shape[1]
 
     # if num_example=200, batch_size=10, then iteration=200/10=20
     max_iteration = (int)(num_example / params.batch_size)
@@ -180,22 +180,22 @@ def train(params):
 
 if __name__ == '__main__':
     
-    params = CParameters(eta=0.2, max_epoch=5, batch_size=5, eps = 0.005, optimizerName=OptimizerName.SGD)
+    params = HyperParameters41(eta=0.2, max_epoch=5, batch_size=5, eps = 0.005, optimizer_name=OptimizerName.SGD)
     loss_history = train(params)
     ax = plt.subplot(2, 2, 1)
     show_contour(ax, loss_history, params.optimizer_name.name)
 
-    params = CParameters(eta=0.02, max_epoch=5, batch_size=5, eps = 0.005, optimizerName=OptimizerName.Momentum)
+    params = HyperParameters41(eta=0.02, max_epoch=5, batch_size=5, eps = 0.005, optimizer_name=OptimizerName.Momentum)
     loss_history =  train(params)
     ax = plt.subplot(2, 2, 2)
     show_contour(ax, loss_history, params.optimizer_name.name)
     
-    params = CParameters(eta=0.05, max_epoch=5, batch_size=5, eps = 0.005, optimizerName=OptimizerName.RMSProp)
+    params = HyperParameters41(eta=0.05, max_epoch=5, batch_size=5, eps = 0.005, optimizer_name=OptimizerName.RMSProp)
     loss_history = train(params)
     ax = plt.subplot(2, 2, 3)
     show_contour(ax, loss_history, params.optimizer_name.name)
 
-    params = CParameters(eta=0.2, max_epoch=5, batch_size=5, eps = 0.005, optimizerName=OptimizerName.Adam)
+    params = HyperParameters41(eta=0.2, max_epoch=5, batch_size=5, eps = 0.005, optimizer_name=OptimizerName.Adam)
     loss_history = train(params)
     ax = plt.subplot(2, 2, 4)
     show_contour(ax, loss_history, params.optimizer_name.name)

@@ -39,7 +39,7 @@ class TrainingTrace(object):
         return False
 
     # 图形显示损失函数值历史记录
-    def ShowLossHistory(self, params, x="epoch", xmin=None, xmax=None, ymin=None, ymax=None):
+    def ShowLossHistory(self, title, x="epoch", xmin=None, xmax=None, ymin=None, ymax=None):
         fig = plt.figure(figsize=(12,5))
 
         axes = plt.subplot(1,2,1)
@@ -51,6 +51,7 @@ class TrainingTrace(object):
             p2, = axes.plot(self.epoch_seq, self.loss_train)
             p1, = axes.plot(self.epoch_seq, self.loss_val)
             axes.set_xlabel("epoch")
+        #end if
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Loss")
         axes.set_ylabel("loss")
@@ -67,26 +68,14 @@ class TrainingTrace(object):
             p2, = axes.plot(self.epoch_seq, self.accuracy_train)
             p1, = axes.plot(self.epoch_seq, self.accuracy_val)
             axes.set_xlabel("epoch")
-
+        #end if
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Accuracy")
         axes.set_ylabel("accuracy")
         
-        title = params.toString()
         plt.suptitle(title)
         plt.show()
-        return title
 
-    def ShowLossHistory4(self, axes, params, xmin=None, xmax=None, ymin=None, ymax=None):
-        p2, = axes.plot(self.epoch_seq, self.loss_train)
-        p1, = axes.plot(self.epoch_seq, self.loss_val)
-        title = params.toString()
-        axes.set_title(title)
-        axes.set_xlabel("epoch")
-        axes.set_ylabel("loss")
-        if xmin != None and ymin != None:
-            axes.axis([xmin, xmax, ymin, ymax])
-        return title
 
     def GetEpochNumber(self):
         return self.epoch_seq[-1]

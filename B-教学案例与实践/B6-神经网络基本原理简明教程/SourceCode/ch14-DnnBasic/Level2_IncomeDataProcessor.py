@@ -1,11 +1,11 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet40 import *
 from MiniFramework.Optimizer import *
 from MiniFramework.LossFunction import *
 from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
+from MiniFramework.WeightsBias20 import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.DataReader import *
 

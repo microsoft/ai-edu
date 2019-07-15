@@ -1,16 +1,15 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.LossFunction import *
-from MiniFramework.WeightsBias import *
+from MiniFramework.EnumDef import *
 from MiniFramework.Optimizer import *
 
 # this class is for two-layer NN only
-class CParameters(object):
+class HyperParameters41(object):
     def __init__(self, eta=0.1, max_epoch=10000, batch_size=5, eps = 0.1,
-                 lossFuncName=LossFunctionName.MSE, 
-                 initMethod=InitialMethod.Zero, 
-                 optimizerName=OptimizerName.SGD):
+                 net_type=NetType.Fitting, 
+                 init_method=InitialMethod.Xavier,
+                 optimizer_name=OptimizerName.SGD):
 
         self.eta = eta
         self.max_epoch = max_epoch
@@ -20,9 +19,9 @@ class CParameters(object):
         else:
             self.batch_size = batch_size
         # end if
-        self.loss_func_name = lossFuncName
-        self.init_method = initMethod
-        self.optimizer_name = optimizerName
+        self.net_type = net_type
+        self.init_method = init_method
+        self.optimizer_name = optimizer_name
         self.eps = eps
 
 

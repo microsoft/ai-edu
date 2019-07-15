@@ -14,10 +14,10 @@ class TrainingTrace(object):
         self.accuracy_train = []
         self.iteration_seq = []
         self.epoch_seq = []
-
         self.loss_val = []
         self.accuracy_val = []
-       
+        self.counter = 0
+
     def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, eps):
         self.iteration_seq.append(total_iteration)
         self.epoch_seq.append(epoch)
@@ -28,8 +28,13 @@ class TrainingTrace(object):
         if accuracy_vld is not None:
             self.accuracy_val.append(accuracy_vld)
 
-        if math.abs(loss_vld[-1] - loss_vld[-2])<eps:
-            return True
+        if len(self.loss_val) > 1:
+            if abs(self.loss_val[-1] - self.loss_val[-2])<eps:
+                self.counter = self.counter + 1
+                if self.counter > 3:
+                    return True
+            else:
+                self.counter = 0
 
         return False
 

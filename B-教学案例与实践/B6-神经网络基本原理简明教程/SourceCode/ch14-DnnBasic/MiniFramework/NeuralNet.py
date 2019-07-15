@@ -142,7 +142,7 @@ class NeuralNet(object):
 
         if need_test:
             print("testing...")
-            accuracy = self.Test(dataReader, self.hp.loss_func)
+            accuracy = self.Test(dataReader)
             print(accuracy)
         # end if
 
@@ -154,7 +154,7 @@ class NeuralNet(object):
 
         # calculate train loss
         self.__forward(train_x, train=False)
-        loss_train = self.lossFunc.CheckLoss(train_y, self.output)
+        loss_train = self.lossFunc.CheckLoss(self.output, train_y)
         loss_train = loss_train# + regular_cost / train_x.shape[0]
         accuracy_train = self.__CalAccuracy(self.output, train_y)
         print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
@@ -162,7 +162,7 @@ class NeuralNet(object):
         # calculate validation loss
         vld_x, vld_y = dataReader.GetValidationSet()
         self.__forward(vld_x, train=False)
-        loss_vld = self.lossFunc.CheckLoss(vld_y, self.output)
+        loss_vld = self.lossFunc.CheckLoss(self.output, vld_y)
         loss_vld = loss_vld #+ regular_cost / vld_x.shape[0]
         accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
@@ -172,10 +172,10 @@ class NeuralNet(object):
             need_stop = True
         return need_stop
 
-    def Test(self, dataReader, loss_func):
+    def Test(self, dataReader):
         x,y = dataReader.GetTestSet()
         self.__forward(x, train=False)
-        correct = self.__CalAccuracy(self.output, y, loss_func)
+        correct = self.__CalAccuracy(self.output, y)
         print(correct)
         return correct
 
@@ -220,5 +220,5 @@ class NeuralNet(object):
             name = self.layer_name[i]
             layer.load_parameters(self.subfolder, name)
 
-    def ShowLossHistory(self, xmin=None, xmax=None, ymin=None, ymax=None):
-        self.loss_history.ShowLossHistory(self.hp, xmin, xmax, ymin, ymax)
+    def ShowLossHistory(self, x, xmin=None, xmax=None, ymin=None, ymax=None):
+        self.loss_trace.ShowLossHistory(self.hp, x, xmin, xmax, ymin, ymax)

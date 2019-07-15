@@ -26,6 +26,7 @@ class HyperParameters(object):
         else:
             self.batch_size = batch_size
         # end if
+        self.eps = eps
         self.net_type = net_type
         self.init_method = init_method
 

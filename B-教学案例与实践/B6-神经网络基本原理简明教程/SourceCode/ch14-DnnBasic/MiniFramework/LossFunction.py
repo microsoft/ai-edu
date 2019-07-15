@@ -20,6 +20,8 @@ class LossFunction(object):
             loss = self.CE2(A, Y, m)
         elif self.net_type == NetType.MultipleClassifier:
             loss = self.CE3(A, Y, m)
+        else:
+            loss = None
         #end if
         return loss
     # end def

@@ -5,8 +5,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 from PIL import Image
 
-from HelperClass3.HyperParameters3 import *
-from HelperClass3.NeuralNet3 import *
+from HelperClass3.NeuralNet30 import *
 
 def ReadImage(img_file_name):
     img = Image.open(img_file_name)
@@ -78,12 +77,12 @@ def LoadNet():
     batch_size = 128
     max_epoch = 40
 
-    hp = HyperParameters3(
+    hp = HyperParameters30(
         n_input, n_hidden1, n_hidden2, n_output, 
         eta, max_epoch, batch_size, eps, 
         NetType.MultipleClassifier, 
         InitialMethod.Xavier)
-    net = NeuralNet3(hp, "MNIST_64_16")
+    net = NeuralNet30(hp, "MNIST_64_16")
     net.LoadResult()
     return net
    

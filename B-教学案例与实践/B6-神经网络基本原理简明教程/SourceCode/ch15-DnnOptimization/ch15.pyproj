@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level5_BatchNormTest.py</StartupFile>
+    <StartupFile>Level3_Optimizer_Real.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -36,17 +36,18 @@
     <Compile Include="MiniFramework\BatchNormLayer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MiniFramework\DataReader.py" />
+    <Compile Include="MiniFramework\ClassificationLayer.py" />
+    <Compile Include="MiniFramework\DataReader20.py" />
     <Compile Include="MiniFramework\ActivatorLayer.py" />
-    <Compile Include="MiniFramework\DropoutLayer.py" />
+    <Compile Include="MiniFramework\EnumDef.py" />
     <Compile Include="MiniFramework\FullConnectionLayer.py" />
     <Compile Include="MiniFramework\Optimizer.py" />
     <Compile Include="MiniFramework\Layer.py" />
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MiniFramework\LossFunction.py" />
-    <Compile Include="MiniFramework\NeuralNet.py" />
-    <Compile Include="MiniFramework\Parameters.py" />
-    <Compile Include="MiniFramework\WeightsBias.py" />
+    <Compile Include="MiniFramework\NeuralNet41.py" />
+    <Compile Include="MiniFramework\HyperParameters41.py" />
+    <Compile Include="MiniFramework\WeightsBias30.py" />
     <Compile Include="MnistImageDataReader.py" />
   </ItemGroup>
   <ItemGroup>

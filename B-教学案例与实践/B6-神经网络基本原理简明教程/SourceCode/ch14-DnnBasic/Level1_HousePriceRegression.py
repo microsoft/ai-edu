@@ -1,9 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet40 import *
 from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader import *
+from MiniFramework.DataReader20 import *
 
 import numpy as np
 import csv
@@ -12,7 +12,7 @@ train_file = "../../Data/house_Train.npz"
 test_file = "../../Data/house_Test.npz"
 
 
-class HouseDataReader(DataReader):
+class HouseDataReader(DataReader20):
     def Drop(self):
         self.XTrain = np.delete(self.XTrain, [0,1,8,9], axis=1)
         self.XTrainRaw = np.delete(self.XTrainRaw, [0,1,8,9], axis=1)
@@ -65,12 +65,12 @@ def model():
     learning_rate = 0.01
     eps = 1e-6
 
-    params = HyperParameters(
+    params = HyperParameters40(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.Fitting,
         init_method=InitialMethod.Xavier)
 
-    net = NeuralNet(params, "HouseSingle")
+    net = NeuralNet40(params, "HouseSingle")
 
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
@@ -98,7 +98,7 @@ def model():
 
     #ShowResult(net, dr)
 
-    net.load_parameters()
+    #net.load_parameters()
     #Inference(net, dr)
     #exit()
     #ShowResult(net, dr)

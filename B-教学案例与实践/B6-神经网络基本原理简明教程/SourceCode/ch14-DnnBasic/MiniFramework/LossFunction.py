@@ -4,7 +4,7 @@
 import numpy as np
 from enum import Enum
 
-from MiniFramework.HyperParameters import *
+from MiniFramework.HyperParameters40 import *
 
 class LossFunction(object):
     def __init__(self, net_type):
@@ -52,15 +52,6 @@ class LossFunction(object):
         p1 = np.log(A)
         p2 =  np.multiply(Y, p1)
         LOSS = np.sum(-p2) 
-        loss = LOSS / count
-        return loss
-    # end def
-
-    # for binary tanh classifier
-    def CE2_tanh(self, A, Y, count):
-        #p = (1-Y) * np.log(1-A) + (1+Y) * np.log(1+A)
-        p = (1-Y) * np.log((1-A)/2) + (1+Y) * np.log((1+A)/2)
-        LOSS = np.sum(-p)
         loss = LOSS / count
         return loss
     # end def

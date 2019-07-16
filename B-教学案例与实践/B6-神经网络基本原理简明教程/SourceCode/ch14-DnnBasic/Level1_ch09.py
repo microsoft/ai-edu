@@ -1,8 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.NeuralNet import *
-from MiniFramework.DataReader import *
+from MiniFramework.NeuralNet40 import *
+from MiniFramework.DataReader20 import *
 from MiniFramework.ActivatorLayer import *
 
 train_file = "../../Data/ch09.train.npz"
@@ -26,7 +26,7 @@ def ShowResult(net, dr):
     plt.show()
 
 def LoadData():
-    dr = DataReader(train_file, test_file)
+    dr = DataReader20(train_file, test_file)
     dr.ReadData()
     #dr.NormalizeX()
     #dr.NormalizeY(YNormalizationMethod.Regression)
@@ -45,12 +45,12 @@ def model():
     learning_rate = 0.5
     eps = 1e-5
 
-    params = HyperParameters(
+    params = HyperParameters40(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
         init_method=InitialMethod.Xavier)
 
-    net = NeuralNet(params, "Level1_CurveFittingNet")
+    net = NeuralNet40(params, "Level1_CurveFittingNet")
     fc1 = FcLayer(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
     sigmoid1 = ActivatorLayer(Sigmoid())
@@ -58,14 +58,9 @@ def model():
     fc2 = FcLayer(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
 
-    #net.load_parameters()
-    #ShowResult(net, dataReader, params.toString())
-    #ShowResult2(net, dataReader)
-
     net.train(dataReader, checkpoint=100, need_test=True)
+
     net.ShowLossHistory("epoch")
-    
-    #ShowResult(net, dataReader, params.toString())
     ShowResult(net, dataReader)
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ from Activations import *
 from Level1_TwoLayerClassificationNet import *
 from DataReader import * 
 from GDOptimizer import *
-from WeightsBias import *
+from WeightsBias30 import *
 
 x_data_name = "X9_3.npy"
 y_data_name = "Y9_3.npy"
@@ -62,7 +62,7 @@ def WalkThroughAllOptimizers(option):
     eta, batch_size, max_epoch = option[1], 10, 10000
     eps = 0.06
 
-    params = CParameters(n_input, n_output, n_hidden,
+    params = HyperParameters41(n_input, n_output, n_hidden,
                          eta, max_epoch, batch_size, eps, 
                          LossFunctionName.CrossEntropy3, 
                          InitialMethod.Xavier,
@@ -81,7 +81,7 @@ def WalkThroughAllOptimizers(option):
 
     print("wait for 10 seconds...")
 
-    wbs_min = WeightsBias(params)
+    wbs_min = WeightsBias30(params)
     wbs_min.W1 = trace.dict_weights["W1"]
     wbs_min.W2 = trace.dict_weights["W2"]
     wbs_min.B1 = trace.dict_weights["B1"]

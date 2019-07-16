@@ -6,15 +6,16 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
-from MiniFramework.NeuralNet import *
+from MiniFramework.NeuralNet40 import *
 from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader import *
+from MiniFramework.ClassificationLayer import *
+from MiniFramework.DataReader20 import *
 
 train_file = "../../Data/ch11.train.npz"
 test_file = "../../Data/ch11.test.npz"
 
 def LoadData():
-    dr = DataReader(train_file, test_file)
+    dr = DataReader20(train_file, test_file)
     dr.ReadData()
     dr.NormalizeX()
     dr.NormalizeY(NetType.MultipleClassifier, base=1)
@@ -47,7 +48,7 @@ def ShowResult(net, title):
     plt.contourf(X,Y,Z)
 
 def model_relu(num_input, num_hidden, num_output, hp):
-    net = NeuralNet(hp, "chinabank_relu")
+    net = NeuralNet40(hp, "chinabank_relu")
 
     fc1 = FcLayer(num_input, num_hidden, hp)
     net.add_layer(fc1, "fc1")
@@ -66,7 +67,7 @@ def model_relu(num_input, num_hidden, num_output, hp):
     ShowData(dataReader)
 
 def model_sigmoid(num_input, num_hidden, num_output, hp):
-    net = NeuralNet(hp, "chinabank_sigmoid")
+    net = NeuralNet40(hp, "chinabank_sigmoid")
 
     fc1 = FcLayer(num_input, num_hidden, hp)
     net.add_layer(fc1, "fc1")
@@ -96,7 +97,7 @@ if __name__ == '__main__':
     learning_rate = 0.1
     eps = 1e-3
 
-    hp = HyperParameters(
+    hp = HyperParameters40(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier)

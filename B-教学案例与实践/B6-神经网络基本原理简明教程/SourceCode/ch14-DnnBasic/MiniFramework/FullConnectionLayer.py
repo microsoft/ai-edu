@@ -4,14 +4,14 @@
 import numpy as np
 
 from MiniFramework.Layer import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.HyperParameters import *
+from MiniFramework.WeightsBias20 import *
+from MiniFramework.HyperParameters40 import *
 
 class FcLayer(CLayer):
     def __init__(self, input_size, output_size, param):
         self.input_size = input_size
         self.output_size = output_size
-        self.weights = WeightsBias(self.input_size, self.output_size, param.init_method, param.eta)
+        self.weights = WeightsBias20(self.input_size, self.output_size, param.init_method, param.eta)
 
     def initialize(self, folder):
         self.weights.InitializeWeights(folder, False)

@@ -6,15 +6,7 @@ from enum import Enum
 from numba import jitclass
 from numba import float64
 
-class OptimizerName(Enum):
-    SGD = 0,
-    Momentum = 1,
-    Nag = 2,
-    AdaGrad = 3,
-    AdaDelta = 4,
-    RMSProp = 5,
-    Adam = 6
-
+from MiniFramework.EnumDef import *
 
 class OptimizerFactory(object):
     @staticmethod

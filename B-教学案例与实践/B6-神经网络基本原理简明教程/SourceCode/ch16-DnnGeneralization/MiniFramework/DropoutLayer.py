@@ -4,12 +4,10 @@
 import numpy as np
 
 from MiniFramework.Layer import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.Parameters import *
 
 class DropoutLayer(CLayer):
     def __init__(self, input_size, ratio=0.5):
-        self.dropout_ratio = ratio
+        self.dropout_ratio = ratio  # the bigger, the more unit dropped
         self.mask = None
         self.input_size = input_size
         self.output_size = input_size

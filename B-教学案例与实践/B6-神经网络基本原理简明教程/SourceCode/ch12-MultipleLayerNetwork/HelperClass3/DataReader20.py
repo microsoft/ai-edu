@@ -9,7 +9,7 @@ import numpy as np
 from pathlib import Path
 from enum import Enum
 
-from HelperClass3.HyperParameters3 import *
+from HelperClass3.HyperParameters30 import *
 
 """
 X:

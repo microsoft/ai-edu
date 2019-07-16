@@ -1,15 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
-from enum import Enum
-
-from MiniFramework.LossFunction import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.Optimizer import *
-
-
 
 from MiniFramework.EnumDef import *
-from MiniFramework.Optimizer import *
 
 # this class is for two-layer NN only
 class HyperParameters41(object):

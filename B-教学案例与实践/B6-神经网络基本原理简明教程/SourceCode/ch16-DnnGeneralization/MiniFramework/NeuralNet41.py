@@ -8,6 +8,7 @@ import os
 
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer import *
+from MiniFramework.DropoutLayer import *
 from MiniFramework.HyperParameters41 import *
 from MiniFramework.TrainingTrace import *
 from MiniFramework.LossFunction import *
@@ -24,6 +25,7 @@ class NeuralNet41(object):
         self.layer_count = 0
         self.subfolder = os.getcwd() + "\\" + self.__create_subfolder()
         print(self.subfolder)
+        self.accuracy = 0
 
     def __create_subfolder(self):
         if self.model_name != None:
@@ -164,8 +166,8 @@ class NeuralNet41(object):
 
         if need_test:
             print("testing...")
-            accuracy = self.Test(dataReader)
-            print(accuracy)
+            self.accuracy = self.Test(dataReader)
+            print(self.accuracy)
         # end if
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
@@ -222,10 +224,6 @@ class NeuralNet41(object):
             correct = r.sum()
             return correct/m
 
-    def inference(self, X):
-        self.__forward(X)
-        return self.output
-
     # save weights value when got low loss than before
     def save_parameters(self):
         print("save parameters")
@@ -243,4 +241,5 @@ class NeuralNet41(object):
             layer.load_parameters(self.subfolder, name)
 
     def ShowLossHistory(self, xcoor, xmin=None, xmax=None, ymin=None, ymax=None):
-        self.loss_trace.ShowLossHistory(self.hp.toString(), xcoor, xmin, xmax, ymin, ymax)
+        title = str.format("{0},accuracy={1:.4f}", self.hp.toString(), self.accuracy)
+        self.loss_trace.ShowLossHistory(title, xcoor, xmin, xmax, ymin, ymax)

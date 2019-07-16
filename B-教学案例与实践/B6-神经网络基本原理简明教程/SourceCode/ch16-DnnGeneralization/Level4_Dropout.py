@@ -1,83 +1,46 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import numpy as np
-import matplotlib.pyplot as plt
-
-from MiniFramework.NeuralNet41 import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.HyperParameters41 import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.ActivatorLayer import *
-from MiniFramework.DropoutLayer import *
-from MnistImageDataReader import *
-
 from Level0_OverFitNet import *
 
-def DropoutNet(dataReader, num_input, num_hidden, num_output, params):
-    net = NeuralNet41(params)
+def Model_Dropout(dataReader, num_input, num_hidden, num_output, params):
+    net = NeuralNet41(params, "overfitting")
 
     fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
-    relu1 = ActivatorLayer(Relu())
-    net.add_layer(relu1, "relu1")
-
-    drop1 = DropoutLayer(num_hidden, 0.1)
-    net.add_layer(drop1, "dp1")
+    s1 = ActivatorLayer(Sigmoid())
+    net.add_layer(s1, "s1")
+    
+    d1 = DropoutLayer(num_hidden, 0.1)
+    net.add_layer(d1, "d1")
 
     fc2 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc2, "fc2")
-    relu2 = ActivatorLayer(Relu())
-    net.add_layer(relu2, "relu2")
-    
-    drop2 = DropoutLayer(num_hidden, 0.4)
-    net.add_layer(drop2, "dp2")
-    
+    t2 = ActivatorLayer(Tanh())
+    net.add_layer(t2, "t2")
+
+    #d2 = DropoutLayer(num_hidden, 0.2)
+    #net.add_layer(d2, "d2")
+
     fc3 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc3, "fc3")
-    relu3 = ActivatorLayer(Relu())
-    net.add_layer(relu3, "relu3")
+    t3 = ActivatorLayer(Tanh())
+    net.add_layer(t3, "t3")
+
+    d3 = DropoutLayer(num_hidden, 0.2)
+    net.add_layer(d3, "d3")
     
-    drop3 = DropoutLayer(num_hidden, 0.45)
-    net.add_layer(drop3, "dp3")
-    
-    fc4 = FcLayer(num_hidden, num_hidden, params)
+    fc4 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc4, "fc4")
-    relu4 = ActivatorLayer(Relu())
-    net.add_layer(relu4, "relu4")
-    
-    drop4 = DropoutLayer(num_hidden, 0.5)
-    net.add_layer(drop4, "dp4")
-    
-    fc5 = FcLayer(num_hidden, num_output, params)
-    net.add_layer(fc5, "fc5")
-    softmax = ActivatorLayer(Softmax())
-    net.add_layer(softmax, "softmax")
 
-    net.train(dataReader, checkpoint=1)
+    net.train(dataReader, checkpoint=100, need_test=True)
+    net.ShowLossHistory(XCoordinate.Epoch)
     
-    net.ShowLossHistory(XCoordinate.Iteration)
-
+    return net
 
 if __name__ == '__main__':
 
-    dataReader = LoadData()
-    num_feature = dataReader.num_feature
-    num_example = dataReader.num_example
-    num_input = num_feature
-    num_hidden = 30
-    num_output = 10
-    max_epoch = 200
-    batch_size = 100
-    learning_rate = 0.1
-    eps = 1e-5
-
-    params = HyperParameters41(
-        learning_rate, max_epoch, batch_size, eps,
-        LossFunctionName.CrossEntropy3, 
-        InitialMethod.Xavier, 
-        OptimizerName.SGD)
-
-    DropoutNet(dataReader, num_input, num_hidden, num_output, params)
-
+    dr = LoadData()
+    hp, num_hidden = SetParameters()
+    net = Model_Dropout(dr, 1, num_hidden, 1, hp)
+    ShowResult(net, dr, hp.toString())

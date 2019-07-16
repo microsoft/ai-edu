@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level0_OverFitNet.py</StartupFile>
+    <StartupFile>Level4_Dropout.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Level0_OverFitNet - Copy.py" />
-    <Compile Include="Level4_Dropout2.py" />
+    <Compile Include="Level4_Dropout.py" />
     <Compile Include="Level6_BaggingLearner.py" />
     <Compile Include="Level6_BootstrappingGenerator.py" />
     <Compile Include="Level5_DataAugmentationGenerator.py" />
@@ -31,7 +31,6 @@
     <Compile Include="Level0_OverFitNet.py" />
     <Compile Include="Level1_L1.py" />
     <Compile Include="Level2_L2.py" />
-    <Compile Include="Level4_Dropout.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py">
       <SubType>Code</SubType>
     </Compile>

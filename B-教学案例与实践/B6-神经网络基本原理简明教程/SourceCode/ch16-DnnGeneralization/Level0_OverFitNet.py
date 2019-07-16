@@ -21,61 +21,58 @@ def Model(dataReader, num_input, num_hidden, num_output, params):
     
     fc2 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc2, "fc2")
-    relu2 = ActivatorLayer(Sigmoid())
-    net.add_layer(relu2, "relu2")
+    t2 = ActivatorLayer(Tanh())
+    net.add_layer(t2, "t2")
     
     fc3 = FcLayer(num_hidden, num_hidden, params)
     net.add_layer(fc3, "fc3")
-    relu3 = ActivatorLayer(Sigmoid())
-    net.add_layer(relu3, "relu3")
+    t3 = ActivatorLayer(Tanh())
+    net.add_layer(t3, "t3")
     
-    fc4 = FcLayer(num_hidden, num_hidden, params)
+    fc4 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc4, "fc4")
-    relu4 = ActivatorLayer(Relu())
-    net.add_layer(relu4, "relu4")
-    
-    fc5 = FcLayer(num_hidden, num_output, params)
-    net.add_layer(fc5, "fc5")
 
     net.train(dataReader, checkpoint=100, need_test=True)
     net.ShowLossHistory(XCoordinate.Epoch)
     
     return net
 
-def ShowResult(net, dr):
-    TX = np.linspace(0,1,100).reshape(100,1)
+def ShowResult(net, dr, title):
+    
+    TX = np.linspace(dr.XTrain.min(),dr.XTrain.max(),100).reshape(100,1)
     TY = net.inference(TX)
     plt.plot(TX, TY, c='red')
     plt.title("fitting result")
     plt.scatter(dr.XTrain, dr.YTrain)
-    plt.scatter(dr.XTest, dr.YTest, marker='x')
+    plt.scatter(dr.XTest, dr.YTest, marker='.', c='g')
+    plt.title(title)
     plt.show()
 
 def LoadData():
     dr = DataReader20(train_file, test_file)
     dr.ReadData()
-    dr.NormalizeX()
-    dr.NormalizeY(NetType.Fitting)
-   # dr.Shuffle()
+    #dr.NormalizeX()
+    #dr.NormalizeY(NetType.Fitting)
+    #dr.Shuffle()
     return dr
 
-if __name__ == '__main__':
-
-    dr = LoadData()
-
-    num_input = dr.num_feature
-    num_hidden = 64
-    num_output = 1
-    max_epoch = 10000
-    batch_size = 10
+def SetParameters():
+    num_hidden = 16
+    max_epoch = 20000
+    batch_size = 5
     learning_rate = 0.1
     eps = 1e-6
-
-    params = HyperParameters41(
+    
+    hp = HyperParameters41(
         learning_rate, max_epoch, batch_size, eps,                        
         net_type=NetType.Fitting,
         init_method=InitialMethod.Xavier, 
         optimizer_name=OptimizerName.SGD)
 
-    net = Model(dr, num_input, num_hidden, num_output, params)
-    ShowResult(net, dr)
+    return hp, num_hidden
+
+if __name__ == '__main__':
+    dr = LoadData()
+    hp, num_hidden = SetParameters()
+    net = Model(dr, 1, num_hidden, 1, hp)
+    ShowResult(net, dr, hp.toString())

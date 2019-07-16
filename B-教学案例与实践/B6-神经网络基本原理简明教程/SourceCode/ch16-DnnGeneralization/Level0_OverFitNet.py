@@ -33,7 +33,7 @@ def Model(dataReader, num_input, num_hidden, num_output, params):
     net.add_layer(fc4, "fc4")
 
     net.train(dataReader, checkpoint=100, need_test=True)
-    net.ShowLossHistory(XCoordinate.Epoch)
+    net.ShowLossHistory(XCoordinate.Epoch, ymin=0.8)
     
     return net
 

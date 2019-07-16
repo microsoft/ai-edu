@@ -63,7 +63,7 @@ class TrainingTrace(object):
     # 图形显示损失函数值历史记录
     def ShowLossHistory(self, title, xcoor, xmin=None, xmax=None, ymin=None, ymax=None):
         fig = plt.figure(figsize=(12,5))
-
+        # loss
         axes = plt.subplot(1,2,1)
         if xcoor == XCoordinate.Iteration:
             p2, = axes.plot(self.iteration_seq, self.loss_train)
@@ -80,9 +80,7 @@ class TrainingTrace(object):
         axes.set_title("Loss")
         axes.set_ylabel("loss")
         
-        if xmin != None or xmax != None or ymin != None or ymax != None:
-            axes.axis([xmin, xmax, ymin, ymax])
-        
+        # accuracy
         axes = plt.subplot(1,2,2)
         if xcoor == XCoordinate.Iteration:
             p2, = axes.plot(self.iteration_seq, self.accuracy_train)
@@ -98,7 +96,10 @@ class TrainingTrace(object):
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Accuracy")
         axes.set_ylabel("accuracy")
-        
+
+        if xmin != None or xmax != None or ymin != None or ymax != None:
+            axes.axis([xmin, xmax, ymin, ymax])
+
         plt.suptitle(title)
         plt.show()
 

@@ -38,7 +38,6 @@ def Model(dataReader, num_input, num_hidden, num_output, params):
     return net
 
 def ShowResult(net, dr, title):
-    
     TX = np.linspace(dr.XTrain.min(),dr.XTrain.max(),100).reshape(100,1)
     TY = net.inference(TX)
     plt.plot(TX, TY, c='red')

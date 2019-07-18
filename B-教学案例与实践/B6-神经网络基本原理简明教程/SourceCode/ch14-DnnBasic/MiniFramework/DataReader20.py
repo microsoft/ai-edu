@@ -40,8 +40,8 @@ class DataReader20(object):
         self.YTrainRaw = None     # training label set before normalization
         self.XTestRaw = None      # test feature set before normalization
         self.YTestRaw = None      # test label set before normalization
-        self.XVld = None          # validation feature set
-        self.YVld = None          # validation lable set
+        self.XDev = None          # validation feature set
+        self.YDev = None          # validation lable set
 
     # read data from file
     def ReadData(self):
@@ -71,6 +71,9 @@ class DataReader20(object):
             # this is for if no normalize requirment
             self.XTest = self.XTestRaw
             self.YTest = self.YTestRaw
+            # assume there has no validation set
+            self.XDev = self.XTest
+            self.YDev = self.YTest
         else:
             raise Exception("Cannot find test file!!!")
         #end if
@@ -82,6 +85,7 @@ class DataReader20(object):
         train_count = self.XTrainRaw.shape[0]
         self.XTrain = x_merge_norm[0:train_count,:]
         self.XTest = x_merge_norm[train_count:,:]
+        self.XDev = self.XTest
 
     def __NormalizeX(self, raw_data):
         temp_X = np.zeros_like(raw_data)
@@ -114,6 +118,8 @@ class DataReader20(object):
         elif nettype == NetType.MultipleClassifier:
             self.YTrain = self.__ToOneHot(self.YTrainRaw, base)
             self.YTest = self.__ToOneHot(self.YTestRaw, base)
+        #end if
+        self.YDev = self.YTest
 
     def __NormalizeY(self, raw_data):
         assert(raw_data.shape[1] == 1)
@@ -166,14 +172,14 @@ class DataReader20(object):
         self.num_validation = (int)(self.num_train / k)
         self.num_train = self.num_train - self.num_validation
         # validation set
-        self.XVld = self.XTrain[0:self.num_validation]
-        self.YVld = self.YTrain[0:self.num_validation]
+        self.XDev = self.XTrain[0:self.num_validation]
+        self.YDev = self.YTrain[0:self.num_validation]
         # train set
         self.XTrain = self.XTrain[self.num_validation:]
         self.YTrain = self.YTrain[self.num_validation:]
 
     def GetValidationSet(self):
-        return self.XVld, self.YVld
+        return self.XDev, self.YDev
 
     def GetTestSet(self):
         return self.XTest, self.YTest

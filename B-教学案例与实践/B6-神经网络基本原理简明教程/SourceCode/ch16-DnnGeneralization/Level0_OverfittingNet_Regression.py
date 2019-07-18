@@ -65,8 +65,7 @@ def SetParameters():
     hp = HyperParameters41(
         learning_rate, max_epoch, batch_size, eps,                        
         net_type=NetType.Fitting,
-        init_method=InitialMethod.Xavier, 
-        optimizer_name=OptimizerName.SGD)
+        init_method=InitialMethod.Xavier)
 
     return hp, num_hidden
 

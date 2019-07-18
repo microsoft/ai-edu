@@ -4,10 +4,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.NeuralNet12 import *
-from HelperClass.Visualizer import *
+from HelperClass.NeuralNet_1_2 import *
+from HelperClass.Visualizer_1_0 import *
 
-class LogicDataReader(DataReader11):
+class LogicDataReader(DataReader_1_1):
+    def __init__(self):
+        pass
+
     def Read_Logic_AND_Data(self):
         X = np.array([0,0,0,1,1,0,1,1]).reshape(4,2)
         Y = np.array([0,0,0,1]).reshape(4,1)
@@ -68,8 +71,8 @@ def train(reader, title):
     # net train
     num_input = 2
     num_output = 1
-    params = HyperParameters11(num_input, num_output, eta=0.5, max_epoch=10000, batch_size=1, eps=2e-3, net_type=NetType.BinaryClassifier)
-    net = NeuralNet12(params)
+    hp = HyperParameters_1_1(num_input, num_output, eta=0.5, max_epoch=10000, batch_size=1, eps=2e-3, net_type=NetType.BinaryClassifier)
+    net = NeuralNet_1_2(hp)
     net.train(reader, checkpoint=1)
     # test
     print(Test(net, reader))

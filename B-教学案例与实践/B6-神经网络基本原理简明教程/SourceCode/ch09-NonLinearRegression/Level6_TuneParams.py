@@ -5,32 +5,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass2.NeuralNet20 import *
+from HelperClass2.NeuralNet_2_0 import *
 
 train_data_name = "../../Data/ch09.train.npz"
 test_data_name = "../../Data/ch09.test.npz"
 
 def train(hp, folder):
-    net = NeuralNet20(hp, folder)
+    net = NeuralNet_2_0(hp, folder)
     net.train(dataReader, 50, True)
-    trace = net.GetTrainingTrace()
+    trace = net.GetTrainingHistory()
     return trace
 
 
 def ShowLossHistory(folder, file1, hp1, file2, hp2, file3, hp3, file4, hp4):
-    lh = TrainingTrace.Load(file1)
+    lh = TrainingHistory_2_0.Load(file1)
     axes = plt.subplot(2,2,1)
     lh.ShowLossHistory4(axes, hp1)
     
-    lh = TrainingTrace.Load(file2)
+    lh = TrainingHistory_2_0.Load(file2)
     axes = plt.subplot(2,2,2)
     lh.ShowLossHistory4(axes, hp2)
 
-    lh = TrainingTrace.Load(file3)
+    lh = TrainingHistory_2_0.Load(file3)
     axes = plt.subplot(2,2,3)
     lh.ShowLossHistory4(axes, hp3)
 
-    lh = TrainingTrace.Load(file4)
+    lh = TrainingHistory_2_0.Load(file4)
     axes = plt.subplot(2,2,4)
     lh.ShowLossHistory4(axes, hp4)
 
@@ -38,7 +38,7 @@ def ShowLossHistory(folder, file1, hp1, file2, hp2, file3, hp3, file4, hp4):
 
 
 def try_hyperParameters(folder, n_hidden, batch_size, eta):
-    hp = HyperParameters20(1, n_hidden, 1, eta, 10000, batch_size, 0.001, NetType.Fitting, InitialMethod.Xavier)
+    hp = HyperParameters_2_0(1, n_hidden, 1, eta, 10000, batch_size, 0.001, NetType.Fitting, InitialMethod.Xavier)
     filename = str.format("{0}\\{1}_{2}_{3}.pkl", folder, ne, batch, eta).replace('.', '', 1)
     file = Path(filename)
     if file.exists():
@@ -51,7 +51,7 @@ def try_hyperParameters(folder, n_hidden, batch_size, eta):
 
 if __name__ == '__main__':
   
-    dataReader = DataReader20(train_data_name, test_data_name)
+    dataReader = DataReader_2_0(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.GenerateValidationSet()
     

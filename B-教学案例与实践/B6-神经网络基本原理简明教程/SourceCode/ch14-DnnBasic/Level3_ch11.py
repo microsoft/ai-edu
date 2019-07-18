@@ -6,7 +6,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
-from MiniFramework.NeuralNet40 import *
+from MiniFramework.NeuralNet_4_0 import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.ClassificationLayer import *
 from MiniFramework.DataReader20 import *
@@ -48,14 +48,14 @@ def ShowResult(net, title):
     plt.contourf(X,Y,Z)
 
 def model_relu(num_input, num_hidden, num_output, hp):
-    net = NeuralNet40(hp, "chinabank_relu")
+    net = NeuralNet_4_0(hp, "chinabank_relu")
 
-    fc1 = FcLayer(num_input, num_hidden, hp)
+    fc1 = FcLayer_1_0(num_input, num_hidden, hp)
     net.add_layer(fc1, "fc1")
     r1 = ActivatorLayer(Relu())
     net.add_layer(r1, "Relu1")
 
-    fc2 = FcLayer(num_hidden, num_output, hp)
+    fc2 = FcLayer_1_0(num_hidden, num_output, hp)
     net.add_layer(fc2, "fc2")
     softmax1 = ClassificationLayer(Softmax())
     net.add_layer(softmax1, "softmax1")
@@ -67,14 +67,14 @@ def model_relu(num_input, num_hidden, num_output, hp):
     ShowData(dataReader)
 
 def model_sigmoid(num_input, num_hidden, num_output, hp):
-    net = NeuralNet40(hp, "chinabank_sigmoid")
+    net = NeuralNet_4_0(hp, "chinabank_sigmoid")
 
-    fc1 = FcLayer(num_input, num_hidden, hp)
+    fc1 = FcLayer_1_0(num_input, num_hidden, hp)
     net.add_layer(fc1, "fc1")
     s1 = ActivatorLayer(Sigmoid())
     net.add_layer(s1, "Sigmoid1")
 
-    fc2 = FcLayer(num_hidden, num_output, hp)
+    fc2 = FcLayer_1_0(num_hidden, num_output, hp)
     net.add_layer(fc2, "fc2")
     softmax1 = ClassificationLayer(Softmax())
     net.add_layer(softmax1, "softmax1")
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     learning_rate = 0.1
     eps = 1e-3
 
-    hp = HyperParameters40(
+    hp = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier)

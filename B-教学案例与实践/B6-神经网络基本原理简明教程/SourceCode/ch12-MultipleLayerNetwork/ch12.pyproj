@@ -21,15 +21,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelperClass3\Activators.py" />
-    <Compile Include="HelperClass3\DataReader20.py" />
-    <Compile Include="HelperClass3\HyperParameters30.py" />
-    <Compile Include="HelperClass3\LossFunction.py" />
-    <Compile Include="HelperClass3\MnistImageDataReader.py" />
-    <Compile Include="HelperClass3\NeuralNet30.py" />
-    <Compile Include="HelperClass3\TrainingTrace3.py" />
-    <Compile Include="HelperClass3\WeightsBias20.py" />
-    <Compile Include="HelperClass3\__init__.py">
+    <Compile Include="HelperClass2\ActivatorFunction_2_0.py" />
+    <Compile Include="HelperClass2\ClassifierFunction_2_0.py" />
+    <Compile Include="HelperClass2\DataReader_2_0.py" />
+    <Compile Include="HelperClass2\EnumDef_2_0.py" />
+    <Compile Include="HelperClass2\HyperParameters_3_0.py" />
+    <Compile Include="HelperClass2\LossFunction_1_1.py" />
+    <Compile Include="HelperClass2\MnistImageDataReader.py" />
+    <Compile Include="HelperClass2\NeuralNet_3_0.py" />
+    <Compile Include="HelperClass2\NeuralNet_2_2.py" />
+    <Compile Include="HelperClass2\TrainingHistory_2_3.py" />
+    <Compile Include="HelperClass2\WeightsBias_1_0.py" />
+    <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level3_GradientCheck.py">
@@ -43,7 +46,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="HelperClass3\" />
+    <Folder Include="HelperClass2\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

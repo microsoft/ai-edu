@@ -6,9 +6,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.DataReader10 import *
+from HelperClass.DataReader_1_0 import *
 
-class NeuralNet(object):
+file_name = "../../data/ch04.npz"
+
+class NeuralNet_0_1(object):
     def __init__(self, eta):
         self.eta = eta
         self.w = 0
@@ -61,11 +63,11 @@ def ShowResult(net, dataReader):
 
 if __name__ == '__main__':
     # read data
-    sdr = DataReader10()
+    sdr = DataReader_1_0(file_name)
     sdr.ReadData()
     # create net
     eta = 0.1
-    net = NeuralNet(eta)
+    net = NeuralNet_0_1(eta)
     net.train(sdr)
     # result
     print("w=%f,b=%f" %(net.w, net.b))

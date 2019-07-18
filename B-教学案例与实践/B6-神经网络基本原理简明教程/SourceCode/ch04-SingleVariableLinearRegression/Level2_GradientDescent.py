@@ -6,11 +6,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from HelperClass.DataReader10 import *
+from HelperClass.DataReader_1_0 import *
+
+file_name = "../../data/ch04.npz"
 
 if __name__ == '__main__':
 
-    reader = DataReader10()
+    reader = DataReader_1_0(file_name)
     reader.ReadData()
     X,Y = reader.GetWholeTrainSamples()
 

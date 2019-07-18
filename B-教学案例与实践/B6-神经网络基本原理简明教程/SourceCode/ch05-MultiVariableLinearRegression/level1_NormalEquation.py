@@ -2,10 +2,13 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
-from HelperClass.DataReader11 import *
+
+from HelperClass.DataReader_1_1 import *
+
+file_name = "../../data/ch05.npz"
 
 if __name__ == '__main__':
-    reader = DataReader11()
+    reader = DataReader_1_1(file_name)
     reader.ReadData()
     X,Y = reader.GetWholeTrainSamples()
     num_example = X.shape[0]

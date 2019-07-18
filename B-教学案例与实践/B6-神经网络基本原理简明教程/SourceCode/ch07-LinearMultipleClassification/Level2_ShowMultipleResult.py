@@ -6,8 +6,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import math
 
-from HelperClass.NeuralNet12 import *
-from HelperClass.Visualizer import *
+from HelperClass.NeuralNet_1_2 import *
+from HelperClass.Visualizer_1_0 import *
+
+file_name = "../../data/ch07.npz"
 
 def ShowData(X,Y):
     fig = plt.figure(figsize=(6,6))
@@ -16,18 +18,7 @@ def ShowData(X,Y):
 def ShowResult(X,Y,xt,yt):
     fig = plt.figure(figsize=(6,6))
     DrawThreeCategoryPoints(X[:,0], X[:,1], Y[:], xlabel="x1", ylabel="x2", show=False)
-    """
-    for i in range(X.shape[0]):
-        category = np.argmax(Y[i])
-        if category == 0:
-            plt.plot(X[i,0], X[i,1], '.', c='r')
-        elif category == 1:
-            plt.plot(X[i,0], X[i,1], 'x', c='g')
-        elif category == 2:
-            plt.plot(X[i,0], X[i,1], '^', c='b')
-        # end if
-    # end for
-    """
+
     b13 = (net.B[0,0] - net.B[0,2])/(net.W[1,2] - net.W[1,0])
     w13 = (net.W[0,0] - net.W[0,2])/(net.W[1,2] - net.W[1,0])
 
@@ -53,15 +44,11 @@ def ShowResult(X,Y,xt,yt):
     plt.axis([-0.1,1.1,-0.1,1.1])
 
     DrawThreeCategoryPoints(xt[:,0], xt[:,1], yt[:], xlabel="x1", ylabel="x2", show=True, isPredicate=True)
-    """
-    for i in range(xt.shape[0]):
-        plt.scatter(xt[i,0], xt[i,1], marker='^', s=200)
-    plt.show()
-    """
+
 # 主程序
 if __name__ == '__main__':
     num_category = 3
-    reader = DataReader13()
+    reader = DataReader_1_3(file_name)
     reader.ReadData()
     reader.ToOneHot(num_category, base=1)
     # show raw data before normalization
@@ -69,8 +56,8 @@ if __name__ == '__main__':
     reader.NormalizeX()
 
     num_input = 2
-    params = HyperParameters11(num_input, num_category, eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.MultipleClassifier)
-    net = NeuralNet12(params)
+    params = HyperParameters_1_1(num_input, num_category, eta=0.1, max_epoch=100, batch_size=10, eps=1e-3, net_type=NetType.MultipleClassifier)
+    net = NeuralNet_1_2(params)
     net.train(reader, checkpoint=1)
 
     xt_raw = np.array([5,1,7,6,5,6,2,7]).reshape(4,2)

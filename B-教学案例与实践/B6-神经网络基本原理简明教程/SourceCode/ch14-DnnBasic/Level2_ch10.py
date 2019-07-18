@@ -6,7 +6,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
-from MiniFramework.NeuralNet40 import *
+from MiniFramework.NeuralNet_4_0 import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.ClassificationLayer import *
 from MiniFramework.DataReader20 import *
@@ -77,19 +77,19 @@ if __name__ == '__main__':
     learning_rate = 0.1
     eps = 1e-3
 
-    params = HyperParameters40(
+    params = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.BinaryClassifier,
         init_method=InitialMethod.Xavier)
 
-    net = NeuralNet40(params, "Arc")
+    net = NeuralNet_4_0(params, "Arc")
 
-    fc1 = FcLayer(num_input, num_hidden, params)
+    fc1 = FcLayer_1_0(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
     sigmoid1 = ActivatorLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
     
-    fc2 = FcLayer(num_hidden, num_output, params)
+    fc2 = FcLayer_1_0(num_hidden, num_output, params)
     net.add_layer(fc2, "fc2")
     logistic = ClassificationLayer(Logistic())
     net.add_layer(logistic, "logistic")

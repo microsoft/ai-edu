@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2a8cb5da-24e5-499b-b336-f0be7a8ed73c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_NN_Complex.py</StartupFile>
+    <StartupFile>Level6_TuneParams.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,22 +21,28 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelperClass2\Activators.py">
+    <Compile Include="HelperClass2\ClassifierFunction_2_0.py" />
+    <Compile Include="HelperClass2\ActivatorFunction_2_0.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass2\DataReader20.py" />
-    <Compile Include="HelperClass2\LossFunction.py" />
-    <Compile Include="HelperClass2\NeuralNet20.py" />
-    <Compile Include="HelperClass2\TrainingTrace.py" />
+    <Compile Include="HelperClass2\DataReader_2_0.py" />
+    <Compile Include="HelperClass2\EnumDef_2_0.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelperClass2\LossFunction_1_1.py" />
+    <Compile Include="HelperClass2\NeuralNet_2_0.py" />
+    <Compile Include="HelperClass2\TrainingHistory_2_0.py" />
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass\Activators.py" />
-    <Compile Include="HelperClass\HyperParameters11.py" />
-    <Compile Include="HelperClass\LossFunction.py" />
-    <Compile Include="HelperClass\NeuralNet12.py" />
-    <Compile Include="HelperClass\DataReader13.py" />
-    <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\ClassifierFunction_1_1.py" />
+    <Compile Include="HelperClass\DataReader_1_3.py" />
+    <Compile Include="HelperClass\EnumDef_1_0.py" />
+    <Compile Include="HelperClass\HyperParameters_1_1.py" />
+    <Compile Include="HelperClass\LossFunction_1_1.py" />
+    <Compile Include="HelperClass\NeuralNet_1_2.py" />
+    <Compile Include="HelperClass\TrainingHistory_1_0.py" />
+    <Compile Include="HelperClass\Visualizer_1_0.py" />
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -47,10 +53,10 @@
     <Compile Include="Level4_NN_Complex.py" />
     <Compile Include="Level3_NN_Sin.py" />
     <Compile Include="Level6_TuneParams.py" />
-    <Compile Include="HelperClass2\HyperParameters20.py">
+    <Compile Include="HelperClass2\HyperParameters_2_0.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass2\WeightsBias20.py" />
+    <Compile Include="HelperClass2\WeightsBias_1_0.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HelperClass2\" />

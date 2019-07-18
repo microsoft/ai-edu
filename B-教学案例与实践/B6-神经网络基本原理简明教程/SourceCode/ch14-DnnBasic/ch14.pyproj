@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_Cifar10Classifier.py</StartupFile>
+    <StartupFile>Level1_ch09.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -37,17 +37,18 @@
     </Compile>
     <Compile Include="MiniFramework\DataReader20.py" />
     <Compile Include="MiniFramework\ActivatorLayer.py" />
-    <Compile Include="MiniFramework\EnumDef.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MiniFramework\FullConnectionLayer.py" />
+    <Compile Include="MiniFramework\DataReader_2_0.py" />
+    <Compile Include="MiniFramework\EnumDef_2_0.py" />
+    <Compile Include="MiniFramework\FullConnectionLayer_1_0.py" />
     <Compile Include="MiniFramework\Layer.py" />
+    <Compile Include="MiniFramework\TrainingHistory_2_3.py" />
     <Compile Include="MiniFramework\TrainingTrace.py" />
+    <Compile Include="MiniFramework\WeightsBias_1_0.py" />
     <Compile Include="MiniFramework\__init__.py" />
-    <Compile Include="MiniFramework\LossFunction.py" />
-    <Compile Include="MiniFramework\NeuralNet40.py" />
-    <Compile Include="MiniFramework\HyperParameters40.py" />
-    <Compile Include="MiniFramework\WeightsBias20.py" />
+    <Compile Include="MiniFramework\LossFunction_1_1.py" />
+    <Compile Include="MiniFramework\NeuralNet_4_0.py" />
+    <Compile Include="MiniFramework\HyperParameters_4_0.py" />
+    <Compile Include="MiniFramework\WeightsBias30.py" />
     <Compile Include="Level1_ch09.py" />
     <Compile Include="Level3_Cifar10Classifier.py" />
     <Compile Include="ExtendedDataReader\__init__.py">

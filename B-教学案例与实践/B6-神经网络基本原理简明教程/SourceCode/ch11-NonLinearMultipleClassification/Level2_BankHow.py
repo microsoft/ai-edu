@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from HelperClass2.NeuralNet20 import *
-from HelperClass2.Visualizer21 import *
+from HelperClass2.NeuralNet_2_2 import *
+from HelperClass2.Visualizer_1_1 import *
 
 train_data_name = "../../Data/ch11.train.npz"
 test_data_name = "../../Data/ch11.test.npz"
@@ -39,7 +39,7 @@ def Show3D(net, dr):
 
 
 if __name__ == '__main__':
-    dataReader = DataReader20(train_data_name, test_data_name)
+    dataReader = DataReader_2_0(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.NormalizeY(NetType.MultipleClassifier, base=1)
 
@@ -53,11 +53,11 @@ if __name__ == '__main__':
     eta, batch_size, max_epoch = 0.1, 10, 5000
     eps = 0.1
 
-    hp = HyperParameters20(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.MultipleClassifier, InitialMethod.Xavier)
-    net = NeuralNet20(hp, "Bank_233_2")
+    hp = HyperParameters_2_0(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.MultipleClassifier, InitialMethod.Xavier)
+    net = NeuralNet_2_2(hp, "Bank_233_2")
     
     #net.LoadResult()
     net.train(dataReader, 100, True)
-    net.ShowTrainingTrace()
+    net.ShowTrainingHistory()
 
     Show3D(net, dataReader)

@@ -1,7 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from HelperClass.NeuralNet10 import *
+from HelperClass.NeuralNet_1_0 import *
+
+file_name = "../../data/ch04.npz"
 
 def ShowResult(net, dataReader):
     X,Y = dataReader.GetWholeTrainSamples()
@@ -18,10 +20,10 @@ def ShowResult(net, dataReader):
 
 
 if __name__ == '__main__':
-    sdr = DataReader10()
+    sdr = DataReader_1_0(file_name)
     sdr.ReadData()
-    params = HyperParameters10(1, 1, eta=0.3, max_epoch=100, batch_size=10, eps = 0.02)
-    net = NeuralNet10(params)
+    hp = HyperParameters_1_0(1, 1, eta=0.3, max_epoch=100, batch_size=10, eps = 0.02)
+    net = NeuralNet_1_0(hp)
     net.train(sdr)    
    
     ShowResult(net, sdr)

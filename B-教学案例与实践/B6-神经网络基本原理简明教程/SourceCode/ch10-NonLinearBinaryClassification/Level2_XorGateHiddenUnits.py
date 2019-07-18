@@ -13,8 +13,8 @@ def train(hidden, dataReader):
     n_output = 1
     eta, batch_size, max_epoch = 0.1, 1, 10000
     eps = 0.005
-    hp = HyperParameters20(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
-    net = NeuralNet20(hp, "Xor_2N1")
+    hp = HyperParameters_2_0(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.BinaryClassifier, InitialMethod.Xavier)
+    net = NeuralNet_2_1(hp, "Xor_2N1")
     net.train(dataReader, 100, False)
     epoch = net.GetEpochNumber()
     ShowResultContour(net, dataReader, str.format("{0},epoch={1}", hp.toString(), epoch))
@@ -22,7 +22,6 @@ def train(hidden, dataReader):
 if __name__ == '__main__':
     dataReader = XOR_DataReader()
     dataReader.ReadData()
-    dataReader.GenerateValidationSet()
 
     train(1, dataReader)
     train(2, dataReader)

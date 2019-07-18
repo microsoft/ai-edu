@@ -5,19 +5,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from MiniFramework.NeuralNet41 import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.HyperParameters41 import *
-from MiniFramework.WeightsBias import *
 from MiniFramework.ActivatorLayer import *
-from MiniFramework.DropoutLayer import *
-
+from MiniFramework.ClassificationLayer import *
 from MnistImageDataReader import *
 
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
+train_image_file = '../../Data/train-images-10'
+train_label_file = '../../Data/train-labels-10'
+test_image_file = '../../Data/test-images-10'
+test_label_file = '../../Data/test-labels-10'
 
 def LoadData():
     mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
@@ -28,7 +23,7 @@ def LoadData():
     return mdr
 
 def Net(dataReader, num_input, num_hidden, num_output, params, show_history=True):
-    net = NeuralNet41(params)
+    net = NeuralNet41(params, "mnist_overfitting")
 
     fc1 = FcLayer(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
@@ -52,7 +47,7 @@ def Net(dataReader, num_input, num_hidden, num_output, params, show_history=True
     
     fc5 = FcLayer(num_hidden, num_output, params)
     net.add_layer(fc5, "fc5")
-    softmax = ActivatorLayer(Softmax())
+    softmax = ClassificationLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
     net.train(dataReader, checkpoint=1, need_test=True)
@@ -77,8 +72,7 @@ if __name__ == '__main__':
 
     params = HyperParameters41(
         learning_rate, max_epoch, batch_size, eps,                        
-        LossFunctionName.CrossEntropy3, 
-        InitialMethod.Xavier, 
-        OptimizerName.SGD)
+        net_type=NetType.MultipleClassifier,
+        init_method=InitialMethod.Xavier)
 
     Net(dataReader, num_input, num_hidden, num_output, params)

@@ -5,7 +5,7 @@ from MiniFramework.EnumDef import *
 
 # this class is for two-layer NN only
 class HyperParameters41(object):
-    def __init__(self, eta=0.1, max_epoch=10000, batch_size=5, eps = 0.1,
+    def __init__(self, eta=0.1, max_epoch=10000, batch_size=5, eps=0.1,
                  net_type=NetType.Fitting, 
                  init_method=InitialMethod.Xavier,
                  optimizer_name=OptimizerName.SGD,

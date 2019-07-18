@@ -1,22 +1,14 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.NeuralNet40 import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias20 import *
-from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader import *
-
 import numpy as np
 import csv
 
 train_data = "../../Data/adult.data"
 test_data = "../../Data/adult.test"
 
-train_data_npz = "../../Data/Income_Train.npz"
-test_data_npz = "../../Data/Income_Test.npz"
+train_data_npz = "../../Data/ch14.Income.train.npz"
+test_data_npz = "../../Data/ch14.Income.test.npz"
 
 workclass_list = ["Private", "Self-emp-not-inc", "Self-emp-inc", "Federal-gov", "Local-gov", "State-gov", "Without-pay", "Never-worked"]
 education_list = ["Bachelors", "Some-college", "11th", "HS-grad", "Prof-school", "Assoc-acdm", "Assoc-voc", "9th", "7th-8th", "12th", "Masters", "1st-4th", "10th", "Doctorate", "5th-6th", "Preschool"]

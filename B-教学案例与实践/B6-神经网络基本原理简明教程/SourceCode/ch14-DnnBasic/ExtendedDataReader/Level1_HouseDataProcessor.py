@@ -1,8 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.DataReader import *
-
 import numpy as np
 import csv
 import copy
@@ -10,8 +8,8 @@ import copy
 data_file_name = "../../Data/kc_house_data.csv"     # download from Kc
 train_data_file_name = "../../Data/kc_train.csv"    # download from DC
 test_data_file_name = "../../Data/kc_test.csv"      # download from DC
-train_data = "../../Data/house_Train.npz"
-test_data = "../../Data/house_Test.npz"
+train_file = "../../Data/ch14.house.train.npz"
+test_file = "../../Data/ch14.house.test.npz"
 
 class HouseDataProcessor(object):
     def PrepareData(self, csv_file, npz_file):
@@ -132,8 +130,8 @@ class HouseSingleDataProcessor(object):
         y_test = y[0:testcount,:]
         y_train = y[testcount:,:]
 
-        np.savez(train_data, data=x_train, label=y_train)
-        np.savez(test_data, data=x_test, label=y_test)
+        np.savez(train_file, data=x_train, label=y_train)
+        np.savez(test_file, data=x_test, label=y_test)
         
         print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
 

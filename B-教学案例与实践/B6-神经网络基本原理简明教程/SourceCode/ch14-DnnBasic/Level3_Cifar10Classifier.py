@@ -2,7 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 from MiniFramework.NeuralNet_4_0 import *
-from MiniFramework.ActivatorLayer import *
+from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 
 from ExtendedDataReader.CifarImageReader import *
@@ -50,22 +50,22 @@ if __name__ == '__main__':
 
     fc1 = FcLayer_1_0(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    r1 = ActivatorLayer(Relu())
+    r1 = ActivationLayer(Relu())
     net.add_layer(r1, "r1")
     
     fc2 = FcLayer_1_0(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    r2 = ActivatorLayer(Relu())
+    r2 = ActivationLayer(Relu())
     net.add_layer(r2, "r2")
 
     fc3 = FcLayer_1_0(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
-    r3 = ActivatorLayer(Relu())
+    r3 = ActivationLayer(Relu())
     net.add_layer(r3, "r3")
 
     fc4 = FcLayer_1_0(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
-    r4 = ActivatorLayer(Relu())
+    r4 = ActivationLayer(Relu())
     net.add_layer(r4, "r4")
     
     fc5 = FcLayer_1_0(num_hidden4, num_output, params)
@@ -77,5 +77,5 @@ if __name__ == '__main__':
 
     net.train(dataReader, checkpoint=0.5, need_test=True)
     
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
     

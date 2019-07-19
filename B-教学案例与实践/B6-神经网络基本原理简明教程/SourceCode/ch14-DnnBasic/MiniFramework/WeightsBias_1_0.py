@@ -4,7 +4,7 @@
 import numpy as np
 from pathlib import Path
 
-from MiniFramework.EnumDef_2_0 import *
+from MiniFramework.EnumDef_3_0 import *
 
 class WeightsBias_1_0(object):
     def __init__(self, n_input, n_output, init_method, eta):

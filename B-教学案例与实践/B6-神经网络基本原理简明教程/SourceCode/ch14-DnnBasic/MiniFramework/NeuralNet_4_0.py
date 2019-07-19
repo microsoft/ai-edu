@@ -220,5 +220,5 @@ class NeuralNet_4_0(object):
             name = self.layer_name[i]
             layer.load_parameters(self.subfolder, name)
 
-    def ShowLossHistory(self, x, xmin=None, xmax=None, ymin=None, ymax=None):
-        self.loss_trace.ShowLossHistory(self.hp.toString(), x, xmin, xmax, ymin, ymax)
+    def ShowLossHistory(self, xcoord=XCoordinate.Epoch, xmin=None, xmax=None, ymin=None, ymax=None):
+        self.loss_trace.ShowLossHistory(self.hp.toString(), xcoord, xmin, xmax, ymin, ymax)

@@ -2,8 +2,8 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 from MiniFramework.NeuralNet_4_0 import *
-from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader20 import *
+from MiniFramework.ActivationLayer import *
+from MiniFramework.DataReader_2_0 import *
 
 import numpy as np
 import csv
@@ -11,7 +11,7 @@ import csv
 train_file = "../../Data/ch14.house.train.npz"
 test_file = "../../Data/ch14.house.test.npz"
 
-class HouseDataReader(DataReader20):
+class HouseDataReader(DataReader_2_0):
     def Drop(self):
         self.XTrain = np.delete(self.XTrain, [0,1,8,9], axis=1)
         self.XTrainRaw = np.delete(self.XTrainRaw, [0,1,8,9], axis=1)
@@ -73,22 +73,22 @@ def model():
 
     fc1 = FcLayer_1_0(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    r1 = ActivatorLayer(Relu())
+    r1 = ActivationLayer(Relu())
     net.add_layer(r1, "r1")
 
     fc2 = FcLayer_1_0(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    r2 = ActivatorLayer(Relu())
+    r2 = ActivationLayer(Relu())
     net.add_layer(r2, "r2")
 
     fc3 = FcLayer_1_0(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
-    r3 = ActivatorLayer(Relu())
+    r3 = ActivationLayer(Relu())
     net.add_layer(r3, "r3")
 
     fc4 = FcLayer_1_0(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
-    r4 = ActivatorLayer(Relu())
+    r4 = ActivationLayer(Relu())
     net.add_layer(r4, "r4")
 
     fc5 = FcLayer_1_0(num_hidden4, num_output, params)
@@ -109,7 +109,7 @@ def model():
     mse = np.sum((dr.YTestRaw - real_output)**2)/dr.YTest.shape[0]/10000
     print("mse=", mse)
     
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
 
     ShowResult(net, dr)
 

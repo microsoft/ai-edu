@@ -7,15 +7,15 @@ import matplotlib.pyplot as plt
 import math
 
 from MiniFramework.NeuralNet_4_0 import *
-from MiniFramework.ActivatorLayer import *
+from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
-from MiniFramework.DataReader20 import *
+from MiniFramework.DataReader_2_0 import *
 
 train_file = "../../Data/ch14.Income.train.npz"
 test_file = "../../Data/ch14.Income.test.npz"
 
 def LoadData():
-    dr = DataReader20(train_file, test_file)
+    dr = DataReader_2_0(train_file, test_file)
     dr.ReadData()
     dr.NormalizeX()
     #dr.NormalizeY(YNormalizationMethod.BinaryClassifier)
@@ -48,22 +48,22 @@ def model():
 
     fc1 = FcLayer_1_0(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    a1 = ActivatorLayer(Relu())
+    a1 = ActivationLayer(Relu())
     net.add_layer(a1, "relu1")
     
     fc2 = FcLayer_1_0(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    a2 = ActivatorLayer(Relu())
+    a2 = ActivationLayer(Relu())
     net.add_layer(a2, "relu2")
 
     fc3 = FcLayer_1_0(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
-    a3 = ActivatorLayer(Relu())
+    a3 = ActivationLayer(Relu())
     net.add_layer(a3, "relu3")
 
     fc4 = FcLayer_1_0(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
-    a4 = ActivatorLayer(Relu())
+    a4 = ActivationLayer(Relu())
     net.add_layer(a4, "relu4")
 
     fc5 = FcLayer_1_0(num_hidden4, num_output, params)
@@ -74,7 +74,7 @@ def model():
     #net.load_parameters()
 
     net.train(dr, checkpoint=10, need_test=True)
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
 
 
 if __name__ == '__main__':

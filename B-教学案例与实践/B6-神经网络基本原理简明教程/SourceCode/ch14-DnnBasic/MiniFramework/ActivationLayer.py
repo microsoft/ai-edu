@@ -5,7 +5,7 @@ import numpy as np
 
 from MiniFramework.Layer import *
 
-class ActivatorLayer(CLayer):
+class ActivationLayer(CLayer):
     def __init__(self, activator):
         self.activator = activator
 

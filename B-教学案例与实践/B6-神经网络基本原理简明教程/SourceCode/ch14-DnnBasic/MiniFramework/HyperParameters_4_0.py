@@ -7,7 +7,7 @@ what's new?
 - remove hidden definition
 """
 
-from MiniFramework.EnumDef_2_0 import *
+from MiniFramework.EnumDef_3_0 import *
 
 # this class is for two-layer NN only
 class HyperParameters_4_0(object):

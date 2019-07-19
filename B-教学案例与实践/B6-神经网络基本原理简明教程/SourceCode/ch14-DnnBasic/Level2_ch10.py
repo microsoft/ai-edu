@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import math
 
 from MiniFramework.NeuralNet_4_0 import *
-from MiniFramework.ActivatorLayer import *
+from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
-from MiniFramework.DataReader20 import *
+from MiniFramework.DataReader_2_0 import *
 
 train_data_name = "../../Data/ch10.train.npz"
 test_data_name = "../../Data/ch10.test.npz"
@@ -62,7 +62,7 @@ def ShowResult2D(net, dr):
 #end def
 
 if __name__ == '__main__':
-    dataReader = DataReader20(train_data_name, test_data_name)
+    dataReader = DataReader_2_0(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.NormalizeX()
     dataReader.Shuffle()
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     fc1 = FcLayer_1_0(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
-    sigmoid1 = ActivatorLayer(Sigmoid())
+    sigmoid1 = ActivationLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
     
     fc2 = FcLayer_1_0(num_hidden, num_output, params)
@@ -97,5 +97,5 @@ if __name__ == '__main__':
     #net.load_parameters()
 
     net.train(dataReader, checkpoint=10, need_test=True)
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
     ShowResult2D(net, dataReader)

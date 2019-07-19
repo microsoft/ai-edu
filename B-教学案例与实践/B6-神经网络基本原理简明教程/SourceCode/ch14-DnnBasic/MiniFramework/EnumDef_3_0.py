@@ -2,7 +2,9 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 """
-Version 2.0
+Version 3.0
+what's new?
+- add XCoordinate
 """
 
 from enum import Enum
@@ -17,3 +19,8 @@ class InitialMethod(Enum):
     Normal = 1,
     Xavier = 2,
     MSRA = 3
+
+class XCoordinate(Enum):
+    Nothing = 0,
+    Iteration = 1,
+    Epoch = 2

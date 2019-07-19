@@ -35,20 +35,17 @@
     <Compile Include="MiniFramework\ClassificationLayer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MiniFramework\DataReader20.py" />
-    <Compile Include="MiniFramework\ActivatorLayer.py" />
+    <Compile Include="MiniFramework\ActivationLayer.py" />
     <Compile Include="MiniFramework\DataReader_2_0.py" />
-    <Compile Include="MiniFramework\EnumDef_2_0.py" />
+    <Compile Include="MiniFramework\EnumDef_3_0.py" />
     <Compile Include="MiniFramework\FullConnectionLayer_1_0.py" />
     <Compile Include="MiniFramework\Layer.py" />
-    <Compile Include="MiniFramework\TrainingHistory_2_3.py" />
-    <Compile Include="MiniFramework\TrainingTrace.py" />
+    <Compile Include="MiniFramework\TrainingHistory_2_4.py" />
     <Compile Include="MiniFramework\WeightsBias_1_0.py" />
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MiniFramework\LossFunction_1_1.py" />
     <Compile Include="MiniFramework\NeuralNet_4_0.py" />
     <Compile Include="MiniFramework\HyperParameters_4_0.py" />
-    <Compile Include="MiniFramework\WeightsBias30.py" />
     <Compile Include="Level1_ch09.py" />
     <Compile Include="Level3_Cifar10Classifier.py" />
     <Compile Include="ExtendedDataReader\__init__.py">

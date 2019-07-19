@@ -2,25 +2,27 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 """
-Version 2.3
+Version 2.4
 what's new?
-- add epoch/iteration as parameter in showLossHistory
+- change hp to string for title in ShowLossHistory()
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 
+from MiniFramework.EnumDef_3_0 import *
+
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
-class TrainingHistory_2_3(object):
+class TrainingHistory_2_4(object):
     def __init__(self, need_earlyStop = False, patience = 5):
         self.loss_train = []
         self.accuracy_train = []
         self.iteration_seq = []
         self.epoch_seq = []
-
         self.loss_val = []
         self.accuracy_val = []
+        self.counter = 0
        
     def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, eps):
         self.iteration_seq.append(total_iteration)
@@ -43,19 +45,20 @@ class TrainingHistory_2_3(object):
         return False
 
     # 图形显示损失函数值历史记录
-    def ShowLossHistory(self, params, x="epoch", xmin=None, xmax=None, ymin=None, ymax=None):
+    def ShowLossHistory(self, title, xcoord, xmin=None, xmax=None, ymin=None, ymax=None):
         fig = plt.figure(figsize=(12,5))
 
         axes = plt.subplot(1,2,1)
-        if x == "iteration":
+        if xcoord == XCoordinate.Iteration:
             p2, = axes.plot(self.iteration_seq, self.loss_train)
             p1, = axes.plot(self.iteration_seq, self.loss_val)
             axes.set_xlabel("iteration")
-        elif x == "epoch":
+        elif xcoord == XCoordinate.Epoch:
             p2, = axes.plot(self.epoch_seq, self.loss_train)
             p1, = axes.plot(self.epoch_seq, self.loss_val)
             axes.set_xlabel("epoch")
         #end if
+
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Loss")
         axes.set_ylabel("loss")
@@ -64,29 +67,28 @@ class TrainingHistory_2_3(object):
             axes.axis([xmin, xmax, ymin, ymax])
         
         axes = plt.subplot(1,2,2)
-        if x == "iteration":
+        if xcoord == XCoordinate.Iteration:
             p2, = axes.plot(self.iteration_seq, self.accuracy_train)
             p1, = axes.plot(self.iteration_seq, self.accuracy_val)
             axes.set_xlabel("iteration")
-        elif x == "epoch":
+        elif xcoord == XCoordinate.Epoch:
             p2, = axes.plot(self.epoch_seq, self.accuracy_train)
             p1, = axes.plot(self.epoch_seq, self.accuracy_val)
             axes.set_xlabel("epoch")
         #end if
+
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Accuracy")
         axes.set_ylabel("accuracy")
         axes.set_xlabel("epoch")
         
-        title = params.toString()
         plt.suptitle(title)
         plt.show()
         return title
 
-    def ShowLossHistory4(self, axes, params, xmin=None, xmax=None, ymin=None, ymax=None):
+    def ShowLossHistory4(self, axes, title, xmin=None, xmax=None, ymin=None, ymax=None):
         p2, = axes.plot(self.epoch_seq, self.loss_train)
         p1, = axes.plot(self.epoch_seq, self.loss_val)
-        title = params.toString()
         axes.set_title(title)
         axes.set_xlabel("epoch")
         axes.set_ylabel("loss")

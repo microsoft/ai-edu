@@ -2,7 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 from MiniFramework.NeuralNet_4_0 import *
-from MiniFramework.ActivatorLayer import *
+from MiniFramework.ActivationLayer import *
 
 train_file = "../../Data/ch09.train.npz"
 test_file = "../../Data/ch09.test.npz"
@@ -52,14 +52,14 @@ def model():
     net = NeuralNet_4_0(params, "Level1_CurveFittingNet")
     fc1 = FcLayer_1_0(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    sigmoid1 = ActivatorLayer(Sigmoid())
+    sigmoid1 = ActivationLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
     fc2 = FcLayer_1_0(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
 
     net.train(dataReader, checkpoint=100, need_test=True)
 
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
     ShowResult(net, dataReader)
 
 if __name__ == '__main__':

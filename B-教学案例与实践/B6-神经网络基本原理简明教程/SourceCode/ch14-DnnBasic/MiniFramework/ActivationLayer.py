@@ -17,7 +17,7 @@ class ActivationLayer(CLayer):
 
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
     def backward(self, delta_in, flag):
-        dZ,_ = self.activator.backward(self.x, self.a, delta_in)
+        dZ = self.activator.backward(self.x, self.a, delta_in)
         return dZ
 
 class CActivator(object):
@@ -40,7 +40,7 @@ class Identity(CActivator):
         return z
 
     def backward(self, z, a, delta):
-        return delta, a
+        return delta
 
 
 class Sigmoid(CActivator):
@@ -51,7 +51,7 @@ class Sigmoid(CActivator):
     def backward(self, z, a, delta):
         da = np.multiply(a, 1-a)
         dz = np.multiply(delta, da)
-        return dz, da
+        return dz
 
 
 class Tanh(CActivator):
@@ -62,7 +62,7 @@ class Tanh(CActivator):
     def backward(self, z, a, delta):
         da = 1 - np.multiply(a, a)
         dz = np.multiply(delta, da)
-        return dz, da
+        return dz
 
 
 class Relu(CActivator):
@@ -75,5 +75,5 @@ class Relu(CActivator):
         da = np.zeros(z.shape)
         da[z>0] = 1
         dz = da * delta
-        return dz, da
+        return dz
 

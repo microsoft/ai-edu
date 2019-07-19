@@ -61,7 +61,7 @@ def model_relu(num_input, num_hidden, num_output, hp):
     net.add_layer(softmax1, "softmax1")
 
     net.train(dataReader, checkpoint=50, need_test=True)
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
     
     ShowResult(net, hp.toString())
     ShowData(dataReader)

@@ -4,14 +4,16 @@
 import numpy as np
 from pathlib import Path
 
-from MiniFramework.EnumDef_3_0 import *
+from MiniFramework.EnumDef_4_0 import *
+from MiniFramework.Optimizer_1_0 import *
 
-class WeightsBias_1_0(object):
-    def __init__(self, n_input, n_output, init_method, eta):
+class WeightsBias_2_0(object):
+    def __init__(self, n_input, n_output, init_method, optimizer_name, eta):
         self.num_input = n_input
         self.num_output = n_output
         self.init_method = init_method
         self.eta = eta
+        self.optimizer_name = optimizer_name
         self.initial_value_filename = str.format("w_{0}_{1}_{2}_init", self.num_input, self.num_output, self.init_method.name)
 
     def InitializeWeights(self, folder, create_new):
@@ -21,13 +23,13 @@ class WeightsBias_1_0(object):
         else:
             self.__LoadExistingParameters()
         # end if
-        #self.__CreateOptimizers()
+        self.__CreateOptimizers()
 
         self.dW = np.zeros(self.W.shape)
         self.dB = np.zeros(self.B.shape)
 
     def __CreateNew(self):
-        self.W, self.B = WeightsBias_1_0.InitialParameters(self.num_input, self.num_output, self.init_method)
+        self.W, self.B = WeightsBias_2_0.InitialParameters(self.num_input, self.num_output, self.init_method)
         self.__SaveInitialValue()
         
     def __LoadExistingParameters(self):
@@ -39,9 +41,19 @@ class WeightsBias_1_0(object):
             self.__CreateNew()
         # end if
 
+    def __CreateOptimizers(self):
+        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+
+    def pre_Update(self):
+        if self.optimizer_name == OptimizerName.Nag:
+            self.W = self.oW1.pre_update(self.W)
+            self.B = self.oB1.pre_update(self.B)
+        # end if
+
     def Update(self):
-        self.W = self.W - self.eta * self.dW
-        self.B = self.B - self.eta * self.dB
+        self.W = self.oW.update(self.W, self.dW)
+        self.B = self.oB.update(self.B, self.dB)
 
     def __SaveInitialValue(self):
         file_name = str.format("{0}\\{1}.npz", self.folder, self.initial_value_filename)

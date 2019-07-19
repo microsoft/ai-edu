@@ -2,9 +2,9 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 """
-Version 3.0
+Version 4.0
 what's new?
-- add XCoordinate
+- add OptimizerName
 """
 
 from enum import Enum
@@ -24,3 +24,12 @@ class XCoordinate(Enum):
     Nothing = 0,
     Iteration = 1,
     Epoch = 2
+
+class OptimizerName(Enum):
+    SGD = 0,
+    Momentum = 1,
+    Nag = 2,
+    AdaGrad = 3,
+    AdaDelta = 4,
+    RMSProp = 5,
+    Adam = 6

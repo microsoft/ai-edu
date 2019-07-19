@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from matplotlib.colors import LogNorm
 
-from MiniFramework.Optimizer import *
-from MiniFramework.HyperParameters41 import *
-from MiniFramework.WeightsBias30 import *
+from MiniFramework.Optimizer_1_0 import *
+from MiniFramework.HyperParameters_4_0 import *
+from MiniFramework.WeightsBias_2_0 import *
 
 x_data_name = "X04.dat"
 y_data_name = "Y04.dat"
@@ -139,7 +139,7 @@ def show_contour(ax, loss_history, optimizer):
 
 def train(params):    
 
-    wb = WeightsBias30(1,1,InitialMethod.Zero, params.optimizer_name, params.eta)
+    wb = WeightsBias_2_0(1,1,InitialMethod.Zero, params.optimizer_name, params.eta)
     wb.InitializeWeights()
 
     # calculate loss to decide the stop condition
@@ -180,7 +180,7 @@ def train(params):
 
 if __name__ == '__main__':
     
-    params = HyperParameters41(eta=0.2, max_epoch=5, batch_size=5, eps = 0.005, optimizer_name=OptimizerName.SGD)
+    params = HyperParameters_4_0(eta=0.2, max_epoch=5, batch_size=5, eps = 0.005, optimizer_name=OptimizerName.SGD)
     loss_history = train(params)
     ax = plt.subplot(2, 2, 1)
     show_contour(ax, loss_history, params.optimizer_name.name)

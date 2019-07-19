@@ -2,8 +2,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import OrderedDict
-from MiniFramework.Optimizer import *
 
+from MiniFramework.Optimizer_1_0 import *
 
 def f(x, y):
     return x**2 / 10.0 + y**2
@@ -13,8 +13,9 @@ def derivative_f(x, y):
 
 
 def run():
-    dict = {OptimizerName.SGD:0.95, OptimizerName.Momentum:0.1, OptimizerName.RMSProp:0.5, OptimizerName.Adam:0.5}
+    dict = {OptimizerName.SGD:0.95, OptimizerName.Momentum:0.1, OptimizerName.RMSProp:0.5, OptimizerName.Adam:0.3}
     idx = 1
+    fig = plt.figure(figsize=(12,9))
 
     for key in dict.keys():
         optimizer_x = OptimizerFactory().CreateOptimizer(dict[key], key)

@@ -2,9 +2,9 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 """
-Version 4.0
+Version 4.1
 what's new?
-- totally different than previsous version, support building-block
+- support FCLayer 1.1
 """
 
 import numpy as np
@@ -15,12 +15,12 @@ import sys
 
 from MiniFramework.DataReader_2_0 import *
 from MiniFramework.Layer import *
-from MiniFramework.FullConnectionLayer_1_0 import *
+from MiniFramework.FullConnectionLayer_1_1 import *
 from MiniFramework.HyperParameters_4_0 import *
 from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_2_4 import *
 
-class NeuralNet_4_0(object):
+class NeuralNet_4_1(object):
     def __init__(self, params, model_name):
         self.model_name = model_name
         self.hp = params
@@ -46,7 +46,7 @@ class NeuralNet_4_0(object):
         self.layer_name.append(name)
         self.layer_count += 1
 
-    def __forward(self, X, train=True):
+    def forward(self, X, train=True):
         input = X
         for i in range(self.layer_count):
             layer = self.layer_list[i]
@@ -60,7 +60,7 @@ class NeuralNet_4_0(object):
         output = self.__forward(X, train=False)
         return output
 
-    def __backward(self, X, Y):
+    def backward(self, X, Y):
         delta_in = self.output - Y
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
@@ -68,12 +68,12 @@ class NeuralNet_4_0(object):
             # move back to previous layer
             delta_in = delta_out
 
-    def __pre_update(self):
+    def pre_update(self):
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             layer.pre_update()
 
-    def __update(self):
+    def update(self):
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             layer.update()
@@ -85,7 +85,7 @@ class NeuralNet_4_0(object):
         littles = 0
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
-            if isinstance(layer, FcLayer_1_0):
+            if isinstance(layer, FcLayer_1_1):
                 weights += np.sum(np.abs(layer.weights.W))
                 zeros += len(np.where(np.abs(layer.weights.W)<=0.0001)[0])
                 littles += len(np.where(np.abs(layer.weights.W)<=0.01)[0])
@@ -110,12 +110,17 @@ class NeuralNet_4_0(object):
             for iteration in range(max_iteration):
                 # get x and y value for one sample
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
+
+                # for optimizers which need pre-update weights
+                if self.hp.optimizer_name == OptimizerName.Nag:
+                    self.pre_update()
+
                 # get z from x,y
-                self.__forward(batch_x, train=True)
+                self.forward(batch_x, train=True)
                 # calculate gradient of w and b
-                self.__backward(batch_x, batch_y)
+                self.backward(batch_x, batch_y)
                 # final update w,b
-                self.__update()
+                self.update()
                 
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
@@ -180,7 +185,7 @@ class NeuralNet_4_0(object):
         print(correct)
         return correct
 
-    def __CalAccuracy(self, a, y):
+    def CalAccuracy(self, a, y):
         assert(a.shape == y.shape)
         m = a.shape[0]
         if self.hp.net_type == NetType.Fitting:
@@ -201,7 +206,7 @@ class NeuralNet_4_0(object):
             return correct/m
 
     def inference(self, X):
-        self.__forward(X, train=False)
+        self.forward(X, train=False)
         return self.output
 
     # save weights value when got low loss than before

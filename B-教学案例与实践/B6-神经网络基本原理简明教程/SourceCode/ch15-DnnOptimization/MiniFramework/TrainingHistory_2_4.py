@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 
-from MiniFramework.EnumDef_3_0 import *
+from MiniFramework.EnumDef_4_0 import *
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class TrainingHistory_2_4(object):

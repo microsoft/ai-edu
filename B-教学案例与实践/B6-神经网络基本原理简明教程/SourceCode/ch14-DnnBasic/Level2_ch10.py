@@ -75,12 +75,12 @@ if __name__ == '__main__':
     max_epoch = 10000
     batch_size = 5
     learning_rate = 0.1
-    eps = 1e-3
 
     params = HyperParameters_4_0(
-        learning_rate, max_epoch, batch_size, eps,
+        learning_rate, max_epoch, batch_size,
         net_type=NetType.BinaryClassifier,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.Xavier,
+        stopper=Stopper(StopCondition.StopLoss, 0.05))
 
     net = NeuralNet_4_0(params, "Arc")
 

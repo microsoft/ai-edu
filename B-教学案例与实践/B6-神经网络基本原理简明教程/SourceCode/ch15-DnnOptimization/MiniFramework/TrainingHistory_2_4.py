@@ -24,7 +24,7 @@ class TrainingHistory_2_4(object):
         self.accuracy_val = []
         self.counter = 0
        
-    def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, eps):
+    def Add(self, epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, stopper):
         self.iteration_seq.append(total_iteration)
         self.epoch_seq.append(epoch)
         self.loss_train.append(loss_train)
@@ -34,13 +34,17 @@ class TrainingHistory_2_4(object):
         if accuracy_vld is not None:
             self.accuracy_val.append(accuracy_vld)
 
-        if len(self.loss_val) > 1:
-            if abs(self.loss_val[-1] - self.loss_val[-2])<eps:
-                self.counter = self.counter + 1
-                if self.counter > 3:
-                    return True
-            else:
-                self.counter = 0
+        if stopper.stop_condition == StopCondition.StopDiff:
+            if len(self.loss_val) > 1:
+                if abs(self.loss_val[-1] - self.loss_val[-2]) < stopper.stop_value:
+                    self.counter = self.counter + 1
+                    if self.counter > 3:
+                        return True
+                else:
+                    self.counter = 0
+                #end if
+            #end if
+        #end if
 
         return False
 

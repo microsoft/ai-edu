@@ -95,12 +95,12 @@ if __name__ == '__main__':
     max_epoch = 5000
     batch_size = 10
     learning_rate = 0.1
-    eps = 1e-3
 
     hp = HyperParameters_4_0(
-        learning_rate, max_epoch, batch_size, eps,
+        learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.Xavier,
+        stopper=Stopper(StopCondition.StopLoss, 0.1))
   
     model_relu(num_input, num_hidden, num_output, hp)
     model_sigmoid(num_input, num_hidden, num_output, hp)

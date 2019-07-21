@@ -168,8 +168,8 @@ class NeuralNet_4_0(object):
         accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
-        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.eps)
-        if loss_vld <= self.hp.eps:
+        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.stopper)
+        if self.hp.stopper.stop_condition == StopCondition.StopLoss and loss_vld <= self.hp.stopper.stop_value:
             need_stop = True
         return need_stop
 
@@ -222,3 +222,12 @@ class NeuralNet_4_0(object):
 
     def ShowLossHistory(self, xcoord=XCoordinate.Epoch, xmin=None, xmax=None, ymin=None, ymax=None):
         self.loss_trace.ShowLossHistory(self.hp.toString(), xcoord, xmin, xmax, ymin, ymax)
+            
+    def GetTrainingTrace(self):
+        return self.loss_trace
+
+    def GetEpochNumber(self):
+        return self.loss_trace.GetEpochNumber()
+
+    def GetLatestAverageLoss(self, count=10):
+        return self.loss_trace.GetLatestAverageLoss(count)

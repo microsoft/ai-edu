@@ -14,7 +14,7 @@ def net(init_method, activator):
     learning_rate = 0.02
     eps = 0.01
 
-    params = HyperParameters_4_0(
+    params = HyperParameters_4_1(
         learning_rate, max_epoch, batch_size, eps,
         net_type=NetType.Fitting,
         init_method=init_method)

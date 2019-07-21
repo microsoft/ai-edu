@@ -47,8 +47,8 @@ class WeightsBias_2_0(object):
 
     def pre_Update(self):
         if self.optimizer_name == OptimizerName.Nag:
-            self.W = self.oW1.pre_update(self.W)
-            self.B = self.oB1.pre_update(self.B)
+            self.W = self.oW.pre_update(self.W)
+            self.B = self.oB.pre_update(self.B)
         # end if
 
     def Update(self):

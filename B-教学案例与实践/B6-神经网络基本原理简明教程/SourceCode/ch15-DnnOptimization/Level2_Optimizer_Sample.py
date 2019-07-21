@@ -13,7 +13,7 @@ def derivative_f(x, y):
 
 
 def run():
-    dict = {OptimizerName.SGD:0.95, OptimizerName.Momentum:0.1, OptimizerName.RMSProp:0.5, OptimizerName.Adam:0.3}
+    dict = {OptimizerName.SGD:0.95, OptimizerName.Momentum:0.05, OptimizerName.RMSProp:0.5, OptimizerName.Adam:0.3}
     idx = 1
     fig = plt.figure(figsize=(12,9))
 

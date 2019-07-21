@@ -39,12 +39,12 @@ if __name__ == '__main__':
     max_epoch = 50
     batch_size = 32
     learning_rate = 0.01
-    eps = 1e-3
 
     params = HyperParameters_4_0(
-        learning_rate, max_epoch, batch_size, eps,
+        learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
-        init_method=InitialMethod.MSRA)
+        init_method=InitialMethod.MSRA,
+        stopper=Stopper(StopCondition.StopDiff, 1e-3))
 
     net = NeuralNet_4_0(params, "Cifar10")
 

@@ -47,7 +47,8 @@ def model():
     params = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.Xavier,
+        stopper=Stopper(StopCondition.StopLoss, 0.001))
 
     net = NeuralNet_4_0(params, "Level1_CurveFittingNet")
     fc1 = FcLayer_1_0(num_input, num_hidden1, params)

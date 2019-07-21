@@ -33,3 +33,13 @@ class OptimizerName(Enum):
     AdaDelta = 4,
     RMSProp = 5,
     Adam = 6
+
+class StopCondition(Enum):
+    Nothing = 0,    # reach the max_epoch then stop
+    StopLoss = 1,   # reach specified loss value then stop
+    StopDiff = 2,   # reach specified abs(curr_loss - prev_loss)
+
+class Stopper(object):
+    def __init__(self, sc, sv):
+        self.stop_condition = sc
+        self.stop_value = sv

@@ -16,9 +16,10 @@ import sys
 from MiniFramework.DataReader_2_0 import *
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer_1_1 import *
-from MiniFramework.HyperParameters_4_0 import *
+from MiniFramework.HyperParameters_4_1 import *
 from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_2_4 import *
+from MiniFramework.ActivationLayer import *
 
 class NeuralNet_4_1(object):
     def __init__(self, params, model_name):
@@ -46,7 +47,7 @@ class NeuralNet_4_1(object):
         self.layer_name.append(name)
         self.layer_count += 1
 
-    def forward(self, X, train=True):
+    def __forward(self, X, train=True):
         input = X
         for i in range(self.layer_count):
             layer = self.layer_list[i]
@@ -116,7 +117,7 @@ class NeuralNet_4_1(object):
                     self.pre_update()
 
                 # get z from x,y
-                self.forward(batch_x, train=True)
+                self.__forward(batch_x, train=True)
                 # calculate gradient of w and b
                 self.backward(batch_x, batch_y)
                 # final update w,b
@@ -156,6 +157,8 @@ class NeuralNet_4_1(object):
         # end if
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
+        self.Hook()
+
         print("epoch=%d, total_iteration=%d" %(epoch, total_iteration))
 
         # calculate train loss
@@ -173,10 +176,14 @@ class NeuralNet_4_1(object):
         accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
-        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.eps)
-        if loss_vld <= self.hp.eps:
+        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.stopper)
+        if self.hp.stopper.stop_condition == StopCondition.StopLoss and loss_vld <= self.hp.stopper.stop_value:
             need_stop = True
         return need_stop
+
+    # for user's customized action
+    def Hook(self):
+        pass
 
     def Test(self, dataReader):
         x,y = dataReader.GetTestSet()
@@ -185,7 +192,7 @@ class NeuralNet_4_1(object):
         print(correct)
         return correct
 
-    def CalAccuracy(self, a, y):
+    def __CalAccuracy(self, a, y):
         assert(a.shape == y.shape)
         m = a.shape[0]
         if self.hp.net_type == NetType.Fitting:
@@ -206,7 +213,7 @@ class NeuralNet_4_1(object):
             return correct/m
 
     def inference(self, X):
-        self.forward(X, train=False)
+        self.__forward(X, train=False)
         return self.output
 
     # save weights value when got low loss than before
@@ -227,3 +234,12 @@ class NeuralNet_4_1(object):
 
     def ShowLossHistory(self, xcoord=XCoordinate.Epoch, xmin=None, xmax=None, ymin=None, ymax=None):
         self.loss_trace.ShowLossHistory(self.hp.toString(), xcoord, xmin, xmax, ymin, ymax)
+
+    def GetTrainingTrace(self):
+        return self.loss_trace
+
+    def GetEpochNumber(self):
+        return self.loss_trace.GetEpochNumber()
+
+    def GetLatestAverageLoss(self, count=10):
+        return self.loss_trace.GetLatestAverageLoss(count)

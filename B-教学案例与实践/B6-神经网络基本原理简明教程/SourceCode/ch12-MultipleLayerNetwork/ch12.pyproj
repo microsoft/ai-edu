@@ -29,7 +29,6 @@
     <Compile Include="HelperClass2\LossFunction_1_1.py" />
     <Compile Include="HelperClass2\MnistImageDataReader.py" />
     <Compile Include="HelperClass2\NeuralNet_3_0.py" />
-    <Compile Include="HelperClass2\NeuralNet_2_2.py" />
     <Compile Include="HelperClass2\TrainingHistory_2_3.py" />
     <Compile Include="HelperClass2\WeightsBias_1_0.py" />
     <Compile Include="HelperClass2\__init__.py">

@@ -5,6 +5,7 @@
 Version 3.0
 what's new?
 - add XCoordinate
+- add stop condition
 """
 
 from enum import Enum
@@ -24,3 +25,15 @@ class XCoordinate(Enum):
     Nothing = 0,
     Iteration = 1,
     Epoch = 2
+
+class StopCondition(Enum):
+    Nothing = 0,    # reach the max_epoch then stop
+    StopLoss = 1,   # reach specified loss value then stop
+    StopDiff = 2,   # reach specified abs(curr_loss - prev_loss)
+
+class Stopper(object):
+    def __init__(self, sc, sv):
+        self.stop_condition = sc
+        self.stop_value = sv
+
+    

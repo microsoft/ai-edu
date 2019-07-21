@@ -62,12 +62,12 @@ def model():
     max_epoch = 1000
     batch_size = 16
     learning_rate = 0.01
-    eps = 1e-6
 
     params = HyperParameters_4_0(
-        learning_rate, max_epoch, batch_size, eps,
+        learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.Xavier,
+        stopper=Stopper(StopCondition.StopDiff, 1e-6))
 
     net = NeuralNet_4_0(params, "HouseSingle")
 

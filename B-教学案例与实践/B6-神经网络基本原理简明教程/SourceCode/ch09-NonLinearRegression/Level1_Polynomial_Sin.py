@@ -4,11 +4,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.NeuralNet12 import *
+from HelperClass.NeuralNet_1_2 import *
 
 file_name = "../../data/ch08.train.npz"
 
-class DataReaderEx(DataReader13):
+class DataReaderEx(DataReader_1_3):
     def Add(self):
         X = self.XTrain[:,]**2
         self.XTrain = np.hstack((self.XTrain, X))
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     # net
     num_input = 4
     num_output = 1
-    params = HyperParameters11(num_input, num_output, eta=0.2, max_epoch=10000, batch_size=10, eps=0.005, net_type=NetType.Fitting)
-    net = NeuralNet12(params)
+    params = HyperParameters_1_1(num_input, num_output, eta=0.2, max_epoch=10000, batch_size=10, eps=0.005, net_type=NetType.Fitting)
+    net = NeuralNet_1_2(params)
     net.train(dataReader, checkpoint=10)
     ShowResult(net, dataReader, params.toString())

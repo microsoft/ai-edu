@@ -7,13 +7,13 @@ from MiniFramework.Layer import *
 
 # sigmoid and softmax
 class ClassificationLayer(CLayer):
-    def __init__(self, activator):
-        self.activator = activator
+    def __init__(self, classifier):
+        self.classifier = classifier
 
     def forward(self, input, train=True):
         self.input_shape = input.shape
         self.x = input
-        self.a = self.activator.forward(self.x)
+        self.a = self.classifier.forward(self.x)
         return self.a
 
     # 对分类函数的求导已经和损失函数合并计算了，所以不需要再做，直接回传误差给上一层

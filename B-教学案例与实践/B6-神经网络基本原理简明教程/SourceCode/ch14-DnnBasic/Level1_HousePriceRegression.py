@@ -1,9 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.NeuralNet40 import *
-from MiniFramework.ActivatorLayer import *
-from MiniFramework.DataReader20 import *
+from MiniFramework.NeuralNet_4_0 import *
+from MiniFramework.ActivationLayer import *
+from MiniFramework.DataReader_2_0 import *
 
 import numpy as np
 import csv
@@ -11,7 +11,7 @@ import csv
 train_file = "../../Data/ch14.house.train.npz"
 test_file = "../../Data/ch14.house.test.npz"
 
-class HouseDataReader(DataReader20):
+class HouseDataReader(DataReader_2_0):
     def Drop(self):
         self.XTrain = np.delete(self.XTrain, [0,1,8,9], axis=1)
         self.XTrainRaw = np.delete(self.XTrainRaw, [0,1,8,9], axis=1)
@@ -62,36 +62,36 @@ def model():
     max_epoch = 1000
     batch_size = 16
     learning_rate = 0.01
-    eps = 1e-6
 
-    params = HyperParameters40(
-        learning_rate, max_epoch, batch_size, eps,
+    params = HyperParameters_4_0(
+        learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.Xavier,
+        stopper=Stopper(StopCondition.StopDiff, 1e-6))
 
-    net = NeuralNet40(params, "HouseSingle")
+    net = NeuralNet_4_0(params, "HouseSingle")
 
-    fc1 = FcLayer(num_input, num_hidden1, params)
+    fc1 = FcLayer_1_0(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    r1 = ActivatorLayer(Relu())
+    r1 = ActivationLayer(Relu())
     net.add_layer(r1, "r1")
 
-    fc2 = FcLayer(num_hidden1, num_hidden2, params)
+    fc2 = FcLayer_1_0(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
-    r2 = ActivatorLayer(Relu())
+    r2 = ActivationLayer(Relu())
     net.add_layer(r2, "r2")
 
-    fc3 = FcLayer(num_hidden2, num_hidden3, params)
+    fc3 = FcLayer_1_0(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
-    r3 = ActivatorLayer(Relu())
+    r3 = ActivationLayer(Relu())
     net.add_layer(r3, "r3")
 
-    fc4 = FcLayer(num_hidden3, num_hidden4, params)
+    fc4 = FcLayer_1_0(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
-    r4 = ActivatorLayer(Relu())
+    r4 = ActivationLayer(Relu())
     net.add_layer(r4, "r4")
 
-    fc5 = FcLayer(num_hidden4, num_output, params)
+    fc5 = FcLayer_1_0(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")
 
 
@@ -109,7 +109,7 @@ def model():
     mse = np.sum((dr.YTestRaw - real_output)**2)/dr.YTest.shape[0]/10000
     print("mse=", mse)
     
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
 
     ShowResult(net, dr)
 

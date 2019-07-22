@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5f7fe492-b5f7-44be-8a73-23ecf7163a93</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_DeNormalizeWB.py</StartupFile>
+    <StartupFile>Level6_NormalizeLabelData.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,11 +21,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelperClass\HyperParameters10.py" />
-    <Compile Include="HelperClass\DataReader11.py" />
-    <Compile Include="HelperClass\TrainingHistory.py" />
+    <Compile Include="HelperClass\HyperParameters_1_0.py" />
+    <Compile Include="HelperClass\DataReader_1_1.py" />
+    <Compile Include="HelperClass\TrainingHistory_1_0.py" />
     <Compile Include="HelperClass\__init__.py" />
-    <Compile Include="HelperClass\NeuralNet11.py">
+    <Compile Include="HelperClass\NeuralNet_1_1.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level6_NormalizeLabelData.py" />

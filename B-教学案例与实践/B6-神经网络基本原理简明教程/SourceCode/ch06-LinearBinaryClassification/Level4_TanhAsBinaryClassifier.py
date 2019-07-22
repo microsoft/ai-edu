@@ -4,19 +4,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from HelperClass.NeuralNet12 import *
-from HelperClass.Activators import *
-from HelperClass.DataReader11 import *
+from HelperClass.NeuralNet_1_2 import *
 from Level3_ShowBinaryResult import *
 
+file_name = "../../data/ch06.npz"
+
 # step 1
-class TanhNeuralNet(NeuralNet12):
+class TanhNeuralNet(NeuralNet_1_2):
     def forwardBatch(self, batch_x):
         Z = np.dot(batch_x, self.W) + self.B
-        if self.params.net_type == NetType.BinaryClassifier:
+        if self.hp.net_type == NetType.BinaryClassifier:
             A = Logistic().forward(Z)
             return A
-        elif self.params.net_type == NetType.BinaryTanh:
+        elif self.hp.net_type == NetType.BinaryTanh:
             A = Tanh().forward(Z)
             return A
         else:
@@ -33,7 +33,7 @@ class TanhNeuralNet(NeuralNet12):
         return dW, dB
 
 
-class DataReader_tanh(DataReader11):
+class DataReader_tanh(DataReader_1_1):
     def ToZeroOne(self):
         Y = np.zeros((self.num_train, 1))
         for i in range(self.num_train):
@@ -56,14 +56,14 @@ def draw_source_data(dataReader, show=False):
 # 主程序
 if __name__ == '__main__':
     # data
-    reader = DataReader_tanh()
+    reader = DataReader_tanh(file_name)
     reader.ReadData()
     reader.ToZeroOne()
     # net
     num_input = 2
     num_output = 1
-    params = HyperParameters11(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryTanh)
-    net = TanhNeuralNet(params)
+    hp = HyperParameters_1_1(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryTanh)
+    net = TanhNeuralNet(hp)
     net.train(reader, checkpoint=10)
 
     # show result

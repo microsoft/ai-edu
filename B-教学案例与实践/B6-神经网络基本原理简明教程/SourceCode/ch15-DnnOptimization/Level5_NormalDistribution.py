@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from MiniFramework.Activators import *
+from MiniFramework.ActivationLayer import *
 
 def nd_fun(x, sigma, mu):
     a = - (x-mu)**2 / (2*sigma*sigma)

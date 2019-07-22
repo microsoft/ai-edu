@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from HelperClass3.NeuralNet30 import *
+from HelperClass2.NeuralNet_3_0 import *
 
 # Roll all our parameters dictionary into a single vector satisfying our specific required shape.
 def dictionary_to_vector(dict_params):
@@ -79,8 +79,8 @@ if __name__ == '__main__':
     batch_size = 128
     max_epoch = 40
 
-    hp = HyperParameters30(n_input, n_hidden1, n_hidden2, n_output, eta, max_epoch, batch_size, eps, NetType.MultipleClassifier, InitialMethod.Xavier)
-    net = NeuralNet30(hp, "MNIST_gradient_check")
+    hp = HyperParameters_3_0(n_input, n_hidden1, n_hidden2, n_output, eta, max_epoch, batch_size, eps, NetType.MultipleClassifier, InitialMethod.Xavier)
+    net = NeuralNet_3_0(hp, "MNIST_gradient_check")
     dict_Param = {"W1": net.wb1.W, "B1": net.wb1.B, "W2": net.wb2.W, "B2": net.wb2.B, "W3": net.wb3.W, "B3": net.wb3.B}
 
     layer_dims = [n_input, n_hidden1, n_hidden2, n_output]

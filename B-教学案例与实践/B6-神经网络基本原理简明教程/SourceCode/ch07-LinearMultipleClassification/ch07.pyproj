@@ -21,13 +21,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelperClass\Activators.py" />
-    <Compile Include="HelperClass\HyperParameters11.py" />
-    <Compile Include="HelperClass\LossFunction.py" />
-    <Compile Include="HelperClass\NeuralNet12.py" />
-    <Compile Include="HelperClass\DataReader13.py" />
-    <Compile Include="HelperClass\TrainingHistory.py" />
-    <Compile Include="HelperClass\Visualizer.py" />
+    <Compile Include="HelperClass\ClassifierFunction_1_1.py" />
+    <Compile Include="HelperClass\EnumDef_1_0.py" />
+    <Compile Include="HelperClass\HyperParameters_1_1.py" />
+    <Compile Include="HelperClass\LossFunction_1_1.py" />
+    <Compile Include="HelperClass\NeuralNet_1_2.py" />
+    <Compile Include="HelperClass\DataReader_1_3.py" />
+    <Compile Include="HelperClass\TrainingHistory_1_0.py" />
+    <Compile Include="HelperClass\Visualizer_1_0.py" />
     <Compile Include="HelperClass\__init__.py">
       <SubType>Code</SubType>
     </Compile>

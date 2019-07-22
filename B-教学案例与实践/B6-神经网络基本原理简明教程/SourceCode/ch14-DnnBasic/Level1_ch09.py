@@ -1,9 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from MiniFramework.NeuralNet40 import *
-from MiniFramework.DataReader20 import *
-from MiniFramework.ActivatorLayer import *
+from MiniFramework.NeuralNet_4_0 import *
+from MiniFramework.ActivationLayer import *
 
 train_file = "../../Data/ch09.train.npz"
 test_file = "../../Data/ch09.test.npz"
@@ -26,7 +25,7 @@ def ShowResult(net, dr):
     plt.show()
 
 def LoadData():
-    dr = DataReader20(train_file, test_file)
+    dr = DataReader_2_0(train_file, test_file)
     dr.ReadData()
     #dr.NormalizeX()
     #dr.NormalizeY(YNormalizationMethod.Regression)
@@ -45,22 +44,23 @@ def model():
     learning_rate = 0.5
     eps = 1e-5
 
-    params = HyperParameters40(
+    params = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.Xavier,
+        stopper=Stopper(StopCondition.StopLoss, 0.001))
 
-    net = NeuralNet40(params, "Level1_CurveFittingNet")
-    fc1 = FcLayer(num_input, num_hidden1, params)
+    net = NeuralNet_4_0(params, "Level1_CurveFittingNet")
+    fc1 = FcLayer_1_0(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
-    sigmoid1 = ActivatorLayer(Sigmoid())
+    sigmoid1 = ActivationLayer(Sigmoid())
     net.add_layer(sigmoid1, "sigmoid1")
-    fc2 = FcLayer(num_hidden1, num_output, params)
+    fc2 = FcLayer_1_0(num_hidden1, num_output, params)
     net.add_layer(fc2, "fc2")
 
     net.train(dataReader, checkpoint=100, need_test=True)
 
-    net.ShowLossHistory("epoch")
+    net.ShowLossHistory()
     ShowResult(net, dataReader)
 
 if __name__ == '__main__':

@@ -3,9 +3,11 @@
 
 import numpy as np
 
-from HelperClass.NeuralNet12 import *
-from HelperClass.HyperParameters11 import *
-from HelperClass.Visualizer import *
+from HelperClass.NeuralNet_1_2 import *
+from HelperClass.HyperParameters_1_1 import *
+from HelperClass.Visualizer_1_0 import *
+
+file_name = "../../data/ch06.npz"
 
 def draw_split_line(net):
     b12 = -net.B[0,0]/net.W[1,0]
@@ -39,14 +41,14 @@ def draw_predicate_data(net, threshold=0.5):
 # 主程序
 if __name__ == '__main__':
     # data
-    reader = DataReader11()
+    reader = DataReader_1_1(file_name)
     reader.ReadData()
     draw_source_data(reader, show=True)
     # net
     num_input = 2
     num_output = 1    
-    params = HyperParameters11(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
-    net = NeuralNet12(params)
+    hp = HyperParameters_1_1(num_input, num_output, eta=0.1, max_epoch=1000, batch_size=10, eps=1e-3, net_type=NetType.BinaryClassifier)
+    net = NeuralNet_1_2(hp)
     net.train(reader, checkpoint=10)
 
     # show result

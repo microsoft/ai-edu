@@ -7,9 +7,9 @@ import numpy as np
 import struct
 import matplotlib.pyplot as plt
 
-from MiniFramework.DataReader20 import *
+from MiniFramework.DataReader_2_0 import *
 
-class CifarImageReader(DataReader20):
+class CifarImageReader(DataReader_2_0):
     def __init__(self, train_file_1, train_file_2, train_file_3, train_file_4, train_file_5, test_file):
         self.train_file = []
         self.train_file.append(train_file_1)

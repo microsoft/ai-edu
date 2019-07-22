@@ -21,16 +21,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelperClass2\Activators.py" />
-    <Compile Include="HelperClass2\DataReader20.py" />
-    <Compile Include="HelperClass2\HyperParameters20.py" />
-    <Compile Include="HelperClass2\LossFunction.py" />
-    <Compile Include="HelperClass2\NeuralNet20.py" />
-    <Compile Include="HelperClass2\TrainingTrace.py" />
-    <Compile Include="HelperClass2\Visualizer21.py">
+    <Compile Include="HelperClass2\ActivatorFunction_2_0.py" />
+    <Compile Include="HelperClass2\ClassifierFunction_2_0.py" />
+    <Compile Include="HelperClass2\DataReader_2_0.py" />
+    <Compile Include="HelperClass2\EnumDef_2_0.py" />
+    <Compile Include="HelperClass2\HyperParameters_2_0.py" />
+    <Compile Include="HelperClass2\LossFunction_1_1.py" />
+    <Compile Include="HelperClass2\NeuralNet_2_2.py" />
+    <Compile Include="HelperClass2\TrainingHistory_2_2.py" />
+    <Compile Include="HelperClass2\Visualizer_1_1.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelperClass2\WeightsBias20.py" />
+    <Compile Include="HelperClass2\WeightsBias_1_0.py" />
     <Compile Include="HelperClass2\__init__.py">
       <SubType>Code</SubType>
     </Compile>

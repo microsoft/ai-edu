@@ -36,7 +36,7 @@ if __name__ == '__main__':
     num_hidden3 = 32
     num_hidden4 = 16
     num_output = 10
-    max_epoch = 50
+    max_epoch = 10
     batch_size = 32
     learning_rate = 0.01
 

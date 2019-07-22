@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_Optimizer_ch09.py</StartupFile>
+    <StartupFile>Level1_InitializeWeights_ch09.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,11 +21,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HelperClass\DataReader_1_0.py" />
-    <Compile Include="HelperClass\HyperParameters_1_0.py" />
-    <Compile Include="HelperClass\NeuralNet_1_0.py" />
-    <Compile Include="HelperClass\TrainingHistory_1_0.py" />
     <Compile Include="Level4_Optimizer08 - Copy.py" />
+    <Compile Include="Level1_InitializeWeights_ch09.py" />
     <Compile Include="Level5_BatchNormalization.py" />
     <Compile Include="Level1_InitializeWeights.py">
       <SubType>Code</SubType>
@@ -61,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />
-    <Folder Include="HelperClass\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

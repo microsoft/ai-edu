@@ -87,10 +87,10 @@ class NeuralNet_4_1(object):
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             if isinstance(layer, FcLayer_1_1):
-                weights += np.sum(np.abs(layer.weights.W))
-                zeros += len(np.where(np.abs(layer.weights.W)<=0.0001)[0])
-                littles += len(np.where(np.abs(layer.weights.W)<=0.01)[0])
-                total += np.size(layer.weights.W)
+                weights += layer.GetAbsSum()
+                zeros += layer.GetNumOf(0.0001)
+                littles += layer.GetNumOf(0.01)
+                total += layer.GetSizeOf()
             # end if
         # end for
         return weights, zeros, littles, total
@@ -243,3 +243,10 @@ class NeuralNet_4_1(object):
 
     def GetLatestAverageLoss(self, count=10):
         return self.loss_trace.GetLatestAverageLoss(count)
+
+    def PrintWeightsBiasValue(self):
+        for i in range(self.layer_count):
+            layer = self.layer_list[i]
+            if isinstance(layer, FcLayer_1_1):
+                layer.PrintWeightBiasValue()
+            

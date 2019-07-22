@@ -33,7 +33,7 @@ def model(learning_rate, optimizer):
 
     n_hidden = 3
 
-    net = NeuralNet_4_1(hp, "nonlinear_regression")
+    net = NeuralNet_4_1(hp, "level2")
 
     fc1 = FcLayer_1_1(1,n_hidden,hp)
     net.add_layer(fc1, "fc1")

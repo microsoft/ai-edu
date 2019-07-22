@@ -19,7 +19,7 @@ def net(init_method, activator):
         net_type=NetType.Fitting,
         init_method=init_method)
 
-    net = NeuralNet_4_1(params, "init_weight_trial")
+    net = NeuralNet_4_1(params, "level1")
     num_hidden = [128,128,128,128,128,128,128]
     fc_count = len(num_hidden)-1
     layers = []

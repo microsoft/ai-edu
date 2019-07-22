@@ -18,8 +18,8 @@ class NeuralNet_4_2(NeuralNet_4_1):
 
     def GetWeightBias(self):
         layer = self.layer_list[0]
-        w_history.append(layer.weights.W[0,0])
-        b_history.append(layer.weights.B[0,0])
+        w_history.append(layer.wb.W[0,0])
+        b_history.append(layer.wb.B[0,0])
 
 
 def ShowResult(net, dataReader):
@@ -84,13 +84,13 @@ def model(learning_rate, optimizer):
 if __name__ == '__main__':
 
     dict = {
-            #OptimizerName.SGD:0.5, 
-            #OptimizerName.Momentum:0.05, 
-            #OptimizerName.Nag:0.05,
-            #OptimizerName.AdaGrad:1,
-            #OptimizerName.AdaDelta:0.0,
+            OptimizerName.SGD:0.5, 
+            OptimizerName.Momentum:0.05, 
+            OptimizerName.Nag:0.05,
+            OptimizerName.AdaGrad:1,
+            OptimizerName.AdaDelta:0.0,
             OptimizerName.RMSProp:0.1, 
-            #OptimizerName.Adam:0.5
+            OptimizerName.Adam:0.5
             }
 
     w_history = []

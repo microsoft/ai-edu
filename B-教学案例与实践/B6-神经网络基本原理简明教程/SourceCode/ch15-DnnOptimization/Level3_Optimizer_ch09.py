@@ -21,20 +21,19 @@ def ShowResult(net, dr, title):
     plt.show()
 #end def
 
-
-if __name__ == '__main__':
+def model(learning_rate, optimizer):
     dr = DataReader_2_0(train_file, test_file)
     dr.ReadData()
     hp = HyperParameters_4_1(
-        eta=0.1, max_epoch=50, batch_size=10,
+        eta=learning_rate, max_epoch=10000, batch_size=10,
         net_type=NetType.Fitting, 
-        init_method=InitialMethod.Zero,
-        optimizer_name=OptimizerName.SGD,
+        init_method=InitialMethod.Xavier,
+        optimizer_name=optimizer,
         stopper=Stopper(StopCondition.StopLoss, 0.001))
 
     n_hidden = 3
 
-    net = NeuralNet_4_1(hp, "level1_ch09")
+    net = NeuralNet_4_1(hp, "level3")
 
     fc1 = FcLayer_1_1(1,n_hidden,hp)
     net.add_layer(fc1, "fc1")
@@ -45,7 +44,24 @@ if __name__ == '__main__':
     fc2 = FcLayer_1_1(n_hidden,1,hp)
     net.add_layer(fc2, "fc2")
 
-    net.train(dr, checkpoint=1, need_test=True)
+    net.train(dr, checkpoint=50, need_test=True)
     title = str.format("lr:{0},op:{1},epoch:{2},ne:{3}", net.hp.eta, net.hp.optimizer_name.name, net.GetEpochNumber(), n_hidden)
     net.ShowLossHistory()
-    net.PrintWeightsBiasValue()
+    ShowResult(net, dr, title)
+
+if __name__ == '__main__':
+    model(0.3, OptimizerName.AdaGrad)
+    model(0.5, OptimizerName.AdaGrad)
+    model(0.7, OptimizerName.AdaGrad)
+
+    model(0.1, OptimizerName.AdaDelta)
+    model(0.01, OptimizerName.AdaDelta)
+
+    model(0.1, OptimizerName.RMSProp)
+    model(0.01, OptimizerName.RMSProp)
+    model(0.005, OptimizerName.RMSProp)
+
+    model(0.1, OptimizerName.Adam)
+    model(0.01, OptimizerName.Adam)
+    model(0.005, OptimizerName.Adam)
+    model(0.001, OptimizerName.Adam)

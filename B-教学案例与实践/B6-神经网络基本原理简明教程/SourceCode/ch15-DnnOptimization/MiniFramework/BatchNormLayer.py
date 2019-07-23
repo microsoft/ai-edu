@@ -44,7 +44,7 @@ class BnLayer(CLayer):
         # end if
         return self.z
 
-    def backward(self, delta_in):
+    def backward(self, delta_in, flag):
         assert(delta_in.ndim == 2 or delta_in.ndim == 4)  # fc or cv
         m = self.x.shape[0]
         # calculate d_beta, b_gamma
@@ -62,21 +62,21 @@ class BnLayer(CLayer):
         d_mu = -np.sum(d_norm_x / self.std, axis=0, keepdims=True) - 2 / m * d_var * np.sum(self.x_mu, axis=0, keepdims=True)
         # 公式13
         delta_out = d_norm_x / self.std + d_var * 2 * self.x_mu / m + d_mu / m
-        return delta_out, self.d_gamma, self.d_beta
+        #return delta_out, self.d_gamma, self.d_beta
+        return delta_out
         
     def update(self, learning_rate=0.1):
         self.gamma = self.gamma - self.d_gamma * learning_rate
         self.beta = self.beta - self.d_beta * learning_rate
 
-    def save_parameters(self, name):
-        np.save(name + "_gamma_" + self.result_value_filename, self.gamma)
-        np.save(name + "_beta_" + self.result_value_filename, self.beta)
-        np.save(name + "_mean_" + self.result_value_filename, self.running_mean)
-        np.save(name + "_var_" + self.result_value_filename, self.running_var)
+    def save_parameters(self, folder, name):
+        file_name = str.format("{0}\\{1}.npz", folder, name)
+        np.savez(file_name, gamma=self.gamma, beta=self.beta, mean=self.running_mean, var=self.running_var)
 
-    def load_parameters(self, name):
-        self.gamma = np.load(name + "_gamma_" + self.result_value_filename)
-        self.beta = np.save(name + "_beta_" + self.result_value_filename)
-        self.running_mean = np.save(name + "_mean_" + self.result_value_filename)
-        self.running_var = np.save(name + "_var_" + self.result_value_filename)
-
+    def load_parameters(self, folder, name):
+        file_name = str.format("{0}\\{1}.npz", folder, name)
+        data = np.load(file_name)
+        self.gamma = data["gamma"]
+        self.beta = data["beta"]
+        self.running_mean = data["running_mean"]
+        self.running_var = data["running_var"]

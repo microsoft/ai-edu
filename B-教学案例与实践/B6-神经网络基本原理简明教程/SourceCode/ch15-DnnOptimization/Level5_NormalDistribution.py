@@ -47,3 +47,8 @@ if __name__ == '__main__':
     plt.axis([-5, 5, 0, 4])
     plt.show()
 
+    x = np.linspace(-5,5)
+    s = Sigmoid().forward(x)
+    plt.plot(x, s)
+    plt.grid()
+    plt.show()

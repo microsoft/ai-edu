@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ExtendedDataReader\CifarImageReader.py" />
     <Compile Include="Level3_Optimizer_ch09.py" />
     <Compile Include="Level1_InitializeWeights_ch09.py" />
     <Compile Include="Level5_BatchNormalization.py" />
@@ -56,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />
+    <Folder Include="ExtendedDataReader\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -36,15 +36,15 @@ if __name__ == '__main__':
     num_hidden3 = 32
     num_hidden4 = 16
     num_output = 10
-    max_epoch = 10
-    batch_size = 32
-    learning_rate = 0.01
+    max_epoch = 30
+    batch_size = 64
+    learning_rate = 0.1
 
     params = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.MSRA,
-        stopper=Stopper(StopCondition.StopDiff, 1e-3))
+        stopper=Stopper(StopCondition.StopLoss, 0.26))
 
     net = NeuralNet_4_0(params, "Cifar10")
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     net.add_layer(fc4, "fc4")
     r4 = ActivationLayer(Relu())
     net.add_layer(r4, "r4")
-    
+
     fc5 = FcLayer_1_0(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")
     softmax = ClassificationLayer(Softmax())
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
     #net.load_parameters()
 
-    net.train(dataReader, checkpoint=0.5, need_test=True)
+    net.train(dataReader, checkpoint=0.1, need_test=True)
     
-    net.ShowLossHistory()
+    net.ShowLossHistory(xcoord=XCoordinate.Iteration)
     

@@ -44,6 +44,6 @@ if __name__ == '__main__':
     p2, = plt.plot(x, r)
     plt.grid()
     plt.legend([p1,p2], ["forward batch data", "Relu"])
-    plt.axis([-5, 5, 0, 5])
+    plt.axis([-5, 5, 0, 4])
     plt.show()
 

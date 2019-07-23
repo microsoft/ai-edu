@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level5_BatchNormTest.py</StartupFile>
+    <StartupFile>Level5_BNTrial_Cifar10.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,6 +28,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level5_BatchNormTest.py" />
+    <Compile Include="Level5_BNTrial_Cifar10.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level5_NormalDistribution.py">
       <SubType>Code</SubType>
     </Compile>
@@ -41,7 +44,6 @@
     <Compile Include="MiniFramework\ClassificationLayer.py" />
     <Compile Include="MiniFramework\DataReader_2_0.py" />
     <Compile Include="MiniFramework\EnumDef_4_0.py" />
-    <Compile Include="MiniFramework\FullConnectionLayer.py" />
     <Compile Include="MiniFramework\FullConnectionLayer_1_1.py" />
     <Compile Include="MiniFramework\HyperParameters_4_1.py" />
     <Compile Include="MiniFramework\LossFunction_1_1.py" />
@@ -51,8 +53,6 @@
     <Compile Include="MiniFramework\TrainingHistory_2_4.py" />
     <Compile Include="MiniFramework\WeightsBias_2_0.py" />
     <Compile Include="MiniFramework\__init__.py" />
-    <Compile Include="MiniFramework\NeuralNet41.py" />
-    <Compile Include="MiniFramework\WeightsBias30.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />

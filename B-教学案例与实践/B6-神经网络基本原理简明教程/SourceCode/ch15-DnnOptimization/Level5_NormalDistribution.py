@@ -44,6 +44,17 @@ if __name__ == '__main__':
     p2, = plt.plot(x, r)
     plt.grid()
     plt.legend([p1,p2], ["forward batch data", "Relu"])
-    plt.axis([-5, 5, 0, 5])
+    plt.axis([-5, 5, 0, 4])
     plt.show()
 
+    x = np.linspace(-5,5)
+    s = Sigmoid().forward(x)
+    plt.plot(x, s)
+    plt.grid()
+    plt.show()
+
+    x = np.linspace(-3,3)
+    f = nd_fun(x, 1, 0)
+    plt.plot(x,f)
+    plt.grid()
+    plt.show()

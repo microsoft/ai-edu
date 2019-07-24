@@ -20,6 +20,8 @@ from MiniFramework.HyperParameters_4_1 import *
 from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_2_4 import *
 from MiniFramework.ActivationLayer import *
+from MiniFramework.BatchNormLayer import *
+from MiniFramework.ClassificationLayer import *
 
 class NeuralNet_4_1(object):
     def __init__(self, params, model_name):

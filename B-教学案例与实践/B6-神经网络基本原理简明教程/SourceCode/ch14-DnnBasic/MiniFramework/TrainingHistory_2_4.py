@@ -66,7 +66,6 @@ class TrainingHistory_2_4(object):
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Loss")
         axes.set_ylabel("loss")
-        axes.set_xlabel("epoch")
         if xmin != None or xmax != None or ymin != None or ymax != None:
             axes.axis([xmin, xmax, ymin, ymax])
         

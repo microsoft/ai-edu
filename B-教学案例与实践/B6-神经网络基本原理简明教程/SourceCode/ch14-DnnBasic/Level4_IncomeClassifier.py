@@ -28,10 +28,12 @@ def model():
     dr = LoadData()
     
     num_input = dr.num_feature
-    num_hidden1 = 64
+    num_hidden1 = 128
     num_hidden2 = 64
     num_hidden3 = 32
     num_hidden4 = 16
+    num_hidden5 = 8
+    num_hidden6 = 4
     num_output = 1
 
     max_epoch = 100
@@ -66,14 +68,24 @@ def model():
     a4 = ActivationLayer(Relu())
     net.add_layer(a4, "relu4")
 
-    fc5 = FcLayer_1_0(num_hidden4, num_output, params)
+    fc5 = FcLayer_1_0(num_hidden4, num_hidden5, params)
     net.add_layer(fc5, "fc5")
+    a5 = ActivationLayer(Relu())
+    net.add_layer(a5, "relu5")
+
+    fc6 = FcLayer_1_0(num_hidden5, num_hidden6, params)
+    net.add_layer(fc6, "fc")
+    a6 = ActivationLayer(Relu())
+    net.add_layer(a6, "relu6")
+
+    fc7 = FcLayer_1_0(num_hidden6, num_output, params)
+    net.add_layer(fc7, "fc7")
     logistic = ClassificationLayer(Logistic())
     net.add_layer(logistic, "logistic")
 
     #net.load_parameters()
 
-    net.train(dr, checkpoint=10, need_test=True)
+    net.train(dr, checkpoint=1, need_test=True)
     net.ShowLossHistory()
 
 

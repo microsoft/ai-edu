@@ -52,3 +52,9 @@ if __name__ == '__main__':
     plt.plot(x, s)
     plt.grid()
     plt.show()
+
+    x = np.linspace(-3,3)
+    f = nd_fun(x, 1, 0)
+    plt.plot(x,f)
+    plt.grid()
+    plt.show()

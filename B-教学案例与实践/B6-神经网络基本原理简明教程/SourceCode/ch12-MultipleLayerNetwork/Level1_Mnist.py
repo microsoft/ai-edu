@@ -17,10 +17,10 @@ if __name__ == '__main__':
     n_hidden1 = 64
     n_hidden2 = 16
     n_output = dataReader.num_category
-    eta = 0.2
-    eps = 0.01
+    eta = 0.5
+    eps = 0.08
     batch_size = 128
-    max_epoch = 40
+    max_epoch = 100
 
     hp = HyperParameters_3_0(n_input, n_hidden1, n_hidden2, n_output, eta, max_epoch, batch_size, eps, NetType.MultipleClassifier, InitialMethod.Xavier)
     net = NeuralNet_3_0(hp, "MNIST_64_16")

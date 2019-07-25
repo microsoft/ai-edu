@@ -32,7 +32,7 @@ class BnLayer(CLayer):
             self.norm_x = self.x_mu / self.std
             # 公式9
             self.z = self.gamma * self.norm_x + self.beta
-            # mean and var history
+            # mean and var history, for test/inference
             self.running_mean = self.momentum * self.running_mean + (1.0 - self.momentum) * self.mu
             self.running_var = self.momentum * self.running_var + (1.0 - self.momentum) * self.var
         else:

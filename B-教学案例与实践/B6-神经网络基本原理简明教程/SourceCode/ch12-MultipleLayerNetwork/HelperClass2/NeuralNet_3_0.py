@@ -205,8 +205,8 @@ class NeuralNet_3_0(object):
         self.wb2.LoadResultValue(self.subfolder, "wb2")
         self.wb3.LoadResultValue(self.subfolder, "wb3")
 
-    def ShowTrainingHistory(self, xline):
-        self.loss_trace.ShowLossHistory(self.hp, x="epoch")
+    def ShowTrainingHistory(self, xcoord):
+        self.loss_trace.ShowLossHistory(self.hp, xcoord)
 
     def GetTrainingTrace(self):
         return self.loss_trace
@@ -216,3 +216,6 @@ class NeuralNet_3_0(object):
 
     def GetLatestAverageLoss(self, count=10):
         return self.loss_trace.GetLatestAverageLoss(count)
+
+    def DumpLossHistory(self, filename):
+        return self.loss_trace.Dump(filename)

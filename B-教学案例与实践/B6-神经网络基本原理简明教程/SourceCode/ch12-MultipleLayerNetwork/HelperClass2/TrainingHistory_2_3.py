@@ -13,7 +13,7 @@ import pickle
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class TrainingHistory_2_3(object):
-    def __init__(self, need_earlyStop = False, patience = 5):
+    def __init__(self):
         self.loss_train = []
         self.accuracy_train = []
         self.iteration_seq = []
@@ -51,7 +51,6 @@ class TrainingHistory_2_3(object):
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Loss")
         axes.set_ylabel("loss")
-        axes.set_xlabel("epoch")
         if xmin != None or xmax != None or ymin != None or ymax != None:
             axes.axis([xmin, xmax, ymin, ymax])
         
@@ -68,7 +67,6 @@ class TrainingHistory_2_3(object):
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Accuracy")
         axes.set_ylabel("accuracy")
-        axes.set_xlabel("epoch")
         
         title = params.toString()
         plt.suptitle(title)

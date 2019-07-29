@@ -20,9 +20,12 @@ if __name__ == '__main__':
     eta = 0.2
     eps = 0.01
     batch_size = 128
-    max_epoch = 40
+    max_epoch = 20
 
-    hp = HyperParameters_3_0(n_input, n_hidden1, n_hidden2, n_output, eta, max_epoch, batch_size, eps, NetType.MultipleClassifier, InitialMethod.Xavier)
+    hp = HyperParameters_3_0(
+        n_input, n_hidden1, n_hidden2, n_output, 
+        eta, max_epoch, batch_size, eps, 
+        NetType.MultipleClassifier, InitialMethod.Xavier)
     net = NeuralNet_3_0(hp, "MNIST_64_16")
     net.train(dataReader, 0.5, True)
-    net.ShowTrainingHistory(xline="iteration")
+    net.ShowTrainingHistory(xcoord="epoch")

@@ -16,7 +16,6 @@ class BnLayer(CLayer):
         self.momentum = momentum
         self.running_mean = np.zeros((1,input_size))
         self.running_var = np.zeros((1,input_size))
-        self.result_value_filename = str.format("{0}.npy", self.input_size)
 
     def forward(self, input, train=True):
         assert(input.ndim == 2 or input.ndim == 4)  # fc or cv
@@ -33,7 +32,7 @@ class BnLayer(CLayer):
             self.norm_x = self.x_mu / self.std
             # 公式9
             self.z = self.gamma * self.norm_x + self.beta
-
+            # mean and var history, for test/inference
             self.running_mean = self.momentum * self.running_mean + (1.0 - self.momentum) * self.mu
             self.running_var = self.momentum * self.running_var + (1.0 - self.momentum) * self.var
         else:

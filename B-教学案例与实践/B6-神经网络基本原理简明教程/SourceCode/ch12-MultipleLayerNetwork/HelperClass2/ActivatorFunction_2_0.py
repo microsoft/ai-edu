@@ -5,7 +5,8 @@
 Version 2.0
 """
 
-import numpy as np
+#import numpy as np
+import minpy.numpy as np
 
 class CActivator(object):
     # z = 本层的wx+b计算值矩阵

@@ -7,7 +7,8 @@ what's new:
 - support 3 layers
 """
 
-import numpy as np
+#import numpy as np
+import minpy.numpy as np
 import time
 import math
 import os

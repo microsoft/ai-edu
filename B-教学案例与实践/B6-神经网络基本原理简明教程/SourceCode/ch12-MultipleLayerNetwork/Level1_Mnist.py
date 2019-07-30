@@ -1,10 +1,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
+import time
 
 from HelperClass2.MnistImageDataReader import *
 from HelperClass2.NeuralNet_3_0 import *
 
 if __name__ == '__main__':
+    star = time.time()
 
     dataReader = MnistImageDataReader(mode="vector")
     dataReader.ReadData()
@@ -29,3 +31,6 @@ if __name__ == '__main__':
     net = NeuralNet_3_0(hp, "MNIST_64_16")
     net.train(dataReader, 0.5, True)
     net.ShowTrainingHistory(xcoord="epoch")
+
+    end = time.time()
+    print("time used:", end-start)

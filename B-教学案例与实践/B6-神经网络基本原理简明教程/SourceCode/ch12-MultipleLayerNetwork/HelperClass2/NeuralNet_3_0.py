@@ -26,7 +26,7 @@ class NeuralNet_3_0(object):
     def __init__(self, hp, model_name):
         self.hp = hp
         self.model_name = model_name
-        self.subfolder = os.getcwd() + "\\" + self.__create_subfolder()
+        self.subfolder = os.getcwd() + "/" + self.__create_subfolder()
         print(self.subfolder)
 
         self.wb1 = WeightsBias_1_0(self.hp.num_input, self.hp.num_hidden1, self.hp.init_method, self.hp.eta)
@@ -39,7 +39,7 @@ class NeuralNet_3_0(object):
     def __create_subfolder(self):
         if self.model_name != None:
             path = self.model_name.strip()
-            path = path.rstrip("\\")
+            path = path.rstrip("/")
             isExists = os.path.exists(path)
             if not isExists:
                 os.makedirs(path)
@@ -49,11 +49,13 @@ class NeuralNet_3_0(object):
         # 公式1
         self.Z1 = np.dot(batch_x, self.wb1.W) + self.wb1.B
         # 公式2
-        self.A1 = Sigmoid().forward(self.Z1)
+        #self.A1 = Sigmoid().forward(self.Z1)
+        self.A1 = 1.0 / (1.0 + np.exp(-self.Z1))
         # 公式3
         self.Z2 = np.dot(self.A1, self.wb2.W) + self.wb2.B
         # 公式4
-        self.A2 = Tanh().forward(self.Z2)
+        #self.A2 = Tanh().forward(self.Z2)
+        self.A2 = 2.0 / (1.0 + np.exp(-2*self.Z2)) - 1.0
         # 公式5
         self.Z3 = np.dot(self.A2, self.wb3.W) + self.wb3.B
         # 公式6
@@ -80,7 +82,9 @@ class NeuralNet_3_0(object):
         # 第二层的梯度输入 公式10
         dA2 = np.dot(dZ3, self.wb3.W.T)
         # 公式11
-        dZ2,_ = Tanh().backward(None, self.A2, dA2)
+        #dZ2,_ = Tanh().backward(None, self.A2, dA2)
+        da = 1 - np.multiply(self.A2, self.A2)
+        dZ2 = np.multiply(dA2, da)
         # 公式12
         self.wb2.dW = np.dot(self.A1.T, dZ2)/m
         # 公式13
@@ -89,7 +93,10 @@ class NeuralNet_3_0(object):
         # 第一层的梯度输入 公式8
         dA1 = np.dot(dZ2, self.wb2.W.T) 
         # 第一层的dZ 公式10
-        dZ1,_ = Sigmoid().backward(None, self.A1, dA1)
+#        dZ1,_ = Sigmoid().backward(None, self.A1, dA1)
+        da = np.multiply(self.A1, 1-self.A1)
+        dZ1 = np.multiply(dA1, da)
+
         # 第一层的权重和偏移 公式11
         self.wb1.dW = np.dot(batch_x.T, dZ1)/m
         self.wb1.dB = np.sum(dZ1, axis=0, keepdims=True)/m

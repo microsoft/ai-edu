@@ -8,6 +8,7 @@ what's new:
 """
 
 import numpy as np
+#import minpy.numpy as np
 from pathlib import Path
 
 from HelperClass2.EnumDef_2_0 import *

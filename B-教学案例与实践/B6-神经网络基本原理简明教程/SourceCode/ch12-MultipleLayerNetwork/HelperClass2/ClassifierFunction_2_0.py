@@ -6,6 +6,7 @@ Version 2.0
 """
 
 import numpy as np
+#import minpy.numpy as np
 
 class CClassifier(object):
     def forward(self, z):

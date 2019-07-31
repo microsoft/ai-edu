@@ -194,13 +194,13 @@ class NeuralNet_3_0(object):
         elif self.hp.net_type == NetType.BinaryClassifier:
             b = np.round(a)
             r = (b == y)
-            correct = r.sum()
+            correct = np.sum(r)
             return correct/m
         elif self.hp.net_type == NetType.MultipleClassifier:
             ra = np.argmax(a, axis=1)
             ry = np.argmax(y, axis=1)
             r = (ra == ry)
-            correct = r.sum()
+            correct = np.sum(r)
             return correct/m
 
     def SaveResult(self):

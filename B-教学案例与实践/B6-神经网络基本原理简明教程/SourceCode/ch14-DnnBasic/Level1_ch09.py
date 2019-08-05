@@ -42,7 +42,6 @@ def model():
     max_epoch = 10000
     batch_size = 10
     learning_rate = 0.5
-    eps = 1e-5
 
     params = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size,

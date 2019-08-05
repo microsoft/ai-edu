@@ -49,9 +49,7 @@ def Inference(net, dr):
             f.writerow(real_output[i])
 
 
-def model():
-    dr = LoadData()
-
+def model(dr):
     num_input = dr.num_feature
     num_hidden1 = 32
     num_hidden2 = 16
@@ -59,14 +57,14 @@ def model():
     num_hidden4 = 4
     num_output = 1
 
-    max_epoch = 10000
+    max_epoch = 1000
     batch_size = 16
-    learning_rate = 0.01
+    learning_rate = 0.1
 
     params = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
-        init_method=InitialMethod.Xavier,
+        init_method=InitialMethod.MSRA,
         stopper=Stopper(StopCondition.StopDiff, 1e-7))
 
     net = NeuralNet_4_0(params, "HouseSingle")
@@ -94,25 +92,18 @@ def model():
     fc5 = FcLayer_1_0(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")
 
-
-    #ShowResult(net, dr)
-
-    #net.load_parameters()
-    #Inference(net, dr)
-    #exit()
-    #ShowResult(net, dr)
-
     net.train(dr, checkpoint=10, need_test=True)
-    
+    return net
+
+
+
+if __name__ == '__main__':
+    dr = LoadData()
+    net = model(dr)
     output = net.inference(dr.XTest)
     real_output = dr.DeNormalizeY(output)
     mse = np.sum((dr.YTestRaw - real_output)**2)/dr.YTest.shape[0]/10000
     print("mse=", mse)
     
     net.ShowLossHistory()
-
     ShowResult(net, dr)
-
-
-if __name__ == '__main__':
-    model()

@@ -1,8 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import numpy as pynp
-import minpy.numpy as np
+import numpy as np
 import math
 from pathlib import Path
 

@@ -3,8 +3,7 @@
 
 # coding: utf-8
 
-#import numpy as np
-import minpy.numpy as np
+import numpy as np
 import struct
 from HelperClass2.DataReader_2_0 import *
 

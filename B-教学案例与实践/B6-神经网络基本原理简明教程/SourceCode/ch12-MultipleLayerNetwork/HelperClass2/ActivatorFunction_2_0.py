@@ -6,7 +6,6 @@ Version 2.0
 """
 
 import numpy as np
-#import minpy.numpy as np
 
 class CActivator(object):
     # z = 本层的wx+b计算值矩阵
@@ -38,7 +37,6 @@ class Sigmoid(CActivator):
         da = np.multiply(a, 1-a)
         dz = np.multiply(delta, da)
         return dz, da
-
 
 class Tanh(CActivator):
     def forward(self, z):

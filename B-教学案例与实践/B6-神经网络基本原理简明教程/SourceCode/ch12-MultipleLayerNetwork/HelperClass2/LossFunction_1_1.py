@@ -7,8 +7,7 @@ Version 1.1
 - add Crossentropy for multiple classifier
 """
 
-#import numpy as np
-import minpy.numpy as np
+import numpy as np
 
 from HelperClass2.EnumDef_2_0 import *
 
@@ -34,7 +33,7 @@ class LossFunction_1_1(object):
         p1 = A - Y
         LOSS = np.multiply(p1, p1)
         loss = LOSS.sum()/count/2
-        return loss[0]
+        return loss
     # end def
 
     # for binary classifier
@@ -48,14 +47,14 @@ class LossFunction_1_1(object):
 
         LOSS = np.sum(-(p4 + p5))  #binary classification
         loss = LOSS / count
-        return loss[0]
+        return loss
     # end def
 
     # for multiple classifier
     def CE3(self, A, Y, count):
         p1 = np.log(A)
         p2 =  np.multiply(Y, p1)
-        LOSS = np.sum(-p2) 
+        LOSS = np.sum(-p2, keepdims=False) 
         loss = LOSS / count
-        return loss[0]
+        return loss
     # end def

@@ -69,17 +69,17 @@ if __name__ == '__main__':
     dataReader.GenerateValidationSet()
     
     num_input = 2
-    num_hidden = 2
+    num_hidden = 3
     num_output = 1
 
-    max_epoch = 10000
+    max_epoch = 5000
     batch_size = 5
     learning_rate = 0.1
 
     params = HyperParameters_4_0(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.BinaryClassifier,
-        init_method=InitialMethod.Xavier,
+        init_method=InitialMethod.MSRA,
         stopper=Stopper(StopCondition.StopLoss, 0.05))
 
     net = NeuralNet_4_0(params, "Arc")

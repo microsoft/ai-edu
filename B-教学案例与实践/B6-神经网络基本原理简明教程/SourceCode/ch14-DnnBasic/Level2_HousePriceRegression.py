@@ -59,7 +59,7 @@ def model():
     num_hidden4 = 4
     num_output = 1
 
-    max_epoch = 1000
+    max_epoch = 10000
     batch_size = 16
     learning_rate = 0.01
 
@@ -67,7 +67,7 @@ def model():
         learning_rate, max_epoch, batch_size,
         net_type=NetType.Fitting,
         init_method=InitialMethod.Xavier,
-        stopper=Stopper(StopCondition.StopDiff, 1e-6))
+        stopper=Stopper(StopCondition.StopDiff, 1e-7))
 
     net = NeuralNet_4_0(params, "HouseSingle")
 

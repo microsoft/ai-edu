@@ -1,11 +1,15 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+"""
+Version 1.1
+"""
+
 import numpy as np
 
-from MiniFramework.EnumDef import *
+from MiniFramework.EnumDef_4_0 import *
 
-class LossFunction(object):
+class LossFunction_1_1(object):
     def __init__(self, net_type):
         self.net_type = net_type
     # end def
@@ -19,8 +23,6 @@ class LossFunction(object):
             loss = self.CE2(A, Y, m)
         elif self.net_type == NetType.MultipleClassifier:
             loss = self.CE3(A, Y, m)
-        else:
-            loss = None
         #end if
         return loss
     # end def
@@ -54,4 +56,3 @@ class LossFunction(object):
         loss = LOSS / count
         return loss
     # end def
-

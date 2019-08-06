@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from MiniFramework.NeuralNet41 import *
+from MiniFramework.NeuralNet_4_2 import *
 from MiniFramework.ActivatorLayer import *
 
 train_file = "../../Data/ch16.train.npz"
@@ -12,9 +12,9 @@ test_file = "../../Data/ch16.test.npz"
 
 
 def Model(dataReader, num_input, num_hidden, num_output, params):
-    net = NeuralNet41(params, "overfitting")
+    net = NeuralNet_4_2(params, "overfitting")
 
-    fc1 = FcLayer(num_input, num_hidden, params)
+    fc1 = FcLayer_2_0(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
     s1 = ActivatorLayer(Sigmoid())
     net.add_layer(s1, "s1")

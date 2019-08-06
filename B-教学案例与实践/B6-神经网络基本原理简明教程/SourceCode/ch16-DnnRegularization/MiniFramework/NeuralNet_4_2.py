@@ -7,15 +7,15 @@ import time
 import os
 
 from MiniFramework.Layer import *
-from MiniFramework.FullConnectionLayer import *
+from MiniFramework.FullConnectionLayer_2_0 import *
 from MiniFramework.DropoutLayer import *
-from MiniFramework.HyperParameters41 import *
-from MiniFramework.TrainingTrace import *
-from MiniFramework.LossFunction import *
-from MiniFramework.EnumDef import *
-from MiniFramework.DataReader20 import *
+from MiniFramework.HyperParameters_4_2 import *
+from MiniFramework.TrainingHistory_3_0 import *
+from MiniFramework.LossFunction_1_1 import *
+from MiniFramework.EnumDef_5_0 import *
+from MiniFramework.DataReader_2_0 import *
 
-class NeuralNet41(object):
+class NeuralNet_4_2(object):
     def __init__(self, params, model_name):
         self.model_name = model_name
         self.hp = params
@@ -108,19 +108,17 @@ class NeuralNet41(object):
 
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
     def train(self, dataReader, checkpoint=0.1, need_test=True):
-
         t0 = time.time()
-        self.lossFunc = LossFunction(self.hp.net_type)
+        self.lossFunc = LossFunction_1_1(self.hp.net_type)
         if self.hp.regular_name == RegularMethod.EarlyStop:
-            self.loss_trace = TrainingTrace(True, self.hp.regular_value)
+            self.loss_trace = TrainingHistory_3_0(True, self.hp.regular_value)
         else:
-           self.loss_trace = TrainingTrace()
+           self.loss_trace = TrainingHistory_3_0()
 
-        # if num_example=200, batch_size=10, then iteration=200/10=20
         if self.hp.batch_size == -1 or self.hp.batch_size > dataReader.num_train:
             self.hp.batch_size = dataReader.num_train
         # end if
-        max_iteration = dataReader.num_train // self.hp.batch_size
+        max_iteration = math.ceil(dataReader.num_train / self.hp.batch_size)
         checkpoint_iteration = (int)(max_iteration * checkpoint)
         need_stop = False
         for epoch in range(self.hp.max_epoch):
@@ -192,8 +190,8 @@ class NeuralNet41(object):
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
         # end if
-        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.eps)
-        if loss_vld <= self.hp.eps:
+        need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.stopper)
+        if self.hp.stopper.stop_condition == StopCondition.StopLoss and loss_vld <= self.hp.stopper.stop_value:
             need_stop = True
         return need_stop
         
@@ -201,7 +199,6 @@ class NeuralNet41(object):
         x,y = dataReader.GetTestSet()
         self.__forward(x, train=False)
         correct = self.__CalAccuracy(self.output, y)
-        print(correct)
         return correct
 
     def __CalAccuracy(self, a, y):

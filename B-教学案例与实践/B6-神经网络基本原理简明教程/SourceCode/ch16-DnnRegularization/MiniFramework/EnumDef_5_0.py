@@ -1,6 +1,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+"""
+Version 4.1
+what's new:
+- add regularization enum
+"""
+
 from enum import Enum
 
 class NetType(Enum):
@@ -14,11 +20,10 @@ class InitialMethod(Enum):
     Xavier = 2,
     MSRA = 3
 
-class RegularMethod(Enum):
+class XCoordinate(Enum):
     Nothing = 0,
-    L1 = 1,
-    L2 = 2,
-    EarlyStop = 4
+    Iteration = 1,
+    Epoch = 2
 
 class OptimizerName(Enum):
     SGD = 0,
@@ -29,7 +34,18 @@ class OptimizerName(Enum):
     RMSProp = 5,
     Adam = 6
 
-class XCoordinate(Enum):
+class StopCondition(Enum):
+    Nothing = 0,    # reach the max_epoch then stop
+    StopLoss = 1,   # reach specified loss value then stop
+    StopDiff = 2,   # reach specified abs(curr_loss - prev_loss)
+
+class Stopper(object):
+    def __init__(self, sc, sv):
+        self.stop_condition = sc
+        self.stop_value = sv
+
+class RegularMethod(Enum):
     Nothing = 0,
-    Iteration = 1,
-    Epoch = 2
+    L1 = 1,
+    L2 = 2,
+    EarlyStop = 3

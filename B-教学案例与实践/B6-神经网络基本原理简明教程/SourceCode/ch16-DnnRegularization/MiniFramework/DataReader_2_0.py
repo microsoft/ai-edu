@@ -7,9 +7,8 @@ Version 2.0
 
 import numpy as np
 from pathlib import Path
-from enum import Enum
 
-from MiniFramework.EnumDef import *
+from MiniFramework.EnumDef_4_0 import *
 
 """
 X:
@@ -23,7 +22,7 @@ Y:  [if regression, value]
     [if multiple classification, e.g. 4 category, one-hot]
 """
 
-class DataReader20(object):
+class DataReader_2_0(object):
     def __init__(self, train_file, test_file):
         self.train_file_name = train_file
         self.test_file_name = test_file
@@ -71,7 +70,7 @@ class DataReader20(object):
             # this is for if no normalize requirment
             self.XTest = self.XTestRaw
             self.YTest = self.YTestRaw
-            # assume there has no validation set
+            # in case there has no validation set created
             self.XDev = self.XTest
             self.YDev = self.YTest
         else:
@@ -85,7 +84,6 @@ class DataReader20(object):
         train_count = self.XTrainRaw.shape[0]
         self.XTrain = x_merge_norm[0:train_count,:]
         self.XTest = x_merge_norm[train_count:,:]
-        self.XDev = self.XTest
 
     def __NormalizeX(self, raw_data):
         temp_X = np.zeros_like(raw_data)
@@ -118,8 +116,6 @@ class DataReader20(object):
         elif nettype == NetType.MultipleClassifier:
             self.YTrain = self.__ToOneHot(self.YTrainRaw, base)
             self.YTest = self.__ToOneHot(self.YTestRaw, base)
-        #end if
-        self.YDev = self.YTest
 
     def __NormalizeY(self, raw_data):
         assert(raw_data.shape[1] == 1)

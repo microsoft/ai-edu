@@ -35,21 +35,19 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniFramework\ClassificationLayer.py" />
-    <Compile Include="MiniFramework\DataReader.py" />
     <Compile Include="MiniFramework\ActivatorLayer.py" />
-    <Compile Include="MiniFramework\DataReader20.py" />
+    <Compile Include="MiniFramework\DataReader_2_0.py" />
     <Compile Include="MiniFramework\DropoutLayer.py" />
-    <Compile Include="MiniFramework\EnumDef.py" />
-    <Compile Include="MiniFramework\FullConnectionLayer.py" />
-    <Compile Include="MiniFramework\Optimizer.py" />
+    <Compile Include="MiniFramework\EnumDef_5_0.py" />
+    <Compile Include="MiniFramework\FullConnectionLayer_2_0.py" />
+    <Compile Include="MiniFramework\Optimizer_1_0.py" />
     <Compile Include="MiniFramework\Layer.py" />
-    <Compile Include="MiniFramework\HyperParameters41.py" />
-    <Compile Include="MiniFramework\TrainingTrace.py" />
-    <Compile Include="MiniFramework\WeightsBias30.py" />
+    <Compile Include="MiniFramework\HyperParameters_4_2.py" />
+    <Compile Include="MiniFramework\TrainingHistory_3_0.py" />
+    <Compile Include="MiniFramework\WeightsBias_2_1.py" />
     <Compile Include="MiniFramework\__init__.py" />
-    <Compile Include="MiniFramework\LossFunction.py" />
-    <Compile Include="MiniFramework\NeuralNet41.py" />
-    <Compile Include="MiniFramework\WeightsBias.py" />
+    <Compile Include="MiniFramework\LossFunction_1_1.py" />
+    <Compile Include="MiniFramework\NeuralNet_4_2.py" />
     <Compile Include="MnistBaggingReader.py" />
     <Compile Include="MnistAugmentationReader.py">
       <SubType>Code</SubType>

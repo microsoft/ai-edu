@@ -4,10 +4,10 @@
 import numpy as np
 from pathlib import Path
 
-from MiniFramework.EnumDef import *
-from MiniFramework.Optimizer import *
+from MiniFramework.EnumDef_5_0 import *
+from MiniFramework.Optimizer_1_0 import *
 
-class WeightsBias30(object):
+class WeightsBias_2_1(object):
     def __init__(self, n_input, n_output, init_method, optimizer_name, eta):
         self.num_input = n_input
         self.num_output = n_output
@@ -74,7 +74,6 @@ class WeightsBias30(object):
         print("W_norm_1=", w_norm_1)
         w_norm_2 = np.linalg.norm(self.W,2)
         print("W_norm_2=", w_norm_2)
-        
 
     def LoadResultValue(self, folder, name):
         file_name = str.format("{0}\\{1}.npz", folder, name)

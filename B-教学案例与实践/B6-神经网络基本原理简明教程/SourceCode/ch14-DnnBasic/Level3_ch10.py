@@ -61,18 +61,20 @@ def ShowResult2D(net, dr):
 
 #end def
 
-if __name__ == '__main__':
+def load_data():
     dataReader = DataReader_2_0(train_data_name, test_data_name)
     dataReader.ReadData()
     dataReader.NormalizeX()
     dataReader.Shuffle()
     dataReader.GenerateValidationSet()
-    
+    return dataReader
+
+def model(dataReader):
     num_input = 2
-    num_hidden = 2
+    num_hidden = 3
     num_output = 1
 
-    max_epoch = 10000
+    max_epoch = 1000
     batch_size = 5
     learning_rate = 0.1
 
@@ -80,7 +82,7 @@ if __name__ == '__main__':
         learning_rate, max_epoch, batch_size,
         net_type=NetType.BinaryClassifier,
         init_method=InitialMethod.Xavier,
-        stopper=Stopper(StopCondition.StopLoss, 0.05))
+        stopper=Stopper(StopCondition.StopLoss, 0.02))
 
     net = NeuralNet_4_0(params, "Arc")
 
@@ -94,8 +96,12 @@ if __name__ == '__main__':
     logistic = ClassificationLayer(Logistic())
     net.add_layer(logistic, "logistic")
 
-    #net.load_parameters()
-
     net.train(dataReader, checkpoint=10, need_test=True)
+    return net
+
+if __name__ == '__main__':
+    dr = load_data()
+    net = model(dr)
     net.ShowLossHistory()
-    ShowResult2D(net, dataReader)
+    ShowResult2D(net, dr)
+

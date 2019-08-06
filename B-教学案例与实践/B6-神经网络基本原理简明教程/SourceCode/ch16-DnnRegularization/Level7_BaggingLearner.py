@@ -13,7 +13,7 @@ from MiniFramework.ActivatorLayer import *
 from MiniFramework.DropoutLayer import *
 
 from MnistBaggingReader import *
-from Level0_OverFitNet import *
+from Level0_OverfittingNet_Regression import *
 
 train_image_file_temp = 'level6_{0}.npz'
 test_image_file = 'test-images-10'

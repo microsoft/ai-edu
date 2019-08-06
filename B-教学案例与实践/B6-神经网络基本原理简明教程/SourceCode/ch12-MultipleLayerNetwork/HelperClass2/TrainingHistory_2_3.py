@@ -7,7 +7,6 @@ what's new?
 - add epoch/iteration as parameter in showLossHistory
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 

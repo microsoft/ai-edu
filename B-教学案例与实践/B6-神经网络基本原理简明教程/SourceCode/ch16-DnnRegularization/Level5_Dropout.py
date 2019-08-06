@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from Level0_OverFitNet import *
+from Level0_OverfittingNet_Regression import *
 
 def Model_Dropout(dataReader, num_input, num_hidden, num_output, params):
     net = NeuralNet41(params, "overfitting")

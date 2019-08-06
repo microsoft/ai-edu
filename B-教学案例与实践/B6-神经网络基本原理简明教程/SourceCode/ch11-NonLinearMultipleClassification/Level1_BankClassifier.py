@@ -31,8 +31,12 @@ if __name__ == '__main__':
 
     hp = HyperParameters_2_0(n_input, n_hidden, n_output, eta, max_epoch, batch_size, eps, NetType.MultipleClassifier, InitialMethod.Xavier)
     net = NeuralNet_2_2(hp, "Bank_233")
-    net.train(dataReader, 100, True)
-    net.ShowTrainingHistory()
+
+    net.LoadResult()
+
+
+    #net.train(dataReader, 100, True)
+    #net.ShowTrainingHistory()
 
     fig = plt.figure(figsize=(6,6))
     DrawThreeCategoryPoints(dataReader.XTrain[:,0], dataReader.XTrain[:,1], dataReader.YTrain, hp.toString())

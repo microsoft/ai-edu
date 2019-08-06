@@ -37,7 +37,7 @@ class MnistImageDataReader(DataReader_2_0):
         self.YTrainRaw = self.YTrainRaw[0:count]
 
         self.num_example = self.XTrainRaw.shape[0]
-        self.num_category = len(np.unique(self.YTrainRaw))
+        self.num_category = (np.unique(self.YTrainRaw)).shape[0]
         self.num_test = self.XTestRaw.shape[0]
         self.num_train = self.num_example
         if self.mode == "vector":
@@ -51,7 +51,7 @@ class MnistImageDataReader(DataReader_2_0):
         self.XTestRaw = self.__ReadImageFile(self.test_image_file)
         self.YTestRaw = self.__ReadLabelFile(self.test_label_file)
         self.num_example = self.XTrainRaw.shape[0]
-        self.num_category = len(np.unique(self.YTrainRaw))
+        self.num_category = (np.unique(self.YTrainRaw)).shape[0]
         self.num_test = self.XTestRaw.shape[0]
         self.num_train = self.num_example
         if self.mode == "vector":
@@ -100,11 +100,11 @@ class MnistImageDataReader(DataReader_2_0):
         return label_data
 
     def NormalizeX(self):
-        self.XTrain = self.__NormalizeData(self.XTrainRaw).astype(np.float32)
-        self.XTest = self.__NormalizeData(self.XTestRaw).astype(np.float32)
+        self.XTrain = self.__NormalizeData(self.XTrainRaw)
+        self.XTest = self.__NormalizeData(self.XTestRaw)
 
     def __NormalizeData(self, XRawData):
-        X_NEW = np.zeros(XRawData.shape).astype(np.float32)
+        X_NEW = np.zeros(XRawData.shape)
         x_max = np.max(XRawData)
         x_min = np.min(XRawData)
         X_NEW = (XRawData - x_min)/(x_max-x_min)

@@ -54,7 +54,7 @@ class LossFunction_1_1(object):
     def CE3(self, A, Y, count):
         p1 = np.log(A)
         p2 =  np.multiply(Y, p1)
-        LOSS = np.sum(-p2) 
+        LOSS = np.sum(-p2, keepdims=False) 
         loss = LOSS / count
         return loss
     # end def

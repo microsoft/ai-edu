@@ -38,7 +38,6 @@ class Sigmoid(CActivator):
         dz = np.multiply(delta, da)
         return dz, da
 
-
 class Tanh(CActivator):
     def forward(self, z):
         a = 2.0 / (1.0 + np.exp(-2*z)) - 1.0

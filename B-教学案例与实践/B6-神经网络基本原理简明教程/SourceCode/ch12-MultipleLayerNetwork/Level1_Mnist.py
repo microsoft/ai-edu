@@ -1,11 +1,11 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
+import time
 
 from HelperClass2.MnistImageDataReader import *
 from HelperClass2.NeuralNet_3_0 import *
 
 if __name__ == '__main__':
-
     dataReader = MnistImageDataReader(mode="vector")
     dataReader.ReadData()
     dataReader.NormalizeX()

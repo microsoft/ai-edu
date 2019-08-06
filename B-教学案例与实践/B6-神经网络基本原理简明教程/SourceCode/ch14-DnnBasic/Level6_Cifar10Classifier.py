@@ -36,7 +36,7 @@ if __name__ == '__main__':
     num_hidden3 = 32
     num_hidden4 = 16
     num_output = 10
-    max_epoch = 30
+    max_epoch = 10
     batch_size = 64
     learning_rate = 0.1
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.MSRA,
-        stopper=Stopper(StopCondition.StopLoss, 0.26))
+        stopper=Stopper(StopCondition.StopDiff, 1e-5))
 
     net = NeuralNet_4_0(params, "Cifar10")
 
@@ -73,9 +73,6 @@ if __name__ == '__main__':
     softmax = ClassificationLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
-    #net.load_parameters()
-
     net.train(dataReader, checkpoint=0.1, need_test=True)
-    
     net.ShowLossHistory(xcoord=XCoordinate.Iteration)
     

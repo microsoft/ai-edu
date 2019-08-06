@@ -55,10 +55,15 @@ def model_relu(num_input, num_hidden, num_output, hp):
     r1 = ActivationLayer(Relu())
     net.add_layer(r1, "Relu1")
 
-    fc2 = FcLayer_1_0(num_hidden, num_output, hp)
+    fc2 = FcLayer_1_0(num_hidden, num_hidden, hp)
     net.add_layer(fc2, "fc2")
-    softmax1 = ClassificationLayer(Softmax())
-    net.add_layer(softmax1, "softmax1")
+    r2 = ActivationLayer(Relu())
+    net.add_layer(r2, "Relu2")
+
+    fc3 = FcLayer_1_0(num_hidden, num_output, hp)
+    net.add_layer(fc3, "fc3")
+    softmax = ClassificationLayer(Softmax())
+    net.add_layer(softmax, "softmax")
 
     net.train(dataReader, checkpoint=50, need_test=True)
     net.ShowLossHistory()
@@ -100,7 +105,8 @@ if __name__ == '__main__':
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier,
-        stopper=Stopper(StopCondition.StopLoss, 0.1))
-  
-    model_relu(num_input, num_hidden, num_output, hp)
+        stopper=Stopper(StopCondition.StopLoss, 0.08))
     model_sigmoid(num_input, num_hidden, num_output, hp)
+
+    hp.init_method = InitialMethod.MSRA
+    model_relu(num_input, num_hidden, num_output, hp)

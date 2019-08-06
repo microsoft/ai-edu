@@ -61,8 +61,10 @@ class BnLayer(CLayer):
         d_mu = -np.sum(d_norm_x / self.std, axis=0, keepdims=True) - 2 / m * d_var * np.sum(self.x_mu, axis=0, keepdims=True)
         # 公式13
         delta_out = d_norm_x / self.std + d_var * 2 * self.x_mu / m + d_mu / m
-        #return delta_out, self.d_gamma, self.d_beta
-        return delta_out
+        if flag == -1:
+            return delta_out, self.d_gamma, self.d_beta
+        else:
+            return delta_out
         
     def update(self, learning_rate=0.1):
         self.gamma = self.gamma - self.d_gamma * learning_rate

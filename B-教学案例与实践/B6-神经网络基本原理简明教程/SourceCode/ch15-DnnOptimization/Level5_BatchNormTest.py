@@ -192,7 +192,7 @@ if __name__ == '__main__':
     x = np.random.random(size=(batch_size,features))
     z = bn.forward(x)
     delta_in = np.random.random(size=(batch_size,features))
-    delta_out, d_gamma, d_beta = bn.backward(delta_in)
+    delta_out, d_gamma, d_beta = bn.backward(delta_in, -1)
 
     gamma = bn.gamma
     beta = bn.beta

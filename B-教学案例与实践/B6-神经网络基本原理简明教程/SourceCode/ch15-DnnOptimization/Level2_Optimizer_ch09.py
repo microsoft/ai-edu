@@ -51,5 +51,6 @@ def model(learning_rate, optimizer):
 
 if __name__ == '__main__':
     model(0.1, OptimizerName.SGD)
+    model(0.3, OptimizerName.SGD)
     model(0.1, OptimizerName.Momentum)
     model(0.1, OptimizerName.Nag)

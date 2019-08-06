@@ -24,7 +24,7 @@ def ReadImage(img_file_name):
 def Inference(img_array):
     output = net.inference(img_array)
     n = np.argmax(output)
-    print("------recognize result is: {0} -----", n)
+    print("------recognize result is: -----", n)
 
 def on_key_press(event):
     img_file_name = "handwriting.png"

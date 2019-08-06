@@ -78,22 +78,6 @@ class NeuralNet_4_0(object):
             layer = self.layer_list[i]
             layer.update()
 
-    def __get_weights_from_fc_layer(self):
-        weights = 0
-        total = 0
-        zeros = 0
-        littles = 0
-        for i in range(self.layer_count-1,-1,-1):
-            layer = self.layer_list[i]
-            if isinstance(layer, FcLayer_1_0):
-                weights += np.sum(np.abs(layer.weights.W))
-                zeros += len(np.where(np.abs(layer.weights.W)<=0.0001)[0])
-                littles += len(np.where(np.abs(layer.weights.W)<=0.01)[0])
-                total += np.size(layer.weights.W)
-            # end if
-        # end for
-        return weights, zeros, littles, total
-
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
     def train(self, dataReader, checkpoint=0.1, need_test=True):
         t0 = time.time()
@@ -138,12 +122,6 @@ class NeuralNet_4_0(object):
 
         self.save_parameters()
 
-        weights, zeros, littles, total = self.__get_weights_from_fc_layer()
-        print("total weights abs sum=", weights)
-        print("total weights =", total)
-        print("little weights =", littles)
-        print("zero weights =", zeros)
-
         if need_test:
             print("testing...")
             accuracy = self.Test(dataReader)
@@ -177,7 +155,6 @@ class NeuralNet_4_0(object):
         x,y = dataReader.GetTestSet()
         self.__forward(x, train=False)
         correct = self.__CalAccuracy(self.output, y)
-        print(correct)
         return correct
 
     def __CalAccuracy(self, a, y):

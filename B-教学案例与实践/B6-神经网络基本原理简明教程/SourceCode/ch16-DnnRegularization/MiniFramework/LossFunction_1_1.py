@@ -7,7 +7,7 @@ Version 1.1
 
 import numpy as np
 
-from MiniFramework.EnumDef_4_0 import *
+from MiniFramework.EnumDef_5_0 import *
 
 class LossFunction_1_1(object):
     def __init__(self, net_type):

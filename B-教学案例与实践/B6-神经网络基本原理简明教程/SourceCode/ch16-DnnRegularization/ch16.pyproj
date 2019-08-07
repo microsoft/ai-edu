@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level1_OverfittingNet_Classification.py</StartupFile>
+    <StartupFile>Level7_BaggingLearner.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ExtendedDataReader\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Level1_OverfittingNet_Classification.py" />
     <Compile Include="Level5_Dropout.py" />
     <Compile Include="Level7_BaggingLearner.py" />
@@ -48,14 +51,15 @@
     <Compile Include="MiniFramework\__init__.py" />
     <Compile Include="MiniFramework\LossFunction_1_1.py" />
     <Compile Include="MiniFramework\NeuralNet_4_2.py" />
-    <Compile Include="MnistBaggingReader.py" />
-    <Compile Include="MnistAugmentationReader.py">
+    <Compile Include="ExtendedDataReader\MnistBaggingReader.py" />
+    <Compile Include="ExtendedDataReader\MnistAugmentationReader.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MnistImageDataReader.py" />
+    <Compile Include="ExtendedDataReader\MnistImageDataReader.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />
+    <Folder Include="ExtendedDataReader\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from MiniFramework.EnumDef_4_0 import *
+from MiniFramework.EnumDef_5_0 import *
 
 class OptimizerFactory(object):
     @staticmethod

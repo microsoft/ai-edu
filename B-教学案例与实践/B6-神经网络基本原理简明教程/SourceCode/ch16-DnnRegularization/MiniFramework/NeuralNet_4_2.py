@@ -5,6 +5,7 @@
 import numpy as np
 import time
 import os
+import math
 
 from MiniFramework.Layer import *
 from MiniFramework.FullConnectionLayer_2_0 import *
@@ -81,30 +82,33 @@ class NeuralNet_4_2(object):
         regular_cost = 0
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
-            if isinstance(layer, FcLayer):
+            if isinstance(layer, FcLayer_2_0):
                 if regularName == RegularMethod.L1:
-                    regular_cost += np.sum(np.abs(layer.weights.W))
+                    regular_cost += np.sum(np.abs(layer.wb.W))
                 elif regularName == RegularMethod.L2:
-                    regular_cost += np.sum(np.square(layer.weights.W))
+                    regular_cost += np.sum(np.square(layer.wb.W))
             # end if
         # end for
         return regular_cost * self.hp.regular_value
 
-    def __get_weights_from_fc_layer(self):
+    def __check_weights_from_fc_layer(self):
         weights = 0
         total = 0
         zeros = 0
         littles = 0
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
-            if isinstance(layer, FcLayer):
-                weights += np.sum(np.abs(layer.weights.W))
-                zeros += len(np.where(np.abs(layer.weights.W)<=0.0001)[0])
-                littles += len(np.where(np.abs(layer.weights.W)<=0.01)[0])
-                total += np.size(layer.weights.W)
+            if isinstance(layer, FcLayer_2_0):
+                weights += np.sum(np.abs(layer.wb.W))
+                zeros += len(np.where(np.abs(layer.wb.W)<=0.0001)[0])
+                littles += len(np.where(np.abs(layer.wb.W)<=0.01)[0])
+                total += np.size(layer.wb.W)
             # end if
         # end for
-        return weights, zeros, littles, total
+        print("total weights abs sum=", weights)
+        print("total weights =", total)
+        print("little weights =", littles)
+        print("zero weights =", zeros)
 
     # checkpoint=0.1 means will calculate the loss/accuracy every 10% in each epoch
     def train(self, dataReader, checkpoint=0.1, need_test=True):
@@ -156,11 +160,7 @@ class NeuralNet_4_2(object):
 
         self.save_parameters()
 
-        weights, zeros, littles, total = self.__get_weights_from_fc_layer()
-        print("total weights abs sum=", weights)
-        print("total weights =", total)
-        print("little weights =", littles)
-        print("zero weights =", zeros)
+        self.__check_weights_from_fc_layer()
 
         if need_test:
             print("testing...")
@@ -191,8 +191,9 @@ class NeuralNet_4_2(object):
 
         # end if
         need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.stopper)
-        if self.hp.stopper.stop_condition == StopCondition.StopLoss and loss_vld <= self.hp.stopper.stop_value:
-            need_stop = True
+        if self.hp.stopper is not None:
+            if self.hp.stopper.stop_condition == StopCondition.StopLoss and loss_vld <= self.hp.stopper.stop_value:
+                need_stop = True
         return need_stop
         
     def Test(self, dataReader):

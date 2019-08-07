@@ -3,15 +3,10 @@
 
 import numpy as np
 
-from MnistImageDataReader import *
-
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
+from ExtendedDataReader.MnistImageDataReader import *
 
 def GenerateDataSet(count=10):
-    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "vector")
+    mdr = MnistImageDataReader("vector")
     mdr.ReadLessData(1000)
     
     for i in range(count):

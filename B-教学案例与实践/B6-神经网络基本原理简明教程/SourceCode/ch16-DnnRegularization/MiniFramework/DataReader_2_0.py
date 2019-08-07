@@ -8,7 +8,7 @@ Version 2.0
 import numpy as np
 from pathlib import Path
 
-from MiniFramework.EnumDef_4_0 import *
+from MiniFramework.EnumDef_5_0 import *
 
 """
 X:

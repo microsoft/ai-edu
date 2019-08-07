@@ -34,14 +34,15 @@ class TrainingHistory_3_0(object):
         if accuracy_vld is not None:
             self.accuracy_val.append(accuracy_vld)
 
-        if stopper.stop_condition == StopCondition.StopDiff:
-            if len(self.loss_val) > 1:
-                if abs(self.loss_val[-1] - self.loss_val[-2]) < stopper.stop_value:
-                    self.counter = self.counter + 1
-                    if self.counter > 3:
-                        return True
-                else:
-                    self.counter = 0
+        if stopper is not None:
+            if stopper.stop_condition == StopCondition.StopDiff:
+                if len(self.loss_val) > 1:
+                    if abs(self.loss_val[-1] - self.loss_val[-2]) < stopper.stop_value:
+                        self.counter = self.counter + 1
+                        if self.counter > 3:
+                            return True
+                    else:
+                        self.counter = 0
                 #end if
             #end if
         #end if
@@ -73,7 +74,6 @@ class TrainingHistory_3_0(object):
             p1, = axes.plot(self.epoch_seq, self.loss_val)
             axes.set_xlabel("epoch")
         #end if
-
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Loss")
         axes.set_ylabel("loss")
@@ -90,11 +90,9 @@ class TrainingHistory_3_0(object):
             p1, = axes.plot(self.epoch_seq, self.accuracy_val)
             axes.set_xlabel("epoch")
         #end if
-
         axes.legend([p1,p2], ["validation","train"])
         axes.set_title("Accuracy")
         axes.set_ylabel("accuracy")
-        axes.set_xlabel("epoch")
         
         plt.suptitle(title)
         plt.show()

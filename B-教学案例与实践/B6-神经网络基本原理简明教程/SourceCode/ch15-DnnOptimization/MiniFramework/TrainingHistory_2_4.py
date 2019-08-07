@@ -15,7 +15,7 @@ from MiniFramework.EnumDef_4_0 import *
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class TrainingHistory_2_4(object):
-    def __init__(self, need_earlyStop = False, patience = 5):
+    def __init__(self):
         self.loss_train = []
         self.accuracy_train = []
         self.iteration_seq = []
@@ -87,16 +87,6 @@ class TrainingHistory_2_4(object):
         
         plt.suptitle(title)
         plt.show()
-        return title
-
-    def ShowLossHistory4(self, axes, title, xmin=None, xmax=None, ymin=None, ymax=None):
-        p2, = axes.plot(self.epoch_seq, self.loss_train)
-        p1, = axes.plot(self.epoch_seq, self.loss_val)
-        axes.set_title(title)
-        axes.set_xlabel("epoch")
-        axes.set_ylabel("loss")
-        if xmin != None and ymin != None:
-            axes.axis([xmin, xmax, ymin, ymax])
         return title
 
     def GetEpochNumber(self):

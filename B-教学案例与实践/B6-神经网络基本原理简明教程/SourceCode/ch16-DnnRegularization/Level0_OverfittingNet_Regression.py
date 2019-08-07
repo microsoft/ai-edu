@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from MiniFramework.NeuralNet41 import *
+from MiniFramework.NeuralNet_4_2 import *
 from MiniFramework.ActivatorLayer import *
 
 train_file = "../../Data/ch16.train.npz"
@@ -12,28 +12,28 @@ test_file = "../../Data/ch16.test.npz"
 
 
 def Model(dataReader, num_input, num_hidden, num_output, params):
-    net = NeuralNet41(params, "overfitting")
+    net = NeuralNet_4_2(params, "overfitting")
 
-    fc1 = FcLayer(num_input, num_hidden, params)
+    fc1 = FcLayer_2_0(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
     s1 = ActivatorLayer(Sigmoid())
     net.add_layer(s1, "s1")
     
-    fc2 = FcLayer(num_hidden, num_hidden, params)
+    fc2 = FcLayer_2_0(num_hidden, num_hidden, params)
     net.add_layer(fc2, "fc2")
     t2 = ActivatorLayer(Tanh())
     net.add_layer(t2, "t2")
     
-    fc3 = FcLayer(num_hidden, num_hidden, params)
+    fc3 = FcLayer_2_0(num_hidden, num_hidden, params)
     net.add_layer(fc3, "fc3")
     t3 = ActivatorLayer(Tanh())
     net.add_layer(t3, "t3")
     
-    fc4 = FcLayer(num_hidden, num_output, params)
+    fc4 = FcLayer_2_0(num_hidden, num_output, params)
     net.add_layer(fc4, "fc4")
 
     net.train(dataReader, checkpoint=100, need_test=True)
-    net.ShowLossHistory(XCoordinate.Epoch, ymin=0.8)
+    net.ShowLossHistory(XCoordinate.Epoch)
     
     return net
 
@@ -48,11 +48,8 @@ def ShowResult(net, dr, title):
     plt.show()
 
 def LoadData():
-    dr = DataReader20(train_file, test_file)
+    dr = DataReader_2_0(train_file, test_file)
     dr.ReadData()
-    #dr.NormalizeX()
-    #dr.NormalizeY(NetType.Fitting)
-    #dr.Shuffle()
     return dr
 
 def SetParameters():
@@ -62,8 +59,8 @@ def SetParameters():
     learning_rate = 0.1
     eps = 1e-6
     
-    hp = HyperParameters41(
-        learning_rate, max_epoch, batch_size, eps,                        
+    hp = HyperParameters_4_2(
+        learning_rate, max_epoch, batch_size,                    
         net_type=NetType.Fitting,
         init_method=InitialMethod.Xavier)
 

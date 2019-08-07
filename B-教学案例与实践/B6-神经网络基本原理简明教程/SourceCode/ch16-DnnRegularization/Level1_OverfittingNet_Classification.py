@@ -17,8 +17,8 @@ def LoadData():
     mdr.GenerateValidationSet(k=10)
     return mdr
 
-def Net(dataReader, num_input, num_hidden, num_output, params, show_history=True):
-    net = NeuralNet_4_2(params, "mnist_overfitting")
+def Net(subfolder, dataReader, num_input, num_hidden, num_output, params, show_history=True):
+    net = NeuralNet_4_2(params, subfolder)
 
     fc1 = FcLayer_2_0(num_input, num_hidden, params)
     net.add_layer(fc1, "fc1")
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     num_input = num_feature
     num_hidden = 30
     num_output = 10
-    max_epoch = 200
+    max_epoch = 100
     batch_size = 32
     learning_rate = 0.1
 
@@ -69,4 +69,4 @@ if __name__ == '__main__':
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier)
 
-    Net(dataReader, num_input, num_hidden, num_output, params)
+    Net("mnist_overfitting", dataReader, num_input, num_hidden, num_output, params)

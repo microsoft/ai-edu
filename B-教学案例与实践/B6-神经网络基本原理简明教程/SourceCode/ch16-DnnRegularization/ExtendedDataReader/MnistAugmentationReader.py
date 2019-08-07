@@ -10,7 +10,7 @@ test_label_file = '../../Data/test-labels-10'
 
 class MnistAugmentationReader(MnistImageDataReader):
     def ReadData(self):
-        data = np.load("level5_data.npz")
+        data = np.load("augmentation/data.npz")
         image = data["data"] 
         label = data["label"]
         assert(image.shape[0] == label.shape[0])

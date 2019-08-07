@@ -2,10 +2,15 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
+import os
 
 from ExtendedDataReader.MnistImageDataReader import *
 
-def GenerateDataSet(count=10):
+def GenerateDataSet(subfolder, count=10):
+    isExists = os.path.exists(subfolder)
+    if not isExists:
+        os.makedirs(subfolder)
+
     mdr = MnistImageDataReader("vector")
     mdr.ReadLessData(1000)
     
@@ -19,9 +24,9 @@ def GenerateDataSet(count=10):
             Y[k] = mdr.YTrainRaw[j]
             k = k+1
         # end for
-        np.savez("level6_" + str(i)+".npz", data=X, label=Y)
+        np.savez(subfolder + "/" + str(i) + ".npz", data=X, label=Y)
     # end for
 
 if __name__=="__main__":
-    GenerateDataSet(9)
+    GenerateDataSet("ensemble", 9)
   

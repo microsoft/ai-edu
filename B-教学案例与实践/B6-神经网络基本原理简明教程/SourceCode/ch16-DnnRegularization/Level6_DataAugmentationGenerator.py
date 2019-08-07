@@ -6,9 +6,8 @@ import cv2
 import gzip
 import math
 import random
-
+import os
 import matplotlib.pyplot as plt
-
 
 IMAGE_SIZE = 28
 NUM_CHANNELS = 1
@@ -166,7 +165,7 @@ def noise(image, var=0.1):
     noise_image = image + gaussian_noise
     return np.clip(noise_image, 0, 1)
 
-def generate():
+def generate(subfolder):
     dataReader = LoadData()
     image_list = dataReader.XTrain.reshape(1000,28,28)
     label = dataReader.YTrainRaw
@@ -190,20 +189,17 @@ def generate():
     all_label = np.concatenate([label for i in range(10)])
     all_image = all_image.astype(np.uint8)
     all_label = all_label.astype(np.uint8)
-    np.savez("level5_data.npz", data=all_image, label=all_label)
-    """
-    the example code to read data:
-        import numpy as np
-        data = np.load("data.npz")
-        image = data["data"] / 255
-        label = data["label"]
-    """
+
+    isExists = os.path.exists(subfolder)
+    if not isExists:
+        os.makedirs(subfolder)
+    np.savez(subfolder + "/data.npz", data=all_image, label=all_label)
 
 if __name__=="__main__":
 
-    generate()
+    generate("augmentation")
 
-    data = np.load("data.npz")
+    data = np.load("augmentation/data.npz")
     image = data["data"] 
     label = data["label"]
     print(image.shape, label.shape)

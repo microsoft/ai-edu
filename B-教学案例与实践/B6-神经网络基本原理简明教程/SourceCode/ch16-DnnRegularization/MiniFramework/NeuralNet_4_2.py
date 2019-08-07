@@ -24,14 +24,14 @@ class NeuralNet_4_2(object):
         self.layer_name = []
         self.output = None
         self.layer_count = 0
-        self.subfolder = os.getcwd() + "\\" + self.__create_subfolder()
+        self.subfolder = os.getcwd() + "/" + self.__create_subfolder()
         print(self.subfolder)
         self.accuracy = 0
 
     def __create_subfolder(self):
         if self.model_name != None:
             path = self.model_name.strip()
-            path = path.rstrip("\\")
+            path = path.rstrip("/")
             isExists = os.path.exists(path)
             if not isExists:
                 os.makedirs(path)

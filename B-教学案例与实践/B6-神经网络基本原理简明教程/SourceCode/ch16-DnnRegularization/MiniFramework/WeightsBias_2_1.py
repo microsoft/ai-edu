@@ -29,7 +29,7 @@ class WeightsBias_2_1(object):
         self.dB = np.zeros(self.B.shape)
 
     def __CreateNew(self):
-        self.W, self.B = WeightsBias30.InitialParameters(self.num_input, self.num_output, self.init_method)
+        self.W, self.B = WeightsBias_2_1.InitialParameters(self.num_input, self.num_output, self.init_method)
         self.__SaveInitialValue()
         
     def __LoadExistingParameters(self):

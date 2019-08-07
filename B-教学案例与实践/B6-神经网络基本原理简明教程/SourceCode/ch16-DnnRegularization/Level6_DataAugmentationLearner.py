@@ -9,11 +9,6 @@ from ExtendedDataReader.MnistAugmentationReader import *
 
 from Level1_OverfittingNet_Classification import *
 
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
-
 def LoadData():
     mdr = MnistAugmentationReader("vector")
     mdr.ReadData()
@@ -31,7 +26,7 @@ if __name__ == '__main__':
     num_input = num_feature
     num_hidden = 30
     num_output = 10
-    max_epoch = 200
+    max_epoch = 100
     batch_size = 32
     learning_rate = 0.1
 
@@ -40,4 +35,4 @@ if __name__ == '__main__':
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier)
 
-    Net(dataReader, num_input, num_hidden, num_output, params)
+    Net("augmentation", dataReader, num_input, num_hidden, num_output, params)

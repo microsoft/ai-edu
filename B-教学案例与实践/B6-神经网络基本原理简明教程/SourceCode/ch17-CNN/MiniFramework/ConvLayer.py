@@ -8,7 +8,6 @@ import minpy.numpy as np
 import timeit
 
 from MiniFramework.Layer import *
-from MiniFramework.Activators import *
 from MiniFramework.ConvWeightsBias import *
 from MiniFramework.Parameters import *
 from MiniFramework.jit_utility import *

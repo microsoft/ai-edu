@@ -3,20 +3,15 @@
 
 #coding=utf-8
 
-import numpy as np
-from enum import Enum
-
+#import numpy as np
+import minpy.numpy as np
 
 from MiniFramework.Layer import *
 from MiniFramework.Activators import *
 from MiniFramework.ConvWeightsBias import *
 from MiniFramework.Parameters import *
 from MiniFramework.jit_utility import *
-
-
-class PoolingTypes(Enum):
-    MAX = 0,
-    MEAN = 1,
+from MiniFramework.EnumDef_6_0 import *
 
 
 class PoolingLayer(CLayer):

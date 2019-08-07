@@ -20,7 +20,10 @@ class FcLayer_2_0(CLayer):
 
     def forward(self, input, train=True):
         self.input_shape = input.shape
-        self.x = input
+        if input.ndim == 3: # come from pooling layer
+            self.x = input.reshape(input.size, 1)
+        else:
+            self.x = input
         self.z = np.dot(self.x, self.wb.W) + self.wb.B
         return self.z
 

@@ -1,75 +1,34 @@
 # Copyright (c) Microsoft.  All rights reserved.
 # Licensed under the MIT license.  See LICENSE file in the project root for full license information.
 
-# coding: utf-8
-
 import time
 import matplotlib.pyplot as plt
 
-from MiniFramework.NeuralNet import *
-from MiniFramework.GDOptimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.Parameters import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.Activators import *
-from MiniFramework.ConvLayer import *
-from MiniFramework.PoolingLayer import *
-
-from MnistImageReader import *
-
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
+from MiniFramework.NeuralNet_4_2 import *
+from ExtendedDataReader.MnistImageDataReader import *
 
 def LoadData(num_output):
-    mdr = MnistImageReader(train_image_file, train_label_file, test_image_file, test_label_file)
+    mdr = MnistImageDataReader("image")
     mdr.ReadData()
-    mdr.Normalize()
+    mdr.NormalizeX()
+    mdr.NormalizeY(NetType.MultipleClassifier, base=0)
     mdr.Shuffle()
-    mdr.GenerateDevSet(12)
+    mdr.GenerateValidationSet(k=12)
     return mdr
 
-def Test(dataReader, model):
-    correct = 0
-    test_batch = 1000
-    max_iteration = dataReader.num_test//test_batch
-    for i in range(max_iteration):
-        x, y = dataReader.GetBatchTestSamples(test_batch, i)
-        model.forward(x)
-        correct += CalAccuracy(model.output, None, y)
-    #end for
-    return correct, dataReader.num_test
-
-
-
-def CalAccuracy(a, y_onehot, y_label):
-    ra = np.argmax(a, axis=0).reshape(-1,1)
-    if y_onehot is None:
-        ry = y_label
-    elif y_label is None:
-        ry = np.argmax(y_onehot, axis=0).reshape(-1,1)
-    r = (ra == ry)
-    correct = r.sum()
-    return correct
-
-
-def net():
+def model():
     num_output = 10
     dataReader = LoadData(num_output)
 
     max_epoch = 1
-    batch_size = 50
-    eta = 0.01
-    eps = 0.01
-    params = CParameters(eta, max_epoch, batch_size, eps,
-                    LossFunctionName.CrossEntropy3, 
-                    InitialMethod.Xavier, 
-                    OptimizerName.Adam)
+    batch_size = 128
+    learning_rate = 0.1
+    params = HyperParameters_4_2(
+        learning_rate, max_epoch, batch_size,
+        net_type=NetType.MultipleClassifier,
+        init_method=InitialMethod.Xavier)
 
-    loss_history = CLossHistory()
-
-    net = NeuralNet(params)
+    net = NeuralNet_4_2(params, "mnist_conv")
 
     c1 = ConvLayer((1,28,28), (8,3,3), (1,1), Relu(), params)
     net.add_layer(c1)
@@ -89,16 +48,14 @@ def net():
     p2 = PoolingLayer(c4.output_shape, (2,2,), 2, PoolingTypes.MAX)
     net.add_layer(p2)
 
-    f1 = FcLayer(p2.output_size, 32, Relu(), params)
+    f1 = FcLayer_2_0(p2.output_size, 32, Relu(), params)
     net.add_layer(f1)
 
-    f2 = FcLayer(f1.output_size, 10, Softmax(), params)
+    f2 = FcLayer_2_0(f1.output_size, 10, Softmax(), params)
     net.add_layer(f2)
 
-    net.train(dataReader, loss_history)
-
-    loss_history.ShowLossHistory(params)
+    net.train(dataReader, checkpoint=0.01, need_test=True)
+    net.ShowLossHistory(XCoordinate.Iteration)
 
 if __name__ == '__main__':
-    net()
-
+    model()

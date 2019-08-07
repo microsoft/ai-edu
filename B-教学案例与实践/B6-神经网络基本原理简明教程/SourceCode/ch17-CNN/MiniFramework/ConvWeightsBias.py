@@ -1,9 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#coding=utf-8
-
-import numpy as np
+#import numpy as np
+import minpy.numpy as np
 
 from MiniFramework.WeightsBias import *
 
@@ -74,11 +73,8 @@ class ConvWeightsBias(WeightsBias):
         self.dB = self.dB / m
 
     def Update(self):
-#        self.W = self.W - self.eta * self.dW
-#        self.B = self.B - self.eta * self.dB
         self.W = self.oW.update(self.W, self.dW)
         self.B = self.oB.update(self.B, self.dB)
-
 
     def __CreateOptimizers(self):
         self.oW = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)

@@ -20,7 +20,7 @@ def model():
     num_output = 10
     dataReader = LoadData(num_output)
 
-    max_epoch = 1
+    max_epoch = 20
     batch_size = 128
     learning_rate = 0.1
     params = HyperParameters_4_2(
@@ -28,23 +28,30 @@ def model():
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier)
 
-    net = NeuralNet_4_2(params, "mnist_conv")
+    net = NeuralNet_4_2(params, "mnist_deep_conv")
     
-    c1 = ConvLayer((1,28,28), (8,3,3), (1,1), params)
+    c1 = ConvLayer((1,28,28), (16,3,3), (1,1), params)
     net.add_layer(c1, "c1")
     r1 = ActivatorLayer(Relu())
     net.add_layer(r1, "relu1")
     p1 = PoolingLayer(c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
     net.add_layer(p1, "p1") 
+    
+    c2 = ConvLayer(p1.output_shape, (32,3,3), (1,1), params)
+    net.add_layer(c2, "c2")
+    r2 = ActivatorLayer(Relu())
+    net.add_layer(r2, "relu2")
+    p2 = PoolingLayer(c2.output_shape, (2,2,), 2, PoolingTypes.MAX)
+    net.add_layer(p2, "p2") 
   
-    c3 = ConvLayer(p1.output_shape, (16,3,3), (1,1), params)
+    c3 = ConvLayer(p2.output_shape, (64,3,3), (1,1), params)
     net.add_layer(c3, "c3")
     r3 = ActivatorLayer(Relu())
     net.add_layer(r3, "relu3")
-    p2 = PoolingLayer(c3.output_shape, (2,2,), 2, PoolingTypes.MAX)
-    net.add_layer(p2, "p2")  
+    p3 = PoolingLayer(c3.output_shape, (2,2,), 2, PoolingTypes.MAX)
+    net.add_layer(p3, "p3")  
 
-    f1 = FcLayer_2_0(p2.output_size, 32, params)
+    f1 = FcLayer_2_0(p3.output_size, 32, params)
     net.add_layer(f1, "f1")
     r5 = ActivatorLayer(Relu())
     net.add_layer(r5, "relu5")

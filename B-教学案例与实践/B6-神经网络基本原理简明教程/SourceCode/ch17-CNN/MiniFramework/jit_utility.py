@@ -106,8 +106,8 @@ def jit_conv_2d(input_array, kernal, bias, output_array):
             target_array = input_array[i_start:i_end, j_start:j_end]
             output_array[i,j] = np.sum(target_array * kernal) + bias
 
-#@nb.jit(nopython=True)
-@nb.jit(float32[:,:,:,:](float32[:,:,:,:],float32[:,:,:,:],float32[:,:],int32,int32,int32))
+@nb.jit(nopython=True)
+#@nb.jit(float32[:,:,:,:](float32[:,:,:,:],float32[:,:,:,:],float32[:,:],int32,int32,int32))
 def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
     # 输入图片的批大小，通道数，高，宽
     assert(x.ndim == 4)
@@ -212,8 +212,8 @@ def calcalate_weights_grad(x, dz, batch_size, output_c, input_c, filter_h, filte
     #end bs
     return (dW, dB)
 
-#@nb.jit(nopython=True)
-@nb.jit((float32[:,:,:,:],float32[:,:,:,:],int32,int32,int32,int32,int32,float32[:,:,:,:]))
+@nb.jit(nopython=True)
+#@nb.jit((float32[:,:,:,:],float32[:,:,:,:],int32,int32,int32,int32,int32,float32[:,:,:,:]))
 def calculate_delta_out(dz, rot_weights, batch_size, num_input_channel, num_output_channel, input_height, input_width, delta_out):
     for bs in range(batch_size):
         for oc in range(num_output_channel):    # == kernal count

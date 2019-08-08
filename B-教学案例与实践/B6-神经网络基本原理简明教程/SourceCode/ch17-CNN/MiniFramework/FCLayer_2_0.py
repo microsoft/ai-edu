@@ -15,13 +15,13 @@ class FcLayer_2_0(CLayer):
         self.regular_name = hp.regular_name
         self.regular_value = hp.regular_value
 
-    def initialize(self, folder):
-        self.wb.InitializeWeights(folder, False)
+    def initialize(self, folder, name):
+        self.wb.Initialize(folder, name, False)
 
     def forward(self, input, train=True):
         self.input_shape = input.shape
-        if input.ndim == 3: # come from pooling layer
-            self.x = input.reshape(input.size, 1)
+        if input.ndim == 4: # come from pooling layer
+            self.x = input.reshape(self.input_shape[0],-1)
         else:
             self.x = input
         self.z = np.dot(self.x, self.wb.W) + self.wb.B
@@ -56,8 +56,8 @@ class FcLayer_2_0(CLayer):
     def update(self):
         self.wb.Update()
         
-    def save_parameters(self, folder, name):
-        self.wb.SaveResultValue(folder, name)
+    def save_parameters(self):
+        self.wb.SaveResultValue()
 
-    def load_parameters(self, folder, name):
-        self.wb.LoadResultValue(folder, name)
+    def load_parameters(self):
+        self.wb.LoadResultValue()

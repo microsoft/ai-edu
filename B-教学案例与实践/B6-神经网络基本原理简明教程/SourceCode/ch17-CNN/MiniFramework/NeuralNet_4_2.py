@@ -27,7 +27,7 @@ class NeuralNet_4_2(object):
         self.model_name = model_name
         self.hp = params
         self.layer_list = []
-        self.layer_name = []
+        #self.layer_name = []
         self.output = None
         self.layer_count = 0
         self.subfolder = os.getcwd() + "/" + self.__create_subfolder()
@@ -43,10 +43,10 @@ class NeuralNet_4_2(object):
                 os.makedirs(path)
             return path
 
-    def add_layer(self, layer, name=""):
-        layer.initialize(self.subfolder)
+    def add_layer(self, layer, name):
+        layer.initialize(self.subfolder, name)
         self.layer_list.append(layer)
-        self.layer_name.append(name)
+        #self.layer_name.append(name)
         self.layer_count += 1
 
     def __forward(self, X, train=True):
@@ -129,7 +129,7 @@ class NeuralNet_4_2(object):
             self.hp.batch_size = dataReader.num_train
         # end if
         max_iteration = math.ceil(dataReader.num_train / self.hp.batch_size)
-        checkpoint_iteration = (int)(max_iteration * checkpoint)
+        checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
         need_stop = False
         for epoch in range(self.hp.max_epoch):
             dataReader.Shuffle()
@@ -233,16 +233,14 @@ class NeuralNet_4_2(object):
         print("save parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
-            name = self.layer_name[i]
-            layer.save_parameters(self.subfolder, name)
+            layer.save_parameters()
 
     # load weights for the most low loss moment
     def load_parameters(self):
         print("load parameters")
         for i in range(self.layer_count):
             layer = self.layer_list[i]
-            name = self.layer_name[i]
-            layer.load_parameters(self.subfolder, name)
+            layer.load_parameters()
 
     def ShowLossHistory(self, xcoor, xmin=None, xmax=None, ymin=None, ymax=None):
         title = str.format("{0},accuracy={1:.4f}", self.hp.toString(), self.accuracy)

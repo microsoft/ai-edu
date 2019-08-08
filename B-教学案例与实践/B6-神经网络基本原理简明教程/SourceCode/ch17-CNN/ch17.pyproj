@@ -47,7 +47,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniFramework\ConvLayer.py" />
-    <Compile Include="MiniFramework\FCLayer.py" />
     <Compile Include="MiniFramework\jit_utility.py">
       <SubType>Code</SubType>
     </Compile>

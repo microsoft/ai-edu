@@ -28,11 +28,11 @@ class ConvLayer(CLayer):
         self.padding = conv_param[1]
         self.hp = hp
 
-    def initialize(self, folder):
+    def initialize(self, folder, name, create_new=False):
         self.Kernal = ConvKernal(
             self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width, 
             self.hp.init_method, self.hp.optimizer_name, self.hp.eta)
-        self.Kernal.Initialize()
+        self.Kernal.Initialize(folder, name, create_new)
         (self.output_height, self.output_width) = calculate_output_size(
             self.input_height, self.input_width, 
             self.filter_height, self.filter_width, 
@@ -123,8 +123,8 @@ class ConvLayer(CLayer):
 
         
     # 用输入误差矩阵乘以（旋转180度后的）卷积核
-    def _calculate_delta_out(self, dz, flag):
-        if flag == LayerIndexFlags.FirstLayer:
+    def _calculate_delta_out(self, dz, layer_idx):
+        if layer_idx == 0:
             return None
         # 旋转卷积核180度
         rot_weights = self.Kernal.Rotate180()
@@ -142,11 +142,11 @@ class ConvLayer(CLayer):
     def update(self):
         self.Kernal.Update()
         
-    def save_parameters(self, name):
-        self.Kernal.SaveResultValue(name)
+    def save_parameters(self):
+        self.Kernal.SaveResultValue()
 
-    def load_parameters(self, name):
-        self.Kernal.LoadResultValue(name)
+    def load_parameters(self):
+        self.Kernal.LoadResultValue()
 
 #end class
 

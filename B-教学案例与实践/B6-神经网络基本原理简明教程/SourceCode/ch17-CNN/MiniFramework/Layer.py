@@ -5,7 +5,7 @@ class CLayer(object):
     def __init__(self, layer_type):
         self.layer_type = layer_type
 
-    def initialize(self, folder):
+    def initialize(self, folder, name):
         pass
 
     def train(self, input, train=True):
@@ -14,8 +14,8 @@ class CLayer(object):
     def update(self):
         pass
 
-    def save_parameters(self, folder, name):
+    def save_parameters(self):
         pass
 
-    def load_parameters(self, folder, name):
+    def load_parameters(self):
         pass

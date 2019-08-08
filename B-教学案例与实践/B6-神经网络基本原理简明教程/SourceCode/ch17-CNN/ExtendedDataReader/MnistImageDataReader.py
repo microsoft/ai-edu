@@ -78,7 +78,7 @@ class MnistImageDataReader(DataReader_2_0):
             bin_data = f.read(image_size)   # read 784 byte data for one time
             unpacked_data = struct.unpack(fmt, bin_data)
             array_data = np.array(unpacked_data)
-            array_data2 = array_data.reshape((1, num_rows, num_cols))
+            array_data2 = array_data.reshape((1, num_rows, num_cols)).astype(np.float32)
             image_data[i] = array_data2
         # end for
         f.close()

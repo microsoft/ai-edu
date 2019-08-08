@@ -4,7 +4,7 @@
 import numpy as np
 #import minpy.numpy as np
 
-#from MiniFramework.WeightsBias_2_1 import *
+from MiniFramework.WeightsBias_2_1 import *
 from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Optimizer_1_0 import *
 
@@ -15,7 +15,7 @@ WC - Channel 输入通道数量
 FH - Filter Height
 FW - Filter Width
 """
-class ConvKernal(object):
+class ConvKernal(WeightsBias_2_1):
     def __init__(self, output_c, input_c, filter_h, filter_w, init_method, optimizer_name, eta):
         self.KernalCount = output_c
         self.FilterCount = input_c
@@ -23,44 +23,28 @@ class ConvKernal(object):
         self.FilterWidth = filter_w
         self.init_method = init_method
         self.optimizer_name = optimizer_name
-        self.eta = eta
-        
-        tmp = str.format("_{0}_{1}_{2}_{3}_{4}_init.npy", 
-                        self.KernalCount, 
-                        self.FilterCount, 
-                        self.FilterHeight, 
-                        self.FilterWidth, 
-                        self.init_method.name)
-        self.w_initial_filename = "w" + tmp
-        self.b_initial_filename = "b" + tmp
-
-        tmp = str.format("_{0}_{1}_{2}_{3}_{4}_result.npy", 
-                        self.KernalCount, 
-                        self.FilterCount, 
-                        self.FilterHeight, 
-                        self.FilterWidth, 
-                        self.init_method.name)
-        self.w_result_filename = "w" + tmp
-        self.b_result_filename = "b" + tmp
+        self.learning_rate = eta
         self.KernalShape = (self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
 
-    def Initialize(self, create_new = False):
-        """
+    def Initialize(self, folder, name, create_new):
+        self.init_file_name = str.format(
+            "{0}/{1}_{2}_{3}_{4}_{5}_init.npz", 
+            folder, name, self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
+        self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)
         if create_new:
             self.CreateNew()
         else:
             self.LoadExistingParameters()
-        """
-        self.CreateNew()
+        # end if
+        self.CreateOptimizers()
 
-        self.__CreateOptimizers()
         self.dW = np.zeros(self.W.shape).astype(np.float32)
         self.dB = np.zeros(self.B.shape).astype(np.float32)
 
     def CreateNew(self):
         self.W = ConvKernal.InitialConvParameters(self.KernalShape, self.init_method)
         self.B = np.zeros((self.KernalCount, 1)).astype(np.float32)
-        #self.SaveInitialValue()
+        self.SaveInitialValue()
 
     def Rotate180(self):
         self.WT = np.zeros(self.W.shape).astype(np.float32)
@@ -76,14 +60,6 @@ class ConvKernal(object):
     def MeanGrads(self, m):
         self.dW = self.dW / m
         self.dB = self.dB / m
-
-    def Update(self):
-        self.W = self.oW.update(self.W, self.dW)
-        self.B = self.oB.update(self.B, self.dB)
-
-    def __CreateOptimizers(self):
-        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
 
     @staticmethod
     def InitialConvParameters(shape, method):

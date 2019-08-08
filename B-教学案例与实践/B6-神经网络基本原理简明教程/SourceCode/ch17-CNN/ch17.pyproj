@@ -34,7 +34,7 @@
     <Compile Include="MiniFramework\DataReader_2_0.py" />
     <Compile Include="MiniFramework\DropoutLayer.py" />
     <Compile Include="MiniFramework\EnumDef_6_0.py" />
-    <Compile Include="MiniFramework\FullConnectionLayer_2_0.py" />
+    <Compile Include="MiniFramework\FCLayer_2_0.py" />
     <Compile Include="MiniFramework\HyperParameters_4_2.py" />
     <Compile Include="MiniFramework\LossFunction_1_1.py" />
     <Compile Include="MiniFramework\NeuralNet_4_2.py" />
@@ -43,7 +43,7 @@
     <Compile Include="MiniFramework\WeightsBias_2_1.py" />
     <Compile Include="MnistConvNet.py" />
     <Compile Include="MnistConvModel.py" />
-    <Compile Include="MiniFramework\ConvWeightsBias.py">
+    <Compile Include="MiniFramework\ConvKernal.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniFramework\ConvLayer.py" />

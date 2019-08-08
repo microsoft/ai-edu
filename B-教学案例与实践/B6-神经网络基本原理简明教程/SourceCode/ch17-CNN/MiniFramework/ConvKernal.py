@@ -1,10 +1,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#import numpy as np
-import minpy.numpy as np
+import numpy as np
+#import minpy.numpy as np
 
-from MiniFramework.WeightsBias import *
+#from MiniFramework.WeightsBias_2_1 import *
+from MiniFramework.EnumDef_6_0 import *
+from MiniFramework.Optimizer_1_0 import *
 
 """
 Weights and Bias: 一个Weights可以包含多个卷积核Kernal，一个卷积核可以包含多个过滤器Filter
@@ -13,7 +15,7 @@ WC - Channel 输入通道数量
 FH - Filter Height
 FW - Filter Width
 """
-class ConvWeightsBias(WeightsBias):
+class ConvKernal(object):
     def __init__(self, output_c, input_c, filter_h, filter_w, init_method, optimizer_name, eta):
         self.KernalCount = output_c
         self.FilterCount = input_c
@@ -40,22 +42,25 @@ class ConvWeightsBias(WeightsBias):
                         self.init_method.name)
         self.w_result_filename = "w" + tmp
         self.b_result_filename = "b" + tmp
-        self.WeightsShape = (self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
+        self.KernalShape = (self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
 
     def Initialize(self, create_new = False):
+        """
         if create_new:
             self.CreateNew()
         else:
             self.LoadExistingParameters()
+        """
+        self.CreateNew()
 
         self.__CreateOptimizers()
         self.dW = np.zeros(self.W.shape).astype(np.float32)
         self.dB = np.zeros(self.B.shape).astype(np.float32)
 
     def CreateNew(self):
-        self.W = ConvWeightsBias.InitialConvParameters(self.WeightsShape, self.init_method)
+        self.W = ConvKernal.InitialConvParameters(self.KernalShape, self.init_method)
         self.B = np.zeros((self.KernalCount, 1)).astype(np.float32)
-        self.SaveInitialValue()
+        #self.SaveInitialValue()
 
     def Rotate180(self):
         self.WT = np.zeros(self.W.shape).astype(np.float32)
@@ -77,8 +82,8 @@ class ConvWeightsBias(WeightsBias):
         self.B = self.oB.update(self.B, self.dB)
 
     def __CreateOptimizers(self):
-        self.oW = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
-        self.oB = GDOptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oW = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
+        self.oB = OptimizerFactory.CreateOptimizer(self.eta, self.optimizer_name)
 
     @staticmethod
     def InitialConvParameters(shape, method):

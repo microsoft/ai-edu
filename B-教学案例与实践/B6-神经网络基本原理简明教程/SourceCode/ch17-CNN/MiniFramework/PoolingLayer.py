@@ -3,16 +3,12 @@
 
 #coding=utf-8
 
-#import numpy as np
-import minpy.numpy as np
+import numpy as np
+#import minpy.numpy as np
 
 from MiniFramework.Layer import *
-from MiniFramework.Activators import *
-from MiniFramework.ConvWeightsBias import *
-from MiniFramework.Parameters import *
 from MiniFramework.jit_utility import *
 from MiniFramework.EnumDef_6_0 import *
-
 
 class PoolingLayer(CLayer):
     def __init__(self,
@@ -34,7 +30,7 @@ class PoolingLayer(CLayer):
         self.output_shape = (self.num_input_channel, self.output_height, self.output_width)
         self.output_size = self.num_input_channel * self.output_height * self.output_width
         
-    def forward(self, x):
+    def forward(self, x, train=True):
         assert(x.ndim == 4)
         self.x = x
         self.batch_size = self.x.shape[0]

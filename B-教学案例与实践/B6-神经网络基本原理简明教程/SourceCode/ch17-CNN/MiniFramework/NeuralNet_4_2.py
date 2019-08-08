@@ -2,14 +2,14 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 
-#import numpy as np
-import minpy.numpy as np
+import numpy as np
+#import minpy.numpy as np
 import time
 import os
 import math
 
 from MiniFramework.Layer import *
-from MiniFramework.FullConnectionLayer_2_0 import *
+from MiniFramework.FCLayer_2_0 import *
 from MiniFramework.DropoutLayer import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.ClassificationLayer import *

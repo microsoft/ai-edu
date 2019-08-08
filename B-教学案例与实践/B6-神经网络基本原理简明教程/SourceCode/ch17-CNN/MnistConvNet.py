@@ -30,29 +30,41 @@ def model():
 
     net = NeuralNet_4_2(params, "mnist_conv")
 
-    c1 = ConvLayer((1,28,28), (8,3,3), (1,1), Relu(), params)
+    c1 = ConvLayer((1,28,28), (8,3,3), (1,1), params)
     net.add_layer(c1)
+    r1 = ActivatorLayer(Relu())
+    net.add_layer(r1, "relu1")
 
-    c2 = ConvLayer(c1.output_shape, (8,3,3), (1,1), Relu(), params)
+    c2 = ConvLayer(c1.output_shape, (8,3,3), (1,1), params)
     net.add_layer(c2)
+    r2 = ActivatorLayer(Relu())
+    net.add_layer(r2, "relu2")
 
     p1 = PoolingLayer(c2.output_shape, (2,2,), 2, PoolingTypes.MAX)
     net.add_layer(p1)
 
-    c3 = ConvLayer(p1.output_shape, (16,3,3), (1,1), Relu(), params)
+    c3 = ConvLayer(p1.output_shape, (16,3,3), (1,1), params)
     net.add_layer(c3)
+    r3 = ActivatorLayer(Relu())
+    net.add_layer(r3, "relu3")
 
-    c4 = ConvLayer(c3.output_shape, (16,3,3), (1,1), Relu(), params)
+    c4 = ConvLayer(c3.output_shape, (16,3,3), (1,1), params)
     net.add_layer(c4)
+    r4 = ActivatorLayer(Relu())
+    net.add_layer(r4, "relu4")
 
     p2 = PoolingLayer(c4.output_shape, (2,2,), 2, PoolingTypes.MAX)
     net.add_layer(p2)
 
-    f1 = FcLayer_2_0(p2.output_size, 32, Relu(), params)
+    f1 = FcLayer_2_0(p2.output_size, 32, params)
     net.add_layer(f1)
+    r5 = ActivatorLayer(Relu())
+    net.add_layer(r5, "relu5")
 
-    f2 = FcLayer_2_0(f1.output_size, 10, Softmax(), params)
+    f2 = FcLayer_2_0(f1.output_size, 10, params)
     net.add_layer(f2)
+    s1 = ClassificationLayer(Softmax())
+    net.add_layer(s1)
 
     net.train(dataReader, checkpoint=0.01, need_test=True)
     net.ShowLossHistory(XCoordinate.Iteration)

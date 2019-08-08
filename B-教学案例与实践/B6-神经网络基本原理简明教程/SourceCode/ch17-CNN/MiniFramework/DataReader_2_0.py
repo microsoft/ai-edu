@@ -5,8 +5,8 @@
 Version 2.0
 """
 
-#import numpy as np
-import minpy.numpy as np
+import numpy as np
+#import minpy.numpy as np
 from pathlib import Path
 
 from MiniFramework.EnumDef_6_0 import *

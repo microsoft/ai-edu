@@ -180,7 +180,8 @@ def expand_delta_map(dZ, batch_size, input_c, input_h, input_w, output_h, output
         # 假设如果stride等于1时，卷积后输出的图片大小应该是多少，然后根据这个尺寸调整delta_z的大小
         (expand_h, expand_w) = calculate_output_size(input_h, input_w, filter_h, filter_w, padding, 1)
         # 初始化一个0数组，四维
-        dZ_stride_1 = np.zeros((batch_size, input_c, expand_h, expand_w)).astype(np.float32)
+        #dZ_stride_1 = np.zeros((batch_size, input_c, expand_h, expand_w)).astype(np.float32)
+        dZ_stride_1 = np.zeros((batch_size, input_c, expand_h, expand_w))
         # 把误差值填到当stride=1时的对应位置上
         for bs in range(batch_size):
             for ic in range(input_c):
@@ -202,7 +203,8 @@ def calcalate_weights_grad(x, dz, batch_size, output_c, input_c, filter_h, filte
         for oc in range(output_c):   # == kernal count
             for ic in range(input_c):    # == filter count
                 w_grad = np.zeros((filter_h, filter_w)).astype(np.float32)
-                conv2d(x[bs,ic], dz[bs,oc], 0, w_grad)
+                #w_grad = np.zeros((filter_h, filter_w))
+                jit_conv_2d(x[bs,ic], dz[bs,oc], 0, w_grad)
                 dW[oc,ic] += w_grad
             #end ic
             dB[oc] += dz[bs,oc].sum()
@@ -216,8 +218,9 @@ def calculate_delta_out(dz, rot_weights, batch_size, num_input_channel, num_outp
     for bs in range(batch_size):
         for oc in range(num_output_channel):    # == kernal count
             delta_per_input = np.zeros((input_height, input_width)).astype(np.float32)
+            #delta_per_input = np.zeros((input_height, input_width))
             for ic in range(num_input_channel): # == filter count
-                conv2d(dz[bs,oc], rot_weights[oc,ic], 0, delta_per_input)
+                jit_conv_2d(dz[bs,oc], rot_weights[oc,ic], 0, delta_per_input)
                 delta_out[bs,ic] += delta_per_input
             #END IC
         #end oc
@@ -232,6 +235,7 @@ def im2col2(input_data, filter_h, filter_w, stride=1, pad=0):
     img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
     img = input_data
     col = np.zeros((N, C, filter_h, filter_w, out_h, out_w)).astype(np.float32)
+    #col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
     col = im2col3(img, col, N, filter_h, filter_w, out_h, out_w, stride)
     col = col.transpose(0, 4, 5, 1, 2, 3).reshape(N*out_h*out_w, -1)
     return col
@@ -256,6 +260,7 @@ def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
     img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
     img = input_data
     col = np.zeros((N, C, filter_h, filter_w, out_h, out_w)).astype(np.float32)
+    #col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
 
     for i in range(filter_h):
         i_max = i + stride*out_h
@@ -273,6 +278,7 @@ def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
     out_w = (W + 2*pad - filter_w)//stride + 1
     col = col.reshape(N, out_h, out_w, C, filter_h, filter_w).transpose(0, 3, 4, 5, 1, 2)
     img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1)).astype(np.float32)
+    #img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1))
     for i in range(filter_h):
         i_max = i + stride*out_h
         for j in range(filter_w):

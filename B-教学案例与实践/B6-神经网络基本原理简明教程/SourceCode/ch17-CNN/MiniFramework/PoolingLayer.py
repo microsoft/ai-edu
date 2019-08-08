@@ -4,20 +4,11 @@
 #coding=utf-8
 
 import numpy as np
-from enum import Enum
-
+#import minpy.numpy as np
 
 from MiniFramework.Layer import *
-from MiniFramework.Activators import *
-from MiniFramework.ConvWeightsBias import *
-from MiniFramework.Parameters import *
 from MiniFramework.jit_utility import *
-
-
-class PoolingTypes(Enum):
-    MAX = 0,
-    MEAN = 1,
-
+from MiniFramework.EnumDef_6_0 import *
 
 class PoolingLayer(CLayer):
     def __init__(self,
@@ -39,7 +30,10 @@ class PoolingLayer(CLayer):
         self.output_shape = (self.num_input_channel, self.output_height, self.output_width)
         self.output_size = self.num_input_channel * self.output_height * self.output_width
         
-    def forward(self, x):
+    def initialize(self, folder, name):
+        self.init_file_name = str.format("{0}/{1}_init.npz", folder, name)
+
+    def forward(self, x, train=True):
         assert(x.ndim == 4)
         self.x = x
         self.batch_size = self.x.shape[0]
@@ -53,10 +47,8 @@ class PoolingLayer(CLayer):
         delta_out = max_pool_backward(self.x, delta_in, self.batch_size, self.num_input_channel, self.output_height, self.output_width, self.pool_height, self.pool_width, self.stride)
         return delta_out
 
-    def save_parameters(self, name):
-        np.save(name + "_type", self.pooling_type)
+    def save_parameters(self):
+        np.save(self.init_file_name, self.pooling_type)
 
-    def load_parameters(self, name):
-        self.mode = np.load(name+"_type.npy")
-
-
+    def load_parameters(self):
+        self.mode = np.load(self.init_file_name)

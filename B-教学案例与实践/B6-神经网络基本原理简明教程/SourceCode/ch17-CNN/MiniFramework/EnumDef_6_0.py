@@ -6,6 +6,8 @@ Version 4.1
 what's new:
 - add regularization enum
 """
+#import numpy as np
+import minpy.numpy as np
 
 from enum import Enum
 

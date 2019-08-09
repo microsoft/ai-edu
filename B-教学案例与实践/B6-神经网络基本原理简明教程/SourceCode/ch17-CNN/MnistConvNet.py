@@ -9,8 +9,8 @@ from ExtendedDataReader.MnistImageDataReader import *
 
 def LoadData(num_output):
     mdr = MnistImageDataReader("image")
-    mdr.ReadLessData(10000)
-    #mdr.ReadData()
+    #mdr.ReadLessData(10000)
+    mdr.ReadData()
     mdr.NormalizeX()
     mdr.NormalizeY(NetType.MultipleClassifier, base=0)
     mdr.Shuffle()
@@ -22,7 +22,7 @@ def model():
     dataReader = LoadData(num_output)
 
     max_epoch = 1
-    batch_size = 32
+    batch_size = 128
     learning_rate = 0.1
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,

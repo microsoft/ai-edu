@@ -1,26 +1,23 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-
-import numpy as np
-#import minpy.numpy as np
 import time
 import os
 import math
 
+from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 from MiniFramework.FCLayer_2_0 import *
 from MiniFramework.DropoutLayer import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.ClassificationLayer import *
-from MiniFramework.ConvLayer_CPU import *
+#from MiniFramework.ConvLayer_CPU import *
 from MiniFramework.ConvLayer_GPU import *
 from MiniFramework.PoolingLayer import *
-
 from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.TrainingHistory_3_0 import *
 from MiniFramework.LossFunction_1_1 import *
-from MiniFramework.EnumDef_6_0 import *
+
 from MiniFramework.DataReader_2_0 import *
 
 class NeuralNet_4_2(object):

@@ -1,11 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import numpy as np
-#import minpy.numpy as np
-
-from MiniFramework.WeightsBias_2_1 import *
+import math
 from MiniFramework.EnumDef_6_0 import *
+from MiniFramework.WeightsBias_2_1 import *
 from MiniFramework.Optimizer_1_0 import *
 
 """
@@ -31,20 +29,23 @@ class ConvKernal(WeightsBias_2_1):
             "{0}/{1}_{2}_{3}_{4}_{5}_init.npz", 
             folder, name, self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
         self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)
+        self.CreateNew()
+        """
         if create_new:
             self.CreateNew()
         else:
             self.LoadExistingParameters()
+        """
         # end if
         self.CreateOptimizers()
 
-        self.dW = np.zeros(self.W.shape).astype(np.float32)
-        self.dB = np.zeros(self.B.shape).astype(np.float32)
+        self.dW = np.zeros(self.W.shape)
+        self.dB = np.zeros(self.B.shape)
 
     def CreateNew(self):
         self.W = ConvKernal.InitialConvParameters(self.KernalShape, self.init_method)
-        self.B = np.zeros((self.KernalCount, 1)).astype(np.float32)
-        self.SaveInitialValue()
+        self.B = np.zeros((self.KernalCount, 1))
+        #self.SaveInitialValue()
 
     def Rotate180(self):
         self.WT = np.zeros(self.W.shape).astype(np.float32)
@@ -74,8 +75,7 @@ class ConvKernal(WeightsBias_2_1):
         elif method == InitialMethod.MSRA:
             W = np.random.normal(0, np.sqrt(2/num_input*num_output), size=shape).astype(np.float32)
         elif method == InitialMethod.Xavier:
-            W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
-                                  np.sqrt(6/(num_output+num_input)),
-                                  size=shape).astype(np.float32)
+            t = math.sqrt(6/(num_output+num_input))
+            W = np.random.uniform(-t, t, shape)
         return W
 

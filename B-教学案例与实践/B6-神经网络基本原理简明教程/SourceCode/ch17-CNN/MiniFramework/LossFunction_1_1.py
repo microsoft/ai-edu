@@ -5,9 +5,6 @@
 Version 1.1
 """
 
-import numpy as np
-#import minpy.numpy as np
-
 from MiniFramework.EnumDef_6_0 import *
 
 class LossFunction_1_1(object):

@@ -9,8 +9,8 @@ from ExtendedDataReader.MnistImageDataReader import *
 
 def LoadData(num_output):
     mdr = MnistImageDataReader("image")
-    #mdr.ReadLessData(10000)
-    mdr.ReadData()
+    mdr.ReadLessData(1000)
+    #mdr.ReadData()
     mdr.NormalizeX()
     mdr.NormalizeY(NetType.MultipleClassifier, base=0)
     mdr.Shuffle()

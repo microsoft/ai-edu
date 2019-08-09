@@ -69,11 +69,11 @@ class ConvKernal(WeightsBias_2_1):
         num_output = shape[3]
         
         if method == InitialMethod.Zero:
-            W = np.zeros(shape).astype(np.float32)
+            W = np.zeros(shape)
         elif method == InitialMethod.Normal:
-            W = np.random.normal(size=shape).astype(np.float32)
+            W = np.random.normal(shape)
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_input*num_output), size=shape).astype(np.float32)
+            W = np.random.normal(0, np.sqrt(2/num_input*num_output), shape)
         elif method == InitialMethod.Xavier:
             t = math.sqrt(6/(num_output+num_input))
             W = np.random.uniform(-t, t, shape)

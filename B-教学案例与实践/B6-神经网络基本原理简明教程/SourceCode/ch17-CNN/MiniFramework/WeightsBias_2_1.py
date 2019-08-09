@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import math
 from pathlib import Path
 
 from MiniFramework.EnumDef_6_0 import *
@@ -17,19 +18,22 @@ class WeightsBias_2_1(object):
     def Initialize(self, folder, name, create_new):
         self.init_file_name = str.format("{0}/{1}_{2}_{3}_init.npz", folder, name, self.num_input, self.num_output)
         self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)
+        self.CreateNew()
+        """
         if create_new:
             self.CreateNew()
         else:
             self.LoadExistingParameters()
+        """
         # end if
         self.CreateOptimizers()
 
-        self.dW = np.zeros(self.W.shape).astype(np.float32)
-        self.dB = np.zeros(self.B.shape).astype(np.float32)
+        self.dW = np.zeros(self.W.shape)
+        self.dB = np.zeros(self.B.shape)
 
     def CreateNew(self):
         self.W, self.B = WeightsBias_2_1.InitialParameters(self.num_input, self.num_output, self.init_method)
-        self.SaveInitialValue()
+        #self.SaveInitialValue()
         
     def LoadExistingParameters(self):
         w_file = Path(self.init_file_name)
@@ -72,18 +76,14 @@ class WeightsBias_2_1(object):
     @staticmethod
     def InitialParameters(num_input, num_output, method):
         if method == InitialMethod.Zero:
-            # zero
-            W = np.zeros((num_input, num_output)).astype(np.float32)
+            W = np.zeros((num_input, num_output))
         elif method == InitialMethod.Normal:
-            # normalize
-            W = np.random.normal(size=(num_input, num_output)).astype(np.float32)
+            W = np.random.normal(size=(num_input, num_output))
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_output), size=(num_input, num_output)).astype(np.float32)
+            W = np.random.normal(0, np.sqrt(2/num_output), size=(num_input, num_output))
         elif method == InitialMethod.Xavier:
-            # xavier
-            W = np.random.uniform(-np.sqrt(6/(num_output+num_input)),
-                                  np.sqrt(6/(num_output+num_input)),
-                                  size=(num_input, num_output)).astype(np.float32)
+            t = math.sqrt(6/(num_output+num_input))
+            W = np.random.uniform(-t, t, (num_input, num_output))
         # end if
-        B = np.zeros((1, num_output)).astype(np.float32)
+        B = np.zeros((1, num_output))
         return W, B

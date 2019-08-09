@@ -52,5 +52,5 @@ class LossFunction_1_1(object):
         p2 =  np.multiply(Y, p1)
         LOSS = np.sum(-p2) 
         loss = LOSS / count
-        return loss
+        return loss[0]
     # end def

@@ -1,9 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-# coding: utf-8
-
-import numpy as np
 import struct
 from MiniFramework.DataReader_2_0 import *
 
@@ -78,7 +75,7 @@ class MnistImageDataReader(DataReader_2_0):
             bin_data = f.read(image_size)   # read 784 byte data for one time
             unpacked_data = struct.unpack(fmt, bin_data)
             array_data = np.array(unpacked_data)
-            array_data2 = array_data.reshape((1, num_rows, num_cols)).astype(np.float32)
+            array_data2 = array_data.reshape((1, num_rows, num_cols))
             image_data[i] = array_data2
         # end for
         f.close()

@@ -1,9 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#coding=utf-8
-
-import numpy as np
+from MiniFramework.EnumDef_6_0 import *
 import numba as nb
 from numba import float32, int32
 
@@ -31,9 +29,9 @@ def jit_conv_kernel2(x, w, rs, batch_size, num_input_channel, input_height, inpu
                                 rs[i, q, j, p] += x[i, r, j+s, p+t] * w[q, r, s, t]
     return rs
 
-@nb.jit(nopython=True)
+#@nb.jit(nopython=True)
 def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
-    z = np.zeros((batch_size, input_c, output_h, output_w)).astype(np.float32)
+    z = np.zeros((batch_size, input_c, output_h, output_w))
     for b in range(batch_size):
         for c in range(input_c):
             for i in range(output_h):
@@ -43,18 +41,17 @@ def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w,
                     j_start = j * pool_stride
                     j_end = j_start + pool_w
                     target_array = x[b,c,i_start:i_end, j_start:j_end]
-                    z[b,c,i,j] = target_array.max()
+                    t = np.max(target_array)
+                    if t.ndim == 0:
+                        z[b,c,i,j] = t
+                    elif t.ndim == 2:
+                        z[b,c,i,j] = t[0,0]
 
-                    #end if
-                #end for
-            #end for
-        #end for
-    #end for
     return z
 
-@nb.jit(nopython=True)
+#@nb.jit(nopython=True)
 def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
-    delta_out = np.zeros(x.shape).astype(np.float32)
+    delta_out = np.zeros(x.shape)
     for b in range(batch_size):
         for c in range(input_c):
             for i in range(output_h):
@@ -65,14 +62,10 @@ def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool
                     j_end = j_start + pool_w
                     m,n = pool_get_max_index(x[b,c], i_start, i_end, j_start, j_end)
                     delta_out[b,c,m,n] = delta_in[b,c,i,j]
-                    #end if
-                #end for
-            #end for
-        #end for
-    #end for
+
     return delta_out
 
-@nb.jit(nopython=True)
+#@nb.jit(nopython=True)
 def pool_get_max_index(input, i_start, i_end, j_start, j_end):
     assert(input.ndim == 2)
     max_i = i_start

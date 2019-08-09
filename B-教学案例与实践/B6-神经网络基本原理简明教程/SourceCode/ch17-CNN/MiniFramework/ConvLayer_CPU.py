@@ -3,6 +3,7 @@
 
 import timeit
 
+from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 from MiniFramework.ConvKernal import *
 from MiniFramework.jit_utility import *
@@ -83,7 +84,8 @@ class ConvLayer_CPU(CLayer):
 
         # 计算本层输出到下一层的误差矩阵
         delta_out = self._calculate_delta_out(dz_padded, flag)
-        return delta_out
+        #return delta_out
+        return delta_out, self.Kernal.dW, self.Kernal.dB
 
     # 用输入数据乘以回传入的误差矩阵,得到卷积核的梯度矩阵
     def _calculate_weightsbias_grad(self, dz):

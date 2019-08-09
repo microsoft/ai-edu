@@ -5,13 +5,12 @@
 
 import numpy as np
 #import minpy.numpy as np
-import timeit
 
 from MiniFramework.Layer import *
 from MiniFramework.ConvKernal import *
 from MiniFramework.jit_utility import *
 
-class ConvLayer(CLayer):
+class ConvLayer_GPU(CLayer):
     # define the number of input and output channel, also the filter size
     def __init__(self, 
                  input_shape,       # (InputChannelCount, H, W)
@@ -47,8 +46,35 @@ class ConvLayer(CLayer):
     W：图片宽度（比如224）
     四维卷积操作
     """
-    
+
     def forward(self, x, train=True):
+        self.x = x
+        assert(self.x.shape[1] == self.num_input_channel)
+        assert(self.x.shape[2] == self.input_height)
+        assert(self.x.shape[3] == self.input_width)
+        self.batch_size = self.x.shape[0]
+        FN, C, FH, FW = self.Kernal.W.shape
+        N, C, H, W = x.shape
+        out_h = 1 + int((H + 2 * self.padding - FH) / self.stride)
+        out_w = 1 + int((W + 2 * self.padding - FW) / self.stride)
+        self.col_x = im2col(x, FH, FW, self.stride, self.padding)
+        self.col_w = self.Kernal.W.reshape(FN, -1).T
+        out = np.dot(self.col_x, self.col_w) + self.Kernal.B.reshape(-1,FN)
+        self.z = out.reshape(N, out_h, out_w, -1).transpose(0, 3, 1, 2) 
+        return self.z
+
+    def backward(self, delta_in, layer_idx):
+        FN, C, FH, FW = self.Kernal.W.shape
+        dout = delta_in.transpose(0,2,3,1).reshape(-1, FN)
+        self.Kernal.dB = np.sum(dout, axis=0) / self.batch_size
+        dW = np.dot(self.col_x.T, dout)
+        self.Kernal.dW = dW.transpose(1, 0).reshape(FN, C, FH, FW) / self.batch_size
+        dcol = np.dot(dout, self.col_w.T)
+        delta_out = col2im(dcol, self.x.shape, FH, FW, self.stride, self.padding)
+        #return delta_out, self.Kernal.dW, self.Kernal.dB
+        return delta_out
+    
+    def forward_numba(self, x, train=True):
         assert(x.ndim == 4)
         self.x = x
         assert(self.x.shape[1] == self.num_input_channel)
@@ -65,22 +91,8 @@ class ConvLayer(CLayer):
         self.z = jit_conv_4d(self.padded, self.Kernal.W, self.Kernal.B, self.output_height, self.output_width, self.stride)
         return self.z
 
-    def forward_fast(self, x):
-        FN, C, FH, FW = self.Kernal.W.shape
-        N, C, H, W = x.shape
-        out_h = 1 + int((H + 2 * self.padding - FH) / self.stride)
-        out_w = 1 + int((W + 2 * self.padding - FW) / self.stride)
-        col_x = im2col2(x, FH, FW, self.stride, self.padding)
-        col_w = self.Kernal.W.reshape(FN, -1).T
-        out = np.dot(col_x, col_w) + self.Kernal.B.reshape(-1,FN)
-        self.z = out.reshape(N, out_h, out_w, -1).transpose(0, 3, 1, 2) 
-        self.x = x
-        self.col_x = col_x
-        self.col_w = col_w
-        return self.z
-
     # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
-    def backward(self, delta_in, flag):
+    def backward_numba(self, delta_in, flag):
         assert(delta_in.ndim == 4)
         assert(delta_in.shape == self.z.shape)
         
@@ -101,6 +113,7 @@ class ConvLayer(CLayer):
 
         # 计算本层输出到下一层的误差矩阵
         delta_out = self._calculate_delta_out(dz_padded, flag)
+        #return delta_out, self.Kernal.dW, self.Kernal.dB
         return delta_out
 
     # 用输入数据乘以回传入的误差矩阵,得到卷积核的梯度矩阵
@@ -120,7 +133,7 @@ class ConvLayer(CLayer):
                                 self.Kernal.dW, self.Kernal.dB)
 
         self.Kernal.MeanGrads(self.batch_size)
-
+        
         
     # 用输入误差矩阵乘以（旋转180度后的）卷积核
     def _calculate_delta_out(self, dz, layer_idx):
@@ -150,35 +163,103 @@ class ConvLayer(CLayer):
 
 #end class
 
-def conv1():
-    r1 = cl.forward(x)
-    return r1
+def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
+    N, C, H, W = input_data.shape
+    out_h = (H + 2*pad - filter_h)//stride + 1
+    out_w = (W + 2*pad - filter_w)//stride + 1
+    img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
+    col = np.zeros((N, C, filter_h, filter_w, out_h, out_w)).astype(np.float32)
+    #col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
 
-def conv2():
-    r2 = cl.forward_fast(x)
-    return r2
+    for i in range(filter_h):
+        i_max = i + stride*out_h
+        for j in range(filter_w):
+            j_max = j + stride*out_w
+            col[:, :, i, j, :, :] = img[:, :, i:i_max:stride, j:j_max:stride]
+        #end for
+    #end for
+    col = col.transpose(0, 4, 5, 1, 2, 3).reshape(N*out_h*out_w, -1)
+    return col
 
+def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
+    N, C, H, W = input_shape
+    out_h = (H + 2*pad - filter_h)//stride + 1
+    out_w = (W + 2*pad - filter_w)//stride + 1
+    col = col.reshape(N, out_h, out_w, C, filter_h, filter_w).transpose(0, 3, 4, 5, 1, 2)
+    img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1)).astype(np.float32)
+    #img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1))
+    for i in range(filter_h):
+        i_max = i + stride*out_h
+        for j in range(filter_w):
+            j_max = j + stride*out_w
+            img[:, :, i:i_max:stride, j:j_max:stride] += col[:, :, i, j, :, :]
+        #end for
+    #end for
+    return img[:, :, pad:H + pad, pad:W + pad]
+
+from MiniFramework.HyperParameters_4_2 import *
+import time
 
 if __name__ == '__main__':
     
-    params = CParameters(0.1, 1, 64, 0.1, LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD)
+    batch_size = 2
+
+    params = HyperParameters_4_2(
+        0.1, 1, batch_size,
+        net_type=NetType.MultipleClassifier,
+        init_method=InitialMethod.Xavier)
+
+    stride = 2
+    padding = 1
+    fh = 5
+    fw = 5
+    input_channel = 3
+    output_channel = 4
+    iw = 28
+    ih = 28
 
     # 64 个 3 x 28 x 28 的图像输入（模拟 mnist）
-    x = np.random.randn(1024, 3, 28, 28)
-    cl = ConvLayer((3,28,28,), (4,5,5), (1, 0), Relu(), params)
+    c1 = ConvLayer_GPU((input_channel,iw,ih), (output_channel,fh,fw), (stride, padding), params)
+    c1.initialize("test", "test", False)
+    x = np.random.randn(batch_size, input_channel, iw, ih)
+    f1 = c1.forward_numba(x)
+    delta_in = np.ones((f1.shape))
+    b1, dw1, db1 = c1.backward_numba(delta_in, 1)
 
-    r1 = conv1()
-    r2 = conv2()
+    c2 = ConvLayer_GPU((input_channel,iw,ih), (output_channel,fh,fw), (stride, padding), params)
+    c2.initialize("test", "test", False)
+    f2 = c2.forward(x)
+    delta_in = np.ones((f2.shape))
+    b2, dw2, db2 = c2.backward(delta_in, 1)
+    
+    print(np.allclose(f1, f2, atol=1e-5))
+    #print(f1)
+    #print(f2)
 
-    print(np.allclose(r1, r2))
-    print(r1.sum(), r2.sum())
+    print(np.allclose(b1, b2, atol=1e-4))
+    #print(b1)
+    #print(b2)
 
-    num=10
-    t4 = timeit.timeit('conv1()','from __main__ import conv1', number=num)
-    print("numba:", t4, t4/num)
+    print(np.allclose(dw1, dw2, atol=1e-4))
+    #print(dw1)
+    #print(dw2)
 
-    t5 = timeit.timeit('conv2()','from __main__ import conv2', number=num)
-    print("im2col:", t5, t5/num)
+    print(np.allclose(db1, db2, atol=1e-4))
+    #print(db1)
+    #print(db2)
 
 
+    exit()
 
+    s = time.time()
+    for i in range(10):
+        r1 = conv1()
+    e1 = time.time()
+    print("numba:", e1 - s)
+
+    for i in range(10):
+        r2 = conv2()
+    e2 = time.time()
+    print("im2col:", e2 - e1)
+    print(np.allclose(r1, r2, atol=1e-5))
+    print(np.allclose(r1, r2, rtol=1e-3))

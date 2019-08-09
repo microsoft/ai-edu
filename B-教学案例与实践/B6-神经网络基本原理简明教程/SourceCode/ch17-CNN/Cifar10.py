@@ -13,7 +13,7 @@ from MiniFramework.LossFunction import *
 from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.Activators import *
-from MiniFramework.ConvLayer import *
+from MiniFramework.ConvLayer_CPU import *
 from MiniFramework.PoolingLayer import *
 
 
@@ -50,13 +50,13 @@ def net():
 
     net = NeuralNet(params)
 
-    c1 = ConvLayer((3,32,32), (32,3,3), (1,1), Relu(), params)
+    c1 = ConvLayer_CPU((3,32,32), (32,3,3), (1,1), Relu(), params)
     net.add_layer(c1, "c1")
 
     p1 = PoolingLayer(c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
     net.add_layer(p1, "p1")
 
-    c2 = ConvLayer(p1.output_shape, (64,3,3), (1,1), Relu(), params)
+    c2 = ConvLayer_CPU(p1.output_shape, (64,3,3), (1,1), Relu(), params)
     net.add_layer(c2, "c2")
 
     p2 = PoolingLayer(c2.output_shape, (2,2,), 2, PoolingTypes.MAX)

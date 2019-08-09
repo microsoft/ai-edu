@@ -30,21 +30,21 @@ def model():
 
     net = NeuralNet_4_2(params, "mnist_deep_conv")
     
-    c1 = ConvLayer((1,28,28), (16,3,3), (1,1), params)
+    c1 = ConvLayer_CPU((1,28,28), (16,3,3), (1,1), params)
     net.add_layer(c1, "c1")
     r1 = ActivatorLayer(Relu())
     net.add_layer(r1, "relu1")
     p1 = PoolingLayer(c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
     net.add_layer(p1, "p1") 
     
-    c2 = ConvLayer(p1.output_shape, (32,3,3), (1,1), params)
+    c2 = ConvLayer_CPU(p1.output_shape, (32,3,3), (1,1), params)
     net.add_layer(c2, "c2")
     r2 = ActivatorLayer(Relu())
     net.add_layer(r2, "relu2")
     p2 = PoolingLayer(c2.output_shape, (2,2,), 2, PoolingTypes.MAX)
     net.add_layer(p2, "p2") 
   
-    c3 = ConvLayer(p2.output_shape, (64,3,3), (1,1), params)
+    c3 = ConvLayer_CPU(p2.output_shape, (64,3,3), (1,1), params)
     net.add_layer(c3, "c3")
     r3 = ActivatorLayer(Relu())
     net.add_layer(r3, "relu3")

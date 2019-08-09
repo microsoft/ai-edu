@@ -9,7 +9,8 @@ from ExtendedDataReader.MnistImageDataReader import *
 
 def LoadData(num_output):
     mdr = MnistImageDataReader("image")
-    mdr.ReadData()
+    mdr.ReadLessData(10000)
+    #mdr.ReadData()
     mdr.NormalizeX()
     mdr.NormalizeY(NetType.MultipleClassifier, base=0)
     mdr.Shuffle()
@@ -21,7 +22,7 @@ def model():
     dataReader = LoadData(num_output)
 
     max_epoch = 1
-    batch_size = 128
+    batch_size = 32
     learning_rate = 0.1
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
@@ -30,18 +31,18 @@ def model():
 
     net = NeuralNet_4_2(params, "mnist_conv")
     
-    c1 = ConvLayer((1,28,28), (8,3,3), (1,1), params)
+    c1 = ConvLayer_GPU((1,28,28), (8,3,3), (1,1), params)
     net.add_layer(c1, "c1")
     r1 = ActivatorLayer(Relu())
     net.add_layer(r1, "relu1")
-    p1 = PoolingLayer(c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
+    p1 = PoolingLayer(c1.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p1, "p1") 
   
-    c3 = ConvLayer(p1.output_shape, (16,3,3), (1,1), params)
+    c3 = ConvLayer_GPU(p1.output_shape, (16,3,3), (1,1), params)
     net.add_layer(c3, "c3")
     r3 = ActivatorLayer(Relu())
     net.add_layer(r3, "relu3")
-    p2 = PoolingLayer(c3.output_shape, (2,2,), 2, PoolingTypes.MAX)
+    p2 = PoolingLayer(c3.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p2, "p2")  
 
     f1 = FcLayer_2_0(p2.output_size, 32, params)

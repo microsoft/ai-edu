@@ -12,7 +12,7 @@ from MiniFramework.LossFunction import *
 from MiniFramework.Parameters import *
 from MiniFramework.WeightsBias import *
 from MiniFramework.Activators import *
-from MiniFramework.ConvLayer import *
+from MiniFramework.ConvLayer_CPU import *
 from MiniFramework.PoolingLayer import *
 
 from MnistImageReader import *
@@ -77,11 +77,11 @@ def CalAccuracy(a, y_onehot, y_label):
 
 class Model(object):
     def __init__(self, param):
-        self.c1 = ConvLayer((1,28,28), (4,3,3), (2,2), Relu(), param)
+        self.c1 = ConvLayer_CPU((1,28,28), (4,3,3), (2,2), Relu(), param)
         # 4x24x24
         self.p1 = PoolingLayer(self.c1.output_shape, (2,2,), 2, PoolingTypes.MAX)
         # 4x12x12
-        #self.c2 = ConvLayer(self.p1.output_shape, (8,3,3), (1,0), Relu(), param)
+        #self.c2 = ConvLayer_CPU(self.p1.output_shape, (8,3,3), (1,0), Relu(), param)
         # 4x10x10
         #self.p2 = PoolingLayer(self.c2.output_shape, (2,2,), 2, PoolingTypes.MAX)
         # 4x5x5

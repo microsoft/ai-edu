@@ -13,7 +13,8 @@ from MiniFramework.FCLayer_2_0 import *
 from MiniFramework.DropoutLayer import *
 from MiniFramework.ActivatorLayer import *
 from MiniFramework.ClassificationLayer import *
-from MiniFramework.ConvLayer import *
+from MiniFramework.ConvLayer_CPU import *
+from MiniFramework.ConvLayer_GPU import *
 from MiniFramework.PoolingLayer import *
 
 from MiniFramework.HyperParameters_4_2 import *

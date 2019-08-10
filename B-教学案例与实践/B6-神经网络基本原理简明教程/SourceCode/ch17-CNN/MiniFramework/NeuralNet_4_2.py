@@ -9,10 +9,10 @@ from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 from MiniFramework.FCLayer_2_0 import *
 from MiniFramework.DropoutLayer import *
-from MiniFramework.ActivatorLayer import *
+from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 #from MiniFramework.ConvLayer_CPU import *
-from MiniFramework.ConvLayer_GPU import *
+from MiniFramework.ConvLayer import *
 from MiniFramework.PoolingLayer import *
 from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.TrainingHistory_3_0 import *
@@ -180,17 +180,17 @@ class NeuralNet_4_2(object):
 
         # calculate train loss
         self.__forward(train_x, train=False)
-        loss_train = self.lossFunc.CheckLoss(self.output, train_y)
+        loss_train, accuracy_train = self.lossFunc.CheckLoss(self.output, train_y)
         loss_train = loss_train + regular_cost / train_x.shape[0]
-        accuracy_train = self.__CalAccuracy(self.output, train_y)
+        #accuracy_train = self.__CalAccuracy(self.output, train_y)
         print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
 
         # calculate validation loss
         vld_x, vld_y = dataReader.GetValidationSet()
         self.__forward(vld_x, train=False)
-        loss_vld = self.lossFunc.CheckLoss(self.output, vld_y)
+        loss_vld, accuracy_vld = self.lossFunc.CheckLoss(self.output, vld_y)
         loss_vld = loss_vld + regular_cost / vld_x.shape[0]
-        accuracy_vld = self.__CalAccuracy(self.output, vld_y)
+        #accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
         # end if
@@ -203,28 +203,8 @@ class NeuralNet_4_2(object):
     def Test(self, dataReader):
         x,y = dataReader.GetTestSet()
         self.__forward(x, train=False)
-        correct = self.__CalAccuracy(self.output, y)
+        _, correct = self.lossFunc.CheckLoss(self.output, y)
         return correct
-
-    def __CalAccuracy(self, a, y):
-        assert(a.shape == y.shape)
-        m = a.shape[0]
-        if self.hp.net_type == NetType.Fitting:
-            var = np.var(y)
-            mse = np.sum((a-y)**2)/a.shape[0]
-            r2 = 1 - mse / var
-            return r2
-        elif self.hp.net_type == NetType.BinaryClassifier:
-            b = np.round(a)
-            r = (b == y)
-            correct = np.sum(r)
-            return correct/m
-        elif self.hp.net_type == NetType.MultipleClassifier:
-            ra = np.argmax(a, axis=1)
-            ry = np.argmax(y, axis=1)
-            r = (ra == ry)
-            correct = np.sum(r)
-            return correct/m
 
     # save weights value when got low loss than before
     def save_parameters(self):

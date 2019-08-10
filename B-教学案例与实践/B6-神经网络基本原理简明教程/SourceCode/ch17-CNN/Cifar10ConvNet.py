@@ -2,13 +2,12 @@
 # Licensed under the MIT license.  See LICENSE file in the project root for full license information.
 
 import time
-import matplotlib.pyplot as plt
 
 from MiniFramework.NeuralNet_4_2 import *
-from ExtendedDataReader.MnistImageDataReader import *
+from ExtendedDataReader.CifarImageDataReader import *
 
 def LoadData(num_output):
-    mdr = MnistImageDataReader("image")
+    mdr = CifarImageDataReader("image")
     #mdr.ReadLessData(1000)
     mdr.ReadData()
     mdr.NormalizeX()

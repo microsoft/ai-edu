@@ -1,14 +1,13 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import timeit
-
 from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 from MiniFramework.ConvKernal import *
+from MiniFramework.utility import *
 from MiniFramework.jit_utility import *
 
-class ConvLayer_CPU(CLayer):
+class ConvLayer(CLayer):
     # define the number of input and output channel, also the filter size
     def __init__(self, 
                  input_shape,       # (InputChannelCount, H, W)
@@ -30,22 +29,44 @@ class ConvLayer_CPU(CLayer):
             self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width, 
             self.hp.init_method, self.hp.optimizer_name, self.hp.eta)
         self.Kernal.Initialize(folder, name, create_new)
-        (self.output_height, self.output_width) = calculate_output_size(
+        (self.output_height, self.output_width) = ConvLayer.calculate_output_size(
             self.input_height, self.input_width, 
             self.filter_height, self.filter_width, 
             self.padding, self.stride)
         self.output_shape = (self.num_output_channel, self.output_height, self.output_height)
 
-    """
-    输入数据
-    N：样本图片数量（比如一次计算10张图片）
-    C：图片通道数量（比如红绿蓝三通道）
-    H：图片高度（比如224）
-    W：图片宽度（比如224）
-    四维卷积操作
-    """
-    
     def forward(self, x, train=True):
+        self.x = x
+        assert(self.x.shape[1] == self.num_input_channel)
+        assert(self.x.shape[2] == self.input_height)
+        assert(self.x.shape[3] == self.input_width)
+        self.batch_size = self.x.shape[0]
+        FN, C, FH, FW = self.Kernal.W.shape
+        N, C, H, W = x.shape
+        out_h = 1 + int((H + 2 * self.padding - FH) / self.stride)
+        out_w = 1 + int((W + 2 * self.padding - FW) / self.stride)
+        self.col_x = im2col(x, FH, FW, self.stride, self.padding)
+        self.col_w = self.Kernal.W.reshape(FN, -1).T
+        out1 = np.dot(self.col_x, self.col_w) + self.Kernal.B.reshape(-1,FN)
+        out2 = out1.reshape(N, out_h, out_w, -1)
+        self.z = np.transpose(out2, axes=(0, 3, 1, 2))
+        return self.z
+
+    def backward(self, delta_in, layer_idx):
+        FN, C, FH, FW = self.Kernal.W.shape
+        dout = np.transpose(delta_in, axes=(0,2,3,1)).reshape(-1, FN)
+        self.Kernal.dB = np.sum(dout, axis=0, keepdims=True).T / self.batch_size
+        dW = np.dot(self.col_x.T, dout)
+        self.Kernal.dW = np.transpose(dW, axes=(1, 0)).reshape(FN, C, FH, FW) / self.batch_size
+        dcol = np.dot(dout, self.col_w.T)
+        delta_out = col2im(dcol, self.x.shape, FH, FW, self.stride, self.padding)
+        return delta_out
+    
+    def backward_test(self, delta_in, layer_idx):
+        delta_out = self.backward(delta_in, layer_idx)
+        return delta_out, self.Kernal.dW, self.Kernal.dB
+
+    def forward2(self, x, train=True):
         assert(x.ndim == 4)
         self.x = x
         assert(self.x.shape[1] == self.num_input_channel)
@@ -55,6 +76,7 @@ class ConvLayer_CPU(CLayer):
 
         if self.padding > 0:
             self.padded = np.pad(self.x, ((0,0), (0,0), (self.padding,self.padding), (self.padding,self.padding)), 'constant')
+            #self.padded = np.pad(self.x, mode="constant", constant_value=0, pad_width=(0,0,0,0,self.padding,self.padding,self.padding,self.padding))
         else:
             self.padded = self.x
         #end if
@@ -62,8 +84,7 @@ class ConvLayer_CPU(CLayer):
         self.z = jit_conv_4d(self.padded, self.Kernal.W, self.Kernal.B, self.output_height, self.output_width, self.stride)
         return self.z
 
-    # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
-    def backward(self, delta_in, flag):
+    def backward2(self, delta_in, flag):
         assert(delta_in.ndim == 4)
         assert(delta_in.shape == self.z.shape)
         
@@ -132,37 +153,84 @@ class ConvLayer_CPU(CLayer):
     def load_parameters(self):
         self.Kernal.LoadResultValue()
 
+    @staticmethod
+    def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=1):
+        output_h = (input_h - filter_h + 2 * padding) // stride + 1    
+        output_w = (input_w - filter_w + 2 * padding) // stride + 1
+        return (output_h, output_w)
+
 #end class
 
-def conv1():
-    r1 = cl.forward(x)
-    return r1
+from MiniFramework.HyperParameters_4_2 import *
+from MiniFramework.ConvLayer import *
 
-def conv2():
-    r2 = cl.forward_fast(x)
-    return r2
-
+import time
 
 if __name__ == '__main__':
     
-    params = CParameters(0.1, 1, 64, 0.1, LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD)
+    batch_size = 64
+
+    params = HyperParameters_4_2(
+        0.1, 1, batch_size,
+        net_type=NetType.MultipleClassifier,
+        init_method=InitialMethod.Xavier)
+
+    stride = 1
+    padding = 1
+    fh = 3
+    fw = 3
+    input_channel = 3
+    output_channel = 4
+    iw = 24
+    ih = 28
+    
+    x = np.random.randn(batch_size, input_channel, iw, ih)
 
     # 64 个 3 x 28 x 28 的图像输入（模拟 mnist）
-    x = np.random.randn(1024, 3, 28, 28)
-    cl = ConvLayer_CPU((3,28,28,), (4,5,5), (1, 0), Relu(), params)
+    
+    c1 = ConvLayer((input_channel,iw,ih), (output_channel,fh,fw), (stride, padding), params)
+    c1.initialize("test", "test", False)
+    s1 = time.time()
+    for i in range(100):
+        f1 = c1.forward2(x)
+        delta_in = np.ones((f1.shape))
+        b1, dw1, db1 = c1.backward2(delta_in, 1)
+    e1 = time.time()
+    print(e1-s1)
+    
+    s2 = time.time()
+    for i in range(100):
+        f2 = c1.forward(x)
+        b2, dw2, db2 = c1.backward_test(delta_in, 1)
+    e2 = time.time()
+    print(e2-s2)
+    
+    print(np.allclose(f1, f2, atol=1e-5))
+    #print(f1)
+    #print(f2)
 
-    r1 = conv1()
-    r2 = conv2()
+    print(np.allclose(b1, b2, atol=1e-4))
+    #print(b1)
+    #print(b2)
 
-    print(np.allclose(r1, r2))
-    print(r1.sum(), r2.sum())
+    print(np.allclose(dw1, dw2, atol=1e-4))
+    #print(dw1)
+    #print(dw2)
 
-    num=10
-    t4 = timeit.timeit('conv1()','from __main__ import conv1', number=num)
-    print("numba:", t4, t4/num)
-
-    t5 = timeit.timeit('conv2()','from __main__ import conv2', number=num)
-    print("im2col:", t5, t5/num)
+    print(np.allclose(db1, db2, atol=1e-4))
 
 
+    exit()
 
+    s = time.time()
+    for i in range(10):
+        r1 = conv1()
+    e1 = time.time()
+    print("numba:", e1 - s)
+
+    for i in range(10):
+        r2 = conv2()
+    e2 = time.time()
+    print("im2col:", e2 - e1)
+    print(np.allclose(r1, r2, atol=1e-5))
+    print(np.allclose(r1, r2, rtol=1e-3))

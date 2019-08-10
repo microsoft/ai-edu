@@ -4,7 +4,7 @@
 from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 
-class ActivatorLayer(CLayer):
+class ActivationLayer(CLayer):
     def __init__(self, activator):
         self.activator = activator
 

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MnistConvNet.py</StartupFile>
+    <StartupFile>Cifar10ConvNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,14 +24,14 @@
     <Compile Include="Cifar10.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExtendedDataReader\CifarImageDataReader.py" />
     <Compile Include="ExtendedDataReader\MnistImageDataReader.py" />
     <Compile Include="ExtendedDataReader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MiniFramework\ActivatorLayer.py" />
+    <Compile Include="MiniFramework\ActivationLayer.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py" />
     <Compile Include="MiniFramework\ClassificationLayer.py" />
-    <Compile Include="MiniFramework\ConvLayer_CPU.py" />
     <Compile Include="MiniFramework\DataReader_2_0.py" />
     <Compile Include="MiniFramework\DropoutLayer.py" />
     <Compile Include="MiniFramework\EnumDef_6_0.py" />
@@ -41,14 +41,17 @@
     <Compile Include="MiniFramework\NeuralNet_4_2.py" />
     <Compile Include="MiniFramework\Optimizer_1_0.py" />
     <Compile Include="MiniFramework\TrainingHistory_3_0.py" />
+    <Compile Include="MiniFramework\utility.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MiniFramework\WeightsBias_2_1.py" />
+    <Compile Include="Cifar10ConvNet.py" />
     <Compile Include="MnistDeepConvNet.py" />
     <Compile Include="MnistConvNet.py" />
-    <Compile Include="MnistConvModel.py" />
     <Compile Include="MiniFramework\ConvKernal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MiniFramework\ConvLayer_GPU.py" />
+    <Compile Include="MiniFramework\ConvLayer.py" />
     <Compile Include="MiniFramework\jit_utility.py">
       <SubType>Code</SubType>
     </Compile>
@@ -57,15 +60,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniFramework\__init__.py" />
-    <Compile Include="CifarImageReader.py" />
-    <Compile Include="TestNumba\test_conv.py">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MiniFramework\" />
     <Folder Include="ExtendedDataReader\" />
-    <Folder Include="TestNumba\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

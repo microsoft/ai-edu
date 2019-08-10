@@ -4,7 +4,7 @@
 """
 Version 2.0
 """
-
+import numpy as npy
 from pathlib import Path
 from MiniFramework.EnumDef_6_0 import *
 
@@ -44,13 +44,13 @@ class DataReader_2_0(object):
     def ReadData(self):
         train_file = Path(self.train_file_name)
         if train_file.exists():
-            data = np.load(self.train_file_name)
+            data = npy.load(self.train_file_name)
             self.XTrainRaw = data["data"]
             self.YTrainRaw = data["label"]
             assert(self.XTrainRaw.shape[0] == self.YTrainRaw.shape[0])
             self.num_train = self.XTrainRaw.shape[0]
             self.num_feature = self.XTrainRaw.shape[1]
-            self.num_category = len(np.unique(self.YTrainRaw))
+            self.num_category = len(npy.unique(self.YTrainRaw))
             # this is for if no normalize requirment
             self.XTrain = self.XTrainRaw
             self.YTrain = self.YTrainRaw
@@ -60,7 +60,7 @@ class DataReader_2_0(object):
 
         test_file = Path(self.test_file_name)
         if test_file.exists():
-            data = np.load(self.test_file_name)
+            data = npy.load(self.test_file_name)
             self.XTestRaw = data["data"]
             self.YTestRaw = data["label"]
             assert(self.XTestRaw.shape[0] == self.YTestRaw.shape[0])

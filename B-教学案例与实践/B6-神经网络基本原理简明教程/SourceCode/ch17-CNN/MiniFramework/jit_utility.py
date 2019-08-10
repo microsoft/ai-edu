@@ -29,7 +29,7 @@ def jit_conv_kernel2(x, w, rs, batch_size, num_input_channel, input_height, inpu
                                 rs[i, q, j, p] += x[i, r, j+s, p+t] * w[q, r, s, t]
     return rs
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
     z = np.zeros((batch_size, input_c, output_h, output_w))
     for b in range(batch_size):
@@ -42,14 +42,11 @@ def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w,
                     j_end = j_start + pool_w
                     target_array = x[b,c,i_start:i_end, j_start:j_end]
                     t = np.max(target_array)
-                    if t.ndim == 0:
-                        z[b,c,i,j] = t
-                    elif t.ndim == 2:
-                        z[b,c,i,j] = t[0,0]
+                    z[b,c,i,j] = t
 
     return z
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
     delta_out = np.zeros(x.shape)
     for b in range(batch_size):
@@ -65,7 +62,7 @@ def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool
 
     return delta_out
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def pool_get_max_index(input, i_start, i_end, j_start, j_end):
     assert(input.ndim == 2)
     max_i = i_start
@@ -111,7 +108,7 @@ def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
     num_output_channel = weights.shape[0]
     filter_height = weights.shape[2]
     filter_width = weights.shape[3]
-    rs = np.zeros((batch_size, num_output_channel, out_h, out_w)).astype(np.float32)
+    rs = np.zeros((batch_size, num_output_channel, out_h, out_w))
 
     for bs in range(batch_size):
         for oc in range(num_output_channel):
@@ -220,10 +217,11 @@ def calculate_delta_out(dz, rot_weights, batch_size, num_input_channel, num_outp
     #end bs
     return delta_out
 
-
-
-#@nb.jit(nopython=True)
-
+@nb.jit(nopython=True)
+def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=1):
+    output_h = (input_h - filter_h + 2 * padding) // stride + 1    
+    output_w = (input_w - filter_w + 2 * padding) // stride + 1
+    return (output_h, output_w)
 
 if __name__ == '__main__':
 

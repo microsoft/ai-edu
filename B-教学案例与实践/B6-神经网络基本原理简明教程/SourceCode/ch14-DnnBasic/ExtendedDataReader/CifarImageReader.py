@@ -1,7 +1,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-# coding: utf-8
+train_file_1 = "../../Data/cifar10_train_1.bin"
+train_file_2 = "../../Data/cifar10_train_2.bin"
+train_file_3 = "../../Data/cifar10_train_3.bin"
+train_file_4 = "../../Data/cifar10_train_4.bin"
+train_file_5 = "../../Data/cifar10_train_5.bin"
+test_file = "../../Data/cifar10_test.bin"
 
 import numpy as np
 import struct
@@ -10,7 +15,7 @@ import matplotlib.pyplot as plt
 from MiniFramework.DataReader_2_0 import *
 
 class CifarImageReader(DataReader_2_0):
-    def __init__(self, train_file_1, train_file_2, train_file_3, train_file_4, train_file_5, test_file):
+    def __init__(self):
         self.train_file = []
         self.train_file.append(train_file_1)
         self.train_file.append(train_file_2)

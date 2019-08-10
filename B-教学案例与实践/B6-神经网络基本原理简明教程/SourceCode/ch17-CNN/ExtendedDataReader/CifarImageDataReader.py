@@ -5,12 +5,12 @@ import struct
 from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.DataReader_2_0 import *
 
-train_file_1 = "../../Data/data_batch_1.bin"
-train_file_2 = "../../Data/data_batch_2.bin"
-train_file_3 = "../../Data/data_batch_3.bin"
-train_file_4 = "../../Data/data_batch_4.bin"
-train_file_5 = "../../Data/data_batch_5.bin"
-test_file = "../../Data/test_batch.bin"
+train_file_1 = "../../Data/cifar10_train_1.bin"
+train_file_2 = "../../Data/cifar10_train_2.bin"
+train_file_3 = "../../Data/cifar10_train_3.bin"
+train_file_4 = "../../Data/cifar10_train_4.bin"
+train_file_5 = "../../Data/cifar10_train_5.bin"
+test_file = "../../Data/cifar10_test.bin"
 
 class CifarImageDataReader(DataReader_2_0):
     # mode: "image"=Nx3x32x32,  "vector"=Nx1024

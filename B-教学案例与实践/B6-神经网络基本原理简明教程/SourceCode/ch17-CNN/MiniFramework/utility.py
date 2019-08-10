@@ -3,7 +3,7 @@
 
 from MiniFramework.EnumDef_6_0 import *
 
-def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
+def img2col(input_data, filter_h, filter_w, stride=1, pad=0):
     N, C, H, W = input_data.shape
     out_h = (H + 2*pad - filter_h)//stride + 1
     out_w = (W + 2*pad - filter_w)//stride + 1
@@ -21,7 +21,7 @@ def im2col(input_data, filter_h, filter_w, stride=1, pad=0):
     col = np.transpose(col, axes=(0, 4, 5, 1, 2, 3)).reshape(N*out_h*out_w, -1)
     return col
 
-def col2im(col, input_shape, filter_h, filter_w, stride=1, pad=0):
+def col2img(col, input_shape, filter_h, filter_w, stride=1, pad=0):
     N, C, H, W = input_shape
     out_h = (H + 2*pad - filter_h)//stride + 1
     out_w = (W + 2*pad - filter_w)//stride + 1

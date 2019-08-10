@@ -36,6 +36,13 @@ class ConvLayer(CLayer):
         self.output_shape = (self.num_output_channel, self.output_height, self.output_height)
 
     def forward(self, x, train=True):
+        return self.forward_img2col(x, train)
+
+    def backward(self, delta_in, layer_idx):
+        delta_out, dw, db = self.backward_col2img(delta_in, layer_idx)
+        return delta_out
+
+    def forward_img2col(self, x, train=True):
         self.x = x
         assert(self.x.shape[1] == self.num_input_channel)
         assert(self.x.shape[2] == self.input_height)
@@ -45,28 +52,25 @@ class ConvLayer(CLayer):
         N, C, H, W = x.shape
         out_h = 1 + int((H + 2 * self.padding - FH) / self.stride)
         out_w = 1 + int((W + 2 * self.padding - FW) / self.stride)
-        self.col_x = im2col(x, FH, FW, self.stride, self.padding)
+        self.col_x = img2col(x, FH, FW, self.stride, self.padding)
         self.col_w = self.Kernal.W.reshape(FN, -1).T
         out1 = np.dot(self.col_x, self.col_w) + self.Kernal.B.reshape(-1,FN)
         out2 = out1.reshape(N, out_h, out_w, -1)
         self.z = np.transpose(out2, axes=(0, 3, 1, 2))
         return self.z
 
-    def backward(self, delta_in, layer_idx):
+    def backward_col2img(self, delta_in, layer_idx):
         FN, C, FH, FW = self.Kernal.W.shape
         dout = np.transpose(delta_in, axes=(0,2,3,1)).reshape(-1, FN)
         self.Kernal.dB = np.sum(dout, axis=0, keepdims=True).T / self.batch_size
         dW = np.dot(self.col_x.T, dout)
         self.Kernal.dW = np.transpose(dW, axes=(1, 0)).reshape(FN, C, FH, FW) / self.batch_size
         dcol = np.dot(dout, self.col_w.T)
-        delta_out = col2im(dcol, self.x.shape, FH, FW, self.stride, self.padding)
-        return delta_out
-    
-    def backward_test(self, delta_in, layer_idx):
-        delta_out = self.backward(delta_in, layer_idx)
+        delta_out = col2img(dcol, self.x.shape, FH, FW, self.stride, self.padding)
         return delta_out, self.Kernal.dW, self.Kernal.dB
-
-    def forward2(self, x, train=True):
+   
+    
+    def forward_numba(self, x, train=True):
         assert(x.ndim == 4)
         self.x = x
         assert(self.x.shape[1] == self.num_input_channel)
@@ -84,7 +88,7 @@ class ConvLayer(CLayer):
         self.z = jit_conv_4d(self.padded, self.Kernal.W, self.Kernal.B, self.output_height, self.output_width, self.stride)
         return self.z
 
-    def backward2(self, delta_in, flag):
+    def backward_numba(self, delta_in, flag):
         assert(delta_in.ndim == 4)
         assert(delta_in.shape == self.z.shape)
         

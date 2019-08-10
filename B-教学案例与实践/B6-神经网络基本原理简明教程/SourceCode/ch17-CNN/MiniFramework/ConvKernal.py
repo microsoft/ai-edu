@@ -29,13 +29,12 @@ class ConvKernal(WeightsBias_2_1):
             "{0}/{1}_{2}_{3}_{4}_{5}_init.npz", 
             folder, name, self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
         self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)
-        self.CreateNew()
-        """
+
         if create_new:
             self.CreateNew()
         else:
             self.LoadExistingParameters()
-        """
+
         # end if
         self.CreateOptimizers()
 

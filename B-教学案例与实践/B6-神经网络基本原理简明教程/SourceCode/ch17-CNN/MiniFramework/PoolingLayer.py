@@ -30,7 +30,7 @@ class PoolingLayer(CLayer):
         self.arg_max = None
 
     def initialize(self, folder, name):
-        self.init_file_name = str.format("{0}/{1}_init.npz", folder, name)
+        self.init_file_name = str.format("{0}/{1}_init.npy", folder, name)
 
     def forward(self, x, train=True):
         return self.forward_numba(x, train)
@@ -38,7 +38,7 @@ class PoolingLayer(CLayer):
     def backward(self, delta_in, layer_idx):
         return self.backward_numba(delta_in, layer_idx)
 
-    def forward_im2col(self, x, train=True):
+    def forward_img2col(self, x, train=True):
         self.x = x
         N, C, H, W = x.shape
         col_x = im2col(x, self.pool_height, self.pool_width, self.stride, 0)
@@ -49,7 +49,7 @@ class PoolingLayer(CLayer):
         self.z = np.transpose(out2, axes=(0,3,1,2))
         return self.z
 
-    def backward_col2im(self, delta_in, layer_idx):
+    def backward_col2img(self, delta_in, layer_idx):
         dout = np.transpose(delta_in, (0,2,3,1))
         dmax = np.zeros((dout.size, self.pool_size))
         #dmax[np.arange(self.arg_max.size), np.flatten(self.arg_max)] = np.flatten(dout)
@@ -76,7 +76,8 @@ class PoolingLayer(CLayer):
         np.save(self.init_file_name, self.pooling_type)
 
     def load_parameters(self):
-        self.mode = np.load(self.init_file_name)
+        #self.mode = np.load(self.init_file_name)
+        pass
 
 import time
 

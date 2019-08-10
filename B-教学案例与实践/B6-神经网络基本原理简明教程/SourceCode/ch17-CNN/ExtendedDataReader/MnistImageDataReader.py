@@ -138,17 +138,6 @@ class MnistImageDataReader(DataReader_2_0):
         elif self.mode == "image":
             return self.XTest, self.YTest
 
-    def GetBatchTestSamples(self, batch_size, iteration):
-        start = iteration * batch_size
-        end = start + batch_size
-        batch_X = self.XTest[start:end]
-        batch_Y = self.YTest[start:end]
-
-        if self.mode == "vector":
-            return batch_X.reshape(batch_size, -1), batch_Y
-        elif self.mode == "image":
-            return batch_X, batch_Y
-
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format
     # suggest to call this function for each epoch

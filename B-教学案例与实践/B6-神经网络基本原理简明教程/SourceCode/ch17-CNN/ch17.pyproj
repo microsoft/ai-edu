@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Cifar10ConvNet.py</StartupFile>
+    <StartupFile>Level2_Cifar10ConvNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,9 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Cifar10.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ExtendedDataReader\CifarImageDataReader.py" />
     <Compile Include="ExtendedDataReader\MnistImageDataReader.py" />
     <Compile Include="ExtendedDataReader\__init__.py">
@@ -45,9 +42,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniFramework\WeightsBias_2_1.py" />
-    <Compile Include="Cifar10ConvNet.py" />
-    <Compile Include="MnistDeepConvNet.py" />
-    <Compile Include="MnistConvNet.py" />
+    <Compile Include="Level2_Cifar10ConvNet.py" />
+    <Compile Include="Level1_MnistConvNet.py" />
     <Compile Include="MiniFramework\ConvKernal.py">
       <SubType>Code</SubType>
     </Compile>

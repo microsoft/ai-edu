@@ -13,7 +13,9 @@ train_file_5 = "../../Data/data_batch_5.bin"
 test_file = "../../Data/test_batch.bin"
 
 class CifarImageDataReader(DataReader_2_0):
-    def __init__(self):
+    # mode: "image"=Nx3x32x32,  "vector"=Nx1024
+    def __init__(self, mode="image"):
+        self.mode = mode
         self.train_file = []
         self.train_file.append(train_file_1)
         self.train_file.append(train_file_2)
@@ -36,6 +38,8 @@ class CifarImageDataReader(DataReader_2_0):
 
     def __ReadTestFile(self):
         self.XTestRaw, self.YTestRaw = self.__ReadSingleDataFile(self.test_file)
+        self.XTest = self.XTestRaw
+        self.YTest = self.YTestRaw
 
     def __ReadTrainFiles(self):
         self.XTrainRaw = None
@@ -50,11 +54,17 @@ class CifarImageDataReader(DataReader_2_0):
                 self.YTrainRaw = np.vstack((self.YTrainRaw, label_data_single))
             #end if
         #end for
+        self.XTrain = self.XTrainRaw
+        self.YTrain = self.YTrainRaw
 
     # output array: num_images * channel * 28 * 28
     # 3 color, so channel = 3
     def __ReadSingleDataFile(self, image_file_name):
-        image_data = np.empty((10000,1024)).astype(np.float32)
+        if self.mode == "image":
+            image_data = np.empty((10000,3,32,32)).astype(np.float32)
+        else:
+            image_data = np.empty((10000,1024)).astype(np.float32)
+        #endif
         label_data = np.zeros((10000,10))
         f = open(image_file_name, "rb")
         for i in range(10000):
@@ -68,14 +78,16 @@ class CifarImageDataReader(DataReader_2_0):
                 unpacked_data = struct.unpack(fmt, b)
                 array_data = np.array(unpacked_data)
                 array_data2 = array_data.reshape(32,32)
-                color_data[j] = array_data2
+                color_data[j] = array_data2/255.0
             #end for
 
             #plt.imshow(color_data.transpose(1,2,0))
             #plt.show()
-
-            gray_data = np.dot([0.299,0.587,0.114], color_data.reshape(3,-1)).reshape(1,1024)
-            image_data[i] = gray_data
+            if self.mode == "image":
+                image_data[i] = color_data
+            else:
+                gray_data = np.dot([0.299,0.587,0.114], color_data.reshape(3,-1)).reshape(1,1024)
+                image_data[i] = gray_data
             #plt.imshow(gray_data)
             #plt.show()
 

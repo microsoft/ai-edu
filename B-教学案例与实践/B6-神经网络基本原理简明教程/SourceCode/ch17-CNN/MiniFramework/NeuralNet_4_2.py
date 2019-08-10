@@ -152,7 +152,7 @@ class NeuralNet_4_2(object):
                         break                
                 #end if
             # end for
-            #self.save_parameters()  # 这里会显著降低性能，因为频繁的磁盘操作，而且可能会有文件读写失败
+            self.save_parameters()  # 这里会显著降低性能，因为频繁的磁盘操作，而且可能会有文件读写失败
             if need_stop:
                 break
             # end if
@@ -164,7 +164,7 @@ class NeuralNet_4_2(object):
 
         self.save_parameters()
 
-        self.__check_weights_from_fc_layer()
+        #self.__check_weights_from_fc_layer()
 
         if need_test:
             print("testing...")
@@ -182,7 +182,6 @@ class NeuralNet_4_2(object):
         self.__forward(train_x, train=False)
         loss_train, accuracy_train = self.lossFunc.CheckLoss(self.output, train_y)
         loss_train = loss_train + regular_cost / train_x.shape[0]
-        #accuracy_train = self.__CalAccuracy(self.output, train_y)
         print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
 
         # calculate validation loss
@@ -190,7 +189,6 @@ class NeuralNet_4_2(object):
         self.__forward(vld_x, train=False)
         loss_vld, accuracy_vld = self.lossFunc.CheckLoss(self.output, vld_y)
         loss_vld = loss_vld + regular_cost / vld_x.shape[0]
-        #accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
         # end if

@@ -18,13 +18,12 @@ class WeightsBias_2_1(object):
     def Initialize(self, folder, name, create_new):
         self.init_file_name = str.format("{0}/{1}_{2}_{3}_init.npz", folder, name, self.num_input, self.num_output)
         self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)
-        self.CreateNew()
-        """
+        
         if create_new:
             self.CreateNew()
         else:
             self.LoadExistingParameters()
-        """
+        
         # end if
         self.CreateOptimizers()
 

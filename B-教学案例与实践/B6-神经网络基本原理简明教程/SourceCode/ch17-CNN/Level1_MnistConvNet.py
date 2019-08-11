@@ -21,7 +21,7 @@ def model():
     num_output = 10
     dataReader = LoadData(num_output)
 
-    max_epoch = 1
+    max_epoch = 10
     batch_size = 128
     learning_rate = 0.1
     params = HyperParameters_4_2(

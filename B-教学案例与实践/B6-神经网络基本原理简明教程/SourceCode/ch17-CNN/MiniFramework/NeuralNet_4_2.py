@@ -9,6 +9,7 @@ from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 from MiniFramework.FCLayer_2_0 import *
 from MiniFramework.DropoutLayer import *
+from MiniFramework.BatchNormLayer import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 #from MiniFramework.ConvLayer_CPU import *
@@ -146,18 +147,18 @@ class NeuralNet_4_2(object):
                 
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
-                    #self.save_parameters()
+                    self.save_parameters()
                     need_stop = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
                     if need_stop:
                         break                
                 #end if
             # end for
-            self.save_parameters()  # 这里会显著降低性能，因为频繁的磁盘操作，而且可能会有文件读写失败
+            
             if need_stop:
                 break
             # end if
         # end for
-        self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
+        #self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
 
         t1 = time.time()
         print("time used:", t1 - t0)

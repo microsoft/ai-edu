@@ -97,7 +97,6 @@ def jit_conv_2d(input_array, kernal, bias, output_array):
             output_array[i,j] = np.sum(target_array * kernal) + bias
 
 @nb.jit(nopython=True)
-#@nb.jit(float32[:,:,:,:](float32[:,:,:,:],float32[:,:,:,:],float32[:,:],int32,int32,int32))
 def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
     # 输入图片的批大小，通道数，高，宽
     assert(x.ndim == 4)
@@ -121,12 +120,6 @@ def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
                         for fh in range(filter_height):
                             for fw in range(filter_width):
                                 rs[bs,oc,i,j] += x[bs,ic,ii+fh,jj+fw] * weights[oc,ic,fh,fw]
-                            # end fw
-                        # end fh
-                    # end j
-                # end i
-            # end ic
-        # end oc
     #end bs
     return rs
 

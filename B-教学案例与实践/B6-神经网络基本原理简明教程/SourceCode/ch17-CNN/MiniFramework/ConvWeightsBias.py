@@ -6,28 +6,21 @@ from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.WeightsBias_2_1 import *
 from MiniFramework.Optimizer_1_0 import *
 
-"""
-Weights and Bias: 一个Weights可以包含多个卷积核Kernal，一个卷积核可以包含多个过滤器Filter
-WK - Kernal 卷积核数量(等于输出通道数量), 每个WK有一个Bias
-WC - Channel 输入通道数量
-FH - Filter Height
-FW - Filter Width
-"""
-class ConvKernal(WeightsBias_2_1):
+class ConvWeightsBias(WeightsBias_2_1):
     def __init__(self, output_c, input_c, filter_h, filter_w, init_method, optimizer_name, eta):
-        self.KernalCount = output_c
-        self.FilterCount = input_c
-        self.FilterHeight = filter_h
-        self.FilterWidth = filter_w
+        self.FilterCount = output_c
+        self.KernalCount = input_c
+        self.KernalHeight = filter_h
+        self.KernalWidth = filter_w
         self.init_method = init_method
         self.optimizer_name = optimizer_name
         self.learning_rate = eta
-        self.KernalShape = (self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
 
     def Initialize(self, folder, name, create_new):
+        self.WBShape = (self.FilterCount, self.KernalCount, self.KernalHeight, self.KernalWidth)
         self.init_file_name = str.format(
             "{0}/{1}_{2}_{3}_{4}_{5}_init.npz", 
-            folder, name, self.KernalCount, self.FilterCount, self.FilterHeight, self.FilterWidth)
+            folder, name, self.FilterCount, self.KernalCount, self.KernalHeight, self.KernalWidth)
         self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)
 
         if create_new:
@@ -42,14 +35,14 @@ class ConvKernal(WeightsBias_2_1):
         self.dB = np.zeros(self.B.shape)
 
     def CreateNew(self):
-        self.W = ConvKernal.InitialConvParameters(self.KernalShape, self.init_method)
-        self.B = np.zeros((self.KernalCount, 1))
+        self.W = ConvWeightsBias.InitialConvParameters(self.WBShape, self.init_method)
+        self.B = np.zeros((self.FilterCount, 1))
         #self.SaveInitialValue()
 
     def Rotate180(self):
         self.WT = np.zeros(self.W.shape).astype(np.float32)
-        for i in range(self.KernalCount):
-            for j in range(self.FilterCount):
+        for i in range(self.FilterCount):
+            for j in range(self.KernalCount):
                 self.WT[i,j] = np.rot90(self.W[i,j], 2)
         return self.WT
 

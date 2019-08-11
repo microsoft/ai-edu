@@ -79,5 +79,5 @@ class BnLayer(CLayer):
         data = np.load(self.result_file_name)
         self.gamma = data["gamma"]
         self.beta = data["beta"]
-        self.running_mean = data["running_mean"]
-        self.running_var = data["running_var"]
+        self.running_mean = data["mean"]
+        self.running_var = data["var"]

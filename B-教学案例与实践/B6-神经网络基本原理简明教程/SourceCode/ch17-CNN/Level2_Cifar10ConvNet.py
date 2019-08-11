@@ -25,7 +25,8 @@ def model():
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.MSRA,
+        optimizer_name=OptimizerName.Momentum)
 
     net = NeuralNet_4_2(params, "cifar_conv")
     

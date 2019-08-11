@@ -21,13 +21,14 @@ def model():
     num_output = 10
     dataReader = LoadData(num_output)
 
-    max_epoch = 10
+    max_epoch = 5
     batch_size = 128
     learning_rate = 0.1
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
-        init_method=InitialMethod.Xavier)
+        init_method=InitialMethod.MSRA,
+        optimizer_name=OptimizerName.Momentum)
 
     net = NeuralNet_4_2(params, "mnist_conv")
     
@@ -47,6 +48,8 @@ def model():
 
     f1 = FcLayer_2_0(p2.output_size, 32, params)
     net.add_layer(f1, "f1")
+    bn1 = BnLayer(f1.output_size)
+    net.add_layer(bn1, "bn1")
     r5 = ActivationLayer(Relu())
     net.add_layer(r5, "relu5")
 

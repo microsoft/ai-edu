@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_Cifar10ConvNet.py</StartupFile>
+    <StartupFile>Level1_MnistConvNet.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -44,7 +44,7 @@
     <Compile Include="MiniFramework\WeightsBias_2_1.py" />
     <Compile Include="Level2_Cifar10ConvNet.py" />
     <Compile Include="Level1_MnistConvNet.py" />
-    <Compile Include="MiniFramework\ConvKernal.py">
+    <Compile Include="MiniFramework\ConvWeightsBias.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MiniFramework\ConvLayer.py" />

@@ -7,17 +7,9 @@ from MiniFramework.ClassificationLayer import *
 
 from ExtendedDataReader.CifarImageReader import *
 
-file_1 = "../../Data/data_batch_1.bin"
-file_2 = "../../Data/data_batch_2.bin"
-file_3 = "../../Data/data_batch_3.bin"
-file_4 = "../../Data/data_batch_4.bin"
-file_5 = "../../Data/data_batch_5.bin"
-test_file = "../../Data/test_batch.bin"
-
-
 def LoadData():
     print("reading data...")
-    dr = CifarImageReader(file_1, file_2, file_3, file_4, file_5, test_file)
+    dr = CifarImageReader()
     dr.ReadData()
     dr.NormalizeX()
     dr.NormalizeY(NetType.MultipleClassifier)

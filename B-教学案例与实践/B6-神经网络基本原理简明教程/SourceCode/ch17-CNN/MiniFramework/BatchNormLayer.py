@@ -1,10 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import numpy as np
-#import minpy.numpy as np
 from pathlib import Path
-
+from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 
 class BnLayer(CLayer):
@@ -17,6 +15,9 @@ class BnLayer(CLayer):
         self.momentum = momentum
         self.running_mean = np.zeros((1,input_size))
         self.running_var = np.zeros((1,input_size))
+
+    def initialize(self, folder, name, create_new=False):
+        self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)
 
     def forward(self, input, train=True):
         assert(input.ndim == 2 or input.ndim == 4)  # fc or cv
@@ -71,14 +72,12 @@ class BnLayer(CLayer):
         self.gamma = self.gamma - self.d_gamma * learning_rate
         self.beta = self.beta - self.d_beta * learning_rate
 
-    def save_parameters(self, folder, name):
-        file_name = str.format("{0}\\{1}.npz", folder, name)
-        np.savez(file_name, gamma=self.gamma, beta=self.beta, mean=self.running_mean, var=self.running_var)
+    def save_parameters(self):
+        np.savez(self.result_file_name, gamma=self.gamma, beta=self.beta, mean=self.running_mean, var=self.running_var)
 
-    def load_parameters(self, folder, name):
-        file_name = str.format("{0}\\{1}.npz", folder, name)
-        data = np.load(file_name)
+    def load_parameters(self):
+        data = np.load(self.result_file_name)
         self.gamma = data["gamma"]
         self.beta = data["beta"]
-        self.running_mean = data["running_mean"]
-        self.running_var = data["running_var"]
+        self.running_mean = data["mean"]
+        self.running_var = data["var"]

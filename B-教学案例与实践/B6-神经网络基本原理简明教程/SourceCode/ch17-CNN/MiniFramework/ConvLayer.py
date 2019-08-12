@@ -1,14 +1,10 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#coding=utf-8
-
-import numpy as np
-#import minpy.numpy as np
-import timeit
-
+from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
-from MiniFramework.ConvKernal import *
+from MiniFramework.ConvWeightsBias import *
+from MiniFramework.utility import *
 from MiniFramework.jit_utility import *
 
 class ConvLayer(CLayer):
@@ -29,26 +25,52 @@ class ConvLayer(CLayer):
         self.hp = hp
 
     def initialize(self, folder, name, create_new=False):
-        self.Kernal = ConvKernal(
+        self.WB = ConvWeightsBias(
             self.num_output_channel, self.num_input_channel, self.filter_height, self.filter_width, 
             self.hp.init_method, self.hp.optimizer_name, self.hp.eta)
-        self.Kernal.Initialize(folder, name, create_new)
-        (self.output_height, self.output_width) = calculate_output_size(
+        self.WB.Initialize(folder, name, create_new)
+        (self.output_height, self.output_width) = ConvLayer.calculate_output_size(
             self.input_height, self.input_width, 
             self.filter_height, self.filter_width, 
             self.padding, self.stride)
         self.output_shape = (self.num_output_channel, self.output_height, self.output_height)
 
-    """
-    输入数据
-    N：样本图片数量（比如一次计算10张图片）
-    C：图片通道数量（比如红绿蓝三通道）
-    H：图片高度（比如224）
-    W：图片宽度（比如224）
-    四维卷积操作
-    """
-    
     def forward(self, x, train=True):
+        return self.forward_img2col(x, train)
+
+    def backward(self, delta_in, layer_idx):
+        delta_out, dw, db = self.backward_col2img(delta_in, layer_idx)
+        return delta_out
+
+    def forward_img2col(self, x, train=True):
+        self.x = x
+        assert(self.x.shape[1] == self.num_input_channel)
+        assert(self.x.shape[2] == self.input_height)
+        assert(self.x.shape[3] == self.input_width)
+        self.batch_size = self.x.shape[0]
+        FN, C, FH, FW = self.WB.W.shape
+        N, C, H, W = x.shape
+        out_h = 1 + int((H + 2 * self.padding - FH) / self.stride)
+        out_w = 1 + int((W + 2 * self.padding - FW) / self.stride)
+        self.col_x = img2col(x, FH, FW, self.stride, self.padding)
+        self.col_w = self.WB.W.reshape(FN, -1).T
+        out1 = np.dot(self.col_x, self.col_w) + self.WB.B.reshape(-1,FN)
+        out2 = out1.reshape(N, out_h, out_w, -1)
+        self.z = np.transpose(out2, axes=(0, 3, 1, 2))
+        return self.z
+
+    def backward_col2img(self, delta_in, layer_idx):
+        FN, C, FH, FW = self.WB.W.shape
+        dout = np.transpose(delta_in, axes=(0,2,3,1)).reshape(-1, FN)
+        self.WB.dB = np.sum(dout, axis=0, keepdims=True).T / self.batch_size
+        dW = np.dot(self.col_x.T, dout)
+        self.WB.dW = np.transpose(dW, axes=(1, 0)).reshape(FN, C, FH, FW) / self.batch_size
+        dcol = np.dot(dout, self.col_w.T)
+        delta_out = col2img(dcol, self.x.shape, FH, FW, self.stride, self.padding)
+        return delta_out, self.WB.dW, self.WB.dB
+   
+    
+    def forward_numba(self, x, train=True):
         assert(x.ndim == 4)
         self.x = x
         assert(self.x.shape[1] == self.num_input_channel)
@@ -58,29 +80,15 @@ class ConvLayer(CLayer):
 
         if self.padding > 0:
             self.padded = np.pad(self.x, ((0,0), (0,0), (self.padding,self.padding), (self.padding,self.padding)), 'constant')
+            #self.padded = np.pad(self.x, mode="constant", constant_value=0, pad_width=(0,0,0,0,self.padding,self.padding,self.padding,self.padding))
         else:
             self.padded = self.x
         #end if
 
-        self.z = jit_conv_4d(self.padded, self.Kernal.W, self.Kernal.B, self.output_height, self.output_width, self.stride)
+        self.z = jit_conv_4d(self.padded, self.WB.W, self.WB.B, self.output_height, self.output_width, self.stride)
         return self.z
 
-    def forward_fast(self, x):
-        FN, C, FH, FW = self.Kernal.W.shape
-        N, C, H, W = x.shape
-        out_h = 1 + int((H + 2 * self.padding - FH) / self.stride)
-        out_w = 1 + int((W + 2 * self.padding - FW) / self.stride)
-        col_x = im2col2(x, FH, FW, self.stride, self.padding)
-        col_w = self.Kernal.W.reshape(FN, -1).T
-        out = np.dot(col_x, col_w) + self.Kernal.B.reshape(-1,FN)
-        self.z = out.reshape(N, out_h, out_w, -1).transpose(0, 3, 1, 2) 
-        self.x = x
-        self.col_x = col_x
-        self.col_w = col_w
-        return self.z
-
-    # 把激活函数算做是当前层，上一层的误差传入后，先经过激活函数的导数，而得到本层的针对z值的误差
-    def backward(self, delta_in, flag):
+    def backward_numba(self, delta_in, flag):
         assert(delta_in.ndim == 4)
         assert(delta_in.shape == self.z.shape)
         
@@ -101,11 +109,12 @@ class ConvLayer(CLayer):
 
         # 计算本层输出到下一层的误差矩阵
         delta_out = self._calculate_delta_out(dz_padded, flag)
-        return delta_out
+        #return delta_out
+        return delta_out, self.WB.dW, self.WB.dB
 
     # 用输入数据乘以回传入的误差矩阵,得到卷积核的梯度矩阵
     def _calculate_weightsbias_grad(self, dz):
-        self.Kernal.ClearGrads()
+        self.WB.ClearGrads()
         # 先把输入矩阵扩大，周边加0
         (pad_h, pad_w) = calculate_padding_size(
             self.input_height, self.input_width, 
@@ -113,13 +122,13 @@ class ConvLayer(CLayer):
             self.filter_height, self.filter_width, 1)
         input_padded = np.pad(self.x, ((0,0),(0,0),(pad_h, pad_h),(pad_w,pad_w)), 'constant')
         # 输入矩阵与误差矩阵卷积得到权重梯度矩阵
-        (self.Kernal.dW, self.Kernal.dB) = calcalate_weights_grad(
+        (self.WB.dW, self.WB.dB) = calcalate_weights_grad(
                                 input_padded, dz, self.batch_size, 
                                 self.num_output_channel, self.num_input_channel, 
                                 self.filter_height, self.filter_width, 
-                                self.Kernal.dW, self.Kernal.dB)
+                                self.WB.dW, self.WB.dB)
 
-        self.Kernal.MeanGrads(self.batch_size)
+        self.WB.MeanGrads(self.batch_size)
 
         
     # 用输入误差矩阵乘以（旋转180度后的）卷积核
@@ -127,7 +136,7 @@ class ConvLayer(CLayer):
         if layer_idx == 0:
             return None
         # 旋转卷积核180度
-        rot_weights = self.Kernal.Rotate180()
+        rot_weights = self.WB.Rotate180()
         delta_out = np.zeros(self.x.shape).astype(np.float32)
         # 输入梯度矩阵卷积旋转后的卷积核，得到输出梯度矩阵
         delta_out = calculate_delta_out(dz, rot_weights, self.batch_size, 
@@ -140,45 +149,18 @@ class ConvLayer(CLayer):
         self.weights.pre_Update()
 
     def update(self):
-        self.Kernal.Update()
+        self.WB.Update()
         
     def save_parameters(self):
-        self.Kernal.SaveResultValue()
+        self.WB.SaveResultValue()
 
     def load_parameters(self):
-        self.Kernal.LoadResultValue()
+        self.WB.LoadResultValue()
+
+    @staticmethod
+    def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=1):
+        output_h = (input_h - filter_h + 2 * padding) // stride + 1    
+        output_w = (input_w - filter_w + 2 * padding) // stride + 1
+        return (output_h, output_w)
 
 #end class
-
-def conv1():
-    r1 = cl.forward(x)
-    return r1
-
-def conv2():
-    r2 = cl.forward_fast(x)
-    return r2
-
-
-if __name__ == '__main__':
-    
-    params = CParameters(0.1, 1, 64, 0.1, LossFunctionName.CrossEntropy3, InitialMethod.Xavier, OptimizerName.SGD)
-
-    # 64 个 3 x 28 x 28 的图像输入（模拟 mnist）
-    x = np.random.randn(1024, 3, 28, 28)
-    cl = ConvLayer((3,28,28,), (4,5,5), (1, 0), Relu(), params)
-
-    r1 = conv1()
-    r2 = conv2()
-
-    print(np.allclose(r1, r2))
-    print(r1.sum(), r2.sum())
-
-    num=10
-    t4 = timeit.timeit('conv1()','from __main__ import conv1', number=num)
-    print("numba:", t4, t4/num)
-
-    t5 = timeit.timeit('conv2()','from __main__ import conv2', number=num)
-    print("im2col:", t5, t5/num)
-
-
-

@@ -6,8 +6,13 @@ Version 4.1
 what's new:
 - add regularization enum
 """
+import numpy as np
+#import minpy.numpy as np
+#from minpy.context import set_context, gpu
 
 from enum import Enum
+
+#set_context(gpu(0))
 
 class NetType(Enum):
     Fitting = 1,

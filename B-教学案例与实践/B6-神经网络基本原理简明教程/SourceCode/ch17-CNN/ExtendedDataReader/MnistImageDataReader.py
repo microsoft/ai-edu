@@ -1,9 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-# coding: utf-8
-
-import numpy as np
 import struct
 from MiniFramework.DataReader_2_0 import *
 
@@ -78,7 +75,7 @@ class MnistImageDataReader(DataReader_2_0):
             bin_data = f.read(image_size)   # read 784 byte data for one time
             unpacked_data = struct.unpack(fmt, bin_data)
             array_data = np.array(unpacked_data)
-            array_data2 = array_data.reshape((1, num_rows, num_cols)).astype(np.float32)
+            array_data2 = array_data.reshape((1, num_rows, num_cols))
             image_data[i] = array_data2
         # end for
         f.close()
@@ -140,17 +137,6 @@ class MnistImageDataReader(DataReader_2_0):
             return self.XTest.reshape(self.num_test,-1), self.YTest
         elif self.mode == "image":
             return self.XTest, self.YTest
-
-    def GetBatchTestSamples(self, batch_size, iteration):
-        start = iteration * batch_size
-        end = start + batch_size
-        batch_X = self.XTest[start:end]
-        batch_Y = self.YTest[start:end]
-
-        if self.mode == "vector":
-            return batch_X.reshape(batch_size, -1), batch_Y
-        elif self.mode == "image":
-            return batch_X, batch_Y
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format

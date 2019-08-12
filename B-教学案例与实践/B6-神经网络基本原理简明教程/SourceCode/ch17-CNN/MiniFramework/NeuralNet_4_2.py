@@ -1,25 +1,24 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-
-import numpy as np
-#import minpy.numpy as np
 import time
 import os
 import math
 
+from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
 from MiniFramework.FCLayer_2_0 import *
 from MiniFramework.DropoutLayer import *
-from MiniFramework.ActivatorLayer import *
+from MiniFramework.BatchNormLayer import *
+from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
+#from MiniFramework.ConvLayer_CPU import *
 from MiniFramework.ConvLayer import *
 from MiniFramework.PoolingLayer import *
-
 from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.TrainingHistory_3_0 import *
 from MiniFramework.LossFunction_1_1 import *
-from MiniFramework.EnumDef_6_0 import *
+
 from MiniFramework.DataReader_2_0 import *
 
 class NeuralNet_4_2(object):
@@ -148,25 +147,25 @@ class NeuralNet_4_2(object):
                 
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
-                    #self.save_parameters()
+                    self.save_parameters()
                     need_stop = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
                     if need_stop:
                         break                
                 #end if
             # end for
-            #self.save_parameters()  # 这里会显著降低性能，因为频繁的磁盘操作，而且可能会有文件读写失败
+            
             if need_stop:
                 break
             # end if
         # end for
-        self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
+        #self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
 
         t1 = time.time()
         print("time used:", t1 - t0)
 
         self.save_parameters()
 
-        self.__check_weights_from_fc_layer()
+        #self.__check_weights_from_fc_layer()
 
         if need_test:
             print("testing...")
@@ -182,17 +181,15 @@ class NeuralNet_4_2(object):
 
         # calculate train loss
         self.__forward(train_x, train=False)
-        loss_train = self.lossFunc.CheckLoss(self.output, train_y)
+        loss_train, accuracy_train = self.lossFunc.CheckLoss(self.output, train_y)
         loss_train = loss_train + regular_cost / train_x.shape[0]
-        accuracy_train = self.__CalAccuracy(self.output, train_y)
         print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
 
         # calculate validation loss
         vld_x, vld_y = dataReader.GetValidationSet()
         self.__forward(vld_x, train=False)
-        loss_vld = self.lossFunc.CheckLoss(self.output, vld_y)
+        loss_vld, accuracy_vld = self.lossFunc.CheckLoss(self.output, vld_y)
         loss_vld = loss_vld + regular_cost / vld_x.shape[0]
-        accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
         # end if
@@ -205,28 +202,8 @@ class NeuralNet_4_2(object):
     def Test(self, dataReader):
         x,y = dataReader.GetTestSet()
         self.__forward(x, train=False)
-        correct = self.__CalAccuracy(self.output, y)
+        _, correct = self.lossFunc.CheckLoss(self.output, y)
         return correct
-
-    def __CalAccuracy(self, a, y):
-        assert(a.shape == y.shape)
-        m = a.shape[0]
-        if self.hp.net_type == NetType.Fitting:
-            var = np.var(y)
-            mse = np.sum((a-y)**2)/a.shape[0]
-            r2 = 1 - mse / var
-            return r2
-        elif self.hp.net_type == NetType.BinaryClassifier:
-            b = np.round(a)
-            r = (b == y)
-            correct = r.sum()
-            return correct/m
-        elif self.hp.net_type == NetType.MultipleClassifier:
-            ra = np.argmax(a, axis=1)
-            ry = np.argmax(y, axis=1)
-            r = (ra == ry)
-            correct = r.sum()
-            return correct/m
 
     # save weights value when got low loss than before
     def save_parameters(self):

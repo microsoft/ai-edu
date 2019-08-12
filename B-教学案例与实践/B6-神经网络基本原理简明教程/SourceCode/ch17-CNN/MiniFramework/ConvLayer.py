@@ -170,71 +170,85 @@ from MiniFramework.ConvLayer import *
 
 import time
 
-if __name__ == '__main__':
-    
+def test_performance():
     batch_size = 64
-
     params = HyperParameters_4_2(
         0.1, 1, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier)
-
     stride = 1
     padding = 1
     fh = 3
     fw = 3
     input_channel = 3
     output_channel = 4
-    iw = 24
+    iw = 28
     ih = 28
-    
-    x = np.random.randn(batch_size, input_channel, iw, ih)
-
     # 64 个 3 x 28 x 28 的图像输入（模拟 mnist）
+    x = np.random.randn(batch_size, input_channel, iw, ih)
     
     c1 = ConvLayer((input_channel,iw,ih), (output_channel,fh,fw), (stride, padding), params)
     c1.initialize("test", "test", False)
+    # dry run
+    for i in range(10):
+        f1 = c1.forward_img2col(x)
+        delta_in = np.ones((f1.shape))
+        b1, dw1, db1 = c1.backward_col2img(delta_in, 1)
+    # run
     s1 = time.time()
     for i in range(100):
-        f1 = c1.forward2(x)
+        f1 = c1.forward_img2col(x)
         delta_in = np.ones((f1.shape))
-        b1, dw1, db1 = c1.backward2(delta_in, 1)
+        b1, dw1, db1 = c1.backward_col2img(delta_in, 1)
     e1 = time.time()
-    print(e1-s1)
-    
+    print("method 1:", e1-s1)
+
+    # dry run
+    for i in range(10):
+        f2 = c1.forward_numba(x)
+        b2, dw2, db2 = c1.backward_numba(delta_in, 1)
+    # run
     s2 = time.time()
     for i in range(100):
-        f2 = c1.forward(x)
-        b2, dw2, db2 = c1.backward_test(delta_in, 1)
+        f2 = c1.forward_numba(x)
+        b2, dw2, db2 = c1.backward_numba(delta_in, 1)
     e2 = time.time()
-    print(e2-s2)
+    print("method 2:", e2-s2)
     
-    print(np.allclose(f1, f2, atol=1e-5))
-    #print(f1)
-    #print(f2)
+    print("compare result of method 1 and method 2:")
+    print("forward:", np.allclose(f1, f2, atol=1e-5))
+    print("backward:", np.allclose(b1, b2, atol=1e-4))
+    print("dW:", np.allclose(dw1, dw2, atol=1e-4))
+    print("dB:", np.allclose(db1, db2, atol=1e-4))
 
-    print(np.allclose(b1, b2, atol=1e-4))
-    #print(b1)
-    #print(b2)
+def test_correctness():
+    batch_size = 1
+    params = HyperParameters_4_2(
+        0.1, 1, batch_size,
+        net_type=NetType.MultipleClassifier,
+        init_method=InitialMethod.Xavier)
+    stride = 1
+    padding = 0
+    fh = 2
+    fw = 2
+    input_channel = 3
+    output_channel = 2
+    iw = 3
+    ih = 3
+    # 1 个 3 x 3 x 3 的图像输入
+    img = np.array([range(9),range(9),range(9)]).reshape(1,3,3,3)
+    
+    c1 = ConvLayer((input_channel,iw,ih), (output_channel,fh,fw), (stride, padding), params)
+    c1.initialize("test", "test", False)
+    # specify weights and bias
+    c1.WB.W = np.ones(24).reshape(2,3,2,2)
+    c1.WB.B = np.array([0,1]).reshape(2,1)
 
-    print(np.allclose(dw1, dw2, atol=1e-4))
-    #print(dw1)
-    #print(dw2)
+    f1 = c1.forward_img2col(img)
+    delta_in = np.ones((f1.shape))
+    b1, dw1, db1 = c1.backward_col2img(delta_in, 1)
+    print(f1)
 
-    print(np.allclose(db1, db2, atol=1e-4))
-
-
-    exit()
-
-    s = time.time()
-    for i in range(10):
-        r1 = conv1()
-    e1 = time.time()
-    print("numba:", e1 - s)
-
-    for i in range(10):
-        r2 = conv2()
-    e2 = time.time()
-    print("im2col:", e2 - e1)
-    print(np.allclose(r1, r2, atol=1e-5))
-    print(np.allclose(r1, r2, rtol=1e-3))
+if __name__ == '__main__':
+    test_correctness()
+    test_performance()

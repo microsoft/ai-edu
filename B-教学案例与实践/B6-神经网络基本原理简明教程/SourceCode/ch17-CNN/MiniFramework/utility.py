@@ -44,13 +44,3 @@ def col2img(col, input_shape, filter_h, filter_w, stride=1, pad=0):
     #end for
     return img[:, :, pad:H + pad, pad:W + pad]
 
-if __name__ == '__main__':
-    img = np.array(range(9)).reshape(1,1,3,3)
-    print(img)
-    col = img2col(img, 2, 2, 1, 0)
-    print(col)
-
-    img = np.array(range(36)).reshape(2,2,3,3)
-    print(img)
-    col = img2col(img, 2, 2, 1, 0)
-    print(col)

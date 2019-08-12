@@ -7,7 +7,8 @@ from numba import float32, int32
 
 # 简单地加了个 jit 后的卷积，用数组运算
 @nb.jit(nopython=True)
-def jit_conv_kernel(x, w, rs, n, n_channels, height, width, num_output_channel, filter_height, filter_width, out_h, out_w):
+def jit_conv_kernel(x, w, n, n_channels, height, width, num_output_channel, filter_height, filter_width, out_h, out_w):
+    rs = np.zeros((out_h, out_w))
     for i in range(n):
         for j in range(out_h):
             for p in range(out_w):

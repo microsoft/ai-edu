@@ -12,7 +12,6 @@ from MiniFramework.DropoutLayer import *
 from MiniFramework.BatchNormLayer import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
-#from MiniFramework.ConvLayer_CPU import *
 from MiniFramework.ConvLayer import *
 from MiniFramework.PoolingLayer import *
 from MiniFramework.HyperParameters_4_2 import *

@@ -3,7 +3,6 @@
 
 from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.Layer import *
-from MiniFramework.utility import *
 from MiniFramework.jit_utility import *
 
 class PoolingLayer(CLayer):

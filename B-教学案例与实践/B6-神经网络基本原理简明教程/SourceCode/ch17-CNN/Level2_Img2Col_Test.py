@@ -86,9 +86,9 @@ def understand_4d_im2col():
     w = wb.W.reshape(output_channel, -1).T
     output = np.dot(col, w)
     print("x=\n", x)
-    print("col=\n", col)
+    print("col_x=\n", col)
     print("weights=\n", wb.W)
-    print("w=\n", w)
+    print("col_w=\n", w)
     print("output=\n", output)
     out2 = output.reshape(batch_size, output_height, output_width, -1)
     print("out2=\n", out2)

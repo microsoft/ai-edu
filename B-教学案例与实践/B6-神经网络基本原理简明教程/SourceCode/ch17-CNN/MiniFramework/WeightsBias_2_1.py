@@ -47,7 +47,7 @@ class WeightsBias_2_1(object):
         self.oB = OptimizerFactory.CreateOptimizer(self.learning_rate, self.optimizer_name)
 
     def pre_Update(self):
-        if self.optimizer == OptimizerName.Nag:
+        if self.optimizer_name == OptimizerName.Nag:
             self.W = self.oW.pre_update(self.W)
             self.B = self.oB.pre_update(self.B)
         # end if

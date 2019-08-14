@@ -43,29 +43,23 @@ class ConvLayer(CLayer):
 
     def forward_img2col(self, x, train=True):
         self.x = x
-        assert(self.x.shape[1] == self.InC)
-        assert(self.x.shape[2] == self.InH)
-        assert(self.x.shape[3] == self.InW)
         self.batch_size = self.x.shape[0]
-        OutC, InC, FH, FW = self.WB.W.shape
-        batch_size, InC, InH, InW = x.shape
-        OutH = 1 + int((InH + 2 * self.padding - FH) / self.stride)
-        OutW = 1 + int((InW + 2 * self.padding - FW) / self.stride)
-        self.col_x = img2col(x, FH, FW, self.stride, self.padding)
-        self.col_w = self.WB.W.reshape(OutC, -1).T
-        out1 = np.dot(self.col_x, self.col_w) + self.WB.B.reshape(-1,OutC)
-        out2 = out1.reshape(batch_size, OutH, OutW, -1)
+        assert(self.x.shape == (self.batch_size, self.InC, self.InH, self.InW))
+        self.col_x = img2col(x, self.FH, self.FW, self.stride, self.padding)
+        self.col_w = self.WB.W.reshape(self.OutC, -1).T
+        self.col_b = self.WB.B.reshape(-1, self.OutC)
+        out1 = np.dot(self.col_x, self.col_w) + self.col_b
+        out2 = out1.reshape(self.batch_size, self.OutH, self.OutW, -1)
         self.z = np.transpose(out2, axes=(0, 3, 1, 2))
         return self.z
 
     def backward_col2img(self, delta_in, layer_idx):
-        OutC, InC, FH, FW = self.WB.W.shape
-        delta_in_2d = np.transpose(delta_in, axes=(0,2,3,1)).reshape(-1, OutC)
-        self.WB.dB = np.sum(delta_in_2d, axis=0, keepdims=True).T / self.batch_size
-        dW = np.dot(self.col_x.T, delta_in_2d) / self.batch_size
-        self.WB.dW = np.transpose(dW, axes=(1, 0)).reshape(OutC, InC, FH, FW)
-        dcol = np.dot(delta_in_2d, self.col_w.T)
-        delta_out = col2img(dcol, self.x.shape, FH, FW, self.stride, self.padding)
+        col_delta_in = np.transpose(delta_in, axes=(0,2,3,1)).reshape(-1, self.OutC)
+        self.WB.dB = np.sum(col_delta_in, axis=0, keepdims=True).T / self.batch_size
+        col_dW = np.dot(self.col_x.T, col_delta_in) / self.batch_size
+        self.WB.dW = np.transpose(col_dW, axes=(1, 0)).reshape(self.OutC, self.InC, self.FH, self.FW)
+        col_delta_out = np.dot(col_delta_in, self.col_w.T)
+        delta_out = col2img(col_delta_out, self.x.shape, self.FH, self.FW, self.stride, self.padding, self.OutH, self.OutW)
         return delta_out, self.WB.dW, self.WB.dB
    
     def forward_numba(self, x, train=True):
@@ -142,7 +136,7 @@ class ConvLayer(CLayer):
         return delta_out
 
     def pre_update(self):
-        self.weights.pre_Update()
+        pass
 
     def update(self):
         self.WB.Update()

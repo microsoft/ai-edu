@@ -146,13 +146,12 @@ class NeuralNet_4_2(object):
                 
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
-                    self.save_parameters()
                     need_stop = self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
                     if need_stop:
                         break                
                 #end if
             # end for
-            
+            self.save_parameters()
             if need_stop:
                 break
             # end if
@@ -161,8 +160,6 @@ class NeuralNet_4_2(object):
 
         t1 = time.time()
         print("time used:", t1 - t0)
-
-        self.save_parameters()
 
         #self.__check_weights_from_fc_layer()
 

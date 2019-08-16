@@ -59,6 +59,10 @@ def jit_conv_4d(x, weights, bias, out_h, out_w, stride=1):
                                 rs[bs,oc,i,j] += x[bs,ic,ii+fh,jj+fw] * weights[oc,ic,fh,fw]
     return rs
 
+def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=1):
+    output_h = (input_h - filter_h + 2 * padding) // stride + 1    
+    output_w = (input_w - filter_w + 2 * padding) // stride + 1
+    return (output_h, output_w)
 
 if __name__ == '__main__':
     stride = 1
@@ -69,7 +73,7 @@ if __name__ == '__main__':
     output_channel = 4
     iw = 28
     ih = 28
-    (output_height, output_width) = ConvLayer.calculate_output_size(ih, iw, fh, fw, padding, stride)
+    (output_height, output_width) = calculate_output_size(ih, iw, fh, fw, padding, stride)
     wb = ConvWeightsBias(output_channel, input_channel, fh, fw, InitialMethod.MSRA, OptimizerName.SGD, 0.1)
     wb.Initialize("test", "test", True)
     batch_size = 64

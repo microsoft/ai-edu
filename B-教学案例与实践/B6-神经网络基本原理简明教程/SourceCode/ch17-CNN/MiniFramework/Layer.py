@@ -11,6 +11,9 @@ class CLayer(object):
     def train(self, input, train=True):
         pass
 
+    def pre_update(self):
+        pass
+
     def update(self):
         pass
 

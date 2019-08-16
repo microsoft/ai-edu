@@ -5,33 +5,8 @@ from MiniFramework.EnumDef_6_0 import *
 import numba as nb
 from numba import float32, int32
 
-# 简单地加了个 jit 后的卷积，用数组运算
 @nb.jit(nopython=True)
-def jit_conv_kernel(x, w, n, n_channels, height, width, num_output_channel, filter_height, filter_width, out_h, out_w):
-    rs = np.zeros((out_h, out_w))
-    for i in range(n):
-        for j in range(out_h):
-            for p in range(out_w):
-                window = x[i, ..., j:j+filter_height, p:p+filter_width]
-                for q in range(num_output_channel):
-                    rs[i, q, j, p] += np.sum(w[q] * window)
-    return rs
-
-
-@nb.jit(nopython=True)
-def jit_conv_kernel2(x, w, rs, batch_size, num_input_channel, input_height, input_width, num_output_channel, filter_height, filter_width, out_h, out_w):
-    for i in range(batch_size):
-        for j in range(out_h):
-            for p in range(out_w):
-                for q in range(num_output_channel):
-                    for r in range(num_input_channel):
-                        for s in range(filter_height):
-                            for t in range(filter_width):
-                                rs[i, q, j, p] += x[i, r, j+s, p+t] * w[q, r, s, t]
-    return rs
-
-@nb.jit(nopython=True)
-def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
+def jit_maxpool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
     z = np.zeros((batch_size, input_c, output_h, output_w))
     for b in range(batch_size):
         for c in range(input_c):
@@ -48,7 +23,7 @@ def max_pool_forward(x, batch_size, input_c, output_h, output_w, pool_h, pool_w,
     return z
 
 @nb.jit(nopython=True)
-def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
+def jit_maxpool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool_h, pool_w, pool_stride):
     delta_out = np.zeros(x.shape)
     for b in range(batch_size):
         for c in range(input_c):
@@ -58,13 +33,13 @@ def max_pool_backward(x, delta_in, batch_size, input_c, output_h, output_w, pool
                 for j in range(output_w):
                     j_start = j * pool_stride
                     j_end = j_start + pool_w
-                    m,n = pool_get_max_index(x[b,c], i_start, i_end, j_start, j_end)
+                    m,n = jit_get_max_index(x[b,c], i_start, i_end, j_start, j_end)
                     delta_out[b,c,m,n] = delta_in[b,c,i,j]
 
     return delta_out
 
 @nb.jit(nopython=True)
-def pool_get_max_index(input, i_start, i_end, j_start, j_end):
+def jit_get_max_index(input, i_start, i_end, j_start, j_end):
     assert(input.ndim == 2)
     max_i = i_start
     max_j = j_start
@@ -197,7 +172,6 @@ def calcalate_weights_grad(x, dz, batch_size, output_c, input_c, filter_h, filte
     return (dW, dB)
 
 @nb.jit(nopython=True)
-#@nb.jit((float32[:,:,:,:],float32[:,:,:,:],int32,int32,int32,int32,int32,float32[:,:,:,:]))
 def calculate_delta_out(dz, rot_weights, batch_size, num_input_channel, num_output_channel, input_height, input_width, delta_out):
     for bs in range(batch_size):
         for oc in range(num_output_channel):    # == kernal count
@@ -216,6 +190,67 @@ def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=
     output_h = (input_h - filter_h + 2 * padding) // stride + 1    
     output_w = (input_w - filter_w + 2 * padding) // stride + 1
     return (output_h, output_w)
+
+
+#@nb.jit(nopython=True)
+def img2col(input_data, filter_h, filter_w, stride=1, pad=0):
+    N, C, H, W = input_data.shape
+    out_h = (H + 2*pad - filter_h)//stride + 1
+    out_w = (W + 2*pad - filter_w)//stride + 1
+    img = input_data
+    if pad > 0:
+        img = np.zeros((input_data.shape[0],input_data.shape[1],input_data.shape[2]+2*pad,input_data.shape[2]+2*pad))
+        img[:,:,pad:pad+input_data.shape[2],pad:pad+input_data.shape[2]] = input_data[:,:]
+        #img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
+        #img = np.pad(input_data,mode="constant",constant_value=0, pad_width=(0,0,0,0,pad,pad,pad,pad))
+    col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
+
+    for i in range(filter_h):
+        i_max = i + stride*out_h
+        for j in range(filter_w):
+            j_max = j + stride*out_w
+            col[:, :, i, j, :, :] = img[:, :, i:i_max:stride, j:j_max:stride]
+        #end for
+    #end for
+    col = np.transpose(col, axes=(0, 4, 5, 1, 2, 3)).reshape(N*out_h*out_w, -1)
+    return col
+
+
+def col2img(col, input_shape, filter_h, filter_w, stride, pad, out_h, out_w):
+    N, C, H, W = input_shape
+    tmp1 = col.reshape(N, out_h, out_w, C, filter_h, filter_w)
+    tmp2 = np.transpose(tmp1, axes=(0, 3, 4, 5, 1, 2))
+    img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1))
+    for i in range(filter_h):
+        i_max = i + stride*out_h
+        for j in range(filter_w):
+            j_max = j + stride*out_w
+            img[:, :, i:i_max:stride, j:j_max:stride] += tmp2[:, :, i, j, :, :]
+        #end for
+    #end for
+    return img[:, :, pad:H + pad, pad:W + pad]
+
+
+def col2img2(col, input_shape, filter_h, filter_w, stride, pad, out_h, out_w):
+    N, C, H, W = input_shape
+    tmp1 = col.reshape(N, out_h, out_w, C, filter_h, filter_w)
+    tmp2 = np.transpose(tmp1, axes=(0, 3, 4, 5, 1, 2))
+    a = fill(filter_h, filter_w, stride, out_h, out_w, pad, tmp2, H, W, N, C)
+    return a
+
+@nb.jit(nopython=True)
+def fill(filter_h, filter_w, stride, out_h, out_w, pad, tmp2, H, W, N, C):
+    img = np.zeros((N, C, H + 2*pad + stride - 1, W + 2*pad + stride - 1))
+    for i in range(filter_h):
+        i_max = i + stride*out_h
+        for j in range(filter_w):
+            j_max = j + stride*out_w
+            img[:, :, i:i_max:stride, j:j_max:stride] += tmp2[:, :, i, j, :, :]
+        #end for
+    #end for
+    return img[:, :, pad:H + pad, pad:W + pad]
+
+
 
 if __name__ == '__main__':
 

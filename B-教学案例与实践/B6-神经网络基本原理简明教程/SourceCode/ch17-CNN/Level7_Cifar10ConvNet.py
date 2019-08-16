@@ -19,8 +19,8 @@ def model():
     num_output = 10
     dataReader = LoadData()
 
-    max_epoch = 2
-    batch_size = 128
+    max_epoch = 5
+    batch_size = 64
     learning_rate = 0.1
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
@@ -44,24 +44,24 @@ def model():
     p2 = PoolingLayer(c2.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p2, "p2") 
   
-    f1 = FcLayer_2_0(p2.output_size, 120, params)
-    net.add_layer(f1, "f1")
-    bn1 = BnLayer(120)
-    net.add_layer(bn1, "bn1")
+    f3 = FcLayer_2_0(p2.output_size, 120, params)
+    net.add_layer(f3, "f3")
+    bn3 = BnLayer(120)
+    net.add_layer(bn3, "bn3")
     r3 = ActivationLayer(Relu())
     net.add_layer(r3, "relu3")
 
-    f2 = FcLayer_2_0(f1.output_size, 84, params)
-    net.add_layer(f2, "f2")
-    bn2 = BnLayer(84)
-    net.add_layer(bn2, "bn2")
+    f4 = FcLayer_2_0(f3.output_size, 84, params)
+    net.add_layer(f4, "f4")
+    bn4 = BnLayer(84)
+    net.add_layer(bn4, "bn4")
     r4 = ActivationLayer(Relu())
     net.add_layer(r4, "relu4")
     
-    f3 = FcLayer_2_0(f2.output_size, num_output, params)
-    net.add_layer(f3, "f3")
-    s1 = ClassificationLayer(Softmax())
-    net.add_layer(s1, "s1")
+    f5 = FcLayer_2_0(f4.output_size, num_output, params)
+    net.add_layer(f5, "f5")
+    s5 = ClassificationLayer(Softmax())
+    net.add_layer(s5, "s5")
 
     #net.load_parameters()
 

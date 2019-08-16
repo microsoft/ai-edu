@@ -9,6 +9,11 @@ from MiniFramework.ConvWeightsBias import *
 from MiniFramework.ConvLayer import *
 from MiniFramework.HyperParameters_4_2 import *
 
+def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=1):
+    output_h = (input_h - filter_h + 2 * padding) // stride + 1    
+    output_w = (input_w - filter_w + 2 * padding) // stride + 1
+    return (output_h, output_w)
+
 def test_2d_conv():
     batch_size = 1
     stride = 1
@@ -19,7 +24,7 @@ def test_2d_conv():
     output_channel = 1
     iw = 3
     ih = 3
-    (output_height, output_width) = ConvLayer.calculate_output_size(ih, iw, fh, fw, padding, stride)
+    (output_height, output_width) = calculate_output_size(ih, iw, fh, fw, padding, stride)
     wb = ConvWeightsBias(output_channel, input_channel, fh, fw, InitialMethod.MSRA, OptimizerName.SGD, 0.1)
     wb.Initialize("test", "test", True)
     wb.W = np.array([3,2,1,0]).reshape(1,1,2,2)
@@ -70,7 +75,7 @@ def understand_4d_im2col():
     output_channel = 2
     iw = 3
     ih = 3
-    (output_height, output_width) = ConvLayer.calculate_output_size(ih, iw, fh, fw, padding, stride)
+    (output_height, output_width) = calculate_output_size(ih, iw, fh, fw, padding, stride)
     wb = ConvWeightsBias(output_channel, input_channel, fh, fw, InitialMethod.MSRA, OptimizerName.SGD, 0.1)
     wb.Initialize("test", "test", True)
     wb.W = np.array(range(output_channel * input_channel * fh * fw)).reshape(output_channel, input_channel, fh, fw)
@@ -81,9 +86,9 @@ def understand_4d_im2col():
     w = wb.W.reshape(output_channel, -1).T
     output = np.dot(col, w)
     print("x=\n", x)
-    print("col=\n", col)
+    print("col_x=\n", col)
     print("weights=\n", wb.W)
-    print("w=\n", w)
+    print("col_w=\n", w)
     print("output=\n", output)
     out2 = output.reshape(batch_size, output_height, output_width, -1)
     print("out2=\n", out2)
@@ -134,7 +139,7 @@ def test_performance():
         f2 = c1.forward_img2col(x)
         #b2, dw2, db2 = c1.backward_col2img(delta_in, 1)
     e2 = time.time()
-    print("method im2col:", e2-s2)
+    print("method img2col:", e2-s2)
 
     print("compare correctness of method 1 and method 2:")
     print("forward:", np.allclose(f1, f2, atol=1e-7))

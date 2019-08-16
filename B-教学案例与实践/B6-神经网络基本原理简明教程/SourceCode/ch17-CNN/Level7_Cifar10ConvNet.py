@@ -17,8 +17,6 @@ def LoadData():
 
 def model():
     num_output = 10
-    dataReader = LoadData()
-
     max_epoch = 5
     batch_size = 64
     learning_rate = 0.1
@@ -63,10 +61,10 @@ def model():
     s5 = ClassificationLayer(Softmax())
     net.add_layer(s5, "s5")
 
-    #net.load_parameters()
-
-    net.train(dataReader, checkpoint=0.05, need_test=True)
-    net.ShowLossHistory(XCoordinate.Iteration)
+    return net
 
 if __name__ == '__main__':
-    model()
+    dataReader = LoadData()
+    net = model()
+    net.train(dataReader, checkpoint=0.05, need_test=True)
+    net.ShowLossHistory(XCoordinate.Iteration)

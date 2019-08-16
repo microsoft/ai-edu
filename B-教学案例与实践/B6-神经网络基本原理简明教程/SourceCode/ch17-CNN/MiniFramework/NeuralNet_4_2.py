@@ -25,7 +25,6 @@ class NeuralNet_4_2(object):
         self.model_name = model_name
         self.hp = params
         self.layer_list = []
-        #self.layer_name = []
         self.output = None
         self.layer_count = 0
         self.subfolder = os.getcwd() + "/" + self.__create_subfolder()
@@ -44,7 +43,6 @@ class NeuralNet_4_2(object):
     def add_layer(self, layer, name):
         layer.initialize(self.subfolder, name)
         self.layer_list.append(layer)
-        #self.layer_name.append(name)
         self.layer_count += 1
 
     def __forward(self, X, train=True):
@@ -156,12 +154,9 @@ class NeuralNet_4_2(object):
                 break
             # end if
         # end for
-        #self.CheckErrorAndLoss(dataReader, batch_x, batch_y, epoch, total_iteration)
 
         t1 = time.time()
         print("time used:", t1 - t0)
-
-        #self.__check_weights_from_fc_layer()
 
         if need_test:
             print("testing...")

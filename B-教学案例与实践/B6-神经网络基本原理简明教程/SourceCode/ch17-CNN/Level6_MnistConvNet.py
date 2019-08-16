@@ -1,13 +1,10 @@
 # Copyright (c) Microsoft.  All rights reserved.
 # Licensed under the MIT license.  See LICENSE file in the project root for full license information.
 
-import time
-import matplotlib.pyplot as plt
-
 from MiniFramework.NeuralNet_4_2 import *
 from ExtendedDataReader.MnistImageDataReader import *
 
-def LoadData(num_output):
+def LoadData():
     mdr = MnistImageDataReader("image")
     mdr.ReadData()
     mdr.NormalizeX()
@@ -18,8 +15,6 @@ def LoadData(num_output):
 
 def model():
     num_output = 10
-    dataReader = LoadData(num_output)
-
     max_epoch = 5
     batch_size = 128
     learning_rate = 0.1
@@ -57,11 +52,10 @@ def model():
     s4 = ClassificationLayer(Softmax())
     net.add_layer(s4, "s4")
 
-    net.train(dataReader, checkpoint=0.05, need_test=True)
-    net.ShowLossHistory(XCoordinate.Iteration)
+    return net
 
 if __name__ == '__main__':
-    model()
-
-
-
+    dataReader = LoadData()
+    net = model()
+    net.train(dataReader, checkpoint=0.05, need_test=True)
+    net.ShowLossHistory(XCoordinate.Iteration)

@@ -12,28 +12,24 @@ def normalize(x):
     return x_n
 
 if __name__ == '__main__':
-    dataReader = LoadData()
+    #dataReader = LoadData()
     net = model()
     net.load_parameters()
-    first_conv_layer = None
-    for layer in net.layer_list:
-        if isinstance(layer, ConvLayer):
-            first_conv_layer = layer
-            w = layer.WB.W
-            # normalization to 0~1
-            w_n = normalize(w)
-            N,C,H,W = w.shape
-            for i in range(N):
-                for j in range(C):
-                    idx = 2*100+N*C/2*10+i+1
-                    print(idx)
-                    plt.subplot(idx)
-                    plt.imshow(w_n[i,j], cmap='gray')
-            #endfor
-            plt.show()
-        #endif
-        break
-    
+    layer = net.layer_list[0]
+    w = layer.WB.W
+    # normalization to 0~1
+    w_n = normalize(w)
+    N,C,H,W = w.shape
+    for i in range(N):
+        for j in range(C):
+            idx = 1*100+C*10+j+1
+            print(idx)
+            plt.subplot(idx)
+            plt.imshow(w_n[i,j])
+        #endfor
+        plt.show()
+    #endif
+    exit()
     x, y = dataReader.GetBatchTrainSamples(20, 0)
     output = net.inference(x)
     

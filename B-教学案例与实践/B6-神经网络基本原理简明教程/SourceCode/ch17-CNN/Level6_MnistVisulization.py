@@ -37,7 +37,8 @@ if __name__ == '__main__':
                     idx = 2*100+N*C/2*10+i+1
                     print(idx)
                     plt.subplot(idx)
-                    plt.imshow(w_n[i,j], cmap='gray')
+                    #plt.imshow(w_n[i,j], cmap='gray')
+                    plt.imshow(w_n[i,j])
             #endfor
             plt.show()
         #endif
@@ -54,7 +55,8 @@ if __name__ == '__main__':
             idx = 2*100+(C/2)*10+j+1
             print(idx)
             plt.subplot(idx)
-            plt.imshow(z[i,j], cmap='gray')
+            #plt.imshow(z[i,j], cmap='gray')
+            plt.imshow(z[i,j])
         plt.show()
     
     """

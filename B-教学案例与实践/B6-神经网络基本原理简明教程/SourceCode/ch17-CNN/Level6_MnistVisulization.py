@@ -10,8 +10,8 @@ def LoadLessData():
     mdr.ReadLessData(100)
     mdr.NormalizeX()
     mdr.NormalizeY(NetType.MultipleClassifier, base=0)
-    mdr.Shuffle()
-    mdr.GenerateValidationSet(k=12)
+    #mdr.Shuffle()
+    #mdr.GenerateValidationSet(k=12)
     return mdr
 
 def normalize(x):
@@ -20,7 +20,65 @@ def normalize(x):
     x_n = (x - min)/(max - min)
     return x_n
 
-if __name__ == '__main__':
+def deconv():
+    print("loading data...")
+    dataReader = LoadLessData()
+    net = model()
+    net.load_parameters()
+    
+    print("forward...")
+    # forward
+    x, y = dataReader.GetBatchTrainSamples(12, 0)
+    print(x.shape)
+
+    data = net.layer_list[0].forward(x)    # conv
+    print(data.shape)
+
+    data = net.layer_list[1].forward(data)    # relu
+    print(data.shape)
+
+    data = net.layer_list[2].forward(data)    # pooling
+    print(data.shape)
+
+    output = data
+    output = normalize(data)
+    fig,ax = plt.subplots(nrows=3, ncols=3, figsize=(12,12))
+    for i in range(8):
+        ax[i//3,i%3].imshow(output[7,i])
+    plt.show()
+
+    #i = np.argmax(np.sum(output, axis=0))
+
+
+    for i in range(8):
+        output[i,:,:,:]=output[7,:,:,:]
+
+    for i in range(8):
+        for j in range(8):
+            output[i,j,:,:]=output[i,i,:,:]
+
+    
+
+    print("backward...")
+    # backward
+    data = net.layer_list[2].backward(output, 1)    # pooling
+    print(data.shape)
+
+    data = net.layer_list[1].forward(data, 1)    # relu, using forward as backward
+    print(data.shape)
+
+    data = net.layer_list[0].backward(data, 1)    # conv
+    print(data.shape)
+
+    output = normalize(data)
+
+    fig,ax = plt.subplots(nrows=2, ncols=12, figsize=(12,5))
+    for i in range(12):
+        ax[0,i].imshow(x[i,0])
+        ax[1,i].imshow(output[i,0])
+    plt.show()
+
+def visulize():
     dataReader = LoadLessData()
     net = model()
     net.load_parameters()
@@ -71,3 +129,7 @@ if __name__ == '__main__':
             plt.imshow(z[i,j], cmap='gray')
         plt.show()
     """
+
+if __name__ == '__main__':
+    visulize()
+    #deconv()

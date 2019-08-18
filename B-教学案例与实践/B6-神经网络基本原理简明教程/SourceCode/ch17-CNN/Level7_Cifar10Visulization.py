@@ -5,35 +5,29 @@ import matplotlib.pyplot as plt
 
 from Level7_Cifar10ConvNet import *
 
+labels = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
+
 def normalize(x):
     min = np.min(x)
     max = np.max(x)
     x_n = (x - min)/(max - min)
     return x_n
 
+def LoadData():
+    print("reading data...")
+    mdr = CifarImageDataReader("image")
+    mdr.ReadLessData()
+    return mdr
+
 if __name__ == '__main__':
-    #dataReader = LoadData()
+    dataReader = LoadData()
     net = model()
     net.load_parameters()
-    layer = net.layer_list[0]
-    w = layer.WB.W
-    # normalization to 0~1
-    w_n = normalize(w)
-    N,C,H,W = w.shape
-    for i in range(N):
-        for j in range(C):
-            idx = 1*100+C*10+j+1
-            print(idx)
-            plt.subplot(idx)
-            plt.imshow(w_n[i,j])
-        #endfor
-        plt.show()
-    #endif
-    exit()
+
     x, y = dataReader.GetBatchTrainSamples(20, 0)
     output = net.inference(x)
     
-    z = normalize(first_conv_layer.z)
+    z = normalize(net.layer_list[0].z)
     N,C,H,W = z.shape
     print(z.shape)
     for i in range(N):
@@ -41,7 +35,7 @@ if __name__ == '__main__':
             idx = 2*100+(C/2)*10+j+1
             print(idx)
             plt.subplot(idx)
-            plt.imshow(z[i,j], cmap='gray')
+            plt.imshow(z[i,j])
         plt.show()
     
     """

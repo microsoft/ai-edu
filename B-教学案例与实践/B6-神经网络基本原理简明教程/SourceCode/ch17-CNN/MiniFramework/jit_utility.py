@@ -199,9 +199,9 @@ def img2col(input_data, filter_h, filter_w, stride=1, pad=0):
     out_w = (W + 2*pad - filter_w)//stride + 1
     img = input_data
     if pad > 0:
-        img = np.zeros((input_data.shape[0],input_data.shape[1],input_data.shape[2]+2*pad,input_data.shape[2]+2*pad))
-        img[:,:,pad:pad+input_data.shape[2],pad:pad+input_data.shape[2]] = input_data[:,:]
-        #img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
+        #img = np.zeros((input_data.shape[0],input_data.shape[1],input_data.shape[2]+2*pad,input_data.shape[2]+2*pad))
+        #img[:,:,pad:pad+input_data.shape[2],pad:pad+input_data.shape[2]] = input_data[:,:]
+        img = np.pad(input_data, [(0,0), (0,0), (pad, pad), (pad, pad)], 'constant')
         #img = np.pad(input_data,mode="constant",constant_value=0, pad_width=(0,0,0,0,pad,pad,pad,pad))
     col = np.zeros((N, C, filter_h, filter_w, out_h, out_w))
 

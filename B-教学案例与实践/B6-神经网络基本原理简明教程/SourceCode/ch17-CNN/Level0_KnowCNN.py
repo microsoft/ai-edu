@@ -13,24 +13,34 @@ from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.jit_utility import *
 
 cat_pic = "../../Data/cat.png"
-car_pic = "../../Data/car.png"
+#car_pic = "../../Data/car.png"
+car_pic = "../../Data/girl.jpg"
+
+def normalize(x, max_value=1):
+    min = np.min(x)
+    max = np.max(x)
+    x_n = (x - min)/(max - min)*max_value
+    return x_n
 
 def try_filters(file_name):
     img = cv2.imread(file_name)
-    img2 = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    img1=img[:,:,[2,1,0]]
+    #plt.imshow(img2)
+    #plt.show()
+    img2 = cv2.cvtColor(img1, cv2.COLOR_RGB2GRAY)
     batch_size = 1
     input_channel = 1
     (height, width) = img2.shape
     FH = 3
     FW = 3
     print(img2.shape)
-    data = np.transpose(img2, axes=(1,0)).reshape((1,1,width,height))
+    data = img2.reshape((1,1,height,width))
     hp = HyperParameters_4_2(
         0.1, 10, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.Xavier,
         optimizer_name=OptimizerName.Momentum)
-    conv = ConvLayer((1,width,height),(1,FH,FW),(1,1),hp)
+    conv = ConvLayer((1,height,width), (1,FH,FW), (1,1), hp)
     conv.initialize("know_cnn", "name")
     
     filters = [
@@ -52,9 +62,9 @@ def try_filters(file_name):
         np.array([0,0,0,
                   -1,2,-1,
                   0,0,0]),          # horizontal edge
-        np.array([0.06,0.125,0.06,
-                  0.125,0.25,0.125,
-                  0.06,0.125,0.06]),    # blur
+        np.array([0.11,0.11,0.11,
+                  0.11,0.11,0.11,
+                  0.11,0.11,0.11]),    # blur
         np.array([-1,-2,-1,
                   0,0,0,
                   1,2,1]),          # sobel y
@@ -65,12 +75,12 @@ def try_filters(file_name):
     filters_name = ["sharpness", "vertical edge", "surround", "sobel x edge", "nothing", "horizontal edge", "blur", "sobel y edge", "embossing"]
 
     fig, ax = plt.subplots(nrows=3, ncols=3, figsize=(9,9))
-    z = []
     for i in range(len(filters)):
         filter = np.repeat(filters[i], input_channel).reshape(batch_size, input_channel,FH,FW)
-        conv.set_filter(filter, None)
-        z.append(conv.forward(data))
-        ax[i//3, i%3].imshow(z[i][0,0].T)
+        conv.set_filter(filter, np.array([10]))
+        z = conv.forward(data)
+        #z = normalize(z, 255)
+        ax[i//3, i%3].imshow(z[0,0], cmap='gray')
         ax[i//3, i%3].set_title(filters_name[i])
     plt.suptitle("try filters")
     plt.show()
@@ -103,7 +113,7 @@ def conv_relu_pool():
     z3 = pool.forward(z2)
 
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(8,6))
-    ax[0,0].imshow(img)
+    ax[0,0].imshow(img[:,:,[2,1,0]])
     ax[0,0].set_title("source:" + str(img.shape))
     ax[0,1].imshow(z1[0,0].T)
     ax[0,1].set_title("conv:" + str(z1.shape))

@@ -34,9 +34,9 @@ def try_filters(file_name):
     conv.initialize("know_cnn", "name")
     
     filters = [
-        np.array([-1,-1,-1,
-                  -1,9,-1,
-                  -1,-1,-1]),       # sharpness filter
+        np.array([0,-1,0,
+                  -1,5,-1,
+                  0,-1,0]),       # sharpness filter
         np.array([0,-1,0,
                   0,2,0,
                   0,-1,0]),         # vertical edge
@@ -52,9 +52,9 @@ def try_filters(file_name):
         np.array([0,0,0,
                   -1,2,-1,
                   0,0,0]),          # horizontal edge
-        np.array([0.1,0.1,0.1,
-                  0.1,0.1,0.1,
-                  0.1,0.1,0.1]),    # blur
+        np.array([0.06,0.125,0.06,
+                  0.125,0.25,0.125,
+                  0.06,0.125,0.06]),    # blur
         np.array([-1,-2,-1,
                   0,0,0,
                   1,2,1]),          # sobel y
@@ -117,6 +117,6 @@ def conv_relu_pool():
 
     
 if __name__ == '__main__':
-    try_filters(cat_pic)
+    #try_filters(cat_pic)
     try_filters(car_pic)
     conv_relu_pool()

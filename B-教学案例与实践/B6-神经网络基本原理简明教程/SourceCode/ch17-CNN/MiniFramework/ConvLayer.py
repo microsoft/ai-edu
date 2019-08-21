@@ -34,6 +34,12 @@ class ConvLayer(CLayer):
             self.padding, self.stride)
         self.output_shape = (self.OutC, self.OutH, self.OutH)
 
+    def set_filter(self, w, b):
+        if w is not None:
+            self.WB.W = w
+        if b is not None:
+            self.WB.B = b
+
     def forward(self, x, train=True):
         return self.forward_img2col(x, train)
 

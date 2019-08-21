@@ -36,15 +36,22 @@ class CifarImageDataReader(DataReader_2_0):
         self.num_test = self.XTestRaw.shape[0]
         self.num_feature = 1024
 
+    def ReadLessData(self):
+        self.__ReadTrainFiles(file_count=1)
+        self.__ReadTestFile()
+        self.num_train = self.num_example = self.XTrainRaw.shape[0]
+        self.num_test = self.XTestRaw.shape[0]
+        self.num_feature = 1024
+
     def __ReadTestFile(self):
         self.XTestRaw, self.YTestRaw = self.__ReadSingleDataFile(self.test_file)
         self.XTest = self.XTestRaw
         self.YTest = self.YTestRaw
 
-    def __ReadTrainFiles(self):
+    def __ReadTrainFiles(self, file_count=5):
         self.XTrainRaw = None
         self.YTrainRaw = None
-        for i in range(5):
+        for i in range(file_count):
             image_data_single, label_data_single = self.__ReadSingleDataFile(self.train_file[i])
             if self.XTrainRaw is None:
                 self.XTrainRaw = image_data_single

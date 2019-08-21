@@ -75,5 +75,5 @@ class PoolingLayer(CLayer):
         np.save(self.init_file_name, self.pooling_type)
 
     def load_parameters(self):
-        self.mode = np.load(self.init_file_name)
+        self.mode = np.load(self.init_file_name, allow_pickle=True)
         pass

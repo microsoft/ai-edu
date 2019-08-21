@@ -13,8 +13,7 @@ from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.jit_utility import *
 
 cat_pic = "../../Data/cat.png"
-#car_pic = "../../Data/car.png"
-car_pic = "../../Data/girl.jpg"
+car_pic = "../../Data/car.png"
 
 def normalize(x, max_value=1):
     min = np.min(x)
@@ -46,33 +45,33 @@ def try_filters(file_name):
     filters = [
         np.array([0,-1,0,
                   -1,5,-1,
-                  0,-1,0]),       # sharpness filter
-        np.array([0,-1,0,
-                  0,2,0,
-                  0,-1,0]),         # vertical edge
+                  0,-1,0]),         # sharpness filter
+        np.array([0,0,0,
+                  -1,2,-1,
+                  0,0,0]),          # vertical edge
         np.array([1,1,1,
                   1,-9,1,
                   1,1,1]),          # surround
-        np.array([-1,0,1,
-                  -2,0,2,
-                  -1,0,1]),         # sobel x
-        np.array([0,0,0,
-                  0,1,0,
-                  0,0,0]),          # nothing
-        np.array([0,0,0,
-                  -1,2,-1,
-                  0,0,0]),          # horizontal edge
-        np.array([0.11,0.11,0.11,
-                  0.11,0.11,0.11,
-                  0.11,0.11,0.11]),    # blur
         np.array([-1,-2,-1,
                   0,0,0,
                   1,2,1]),          # sobel y
+        np.array([0,0,0,
+                  0,1,0,
+                  0,0,0]),          # nothing
+        np.array([0,-1,0,
+                  0,2,0,
+                  0,-1,0]),         # horizontal edge
+        np.array([0.11,0.11,0.11,
+                  0.11,0.11,0.11,
+                  0.11,0.11,0.11]), # blur
+        np.array([-1,0,1,
+                  -2,0,2,
+                  -1,0,1]),         # sobel x
         np.array([2,0,0,
                   0,-1,0,
                   0,0,-1])]         # embossing
 
-    filters_name = ["sharpness", "vertical edge", "surround", "sobel x edge", "nothing", "horizontal edge", "blur", "sobel y edge", "embossing"]
+    filters_name = ["sharpness", "vertical edge", "surround", "sobel y", "nothing", "horizontal edge", "blur", "sobel x", "embossing"]
 
     fig, ax = plt.subplots(nrows=3, ncols=3, figsize=(9,9))
     for i in range(len(filters)):
@@ -80,7 +79,7 @@ def try_filters(file_name):
         conv.set_filter(filter, np.array([10]))
         z = conv.forward(data)
         #z = normalize(z, 255)
-        ax[i//3, i%3].imshow(z[0,0], cmap='gray')
+        ax[i//3, i%3].imshow(z[0,0])
         ax[i//3, i%3].set_title(filters_name[i])
     plt.suptitle("try filters")
     plt.show()

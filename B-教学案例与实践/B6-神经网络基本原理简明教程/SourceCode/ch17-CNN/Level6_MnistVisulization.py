@@ -82,54 +82,43 @@ def visulize():
     dataReader = LoadLessData()
     net = model()
     net.load_parameters()
-    first_conv_layer = None
-    for layer in net.layer_list:
-        if isinstance(layer, ConvLayer):
-            first_conv_layer = layer
-            w = layer.WB.W
-            # normalization to 0~1
-            w_n = normalize(w)
-            N,C,H,W = w.shape
-            for i in range(N):
-                for j in range(C):
-                    idx = 2*100+N*C/2*10+i+1
-                    print(idx)
-                    plt.subplot(idx)
-                    #plt.imshow(w_n[i,j], cmap='gray')
-                    plt.imshow(w_n[i,j])
-            #endfor
-            plt.show()
-        #endif
-        break
-    
     x, y = dataReader.GetBatchTrainSamples(20, 0)
-    output = net.inference(x)
+    net.inference(x)
+    for i in range(20):
+        if np.argmax(y[i]) == 8:
+            break
+
+    N = 1
+    C=8
+    fig, ax = plt.subplots(nrows=3, ncols=C, figsize=(12,8))
+    # conv1, relu, pool
+    for j in range(3):
+        if isinstance(net.layer_list[j], ActivationLayer):
+            z = net.layer_list[j].a
+        else:
+            z = normalize(net.layer_list[j].z)
+        for k in range(C):
+            ax[j,k].imshow(z[i,k])
+            ax[j,k].axis('off')
+    #plt.show()
+
+    C=16
+    fig, ax = plt.subplots(nrows=6, ncols=C//2, figsize=(12,8))
+    # conv1, relu, pool
+    for j in range(3):
+        if isinstance(net.layer_list[j+3], ActivationLayer):
+            z = net.layer_list[j+3].a
+        else:
+            z = normalize(net.layer_list[j+3].z)
+        for k in range(C):
+            ax[j*2+k//8,k%8].imshow(z[i,k])
+            ax[j*2+k//8,k%8].axis('off')
+    plt.show()
     
-    z = normalize(first_conv_layer.z)
-    N,C,H,W = z.shape
-    print(z.shape)
-    for i in range(N):
-        for j in range(C):
-            idx = 2*100+(C/2)*10+j+1
-            print(idx)
-            plt.subplot(idx)
-            #plt.imshow(z[i,j], cmap='gray')
-            plt.imshow(z[i,j])
-        plt.show()
-    
-    """
-    z = normalize(net.layer_list[3].z)
-    N,C,H,W = z.shape
-    print(z.shape)
-    for i in range(N):
-        for j in range(C):
-            idx = 2*100+(C/2)*10+j+1
-            print(idx)
-            plt.subplot(idx)
-            plt.imshow(z[i,j], cmap='gray')
-        plt.show()
-    """
+
+
 
 if __name__ == '__main__':
     visulize()
     #deconv()
+    

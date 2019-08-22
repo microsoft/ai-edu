@@ -78,10 +78,46 @@ def deconv():
         ax[1,i].imshow(output[i,0])
     plt.show()
 
+def to3level(w):
+    min_v = np.min(w)
+    max_v = np.max(w)
+    l2 = (max_v + min_v) / 2
+    l1 = (l2+min_v) / 2
+    l3 = (max_v+l2) / 2
+    new_w = np.zeros(w.shape)
+    for i in range(w.shape[0]):
+        for j in range(w.shape[1]):
+            if w[i,j] < l2:
+                new_w[i,j] = min_v
+            else:
+                new_w[i,j] = max_v
+            """
+            if w[i,j] < l1:
+                new_w[i,j] = min_v
+            elif w[i,j] > l3:
+                new_w[i,j] = max_v
+            else:
+                new_w[i,j] = l2
+            """
+            #endif
+        #endfor
+    #endfor
+    return new_w
+
 def visulize():
     dataReader = LoadLessData()
     net = model()
     net.load_parameters()
+
+    # conv layer 1 kernal
+    """
+    w = net.layer_list[0].WB.W
+    fig, ax = plt.subplots(nrows=2, ncols=4, figsize=(12,8))
+    for i in range(w.shape[0]):
+        new_w = to3level(w[i,0])
+        ax[i//4,i%4].imshow(new_w, cmap='gray')
+    plt.show()
+    """
     x, y = dataReader.GetBatchTrainSamples(20, 0)
     net.inference(x)
     for i in range(20):
@@ -89,9 +125,9 @@ def visulize():
             break
 
     N = 1
-    C=8
+    C = 8
     fig, ax = plt.subplots(nrows=3, ncols=C, figsize=(12,8))
-    # conv1, relu, pool
+    # conv1, relu1, pool1
     for j in range(3):
         if isinstance(net.layer_list[j], ActivationLayer):
             z = net.layer_list[j].a
@@ -100,11 +136,11 @@ def visulize():
         for k in range(C):
             ax[j,k].imshow(z[i,k])
             ax[j,k].axis('off')
-    #plt.show()
+    plt.suptitle("conv1-relu1-pool1")
 
-    C=16
+    C = 16
     fig, ax = plt.subplots(nrows=6, ncols=C//2, figsize=(12,8))
-    # conv1, relu, pool
+    # conv2, relu2, pool2
     for j in range(3):
         if isinstance(net.layer_list[j+3], ActivationLayer):
             z = net.layer_list[j+3].a
@@ -113,10 +149,9 @@ def visulize():
         for k in range(C):
             ax[j*2+k//8,k%8].imshow(z[i,k])
             ax[j*2+k//8,k%8].axis('off')
+    plt.suptitle("conv2-relu2-pool2")
     plt.show()
     
-
-
 
 if __name__ == '__main__':
     visulize()

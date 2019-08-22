@@ -1,13 +1,12 @@
-Copyright © Microsoft Corporation. All rights reserved.
-  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-## 14.6 多分类任务 - Cifar10图像分类
+from MiniFramework.NeuralNet_4_0 import *
+from MiniFramework.ActivationLayer import *
+from MiniFramework.ClassificationLayer import *
 
-### 14.6.1 数据读取
+from ExtendedDataReader.MnistImageDataReader import *
 
-MNIST数据本身是图像格式的，我们用mode="vector"去读取，转变成矢量格式的。
-
-```Python
 def LoadData():
     print("reading data...")
     dr = MnistImageDataReader(mode="vector")
@@ -17,18 +16,9 @@ def LoadData():
     dr.GenerateValidationSet(k=20)
     print(dr.num_validation, dr.num_example, dr.num_test, dr.num_train)
     return dr
-```
 
-### 14.6.2 搭建模型
-
-一共4个隐层，都用Relu()激活函数连接，最后的输出层是10分类：
-
-<img src='../Images/14/mnist_net.png'/>
-
-以下是主要参数设置：
-
-```Python
 if __name__ == '__main__':
+
     dataReader = LoadData()
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
@@ -38,7 +28,7 @@ if __name__ == '__main__':
     num_hidden3 = 32
     num_hidden4 = 16
     num_output = 10
-    max_epoch = 10
+    max_epoch = 20
     batch_size = 64
     learning_rate = 0.1
 
@@ -77,25 +67,4 @@ if __name__ == '__main__':
 
     net.train(dataReader, checkpoint=0.05, need_test=True)
     net.ShowLossHistory(xcoord=XCoordinate.Iteration)
-```
-
-### 14.6.3 运行结果
-
-<img src='../Images/14/mnist_loss.png'/>
-
-```
-......
-epoch=6, total_iteration=5763
-loss_train=0.005559, accuracy_train=1.000000
-loss_valid=0.119701, accuracy_valid=0.971667
-time used: 17.500738859176636
-save parameters
-testing...
-0.9697
-```
-
-最后的识别精度位96.97%。
-
-### 代码位置
-
-ch14, Level6
+    

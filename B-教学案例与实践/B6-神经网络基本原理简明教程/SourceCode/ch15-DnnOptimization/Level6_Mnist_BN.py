@@ -1,34 +1,28 @@
-Copyright © Microsoft Corporation. All rights reserved.
-  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-## 14.6 多分类任务 - Cifar10图像分类
+from MiniFramework.NeuralNet_4_1 import *
+from ExtendedDataReader.MnistImageDataReader import *
 
-### 14.6.1 数据读取
+file_1 = "../../Data/data_batch_1.bin"
+file_2 = "../../Data/data_batch_2.bin"
+file_3 = "../../Data/data_batch_3.bin"
+file_4 = "../../Data/data_batch_4.bin"
+file_5 = "../../Data/data_batch_5.bin"
+test_file = "../../Data/test_batch.bin"
 
-MNIST数据本身是图像格式的，我们用mode="vector"去读取，转变成矢量格式的。
-
-```Python
 def LoadData():
     print("reading data...")
-    dr = MnistImageDataReader(mode="vector")
+    dr = MnistImageDataReader("vector")
     dr.ReadData()
     dr.NormalizeX()
     dr.NormalizeY(NetType.MultipleClassifier)
     dr.GenerateValidationSet(k=20)
     print(dr.num_validation, dr.num_example, dr.num_test, dr.num_train)
     return dr
-```
 
-### 14.6.2 搭建模型
-
-一共4个隐层，都用Relu()激活函数连接，最后的输出层是10分类：
-
-<img src='../Images/14/mnist_net.png'/>
-
-以下是主要参数设置：
-
-```Python
 if __name__ == '__main__':
+
     dataReader = LoadData()
     num_feature = dataReader.num_feature
     num_example = dataReader.num_example
@@ -38,64 +32,53 @@ if __name__ == '__main__':
     num_hidden3 = 32
     num_hidden4 = 16
     num_output = 10
-    max_epoch = 10
+    max_epoch = 30
     batch_size = 64
     learning_rate = 0.1
 
-    params = HyperParameters_4_0(
+    params = HyperParameters_4_1(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.MSRA,
         stopper=Stopper(StopCondition.StopLoss, 0.12))
 
-    net = NeuralNet_4_0(params, "MNIST")
+    net = NeuralNet_4_1(params, "Mnist")
 
-    fc1 = FcLayer_1_0(num_input, num_hidden1, params)
+    fc1 = FcLayer_1_1(num_input, num_hidden1, params)
     net.add_layer(fc1, "fc1")
+    bn1 = BnLayer(num_hidden1)
+    net.add_layer(bn1, "bn1")
     r1 = ActivationLayer(Relu())
     net.add_layer(r1, "r1")
     
-    fc2 = FcLayer_1_0(num_hidden1, num_hidden2, params)
+    fc2 = FcLayer_1_1(num_hidden1, num_hidden2, params)
     net.add_layer(fc2, "fc2")
+    bn2 = BnLayer(num_hidden2)
+    net.add_layer(bn2, "bn2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "r2")
 
-    fc3 = FcLayer_1_0(num_hidden2, num_hidden3, params)
+    fc3 = FcLayer_1_1(num_hidden2, num_hidden3, params)
     net.add_layer(fc3, "fc3")
+    bn3 = BnLayer(num_hidden3)
+    net.add_layer(bn3, "bn3")
     r3 = ActivationLayer(Relu())
     net.add_layer(r3, "r3")
-
-    fc4 = FcLayer_1_0(num_hidden3, num_hidden4, params)
+    
+    fc4 = FcLayer_1_1(num_hidden3, num_hidden4, params)
     net.add_layer(fc4, "fc4")
+    bn4 = BnLayer(num_hidden4)
+    net.add_layer(bn4, "bn4")
     r4 = ActivationLayer(Relu())
     net.add_layer(r4, "r4")
 
-    fc5 = FcLayer_1_0(num_hidden4, num_output, params)
+    fc5 = FcLayer_1_1(num_hidden4, num_output, params)
     net.add_layer(fc5, "fc5")
     softmax = ClassificationLayer(Softmax())
     net.add_layer(softmax, "softmax")
 
+    #net.load_parameters()
+
     net.train(dataReader, checkpoint=0.05, need_test=True)
+    
     net.ShowLossHistory(xcoord=XCoordinate.Iteration)
-```
-
-### 14.6.3 运行结果
-
-<img src='../Images/14/mnist_loss.png'/>
-
-```
-......
-epoch=6, total_iteration=5763
-loss_train=0.005559, accuracy_train=1.000000
-loss_valid=0.119701, accuracy_valid=0.971667
-time used: 17.500738859176636
-save parameters
-testing...
-0.9697
-```
-
-最后的识别精度位96.97%。
-
-### 代码位置
-
-ch14, Level6

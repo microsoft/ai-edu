@@ -78,58 +78,82 @@ def deconv():
         ax[1,i].imshow(output[i,0])
     plt.show()
 
+def to3level(w):
+    min_v = np.min(w)
+    max_v = np.max(w)
+    l2 = (max_v + min_v) / 2
+    l1 = (l2+min_v) / 2
+    l3 = (max_v+l2) / 2
+    new_w = np.zeros(w.shape)
+    for i in range(w.shape[0]):
+        for j in range(w.shape[1]):
+            if w[i,j] < l2:
+                new_w[i,j] = min_v
+            else:
+                new_w[i,j] = max_v
+            """
+            if w[i,j] < l1:
+                new_w[i,j] = min_v
+            elif w[i,j] > l3:
+                new_w[i,j] = max_v
+            else:
+                new_w[i,j] = l2
+            """
+            #endif
+        #endfor
+    #endfor
+    return new_w
+
 def visulize():
     dataReader = LoadLessData()
     net = model()
     net.load_parameters()
-    first_conv_layer = None
-    for layer in net.layer_list:
-        if isinstance(layer, ConvLayer):
-            first_conv_layer = layer
-            w = layer.WB.W
-            # normalization to 0~1
-            w_n = normalize(w)
-            N,C,H,W = w.shape
-            for i in range(N):
-                for j in range(C):
-                    idx = 2*100+N*C/2*10+i+1
-                    print(idx)
-                    plt.subplot(idx)
-                    #plt.imshow(w_n[i,j], cmap='gray')
-                    plt.imshow(w_n[i,j])
-            #endfor
-            plt.show()
-        #endif
-        break
-    
+
+    # conv layer 1 kernal
+    """
+    w = net.layer_list[0].WB.W
+    fig, ax = plt.subplots(nrows=2, ncols=4, figsize=(12,8))
+    for i in range(w.shape[0]):
+        new_w = to3level(w[i,0])
+        ax[i//4,i%4].imshow(new_w, cmap='gray')
+    plt.show()
+    """
     x, y = dataReader.GetBatchTrainSamples(20, 0)
-    output = net.inference(x)
+    net.inference(x)
+    for i in range(20):
+        if np.argmax(y[i]) == 8:
+            break
+
+    N = 1
+    C = 8
+    fig, ax = plt.subplots(nrows=3, ncols=C, figsize=(12,8))
+    # conv1, relu1, pool1
+    for j in range(3):
+        if isinstance(net.layer_list[j], ActivationLayer):
+            z = net.layer_list[j].a
+        else:
+            z = normalize(net.layer_list[j].z)
+        for k in range(C):
+            ax[j,k].imshow(z[i,k])
+            ax[j,k].axis('off')
+    plt.suptitle("conv1-relu1-pool1")
+
+    C = 16
+    fig, ax = plt.subplots(nrows=6, ncols=C//2, figsize=(12,8))
+    # conv2, relu2, pool2
+    for j in range(3):
+        if isinstance(net.layer_list[j+3], ActivationLayer):
+            z = net.layer_list[j+3].a
+        else:
+            z = normalize(net.layer_list[j+3].z)
+        for k in range(C):
+            ax[j*2+k//8,k%8].imshow(z[i,k])
+            ax[j*2+k//8,k%8].axis('off')
+    plt.suptitle("conv2-relu2-pool2")
+    plt.show()
     
-    z = normalize(first_conv_layer.z)
-    N,C,H,W = z.shape
-    print(z.shape)
-    for i in range(N):
-        for j in range(C):
-            idx = 2*100+(C/2)*10+j+1
-            print(idx)
-            plt.subplot(idx)
-            #plt.imshow(z[i,j], cmap='gray')
-            plt.imshow(z[i,j])
-        plt.show()
-    
-    """
-    z = normalize(net.layer_list[3].z)
-    N,C,H,W = z.shape
-    print(z.shape)
-    for i in range(N):
-        for j in range(C):
-            idx = 2*100+(C/2)*10+j+1
-            print(idx)
-            plt.subplot(idx)
-            plt.imshow(z[i,j], cmap='gray')
-        plt.show()
-    """
 
 if __name__ == '__main__':
     visulize()
     #deconv()
+    

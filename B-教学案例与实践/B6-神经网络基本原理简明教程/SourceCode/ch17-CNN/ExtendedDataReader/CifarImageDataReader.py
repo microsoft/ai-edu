@@ -34,24 +34,33 @@ class CifarImageDataReader(DataReader_2_0):
         self.__ReadTestFile()
         self.num_train = self.num_example = self.XTrainRaw.shape[0]
         self.num_test = self.XTestRaw.shape[0]
-        self.num_feature = 1024
 
-    def ReadLessData(self):
-        self.__ReadTrainFiles(file_count=1)
-        self.__ReadTestFile()
+    def ReadLessData(self, count):
+        self.XTrainRaw = None
+        self.YTrainRaw = None
+        for i in range(5):
+            image_data_single, label_data_single = self.__ReadSingleDataFile(self.train_file[i], count)
+            if self.XTrainRaw is None:
+                self.XTrainRaw = image_data_single
+                self.YTrainRaw = label_data_single
+            else:
+                self.XTrainRaw = np.vstack((self.XTrainRaw, image_data_single))
+                self.YTrainRaw = np.vstack((self.YTrainRaw, label_data_single))
+            #end if
+        #end for
+        self.XTrain = self.XTrainRaw
+        self.YTrain = self.YTrainRaw
         self.num_train = self.num_example = self.XTrainRaw.shape[0]
-        self.num_test = self.XTestRaw.shape[0]
-        self.num_feature = 1024
 
     def __ReadTestFile(self):
         self.XTestRaw, self.YTestRaw = self.__ReadSingleDataFile(self.test_file)
         self.XTest = self.XTestRaw
         self.YTest = self.YTestRaw
 
-    def __ReadTrainFiles(self, file_count=5):
+    def __ReadTrainFiles(self):
         self.XTrainRaw = None
         self.YTrainRaw = None
-        for i in range(file_count):
+        for i in range(5):
             image_data_single, label_data_single = self.__ReadSingleDataFile(self.train_file[i])
             if self.XTrainRaw is None:
                 self.XTrainRaw = image_data_single
@@ -66,18 +75,23 @@ class CifarImageDataReader(DataReader_2_0):
 
     # output array: num_images * channel * 28 * 28
     # 3 color, so channel = 3
-    def __ReadSingleDataFile(self, image_file_name):
+    def __ReadSingleDataFile(self, image_file_name, count=0):
+        max_count = 10000
+        if count > 0:
+            max_count = count
+
         if self.mode == "image":
-            image_data = np.empty((10000,3,32,32)).astype(np.float32)
+            image_data = np.empty((max_count,3,32,32)).astype(np.float32)
         else:
-            image_data = np.empty((10000,1024)).astype(np.float32)
+            image_data = np.empty((max_count,1024)).astype(np.float32)
         #endif
-        label_data = np.zeros((10000,10))
+        label_data = np.zeros((max_count,1))
         f = open(image_file_name, "rb")
-        for i in range(10000):
+        
+        for i in range(max_count):
             a = f.read(1)
             label = int.from_bytes(a, byteorder='big')
-            label_data[i,label] = 1
+            label_data[i] = label
             color_data =np.empty((3,32,32))
             for j in range(3):
                 b = f.read(1024)

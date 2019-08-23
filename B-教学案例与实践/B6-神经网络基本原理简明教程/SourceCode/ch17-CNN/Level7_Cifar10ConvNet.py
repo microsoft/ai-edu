@@ -17,8 +17,8 @@ def LoadData():
 
 def model():
     num_output = 10
-    max_epoch = 5
-    batch_size = 64
+    max_epoch = 10
+    batch_size = 32
     learning_rate = 0.1
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
@@ -28,38 +28,39 @@ def model():
 
     net = NeuralNet_4_2(params, "cifar_conv")
     
-    c1 = ConvLayer((3,32,32), (6,5,5), (1,0), params)
+    c1 = ConvLayer((3,32,32), (32,3,3), (1,1), params)
     net.add_layer(c1, "c1")
     r1 = ActivationLayer(Relu())
     net.add_layer(r1, "relu1")
-    p1 = PoolingLayer(c1.output_shape, (2,2), 2, PoolingTypes.MAX)
-    net.add_layer(p1, "p1") 
-
-    c2 = ConvLayer(p1.output_shape, (16,5,5), (1,0), params)
+    
+    c2 = ConvLayer(c1.output_shape, (32,3,3), (1,0), params)
     net.add_layer(c2, "c2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "relu2")
     p2 = PoolingLayer(c2.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p2, "p2") 
-  
-    f3 = FcLayer_2_0(p2.output_size, 120, params)
-    net.add_layer(f3, "f3")
-    bn3 = BnLayer(120)
-    net.add_layer(bn3, "bn3")
+
+    c3 = ConvLayer(p2.output_shape, (64,3,3), (1,1), params)
+    net.add_layer(c3, "c3")
     r3 = ActivationLayer(Relu())
     net.add_layer(r3, "relu3")
-
-    f4 = FcLayer_2_0(f3.output_size, 84, params)
-    net.add_layer(f4, "f4")
-    bn4 = BnLayer(84)
-    net.add_layer(bn4, "bn4")
+    
+    c4 = ConvLayer(c3.output_shape, (64,3,3), (1,0), params)
+    net.add_layer(c4, "c4")
     r4 = ActivationLayer(Relu())
     net.add_layer(r4, "relu4")
-    
-    f5 = FcLayer_2_0(f4.output_size, num_output, params)
+    p4 = PoolingLayer(c4.output_shape, (2,2), 2, PoolingTypes.MAX)
+    net.add_layer(p4, "p4") 
+  
+    f5 = FcLayer_2_0(p4.output_size, 512, params)
     net.add_layer(f5, "f5")
-    s5 = ClassificationLayer(Softmax())
-    net.add_layer(s5, "s5")
+    r5 = ActivationLayer(Relu())
+    net.add_layer(r5, "relu5")
+    
+    f6 = FcLayer_2_0(f5.output_size, num_output, params)
+    net.add_layer(f6, "f6")
+    s7 = ClassificationLayer(Softmax())
+    net.add_layer(s7, "s7")
 
     return net
 

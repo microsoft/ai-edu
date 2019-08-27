@@ -41,7 +41,7 @@ def test_performance():
         b1, dw1, db1 = c1.backward_numba(delta_in, 1)
     # run
     s1 = time.time()
-    for i in range(1000):
+    for i in range(100):
         f1 = c1.forward_numba(x)
         b1, dw1, db1 = c1.backward_numba(delta_in, 1)
     e1 = time.time()
@@ -53,7 +53,7 @@ def test_performance():
         b2, dw2, db2 = c1.backward_col2img(delta_in, 1)
     # run
     s2 = time.time()
-    for i in range(1000):
+    for i in range(100):
         f2 = c1.forward_img2col(x)
         b2, dw2, db2 = c1.backward_col2img(delta_in, 1)
     e2 = time.time()

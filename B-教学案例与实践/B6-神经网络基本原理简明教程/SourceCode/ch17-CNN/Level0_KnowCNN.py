@@ -12,8 +12,10 @@ from MiniFramework.PoolingLayer import *
 from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.jit_utility import *
 
-cat_pic = "../../Data/cat.png"
-car_pic = "../../Data/car.png"
+#cat_pic = "../../Data/cat.png"
+#car_pic = "../../Data/car.png"
+cat_pic = "../../Data/circle.png"
+car_pic = "../../Data/circle.png"
 
 def normalize(x, max_value=1):
     min = np.min(x)

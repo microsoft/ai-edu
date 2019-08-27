@@ -1,102 +1,88 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import numpy
-import numba
-import time
+import numpy as np
+from MiniFramework.jit_utility import *
+from matplotlib import pyplot as plt
+import cv2
 
-from MiniFramework.ConvWeightsBias import *
-from MiniFramework.ConvLayer import *
-from MiniFramework.HyperParameters_4_2 import *
+circle_pic = "../../Data/circle.png"
 
-def calculate_output_size(input_h, input_w, filter_h, filter_w, padding, stride=1):
-    output_h = (input_h - filter_h + 2 * padding) // stride + 1    
-    output_w = (input_w - filter_w + 2 * padding) // stride + 1
-    return (output_h, output_w)
+def normalize(x):
+    min = np.min(x)
+    max = np.max(x)
+    x_n = (x - min)/(max - min)
+    return x_n
 
-def understand_4d_col2img_simple():
-    batch_size = 1
-    stride = 1
-    padding = 0
-    fh = 2
-    fw = 2
-    input_channel = 1
-    output_channel = 1
-    iw = 3
-    ih = 3
-    (output_height, output_width) = calculate_output_size(ih, iw, fh, fw, padding, stride)
-    wb = ConvWeightsBias(output_channel, input_channel, fh, fw, InitialMethod.MSRA, OptimizerName.SGD, 0.1)
-    wb.Initialize("test", "test", True)
-    wb.W = np.array(range(output_channel * input_channel * fh * fw)).reshape(output_channel, input_channel, fh, fw)
-    wb.B = np.array([0])
-    x = np.array(range(input_channel * iw * ih * batch_size)).reshape(batch_size, input_channel, ih, iw)
-    print("x=\n", x)
-    col_x = img2col(x, fh, fw, stride, padding)
-    print("col_x=\n", col_x)
-    print("w=\n", wb.W)
-    col_w = wb.W.reshape(output_channel, -1).T
-    print("col_w=\n", col_w)
+def create_zero_array(x,w):
+    out_h, out_w = calculate_output_size(x.shape[0], x.shape[1], w.shape[0], w.shape[1], 0, 1)
+    output = np.zeros((out_h, out_w))
+    return output
 
-    # backward
-    delta_in = np.array(range(batch_size*output_channel*output_height*output_width)).reshape(batch_size, output_channel, output_height, output_width)
-    print("delta_in=\n", delta_in)
-
-    delta_in_2d = np.transpose(delta_in, axes=(0,2,3,1)).reshape(-1, output_channel)
-    print("delta_in_2d=\n", delta_in_2d)
-
-    dB = np.sum(delta_in_2d, axis=0, keepdims=True).T / batch_size
-    print("dB=\n", dB)
-    dW = np.dot(col_x.T, delta_in_2d) / batch_size
-    print("dW=\n", dW)
-    dW = np.transpose(dW, axes=(1, 0)).reshape(output_channel, input_channel, fh, fw)
-    print("dW=\n", dW)
-    dcol = np.dot(delta_in_2d, col_w.T)
-    print("dcol=\n", dcol)
-    delta_out = col2img(dcol, x.shape, fh, fw, stride, padding)
-    print("delta_out=\n", delta_out)
+def train(x, w, b, y):
+    output = create_zero_array(x, w)
+    for i in range(10000):
+        # forward
+        jit_conv_2d(x, w, b, output)
+        # loss
+        t1 = (output - y)
+        m = t1.shape[0]*t1.shape[1]
+        LOSS = np.multiply(t1, t1)
+        loss = np.sum(LOSS)/2/m
+        print(i,loss)
+        if loss < 1e-7:
+            break
+        # delta
+        delta = output - y
+        # backward
+        dw = np.zeros(w.shape)
+        jit_conv_2d(x, delta, b, dw)
+        w = w - 0.5 * dw/m
+    #end for
+    return w
 
 
-def understand_4d_col2img_complex():
-    batch_size = 2
-    stride = 1
-    padding = 0
-    fh = 2
-    fw = 2
-    input_channel = 3
-    output_channel = 2
-    iw = 3
-    ih = 3
-    (output_height, output_width) = calculate_output_size(ih, iw, fh, fw, padding, stride)
-    wb = ConvWeightsBias(output_channel, input_channel, fh, fw, InitialMethod.MSRA, OptimizerName.SGD, 0.1)
-    wb.Initialize("test", "test", True)
-    wb.W = np.array(range(output_channel * input_channel * fh * fw)).reshape(output_channel, input_channel, fh, fw)
-    wb.B = np.array([0])
-    x = np.array(range(input_channel * iw * ih * batch_size)).reshape(batch_size, input_channel, ih, iw)
-    print("x=\n", x)
-    col_x = img2col(x, fh, fw, stride, padding)
-    print("col_x=\n", col_x)
-    print("w=\n", wb.W)
-    col_w = wb.W.reshape(output_channel, -1).T
-    print("col_w=\n", col_w)
+def create_sample_image():
+    img_color = cv2.imread(circle_pic)
+    img_gray = normalize(cv2.cvtColor(img_color, cv2.COLOR_RGB2GRAY))
+    w = np.array([[0,-1,0],
+                  [0, 2,0],
+                  [0,-1,0]])
+    b = 0
+    y = create_zero_array(img_gray, w)
+    jit_conv_2d(img_gray, w, b, y)
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(6,4))
+    ax[0].imshow(img_gray, cmap='gray')
+    ax[0].set_title("source")
+    ax[1].imshow(y, cmap='gray')
+    ax[1].set_title("target")
+    plt.show()
+    return img_gray, w, y
 
-    # backward
-    delta_in = np.array(range(batch_size*output_channel*output_height*output_width)).reshape(batch_size, output_channel, output_height, output_width)
-    print("delta_in=\n", delta_in)
-
-    delta_in_2d = np.transpose(delta_in, axes=(0,2,3,1)).reshape(-1, output_channel)
-    print("delta_in_2d=\n", delta_in_2d)
-
-    dB = np.sum(delta_in_2d, axis=0, keepdims=True).T / batch_size
-    print("dB=\n", dB)
-    dW = np.dot(col_x.T, delta_in_2d) / batch_size
-    print("dW=\n", dW)
-    dW = np.transpose(dW, axes=(1, 0)).reshape(output_channel, input_channel, fh, fw)
-    print("dW=\n", dW)
-    dcol = np.dot(delta_in_2d, col_w.T)
-    print("dcol=\n", dcol)
-    delta_out = col2img(dcol, x.shape, fh, fw, stride, padding)
-    print("delta_out=\n", delta_out)
+def show_result(img_gray, w_true, w_result):
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(6,4))
+    y = create_zero_array(img_gray, w_true)
+    jit_conv_2d(img_gray, w_true, 0, y)
+    ax[0].imshow(y, cmap='gray')
+    ax[0].set_title("true")
+    z = create_zero_array(img_gray, w_result)
+    jit_conv_2d(img_gray, w_result, 0, z)
+    ax[1].imshow(z, cmap='gray')
+    ax[1].set_title("result")
+    plt.show()
 
 if __name__ == '__main__':
-    understand_4d_col2img_simple()
-    understand_4d_col2img_complex()
+    x, w_true, y = create_sample_image()
+    w_init = np.random.normal(0, 0.1, w_true.shape)
+    w_result = train(x,w_init,0,y)
+
+    print("w_true:\n", w_true)
+    print("w_result:\n", w_result)
+
+    y_hat = np.zeros(y.shape)
+    jit_conv_2d(x, w_true, 0, y_hat)
+
+    print("w allclose:", np.allclose(w_true, w_result, atol=1e-2))
+    print("y allclose:", np.allclose(y, y_hat, atol=1e-2))
+
+    show_result(x, w_true, w_result)

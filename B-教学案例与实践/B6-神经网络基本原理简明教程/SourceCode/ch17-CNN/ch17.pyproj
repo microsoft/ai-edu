@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_BackwardTest.py</StartupFile>
+    <StartupFile>Level3_BackwardTrial.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,10 +28,11 @@
     </Compile>
     <Compile Include="Level0_KnowCNN.py" />
     <Compile Include="Level3_Col2Img_Test.py" />
+    <Compile Include="Level3_BackwardTrial.py" />
     <Compile Include="Level5_PoolLayer_Test.py" />
     <Compile Include="Level4_BackwardTest.py" />
     <Compile Include="Level2_Img2Col_Test.py" />
-    <Compile Include="Level1_Numba_Test.py">
+    <Compile Include="Level2_Numba_Test.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level7_Cifar10Visulization.py" />

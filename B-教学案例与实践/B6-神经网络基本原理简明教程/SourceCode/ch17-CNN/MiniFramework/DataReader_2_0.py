@@ -45,8 +45,8 @@ class DataReader_2_0(object):
         train_file = Path(self.train_file_name)
         if train_file.exists():
             data = npy.load(self.train_file_name)
-            self.XTrainRaw = data["data"]
-            self.YTrainRaw = data["label"]
+            self.XTrainRaw = data["data"].astype('float32')
+            self.YTrainRaw = data["label"].astype('int32')
             assert(self.XTrainRaw.shape[0] == self.YTrainRaw.shape[0])
             self.num_train = self.XTrainRaw.shape[0]
             self.num_feature = self.XTrainRaw.shape[1]
@@ -61,8 +61,8 @@ class DataReader_2_0(object):
         test_file = Path(self.test_file_name)
         if test_file.exists():
             data = npy.load(self.test_file_name)
-            self.XTestRaw = data["data"]
-            self.YTestRaw = data["label"]
+            self.XTestRaw = data["data"].astype('float32')
+            self.YTestRaw = data["label"].astype('int32')
             assert(self.XTestRaw.shape[0] == self.YTestRaw.shape[0])
             self.num_test = self.XTestRaw.shape[0]
             # this is for if no normalize requirment
@@ -133,7 +133,7 @@ class DataReader_2_0(object):
 
     def __ToOneHot(self, Y, base=0):
         count = Y.shape[0]
-        temp_Y = np.zeros((count, self.num_category))
+        temp_Y = np.zeros((count, self.num_category)).astype('float32')
         for i in range(count):
             n = (int)(Y[i,0])
             temp_Y[i,n-base] = 1

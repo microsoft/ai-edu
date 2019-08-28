@@ -59,3 +59,12 @@ if __name__ == '__main__':
     net = model()
     net.train(dataReader, checkpoint=0.05, need_test=True)
     net.ShowLossHistory(XCoordinate.Iteration)
+
+    X,Y = dataReader.GetTestSet()
+    assert(X.shape[0] == Y.shape[0])
+    Z = net.inference(X)
+    count = X.shape[0]
+    for i in range(count):
+        plt.imshow(X[i].reshape(28,28))
+        plt.title(np.argmax(Z[i]))
+        plt.show()

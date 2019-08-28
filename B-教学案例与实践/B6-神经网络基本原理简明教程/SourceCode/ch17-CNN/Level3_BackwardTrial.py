@@ -72,17 +72,20 @@ def show_result(img_gray, w_true, w_result):
     plt.show()
 
 if __name__ == '__main__':
+    # 创建样本数据
     x, w_true, y = create_sample_image()
+    # 随机初始化卷积核
     w_init = np.random.normal(0, 0.1, w_true.shape)
+    # 训练
     w_result = train(x,w_init,0,y)
-
+    # 打印比较真实卷积核值和训练出来的卷积核值
     print("w_true:\n", w_true)
     print("w_result:\n", w_result)
-
+    # 用训练出来的卷积核值对原始图片进行卷积
     y_hat = np.zeros(y.shape)
     jit_conv_2d(x, w_true, 0, y_hat)
-
+    # 与真实的卷积核的卷积结果比较
+    show_result(x, w_true, w_result)
+    # 比较卷积核值的差异核卷积结果的差异
     print("w allclose:", np.allclose(w_true, w_result, atol=1e-2))
     print("y allclose:", np.allclose(y, y_hat, atol=1e-2))
-
-    show_result(x, w_true, w_result)

@@ -50,7 +50,7 @@ class PoolingLayer(CLayer):
 
     def backward_col2img(self, delta_in, layer_idx):
         dout = np.transpose(delta_in, (0,2,3,1))
-        dmax = np.zeros((dout.size, self.pool_size))
+        dmax = np.zeros((dout.size, self.pool_size)).astype('float32')
         #dmax[np.arange(self.arg_max.size), np.flatten(self.arg_max)] = np.flatten(dout)
         dmax[np.arange(self.arg_max.size), self.arg_max.flatten()] = dout.flatten()
         dmax = dmax.reshape(dout.shape + (self.pool_size,))

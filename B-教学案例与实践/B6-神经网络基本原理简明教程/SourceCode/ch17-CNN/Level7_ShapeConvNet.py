@@ -55,12 +55,12 @@ def cnn_model():
     num_output = 5
     max_epoch = 50
     batch_size = 16
-    learning_rate = 0.01
+    learning_rate = 0.1
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.MSRA,
-        optimizer_name=OptimizerName.Momentum)
+        optimizer_name=OptimizerName.SGD)
 
     net = NeuralNet_4_2(params, "pic_conv")
     
@@ -94,17 +94,19 @@ def cnn_model():
 
     return net
 
-def show_samples(x,y):
-    fig,ax = plt.subplots(nrows=4, ncols=4, figsize=(10,10))
+def show_samples(x,y,title):
+    fig,ax = plt.subplots(nrows=4, ncols=4, figsize=(8,8))
     for i in range(16):
         ax[i//4,i%4].imshow(x[i,0])
         ax[i//4,i%4].set_title(name[np.argmax(y[i])])
         ax[i//4,i%4].axis('off')
+    #endfor
+    plt.suptitle(title)
     plt.show()
 
 def dnn_model():
     num_output = 5
-    max_epoch = 20
+    max_epoch = 50
     batch_size = 16
     learning_rate = 0.1
     params = HyperParameters_4_2(
@@ -133,22 +135,29 @@ def dnn_model():
     return net
 
 if __name__ == '__main__':
-
+    
+    # for dnn
+    
     dataReader = LoadVectorData()
     net = dnn_model()
     x,y = dataReader.GetBatchTrainSamples(16, 0)
     x = x.reshape(16,1,28,28)
-
-    #dataReader = LoadImageData()
-    #net = cnn_model()
-    #x,y = dataReader.GetBatchTrainSamples(16, 0)
-
-    show_samples(x,y)
+    
+    
+    # for cnn
+    """
+    dataReader = LoadImageData()
+    net = cnn_model()
+    x,y = dataReader.GetBatchTrainSamples(16, 0)
+    """
+    show_samples(x,y,"sample")
     
     net.train(dataReader, checkpoint=0.5, need_test=True)
     net.ShowLossHistory(XCoordinate.Iteration)
   
-    X,Y = dataReader.GetTestSet()
-    X = X[0:16].reshape(16,1,28,28)
-    Z = net.inference(X)
-    show_samples(X,Z)
+    X_test,Y_test = dataReader.GetTestSet()
+    for i in range(10):
+        start = i * 16
+        X = X_test[start:start+16].reshape(16,1,28,28)
+        Z = net.inference(X)
+        show_samples(X,Z,"predication")

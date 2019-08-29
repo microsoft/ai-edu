@@ -31,12 +31,12 @@ class ConvWeightsBias(WeightsBias_2_1):
         # end if
         self.CreateOptimizers()
 
-        self.dW = np.zeros(self.W.shape)
-        self.dB = np.zeros(self.B.shape)
+        self.dW = np.zeros(self.W.shape).astype('float32')
+        self.dB = np.zeros(self.B.shape).astype('float32')
 
     def CreateNew(self):
         self.W = ConvWeightsBias.InitialConvParameters(self.WBShape, self.init_method)
-        self.B = np.zeros((self.FilterCount, 1))
+        self.B = np.zeros((self.FilterCount, 1)).astype('float32')
         #self.SaveInitialValue()
 
     def Rotate180(self):
@@ -61,13 +61,13 @@ class ConvWeightsBias(WeightsBias_2_1):
         num_output = shape[3]
         
         if method == InitialMethod.Zero:
-            W = np.zeros(shape)
+            W = np.zeros(shape).astype('float32')
         elif method == InitialMethod.Normal:
-            W = np.random.normal(shape)
+            W = np.random.normal(shape).astype('float32')
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_input*num_output), shape)
+            W = np.random.normal(0, np.sqrt(2/num_input*num_output), shape).astype('float32')
         elif method == InitialMethod.Xavier:
             t = math.sqrt(6/(num_output+num_input))
-            W = np.random.uniform(-t, t, shape)
+            W = np.random.uniform(-t, t, shape).astype('float32')
         return W
 

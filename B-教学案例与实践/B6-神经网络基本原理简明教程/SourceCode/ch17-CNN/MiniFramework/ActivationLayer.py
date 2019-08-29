@@ -70,7 +70,7 @@ class Relu(CActivator):
 
     # 注意relu函数判断是否大于1的根据是正向的wx+b=z的值，而不是a值
     def backward(self, z, a, delta):
-        da = np.zeros(z.shape)
+        da = np.zeros(z.shape).astype('float32')
         da[z>0] = 1
         dz = da * delta
         return dz

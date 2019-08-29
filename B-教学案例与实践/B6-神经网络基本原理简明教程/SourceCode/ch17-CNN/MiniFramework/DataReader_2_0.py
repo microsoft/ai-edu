@@ -84,8 +84,8 @@ class DataReader_2_0(object):
         self.XTest = x_merge_norm[train_count:,:]
 
     def __NormalizeX(self, raw_data):
-        temp_X = np.zeros_like(raw_data)
-        self.X_norm = np.zeros((2, self.num_feature))
+        temp_X = np.zeros_like(raw_data).astype('float32')
+        self.X_norm = np.zeros((2, self.num_feature)).astype('float32')
         # 按行归一化,即所有样本的同一特征值分别做归一化
         for i in range(self.num_feature):
             # get one feature from all examples
@@ -117,7 +117,7 @@ class DataReader_2_0(object):
 
     def __NormalizeY(self, raw_data):
         assert(raw_data.shape[1] == 1)
-        self.Y_norm = np.zeros((2,1))
+        self.Y_norm = np.zeros((2,1)).astype('float32')
         max_value = np.max(raw_data)
         min_value = np.min(raw_data)
         # min value
@@ -142,7 +142,7 @@ class DataReader_2_0(object):
     # for binary classifier
     # if use tanh function, need to set negative_value = -1
     def __ToZeroOne(Y, positive_label=1, negative_label=0, positiva_value=1, negative_value=0):
-        temp_Y = np.zeros_like(Y)
+        temp_Y = np.zeros_like(Y).astype('float32')
         for i in range():
             if Y[i,0] == negative_label:     # 负类的标签设为0
                 temp_Y[i,0] = negative_value
@@ -154,7 +154,7 @@ class DataReader_2_0(object):
 
     # normalize data by specified range and min_value
     def NormalizePredicateData(self, X_predicate):
-        X_new = np.zeros(X_predicate.shape)
+        X_new = np.zeros(X_predicate.shape).astype('float32')
         n_feature = X_predicate.shape[0]
         for i in range(n_feature):
             x = X_predicate[i,:]

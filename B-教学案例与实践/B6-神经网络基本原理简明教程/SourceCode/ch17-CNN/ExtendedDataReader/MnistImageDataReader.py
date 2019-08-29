@@ -101,7 +101,7 @@ class MnistImageDataReader(DataReader_2_0):
         self.XTest = self.__NormalizeData(self.XTestRaw)
 
     def __NormalizeData(self, XRawData):
-        X_NEW = np.zeros(XRawData.shape)
+        X_NEW = np.zeros(XRawData.shape).astype('float32')
         x_max = np.max(XRawData)
         x_min = np.min(XRawData)
         X_NEW = (XRawData - x_min)/(x_max-x_min)

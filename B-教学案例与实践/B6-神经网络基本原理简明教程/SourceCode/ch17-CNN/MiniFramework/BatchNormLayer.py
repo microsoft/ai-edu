@@ -7,14 +7,14 @@ from MiniFramework.Layer import *
 
 class BnLayer(CLayer):
     def __init__(self, input_size, momentum=0.9):
-        self.gamma = np.ones((1, input_size))
-        self.beta = np.zeros((1, input_size))
+        self.gamma = np.ones((1, input_size)).astype('float32')
+        self.beta = np.zeros((1, input_size)).astype('float32')
         self.eps = 1e-5
         self.input_size = input_size
         self.output_size = input_size
         self.momentum = momentum
-        self.running_mean = np.zeros((1,input_size))
-        self.running_var = np.zeros((1,input_size))
+        self.running_mean = np.zeros((1,input_size)).astype('float32')
+        self.running_var = np.zeros((1,input_size)).astype('float32')
 
     def initialize(self, folder, name, create_new=False):
         self.result_file_name = str.format("{0}/{1}_result.npz", folder, name)

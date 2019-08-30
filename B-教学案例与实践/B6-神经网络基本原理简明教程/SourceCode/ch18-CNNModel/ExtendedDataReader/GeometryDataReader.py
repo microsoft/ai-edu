@@ -3,6 +3,7 @@
 
 import struct
 from MiniFramework.DataReader_2_0 import *
+import matplotlib.pyplot as plt
 
 class GeometryDataReader(DataReader_2_0):
     # mode = 'image' or 'vector' 

@@ -25,9 +25,9 @@ def LoadData(mode):
 
 def dnn_model():
     num_output = 6
-    max_epoch = 20
+    max_epoch = 100
     batch_size = 16
-    learning_rate = 0.1
+    learning_rate = 0.01
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
@@ -52,7 +52,6 @@ def dnn_model():
     net.add_layer(s3, "s3")
 
     return net
-
 
 def cnn_model():
     num_output = 6
@@ -99,7 +98,7 @@ def cnn_model():
 
 def show_samples(x,y,title):
     x = x/255
-    fig,ax = plt.subplots(nrows=8, ncols=8, figsize=(10,10))
+    fig,ax = plt.subplots(nrows=8, ncols=8, figsize=(11,11))
     for i in range(64):
         ax[i//8,i%8].imshow(x[i].transpose(1,2,0))
         ax[i//8,i%8].set_title(name[y[i,0]])
@@ -130,6 +129,6 @@ if __name__ == '__main__':
     X_test,Y_test = dataReader.GetTestSet()
     Z = net.inference(X_test[0:64])
     X = dataReader.XTestRaw[0:64]
-    #show_samples(X,np.argmax(Z,axis=1).reshape(64,1),"dnn:predication")
     show_samples(X,np.argmax(Z,axis=1).reshape(64,1),"cnn:predication")
+    #show_samples(X,np.argmax(Z,axis=1).reshape(64,1),"dnn:predication")
     

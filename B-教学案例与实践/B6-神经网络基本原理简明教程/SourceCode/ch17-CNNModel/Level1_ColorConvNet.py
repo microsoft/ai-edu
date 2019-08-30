@@ -56,9 +56,9 @@ def dnn_model():
 
 def cnn_model():
     num_output = 6
-    max_epoch = 10
+    max_epoch = 50
     batch_size = 16
-    learning_rate = 0.1
+    learning_rate = 0.01
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,

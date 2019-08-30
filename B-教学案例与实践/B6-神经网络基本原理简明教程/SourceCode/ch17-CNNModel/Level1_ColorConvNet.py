@@ -74,7 +74,7 @@ def cnn_model():
     p1 = PoolingLayer(c1.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p1, "p1") 
 
-    c2 = ConvLayer(p1.output_shape, (16,3,3), (1,0), params)
+    c2 = ConvLayer(p1.output_shape, (8,3,3), (1,0), params)
     net.add_layer(c2, "c2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "relu2")

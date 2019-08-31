@@ -181,7 +181,7 @@ class NeuralNet_4_2(object):
         loss_vld = loss_vld + regular_cost / vld_x.shape[0]
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
-        if self.loss_trace.IsMinimal(loss_vld):
+        if self.loss_trace.IsMaximum(accuracy_vld):
             self.save_parameters()
 
         # end if

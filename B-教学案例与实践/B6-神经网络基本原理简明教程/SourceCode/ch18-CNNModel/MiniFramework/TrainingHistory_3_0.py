@@ -16,7 +16,7 @@ class TrainingHistory_3_0(object):
         self.loss_val = []
         self.accuracy_val = []
         self.counter = 0
-        self.min_vld_loss = float("inf")
+        self.max_vld_acc = 0
         # for early stop
         self.early_stop = need_earlyStop
         self.patience = patience
@@ -59,10 +59,10 @@ class TrainingHistory_3_0(object):
 
         return False
 
-    def IsMinimal(self, loss_vld):
-        if loss_vld is not None:
-            if loss_vld < self.min_vld_loss:
-                self.min_vld_loss = loss_vld
+    def IsMaximum(self, acc_vld):
+        if acc_vld is not None:
+            if acc_vld > self.max_vld_acc:
+                self.max_vld_acc = acc_vld
                 return True
         return False
 

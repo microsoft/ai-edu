@@ -26,12 +26,12 @@ def dnn_model():
     num_output = 9
     max_epoch = 50
     batch_size = 16
-    learning_rate = 0.1
+    learning_rate = 0.01
     params = HyperParameters_4_2(
         learning_rate, max_epoch, batch_size,
         net_type=NetType.MultipleClassifier,
         init_method=InitialMethod.MSRA,
-        optimizer_name=OptimizerName.SGD)
+        optimizer_name=OptimizerName.Momentum)
 
     net = NeuralNet_4_2(params, "color_shape_dnn")
     
@@ -111,25 +111,25 @@ def train_cnn():
     net = cnn_model()
     x,y = dataReader.GetBatchTrainSamples(36, 0)
     show_samples(x,y,"sample")
-    return net, dataReader
+    net.train(dataReader, checkpoint=0.5, need_test=True)
+    net.ShowLossHistory(XCoordinate.Iteration)
+    X_test,Y_test = dataReader.GetTestSet()
+    X = dataReader.XTest[0:36]
+    Z = net.inference(X_test[0:36])
+    show_samples(X,Z,"cnn:predication")
 
 def train_dnn():
     dataReader = LoadData("vector")
     net = dnn_model()
     x,y = dataReader.GetBatchTrainSamples(36, 0)
-    return net, dataReader
+    net.train(dataReader, checkpoint=0.5, need_test=True)
+    net.ShowLossHistory(XCoordinate.Iteration)
+    X_test,Y_test = dataReader.GetTestSet()
+    Z = net.inference(X_test[0:36])
+    X = dataReader.XTestRaw[0:36]/255
+    show_samples(X,Z,"dnn:predication")
 
     
 if __name__ == '__main__':
-
-    #net, dataReader = train_cnn()
-    net, dataReader = train_dnn()
-
-    net.train(dataReader, checkpoint=0.5, need_test=True)
-    net.ShowLossHistory(XCoordinate.Iteration)
-  
-    X_test,Y_test = dataReader.GetTestSet()
-    Z = net.inference(X_test[0:36])
-    X = dataReader.XTestRaw[0:36]
-    show_samples(X,np.argmax(Z,axis=1).reshape(36,1),"dnn:predication")
-    #show_samples(X,np.argmax(Z,axis=1).reshape(36,1),"cnn:predication")
+    train_cnn()
+    #train_dnn()

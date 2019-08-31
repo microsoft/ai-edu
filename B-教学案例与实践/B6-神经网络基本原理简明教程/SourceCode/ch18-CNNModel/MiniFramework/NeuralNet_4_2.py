@@ -149,7 +149,6 @@ class NeuralNet_4_2(object):
                         break                
                 #end if
             # end for
-            self.save_parameters()
             if need_stop:
                 break
             # end if
@@ -161,7 +160,6 @@ class NeuralNet_4_2(object):
         if need_test:
             print("testing...")
             self.accuracy = self.Test(dataReader)
-            print(self.accuracy)
         # end if
 
     def CheckErrorAndLoss(self, dataReader, train_x, train_y, epoch, total_iteration):
@@ -183,6 +181,9 @@ class NeuralNet_4_2(object):
         loss_vld = loss_vld + regular_cost / vld_x.shape[0]
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
+        if self.loss_trace.IsMinimal(loss_vld):
+            self.save_parameters()
+
         # end if
         need_stop = self.loss_trace.Add(epoch, total_iteration, loss_train, accuracy_train, loss_vld, accuracy_vld, self.hp.stopper)
         if self.hp.stopper is not None:
@@ -193,8 +194,15 @@ class NeuralNet_4_2(object):
     def Test(self, dataReader):
         x,y = dataReader.GetTestSet()
         self.__forward(x, train=False)
-        _, correct = self.lossFunc.CheckLoss(self.output, y)
-        return correct
+        _, correct1 = self.lossFunc.CheckLoss(self.output, y)
+        print(correct1)
+
+        self.load_parameters()
+        self.__forward(x, train=False)
+        _, correct2 = self.lossFunc.CheckLoss(self.output, y)
+        print(correct2)
+
+        return correct2
 
     # save weights value when got low loss than before
     def save_parameters(self):

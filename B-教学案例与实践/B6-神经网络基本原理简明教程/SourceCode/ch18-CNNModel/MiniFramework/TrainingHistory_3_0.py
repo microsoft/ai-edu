@@ -16,7 +16,7 @@ class TrainingHistory_3_0(object):
         self.loss_val = []
         self.accuracy_val = []
         self.counter = 0
-
+        self.min_vld_loss = float("inf")
         # for early stop
         self.early_stop = need_earlyStop
         self.patience = patience
@@ -57,6 +57,13 @@ class TrainingHistory_3_0(object):
             # end if
         # end if
 
+        return False
+
+    def IsMinimal(self, loss_vld):
+        if loss_vld is not None:
+            if loss_vld < self.min_vld_loss:
+                self.min_vld_loss = loss_vld
+                return True
         return False
 
     # 图形显示损失函数值历史记录

@@ -12,7 +12,6 @@ test_data_name = "../../data/ch17.test_color.npz"
 
 name = ["red","green","blue","yellow","cyan","pink"]
 
-
 def LoadData(mode):
     print("reading data...")
     dr = GeometryDataReader(train_data_name, test_data_name, mode)
@@ -64,7 +63,7 @@ def cnn_model():
         init_method=InitialMethod.MSRA,
         optimizer_name=OptimizerName.SGD)
 
-    net = NeuralNet_4_2(params, "color_conv")
+    net = NeuralNet_4_2(params, "color_cnn")
     
     c1 = ConvLayer((3,28,28), (2,1,1), (1,0), params)
     net.add_layer(c1, "c1")

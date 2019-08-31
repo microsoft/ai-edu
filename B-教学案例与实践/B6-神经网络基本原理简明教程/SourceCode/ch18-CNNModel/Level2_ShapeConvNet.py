@@ -5,10 +5,11 @@ import time
 import matplotlib.pyplot as plt
 
 from MiniFramework.NeuralNet_4_2 import *
-from MiniFramework.DataReader_2_0 import *
+from ExtendedDataReader.GeometryDataReader import *
 
-train_data_name = "../../data/ch17.train.npz"
-test_data_name = "../../data/ch17.test.npz"
+train_data_name = "../../data/ch17.train_shape.npz"
+test_data_name = "../../data/ch17.test_shape.npz"
+
 name = ["circle","rectangle","triangle","diamond","line"]
 
 class DR(DataReader_2_0):
@@ -30,19 +31,9 @@ class DR(DataReader_2_0):
         X_NEW = (XRawData - x_min)/(x_max-x_min)
         return X_NEW
 
-def LoadVectorData():
+def LoadData(mode):
     print("reading data...")
-    dr = DR(train_data_name, test_data_name)
-    dr.ReadVectorData()
-    dr.NormalizeX()
-    dr.NormalizeY(NetType.MultipleClassifier, base=0)
-    dr.Shuffle()
-    dr.GenerateValidationSet(k=10)
-    return dr
-
-def LoadImageData():
-    print("reading data...")
-    dr = DataReader_2_0(train_data_name, test_data_name)
+    dr = GeometryDataReader(train_data_name, test_data_name, mode)
     dr.ReadData()
     dr.NormalizeX()
     dr.NormalizeY(NetType.MultipleClassifier, base=0)
@@ -62,16 +53,16 @@ def cnn_model():
         init_method=InitialMethod.MSRA,
         optimizer_name=OptimizerName.SGD)
 
-    net = NeuralNet_4_2(params, "pic_conv")
+    net = NeuralNet_4_2(params, "shape_cnn")
     
-    c1 = ConvLayer((1,28,28), (8,5,5), (1,0), params)
+    c1 = ConvLayer((1,28,28), (8,3,3), (1,1), params)
     net.add_layer(c1, "c1")
     r1 = ActivationLayer(Relu())
     net.add_layer(r1, "relu1")
     p1 = PoolingLayer(c1.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p1, "p1") 
 
-    c2 = ConvLayer(p1.output_shape, (16,5,5), (1,0), params)
+    c2 = ConvLayer(p1.output_shape, (16,3,3), (1,0), params)
     net.add_layer(c2, "c2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "relu2")
@@ -95,11 +86,11 @@ def cnn_model():
     return net
 
 def show_samples(x,y,title):
-    fig,ax = plt.subplots(nrows=4, ncols=4, figsize=(8,8))
-    for i in range(16):
-        ax[i//4,i%4].imshow(x[i,0])
-        ax[i//4,i%4].set_title(name[np.argmax(y[i])])
-        ax[i//4,i%4].axis('off')
+    fig,ax = plt.subplots(nrows=6, ncols=6, figsize=(9,9))
+    for i in range(36):
+        ax[i//6,i%6].imshow(x[i,0])
+        ax[i//6,i%6].set_title(name[np.argmax(y[i])])
+        ax[i//6,i%6].axis('off')
     #endfor
     plt.suptitle(title)
     plt.show()
@@ -115,7 +106,7 @@ def dnn_model():
         init_method=InitialMethod.MSRA,
         optimizer_name=OptimizerName.SGD)
 
-    net = NeuralNet_4_2(params, "pic_dnn")
+    net = NeuralNet_4_2(params, "shape_dnn")
     
     f1 = FcLayer_2_0(784, 128, params)
     net.add_layer(f1, "f1")
@@ -134,30 +125,29 @@ def dnn_model():
 
     return net
 
-if __name__ == '__main__':
-    
-    # for dnn
-    """
-    dataReader = LoadVectorData()
+def train_dnn():
+    dataReader = LoadData("vector")
     net = dnn_model()
-    x,y = dataReader.GetBatchTrainSamples(16, 0)
-    x = x.reshape(16,1,28,28)
-    """
-    #end for dnn
-    # for cnn
-    dataReader = LoadImageData()
-    net = cnn_model()
-    x,y = dataReader.GetBatchTrainSamples(16, 0)
-    # enf for cnn
-
+    x,y = dataReader.GetBatchTrainSamples(36, 0)
+    x = x.reshape(36,1,28,28)
     show_samples(x,y,"sample")
-    
+    return net, dataReader
+
+def train_cnn():
+    dataReader = LoadData("image")
+    net = cnn_model()
+    x,y = dataReader.GetBatchTrainSamples(36, 0)
+    #show_samples(x,y,"sample")
+    return net, dataReader
+
+if __name__ == '__main__':
+    #net,dataReader = train_dnn()    
+    net,dataReader = train_cnn()    
     net.train(dataReader, checkpoint=0.5, need_test=True)
     net.ShowLossHistory(XCoordinate.Iteration)
   
     X_test,Y_test = dataReader.GetTestSet()
-    for i in range(10):
-        start = i * 16
-        X = X_test[start:start+16].reshape(16,1,28,28)
-        Z = net.inference(X)
-        show_samples(X,Z,"predication")
+    X = X_test[0:36].reshape(36,1,28,28)
+    Z = net.inference(X)
+    #show_samples(X,Z,"dnn:predication")
+    show_samples(X,Z,"cnn:predication")

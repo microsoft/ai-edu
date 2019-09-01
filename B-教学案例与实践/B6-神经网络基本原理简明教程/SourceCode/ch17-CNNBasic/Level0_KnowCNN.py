@@ -12,10 +12,7 @@ from MiniFramework.PoolingLayer import *
 from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.jit_utility import *
 
-#cat_pic = "../../Data/cat.png"
-#car_pic = "../../Data/car.png"
-cat_pic = "../../Data/circle.png"
-car_pic = "../../Data/circle.png"
+circle_pic = "circle.png"
 
 def normalize(x, max_value=1):
     min = np.min(x)
@@ -25,6 +22,7 @@ def normalize(x, max_value=1):
 
 def try_filters(file_name):
     img = cv2.imread(file_name)
+    # cv2 format is:G B R, change it to R G B
     img1=img[:,:,[2,1,0]]
     #plt.imshow(img2)
     #plt.show()
@@ -78,17 +76,18 @@ def try_filters(file_name):
     fig, ax = plt.subplots(nrows=3, ncols=3, figsize=(9,9))
     for i in range(len(filters)):
         filter = np.repeat(filters[i], input_channel).reshape(batch_size, input_channel,FH,FW)
-        conv.set_filter(filter, np.array([10]))
+        conv.set_filter(filter, None)
         z = conv.forward(data)
         #z = normalize(z, 255)
         ax[i//3, i%3].imshow(z[0,0])
         ax[i//3, i%3].set_title(filters_name[i])
-    plt.suptitle("try filters")
+        ax[i//3, i%3].axis("off")
+    plt.suptitle("filters")
     plt.show()
     return z
 
 def conv_relu_pool():
-    img = cv2.imread(cat_pic)
+    img = cv2.imread(circle_pic)
     #img2 = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     batch_size = 1
     (height, width, input_channel) = img.shape
@@ -115,12 +114,16 @@ def conv_relu_pool():
 
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(8,6))
     ax[0,0].imshow(img[:,:,[2,1,0]])
+    ax[0,0].axis("off")
     ax[0,0].set_title("source:" + str(img.shape))
     ax[0,1].imshow(z1[0,0].T)
+    ax[0,1].axis("off")
     ax[0,1].set_title("conv:" + str(z1.shape))
     ax[1,0].imshow(z2[0,0].T)
+    ax[1,0].axis("off")
     ax[1,0].set_title("relu:" + str(z2.shape))
     ax[1,1].imshow(z3[0,0].T)
+    ax[1,1].axis("off")
     ax[1,1].set_title("pooling:" + str(z3.shape))
 
     plt.suptitle("conv-relu-pool")
@@ -128,6 +131,5 @@ def conv_relu_pool():
 
     
 if __name__ == '__main__':
-    #try_filters(cat_pic)
-    try_filters(car_pic)
+    try_filters(circle_pic)
     conv_relu_pool()

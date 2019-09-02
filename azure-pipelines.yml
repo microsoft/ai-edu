@@ -28,6 +28,6 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)/$(mdpath)_docx'
-    ArtifactName: 'drop'
+    PathtoPublish: '$(Build.SourcesDirectory)/$(mdpath)_docx/'
+    ArtifactName: 'docx'
     publishLocation: 'Container'

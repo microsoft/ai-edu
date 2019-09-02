@@ -11,6 +11,7 @@ pool:
 
 steps:
 - script: |
+    python -V
     cd "$(Build.BinariesDirectory)"
     git clone https://github.com/mslichao/md2docx
     cd md2docx

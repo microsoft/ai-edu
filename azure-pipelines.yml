@@ -14,11 +14,15 @@ steps:
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
     bash ~/miniconda.sh -b -p $HOME/miniconda
     eval "$(~/miniconda/bin/conda shell.bash hook)"
-    python -V
+    cd "$(Build.BinariesDirectory)"
+    git clone https://github.com/mslichao/md2docx
+    cd md2docx
+    pip install -r requirements.txt
+    python batchmd2docx.py "$(Build.SourcesDirectory)/E-Challenge"
   displayName: 'build'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)_docx'
+    PathtoPublish: '$(Build.SourcesDirectory)/E-Challenge_docx'
     ArtifactName: 'drop'
     publishLocation: 'Container'

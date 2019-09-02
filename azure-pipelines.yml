@@ -10,21 +10,15 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-
-# - task: PublishPipelineArtifact@1
-#   inputs:
-#     targetPath: '$(Pipeline.Workspace)'
-#     artifact: 'README.txt'
+    cd "$(Build.BinariesDirectory)"
+    git clone https://github.com/mslichao/md2docx
+    pip install -r requirements.txt
+    python batchmd2docx.py "$(Build.SourcesDirectory)/B-教学案例与实践/B6-神经网络基本原理简明教程"
+  displayName: 'build'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)'
+    PathtoPublish: '$(Build.SourcesDirectory)_docx'
     ArtifactName: 'drop'
     publishLocation: 'Container'

@@ -12,7 +12,7 @@ pool:
 steps:
 - script: |
     cd "$(Build.BinariesDirectory)"
-    git clone https://github.com/mslichao/
+    git clone https://github.com/mslichao/md2docx
     cd md2docx
     pip install -r requirements.txt
     python batchmd2docx.py "$(Build.SourcesDirectory)/B-教学案例与实践/B6-神经网络基本原理简明教程"

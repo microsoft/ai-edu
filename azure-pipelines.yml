@@ -10,6 +10,23 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+
+- script: |
+    mkdir "$(Build.SourcesDirectory)/$(mdpath)/summary"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step1 - BasicKnowledge/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/1.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step2 - LinearRegression/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/2.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step3 - LinearClassification/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/3.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step4 - NonLinearRegression/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/4.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step5 - NonLinearClassification/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/5.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step6 - Model Inference/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/6.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step7 - DNN/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/7.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step8 - CNN/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/8.md"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/Step9 - RNN/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/summary/9.md"
+    mkdir "$(Build.SourcesDirectory)/$(mdpath)/all"
+    cat "$(Build.SourcesDirectory)/$(mdpath)/summary/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/all/all.md"
+  displayName: 'merge'
+
+
 - script: |
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
     bash ~/miniconda.sh -b -p $HOME/miniconda
@@ -28,6 +45,18 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)/$(mdpath)_docx/'
+    PathtoPublish: '$(Build.SourcesDirectory)/$(mdpath)_docx'
     ArtifactName: 'docx'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/$(mdpath)_docx/summary'
+    ArtifactName: 'summary'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/$(mdpath)_docx/all'
+    ArtifactName: 'all'
     publishLocation: 'Container'

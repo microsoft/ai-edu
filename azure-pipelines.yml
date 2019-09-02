@@ -23,7 +23,7 @@ steps:
     cat $(Build.SourcesDirectory)/$(mdpath)/Step8\ -\ CNN/*.md > "$(Build.SourcesDirectory)/$(mdpath)/summary/8.md"
     # cat $(Build.SourcesDirectory)/$(mdpath)/Step9\ -\ RNN/*.md > "$(Build.SourcesDirectory)/$(mdpath)/summary/9.md"
     mkdir "$(Build.SourcesDirectory)/$(mdpath)/all"
-    cat "$(Build.SourcesDirectory)/$(mdpath)/summary/*.md" > "$(Build.SourcesDirectory)/$(mdpath)/all/all.md"
+    cat $(Build.SourcesDirectory)/$(mdpath)/summary/*.md > "$(Build.SourcesDirectory)/$(mdpath)/all/all.md"
   displayName: 'merge'
 
 

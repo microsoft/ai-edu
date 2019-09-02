@@ -18,11 +18,14 @@ steps:
     git clone https://github.com/mslichao/md2docx
     cd md2docx
     pip install -r requirements.txt
-    python batchmd2docx.py "$(Build.SourcesDirectory)/E-Challenge"
+  displayName: 'perpare env'
+
+- script: |
+    python batchmd2docx.py "$(Build.SourcesDirectory)${mdpath}"
   displayName: 'build'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)/E-Challenge_docx'
+    PathtoPublish: '$(Build.SourcesDirectory)/${mdpath}_docx'
     ArtifactName: 'drop'
     publishLocation: 'Container'

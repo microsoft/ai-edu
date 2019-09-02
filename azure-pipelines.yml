@@ -11,7 +11,7 @@ pool:
 
 steps:
 - script: |
-    ln -s python3 python
+    alias python=python3
     python -V
     cd "$(Build.BinariesDirectory)"
     git clone https://github.com/mslichao/md2docx

@@ -4,18 +4,13 @@
 import struct
 from MiniFramework.DataReader_2_0 import *
 
-train_image_file = '../../Data/train-images-10'
-train_label_file = '../../Data/train-labels-10'
-test_image_file = '../../Data/test-images-10'
-test_label_file = '../../Data/test-labels-10'
-
 class MnistImageDataReader(DataReader_2_0):
     # mode: "image"=Nx1x28x28,  "vector"=1x784
-    def __init__(self, mode="image"):
-        self.train_image_file = train_image_file
-        self.train_label_file = train_label_file
-        self.test_image_file = test_image_file
-        self.test_label_file = test_label_file
+    def __init__(self, train_x, train_y, test_x, test_y, mode="image"):
+        self.train_image_file = train_x
+        self.train_label_file = train_y
+        self.test_image_file = test_x
+        self.test_label_file = test_y
         self.num_example = 0
         self.num_feature = 0
         self.num_category = 0

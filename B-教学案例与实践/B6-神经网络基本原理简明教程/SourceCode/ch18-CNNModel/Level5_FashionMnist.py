@@ -4,10 +4,10 @@
 from MiniFramework.NeuralNet_4_2 import *
 from ExtendedDataReader.MnistImageDataReader import *
 
-train_x = '../../Data/train-images-10'
-train_y = '../../Data/train-labels-10'
-test_x = '../../Data/test-images-10'
-test_y = '../../Data/test-labels-10'
+train_x = '../../Data/FashionMnistTrainX'
+train_y = '../../Data/FashionMnistTrainY'
+test_x = '../../Data/FashionMnistTestX'
+test_y = '../../Data/FashionMnistTestY'
 
 def LoadData():
     mdr = MnistImageDataReader(train_x, train_y, test_x, test_y, "image")
@@ -29,7 +29,7 @@ def model():
         init_method=InitialMethod.Xavier,
         optimizer_name=OptimizerName.Momentum)
 
-    net = NeuralNet_4_2(params, "mnist_conv_test")
+    net = NeuralNet_4_2(params, "fashion_mnist_conv_test")
     
     c1 = ConvLayer((1,28,28), (8,5,5), (1,0), params)
     net.add_layer(c1, "c1")

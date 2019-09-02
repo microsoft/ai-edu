@@ -6,7 +6,7 @@ from MiniFramework.jit_utility import *
 from matplotlib import pyplot as plt
 import cv2
 
-circle_pic = "../../Data/circle.png"
+circle_pic = "circle.png"
 
 def normalize(x):
     min = np.min(x)

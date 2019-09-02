@@ -52,7 +52,7 @@ def understand_4d_col2img_simple():
     print("dW=\n", dW)
     dcol = np.dot(delta_in_2d, col_w.T)
     print("dcol=\n", dcol)
-    delta_out = col2img(dcol, x.shape, fh, fw, stride, padding)
+    delta_out = col2img(dcol, x.shape, fh, fw, stride, padding, output_height, output_width)
     print("delta_out=\n", delta_out)
 
 
@@ -94,7 +94,7 @@ def understand_4d_col2img_complex():
     print("dW=\n", dW)
     dcol = np.dot(delta_in_2d, col_w.T)
     print("dcol=\n", dcol)
-    delta_out = col2img(dcol, x.shape, fh, fw, stride, padding)
+    delta_out = col2img(dcol, x.shape, fh, fw, stride, padding, output_height, output_width)
     print("delta_out=\n", delta_out)
 
 if __name__ == '__main__':

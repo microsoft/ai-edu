@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2ba05392-aaac-4e4d-b640-52fb50b7a190</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ch17_color.py</StartupFile>
+    <StartupFile>ch17_shape_color.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -42,6 +42,7 @@
     <Compile Include="ch11.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ch17_shape_color.py" />
     <Compile Include="ch17_shape.py" />
     <Compile Include="ch17_color.py">
       <SubType>Code</SubType>

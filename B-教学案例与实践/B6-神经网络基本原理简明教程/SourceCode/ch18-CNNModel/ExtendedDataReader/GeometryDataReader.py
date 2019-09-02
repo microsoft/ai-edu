@@ -14,11 +14,11 @@ class GeometryDataReader(DataReader_2_0):
     def ConvertToGray(self, data):
         (N,C,H,W) = data.shape
         new_data = np.empty((N,H*W))
-        if C == 3: # color
-            for i in range(N):
+        for i in range(N):
+            if C == 3: # color
                 new_data[i] = np.dot([0.299,0.587,0.114], data[i].reshape(3,-1)).reshape(1,784)
-        elif C == 1: # gray
-            new_data[i] = data[i,0].reshape(1,784)
+            elif C == 1: # gray
+                new_data[i] = data[i,0].reshape(1,784)
         #end if
         return new_data
 

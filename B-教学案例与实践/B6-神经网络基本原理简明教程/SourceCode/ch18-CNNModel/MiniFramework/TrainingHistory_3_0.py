@@ -16,7 +16,7 @@ class TrainingHistory_3_0(object):
         self.loss_val = []
         self.accuracy_val = []
         self.counter = 0
-
+        self.max_vld_acc = 0
         # for early stop
         self.early_stop = need_earlyStop
         self.patience = patience
@@ -57,6 +57,13 @@ class TrainingHistory_3_0(object):
             # end if
         # end if
 
+        return False
+
+    def IsMaximum(self, acc_vld):
+        if acc_vld is not None:
+            if acc_vld > self.max_vld_acc:
+                self.max_vld_acc = acc_vld
+                return True
         return False
 
     # 图形显示损失函数值历史记录

@@ -11,13 +11,8 @@ pool:
 
 steps:
 - script: |
-    alias python=python3
-    python -V
-    cd "$(Build.BinariesDirectory)"
-    git clone https://github.com/mslichao/md2docx
-    cd md2docx
-    pip3 install --upgrade pip
-    python3 batchmd2docx.py "$(Build.SourcesDirectory)/E-Challenge"
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh
+    bash ~/miniconda.sh -b -p $HOME/miniconda
   displayName: 'build'
 
 - task: PublishBuildArtifacts@1

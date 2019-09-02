@@ -15,9 +15,8 @@ steps:
     cd "$(Build.BinariesDirectory)"
     git clone https://github.com/mslichao/md2docx
     cd md2docx
-    pip3 install --upgrade pip setuptools
-    pip3 install -r requirements.txt
-    python3 batchmd2docx.py "$(Build.SourcesDirectory)/B-教学案例与实践/B6-神经网络基本原理简明教程"
+    pip3 install --upgrade pip
+    python3 batchmd2docx.py "$(Build.SourcesDirectory)/E-Challenge"
   displayName: 'build'
 
 - task: PublishBuildArtifacts@1

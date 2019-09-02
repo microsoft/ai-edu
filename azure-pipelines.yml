@@ -21,6 +21,7 @@ steps:
   displayName: 'perpare env'
 
 - script: |
+    conda activate base
     cd "$(Build.BinariesDirectory)/md2docx"
     python batchmd2docx.py "$(Build.SourcesDirectory)${mdpath}"
   displayName: 'build'

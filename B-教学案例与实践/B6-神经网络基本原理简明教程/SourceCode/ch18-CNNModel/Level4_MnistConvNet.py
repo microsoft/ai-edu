@@ -10,7 +10,7 @@ test_x = '../../Data/test-images-10'
 test_y = '../../Data/test-labels-10'
 
 def LoadData():
-    mdr = MnistImageDataReader("image")
+    mdr = MnistImageDataReader(train_x, train_y, test_x, test_y, "image")
     mdr.ReadData()
     mdr.NormalizeX()
     mdr.NormalizeY(NetType.MultipleClassifier, base=0)
@@ -29,7 +29,7 @@ def model():
         init_method=InitialMethod.Xavier,
         optimizer_name=OptimizerName.Momentum)
 
-    net = NeuralNet_4_2(params, "mnist_conv_test")
+    net = NeuralNet_4_2(params, "mnist_cnn")
     
     c1 = ConvLayer((1,28,28), (8,5,5), (1,0), params)
     net.add_layer(c1, "c1")
@@ -39,7 +39,7 @@ def model():
     net.add_layer(p1, "p1") 
   
     c2 = ConvLayer(p1.output_shape, (16,5,5), (1,0), params)
-    net.add_layer(c2, "23")
+    net.add_layer(c2, "c2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "relu2")
     p2 = PoolingLayer(c2.output_shape, (2,2), 2, PoolingTypes.MAX)
@@ -64,12 +64,3 @@ if __name__ == '__main__':
     net = model()
     net.train(dataReader, checkpoint=0.05, need_test=True)
     net.ShowLossHistory(XCoordinate.Iteration)
-
-    X,Y = dataReader.GetTestSet()
-    assert(X.shape[0] == Y.shape[0])
-    Z = net.inference(X)
-    count = X.shape[0]
-    for i in range(count):
-        plt.imshow(X[i].reshape(28,28))
-        plt.title(np.argmax(Z[i]))
-        plt.show()

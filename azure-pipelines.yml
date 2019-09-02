@@ -23,11 +23,11 @@ steps:
 - script: |
     eval "$(~/miniconda/bin/conda shell.bash hook)"
     cd "$(Build.BinariesDirectory)/md2docx"
-    python batchmd2docx.py "$(Build.SourcesDirectory)${mdpath}"
+    python batchmd2docx.py "$(Build.SourcesDirectory)$(mdpath)"
   displayName: 'build'
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)/${mdpath}_docx'
+    PathtoPublish: '$(Build.SourcesDirectory)/$(mdpath)_docx'
     ArtifactName: 'drop'
     publishLocation: 'Container'

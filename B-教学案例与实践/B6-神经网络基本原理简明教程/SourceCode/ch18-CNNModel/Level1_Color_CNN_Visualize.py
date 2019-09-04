@@ -3,6 +3,7 @@
 
 import time
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 
 from MiniFramework.NeuralNet_4_2 import *
 from Level1_Color_CNN import *
@@ -20,41 +21,42 @@ def normalize(x):
     x_n = (x - min)/(max - min)
     return x_n
 
-def visualize_filter_and_layer_2(net,X):
-    fig, ax = plt.subplots(nrows=3, ncols=6, figsize=(8,6))
-    N = 6
-    C = 3
-    # conv1, relu1, pool1
-    for i in range(6):
-        z = normalize(net.layer_list[3].z)
-        a = normalize(net.layer_list[4].a)
-        for j in range(2):
-            ax[0,i].imshow(X[i].transpose(1,2,0))
-            ax[0,i].axis('off')
-
-            ax[1,i].imshow(z[i].transpose(1,2,0))
-            ax[1,i].axis('off')
-
-            ax[2,i].imshow(a[i].transpose(1,2,0))
-            ax[2,i].axis('off')
-
-
-    plt.suptitle("layer1:filter,conv,relu,pool")
-    plt.show()
-
-
-def visualize_filter_and_layer_1(net):
-    fig, ax = plt.subplots(nrows=2, ncols=6, figsize=(4,2))
+def visualize_filter_and_layer(net,X):
+    fig, ax = plt.subplots(nrows=5, ncols=6, figsize=(8,8))
     N = 6
     C = 2
     # conv1, relu1, pool1
-    for i in range(6):
-        z = net.layer_list[0].z
+    for i in range(N):
+        #z = net.layer_list[0].z
+        z = normalize(net.layer_list[0].z)
         for j in range(C):
-            ax[j,i].imshow(z[i,j], cmap='gray')
-            ax[j,i].axis('off')
-    plt.suptitle("layer1:filter,conv,relu,pool")
+            ax[0,i].imshow(X[i].transpose(1,2,0))
+            ax[0,i].axis('off')
+
+            z[i,j,0,0]=0
+            z[i,j,27,27]=1
+            ax[j+1,i].imshow(z[i,j])
+            ax[j+1,i].axis('off')
+    plt.suptitle("color cnn")
+
+    N = 6
+    C = 3
+    # conv1, relu1, pool1
+    for i in range(N):
+        z = normalize(net.layer_list[3].z)
+        a = normalize(net.layer_list[4].a)
+        for j in range(2):
+            ax[3,i].imshow(z[i].transpose(1,2,0))
+            ax[3,i].axis('off')
+
+            ax[4,i].imshow(a[i].transpose(1,2,0))
+            ax[4,i].axis('off')
+
+
     plt.show()
+
+
+
 
 if __name__ == '__main__':
     net = cnn_model()
@@ -70,5 +72,4 @@ if __name__ == '__main__':
 
     print(net.layer_list[0].WB.W)    
     print(net.layer_list[0].WB.B)
-    #visualize_filter_and_layer_1(net)
-    visualize_filter_and_layer_2(net,X)
+    visualize_filter_and_layer(net,X)

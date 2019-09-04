@@ -28,6 +28,7 @@
     <Compile Include="ExtendedDataReader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Level2_Shape_CNN_Visualize.py" />
     <Compile Include="Level1_Color_CNN_Visualize.py" />
     <Compile Include="Level1_Color_DNN.py" />
     <Compile Include="Level1_Color_CNN.py" />

@@ -12,25 +12,6 @@ test_data_name = "../../data/ch17.test_shape.npz"
 
 name = ["circle","rectangle","triangle","diamond","line"]
 
-class DR(DataReader_2_0):
-    def ReadVectorData(self):
-        super().ReadData()
-        self.XTrainRaw = self.XTrainRaw.reshape(-1,784).astype('float32')
-        self.XTestRaw = self.XTestRaw.reshape(-1,784).astype('float32')
-        self.num_category = 5
-        self.num_feature = 784
-
-    def NormalizeX(self):
-        self.XTrain = self.__NormalizeData(self.XTrainRaw)
-        self.XTest = self.__NormalizeData(self.XTestRaw)
-
-    def __NormalizeData(self, XRawData):
-        X_NEW = np.zeros(XRawData.shape)
-        x_max = np.max(XRawData)
-        x_min = np.min(XRawData)
-        X_NEW = (XRawData - x_min)/(x_max-x_min)
-        return X_NEW
-
 def LoadData(mode):
     print("reading data...")
     dr = GeometryDataReader(train_data_name, test_data_name, mode)
@@ -40,7 +21,6 @@ def LoadData(mode):
     dr.Shuffle()
     dr.GenerateValidationSet(k=10)
     return dr
-
 
 def cnn_model():
     num_output = 5
@@ -94,7 +74,6 @@ def show_samples(x,y,title):
     #endfor
     plt.suptitle(title)
     plt.show()
-
 
 def train_cnn():
     dataReader = LoadData("image")

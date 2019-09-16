@@ -29,6 +29,7 @@
     <Compile Include="MiniFramework\ActivationLayer.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py" />
     <Compile Include="MiniFramework\ClassificationLayer.py" />
+    <Compile Include="MiniFramework\DataReader_3_0.py" />
     <Compile Include="MiniFramework\DataReader_2_0.py" />
     <Compile Include="MiniFramework\DropoutLayer.py" />
     <Compile Include="MiniFramework\EnumDef_6_0.py" />

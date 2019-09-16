@@ -4,15 +4,19 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
-from MiniFramework.DataReader_2_0 import *
+from MiniFramework.EnumDef_6_0 import *
+from MiniFramework.DataReader_3_0 import *
 from MiniFramework.ActivationLayer import *
+from MiniFramework.LossFunction_1_1 import *
 
 train_file = "../../data/ch19.train_echo.npz"
 test_file = "../../data/ch19.test_echo.npz"
 
 def load_data():
-    dr = DataReader_2_0(train_file, test_file)
+    dr = DataReader_3_0(train_file, test_file)
     dr.ReadData()
+    dr.GenerateRnnSamples(2)
+    dr.GenerateValidationSet(k=10)
     return dr
 
 def show(x, y, x_label, y_label):
@@ -29,7 +33,7 @@ class timestep_1(object):
         self.x = x
         self.z = np.dot(self.x, U) + bz
         self.h = Tanh().forward(self.z)
-        self.a = np.dot(self.h, V) + ba
+        self.a = 0
 
     def backward(self, y, dz_t2):
         self.da = self.a - y
@@ -59,52 +63,70 @@ class timestep_2(object):
         self.dba = self.da
         self.dbz = self.dz
 
-def train(dr):
-    num_hidden = 1
-    max_epoch = 1000
-    eta = 0.1
-    U = np.random.random((1,num_hidden))
-    V = np.random.random((num_hidden,1))
-    W = np.random.random((num_hidden,num_hidden))
-    bz = np.zeros((1,num_hidden))
-    ba = np.zeros((1,1))
-    count=200
-    t1 = timestep_1()
-    t2 = timestep_2()
-    for epoch in range(max_epoch):
-        for i in range(count-1):
-            # get data
-            batch_x, batch_y = dr.GetBatchTrainSamples(2, i)
-            x1 = batch_x[0]
-            x2 = batch_x[1]
-            y1 = batch_y[0]
-            y2 = batch_y[1]
-            # forward
-            t1.forward(x1,U,V,W,bz,ba)
-            t2.forward(x2,t1.h,U,V,W,bz,ba)
-            # backward
-            t2.backward(y2)
-            t1.backward(y1,t2.dz)
-            # update
-            U = U - (t1.dU + t2.dU)*eta
-            V = V - (t1.dV + t2.dV)*eta
-            W = W - (t1.dW + t2.dW)*eta
-            ba = ba - (t1.dba + t2.dba)*eta
-            bz = bz - (t1.dbz + t2.dbz)*eta
+class net(object):
+    def __init__(self, dr):
+        self.dr = dr
+        self.loss_fun = LossFunction_1_1(NetType.Fitting)
+        self.t1 = timestep_1()
+        self.t2 = timestep_2()
+
+    def check_loss(self,dr):
+        X,Y = dr.GetValidationSet()
+        self.t1.forward(X[:,0:1],self.U,self.V,self.W,self.bz,self.ba)
+        self.t2.forward(X[:,1:2],self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
+        #loss1,acc1 = loss_fun.CheckLoss(t1.a,y1)
+        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.a,Y[:,1:2])
+        #loss = loss1 + loss2
+        return loss2,acc2
+
+    def train(self):
+        num_hidden = 1
+        max_epoch = 5000
+        eta = 0.1
+        self.U = np.random.random((1,num_hidden))*2-1
+        self.V = np.random.random((num_hidden,1))*2-1
+        self.W = np.random.random((num_hidden,num_hidden))*2-1
+        self.bz = np.zeros((1,num_hidden))
+        self.ba = np.zeros((1,1))
+        for epoch in range(max_epoch):
+            for i in range(dr.num_train):
+                # get data
+                batch_x, batch_y = self.dr.GetBatchTrainSamples(1, i)
+                x1 = batch_x[:,0]
+                x2 = batch_x[:,1]
+                y1 = batch_y[:,0]
+                y2 = batch_y[:,1]
+                # forward
+                self.t1.forward(x1,self.U,self.V,self.W,self.bz,self.ba)
+                self.t2.forward(x2,self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
+                # backward
+                self.t2.backward(y2)
+                self.t1.backward(0,self.t2.dz)
+                # update
+                self.U = self.U - (self.t1.dU + self.t2.dU)*eta
+                self.V = self.V - (self.t1.dV + self.t2.dV)*eta
+                self.W = self.W - (self.t1.dW + self.t2.dW)*eta
+                self.ba = self.ba - (self.t1.dba + self.t2.dba)*eta
+                self.bz = self.bz - (self.t1.dbz + self.t2.dbz)*eta
+            #end for
+            if (epoch % 100 == 0):
+                loss,acc = self.check_loss(dr)
+                print(epoch)
+                print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
         #end for
-        if (epoch % 10 == 0):
-            loss = check_loss(t1,t2,
-                          dr.XTrain[0:count-1].reshape(count-1,1),
-                          dr.XTrain[1:count].reshape(count-1,1),
-                          dr.YTrain[0:count-1].reshape(count-1,1),
-                          dr.YTrain[1:count].reshape(count-1,1))
-            print(loss)
-    #end for
 
-
-
+    def test(self):
+        print("testing...")
+        X,Y = dr.GetTestSet()
+        self.t1.forward(X[:,0:1],self.U,self.V,self.W,self.bz,self.ba)
+        self.t2.forward(X[:,1:2],self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
+        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.a,Y[:,1:2])
+        print(str.format("loss={0:6f}, acc={1:6f}", loss2, acc2))
+        show(X[:,0],self.t2.a,"test","predication")
+        
 if __name__=='__main__':
     dr = load_data()
-    show(dr.XTrain, dr.YTrain, "X", "Y")
-
-    train(dr)
+    #show(dr.XTrain, dr.YTrain, "X", "Y")
+    n = net(dr)
+    n.train()
+    n.test()

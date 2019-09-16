@@ -196,3 +196,4 @@ class DataReader_2_0(object):
         YP = np.random.permutation(self.YTrain)
         self.XTrain = XP
         self.YTrain = YP
+

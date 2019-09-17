@@ -163,14 +163,20 @@ class DataReader_2_0(object):
 
     # need explicitly call this function to generate validation set
     def GenerateValidationSet(self, k = 10):
-        self.num_validation = (int)(self.num_train / k)
-        self.num_train = self.num_train - self.num_validation
-        # validation set
-        self.XDev = self.XTrain[0:self.num_validation]
-        self.YDev = self.YTrain[0:self.num_validation]
-        # train set
-        self.XTrain = self.XTrain[self.num_validation:]
-        self.YTrain = self.YTrain[self.num_validation:]
+        if (k == 0):
+            self.num_validation = self.num_train
+            # validation set
+            self.XDev = self.XTrain
+            self.YDev = self.YTrain
+        else:
+            self.num_validation = (int)(self.num_train / k)
+            self.num_train = self.num_train - self.num_validation
+            # validation set
+            self.XDev = self.XTrain[0:self.num_validation]
+            self.YDev = self.YTrain[0:self.num_validation]
+            # train set
+            self.XTrain = self.XTrain[self.num_validation:]
+            self.YTrain = self.YTrain[self.num_validation:]
 
     def GetValidationSet(self):
         return self.XDev, self.YDev

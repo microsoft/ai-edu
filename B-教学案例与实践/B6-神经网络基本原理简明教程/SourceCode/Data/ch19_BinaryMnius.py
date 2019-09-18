@@ -23,10 +23,13 @@ def create_data():
 
 if __name__=='__main__':
     a,b,c = create_data()
-    count = len(a)
     binary8 = np.unpackbits(np.array([range(16)],dtype=np.uint8).T,axis=1)
     bin4 = binary8[:,4:8]
+    for i in range(bin4.shape[0]):
+        bin4[i] = bin4[i][::-1]
     print(bin4)
+    
+    count = len(a)
     X = np.zeros((count,4,2))
     Y = np.zeros((count,4))
     for i in range(count):

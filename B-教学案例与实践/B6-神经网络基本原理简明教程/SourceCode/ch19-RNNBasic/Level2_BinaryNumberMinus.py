@@ -29,10 +29,10 @@ class timestep(object):
         self.z = np.dot(x, U) + np.dot(h_t, W) + bz
         self.h = Tanh().forward(self.z)
         self.a = np.dot(self.h, V) + ba
-        self.o = Logistic().forward(self.a)
+        self.output = Logistic().forward(self.a)
 
     def backward(self, y, dz_t):
-        self.da = self.a - y
+        self.da = self.output - y
         self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_t, self.W.T)) * Tanh().backward(self.h)
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
@@ -41,23 +41,25 @@ class timestep(object):
         self.dbz = self.dz
 
 class timestep_1(timestep):
+    # compare with timestep class: no h_t value from previous layer
     def forward(self,x,U,V,W,bz,ba):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        self.z = np.dot(self.x, U) + bz
+        self.z = np.dot(self.x, U) + bz #  + np.dot(h_t, W), here h_t == 0
         self.h = Tanh().forward(self.z)
         self.a = np.dot(self.h, V) + ba
-        self.o = Logistic().forward(self.a)
+        self.output = Logistic().forward(self.a)
 
 class timestep_4(timestep):
+    # compare with timestep class: no dz_t from future layer
     def backward(self, y):
-        self.da = self.a - y
+        self.da = self.output - y
         self.dz = np.dot(self.da, self.V.T) * Tanh().backward(self.h)
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
-        self.dW = 0
+        self.dW = 0 # = np.dot(self.h.T, dz_t), here dz_t == 0
         self.dba = self.da
         self.dbz = self.dz
 
@@ -85,10 +87,10 @@ class net(object):
     def check_loss(self,X,Y):
         #X,Y = dr.GetValidationSet()
         self.forward(X)
-        loss1,acc1 = self.loss_fun.CheckLoss(self.t1.o,Y[:,0:1])
-        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.o,Y[:,1:2])
-        loss3,acc3 = self.loss_fun.CheckLoss(self.t3.o,Y[:,2:3])
-        loss4,acc4 = self.loss_fun.CheckLoss(self.t4.o,Y[:,3:4])
+        loss1,acc1 = self.loss_fun.CheckLoss(self.t1.output,Y[:,0:1])
+        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.output,Y[:,1:2])
+        loss3,acc3 = self.loss_fun.CheckLoss(self.t3.output,Y[:,2:3])
+        loss4,acc4 = self.loss_fun.CheckLoss(self.t4.output,Y[:,3:4])
         loss = (loss1 + loss2 + loss3 + loss4)/4
         acc = acc1 * acc2 * acc3 * acc4
         return loss,acc

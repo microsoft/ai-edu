@@ -21,25 +21,24 @@ def load_data():
     return dr
 
 class timestep(object):
-    def forward(self,x,h_t,U,V,W,bz,ba):
+    def forward(self,x,h_prev,U,V,W,bz,ba):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        self.z = np.dot(x, U) + np.dot(h_t, W) + bz
+        self.z = np.dot(x, U) + np.dot(h_prev, W) #+ bz
         self.h = Tanh().forward(self.z)
-        self.a = np.dot(self.h, V) + ba
+        self.a = np.dot(self.h, V) #+ ba
         self.output = Logistic().forward(self.a)
 
-    def backward(self, y, dz_t):
-        #self.da = (self.output - y)
-        self.da = (self.output - y) * Sigmoid().backward(self.output)
-        self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_t, self.W.T)) * Tanh().backward(self.h)
+    def backward(self, y, h_prev, dz_next):
+        self.da = (self.output - y)
+        self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_next, self.W.T)) * Tanh().backward(self.h)
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
-        self.dW = np.dot(self.h.T, dz_t)
-        self.dba = self.da
-        self.dbz = self.dz
+        self.dW = np.dot(h_prev.T, self.dz)
+        #self.dba = self.da
+        #self.dbz = self.dz
 
 class timestep_1(timestep):
     # compare with timestep class: no h_t value from previous layer
@@ -48,22 +47,30 @@ class timestep_1(timestep):
         self.V = V
         self.W = W
         self.x = x
-        self.z = np.dot(self.x, U) + bz #  + np.dot(h_t, W), here h_t == 0
+        self.z = np.dot(self.x, U) #+ bz
         self.h = Tanh().forward(self.z)
-        self.a = np.dot(self.h, V) + ba
+        self.a = np.dot(self.h, V) #+ ba
         self.output = Logistic().forward(self.a)
+
+    def backward(self, y, dz_next):
+        self.da = (self.output - y)
+        self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_next, self.W.T)) * Tanh().backward(self.h)
+        self.dV = np.dot(self.h.T, self.da)
+        self.dU = np.dot(self.x.T, self.dz)
+        self.dW = 0
+        #self.dba = self.da
+        #self.dbz = self.dz
 
 class timestep_4(timestep):
     # compare with timestep class: no dz_t from future layer
-    def backward(self, y):
-        #self.da = self.output - y
-        self.da = (self.output - y) * Sigmoid().backward(self.output)
+    def backward(self, y, h_prev):
+        self.da = self.output - y
         self.dz = np.dot(self.da, self.V.T) * Tanh().backward(self.h)
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
-        self.dW = 0 # = np.dot(self.h.T, dz_t), here dz_t == 0
-        self.dba = self.da
-        self.dbz = self.dz
+        self.dW = np.dot(h_prev.T, self.dz)
+        #self.dba = self.da
+        #self.dbz = self.dz
 
 class net(object):
     def __init__(self, dr):
@@ -80,11 +87,11 @@ class net(object):
         self.t3.forward(X[:,2],self.t2.h,self.U,self.V,self.W,self.bz,self.ba)
         self.t4.forward(X[:,3],self.t3.h,self.U,self.V,self.W,self.bz,self.ba)
 
-    def backward(self,X,Y):
-        self.t4.backward(Y[:,0])
-        self.t3.backward(Y[:,1], self.t4.dz)
-        self.t2.backward(Y[:,2], self.t3.dz)
-        self.t1.backward(Y[:,3], self.t2.dz)
+    def backward(self,Y):
+        self.t4.backward(Y[:,3], self.t3.h)
+        self.t3.backward(Y[:,2], self.t2.h, self.t4.dz)
+        self.t2.backward(Y[:,1], self.t1.h, self.t3.dz)
+        self.t1.backward(Y[:,0],            self.t2.dz)
 
     def check_loss(self,X,Y):
         self.forward(X)
@@ -92,15 +99,21 @@ class net(object):
         loss2,acc2 = self.loss_fun.CheckLoss(self.t2.output,Y[:,1:2])
         loss3,acc3 = self.loss_fun.CheckLoss(self.t3.output,Y[:,2:3])
         loss4,acc4 = self.loss_fun.CheckLoss(self.t4.output,Y[:,3:4])
+        output = np.concatenate((self.t1.output,self.t2.output,self.t3.output,self.t4.output), axis=1)
+        result = np.round(output)
+        count = 0
+        for i in range(X.shape[0]):
+            if (np.allclose(result[i], Y[i])):
+                count += 1
+        acc = count/X.shape[0]
         loss = (loss1 + loss2 + loss3 + loss4)/4
-        acc = (acc1 + acc2 + acc3 + acc4)/4
-        return loss,acc
+        return loss,acc,result
 
     def train(self):
         num_input = 2
         num_hidden = 4
         num_output = 1
-        max_epoch = 1000
+        max_epoch = 20
         eta = 0.1
         self.U = np.random.random((num_input,num_hidden))*2-1
         self.W = np.random.random((num_hidden,num_hidden))*2-1
@@ -113,16 +126,16 @@ class net(object):
                 batch_x, batch_y = self.dr.GetBatchTrainSamples(1, i)
                 # forward
                 self.forward(batch_x)
-                self.backward(batch_x, batch_y)
+                self.backward(batch_y)
                 # update
-                self.U = self.U - (self.t1.dU + self.t2.dU + self.t3.dU + self.t4.dU)*eta/4
-                self.V = self.V - (self.t1.dV + self.t2.dV + self.t3.dV + self.t4.dV)*eta/4
-                self.W = self.W - (self.t1.dW + self.t2.dW + self.t3.dW + self.t4.dW)*eta/4
-                self.ba = self.ba - (self.t1.dba + self.t2.dba + self.t3.dba + self.t4.dba)*eta/4
-                self.bz = self.bz - (self.t1.dbz + self.t2.dbz + self.t3.dbz + self.t4.dbz)*eta/4
+                self.U = self.U - (self.t1.dU + self.t2.dU + self.t3.dU + self.t4.dU)*eta
+                self.V = self.V - (self.t1.dV + self.t2.dV + self.t3.dV + self.t4.dV)*eta
+                self.W = self.W - (self.t1.dW + self.t2.dW + self.t3.dW + self.t4.dW)*eta
+                #self.ba = self.ba - (self.t1.dba + self.t2.dba + self.t3.dba + self.t4.dba)*eta
+                #self.bz = self.bz - (self.t1.dbz + self.t2.dbz + self.t3.dbz + self.t4.dbz)*eta
             #end for
             if (epoch % 1 == 0):
-                """
+                
                 d = np.empty((1,4))
                 d[0,0] = np.round(self.t1.output[0][0])
                 d[0,1] = np.round(self.t2.output[0][0])
@@ -131,9 +144,9 @@ class net(object):
                 print(batch_x)
                 print(batch_y)
                 print(d)
-                """
+                
                 X,Y = dr.GetValidationSet()
-                loss,acc = self.check_loss(X,Y)
+                loss,acc,_ = self.check_loss(X,Y)
                 print(epoch)
                 print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
         #end for
@@ -142,9 +155,25 @@ class net(object):
         print("testing...")
         X,Y = dr.GetTestSet()
         count = X.shape[0]
-        loss,acc = self.check_loss(X,Y)
+        loss,acc,result = self.check_loss(X,Y)
         print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
-        
+        r = np.random.randint(0,count,2)
+        for i in range(2):
+            idx = r[i]
+            x1 = X[idx,:,0]
+            x2 = X[idx,:,1]
+            print("  x1:", reverse(x1))
+            print("- x2:", reverse(x2))
+            print("------------------")
+            print("true:", reverse(Y[idx]))
+            print("pred:", reverse(result[idx]))
+            print("==================")
+
+def reverse(a):
+    l = a.tolist()
+    l.reverse()
+    return l
+
 if __name__=='__main__':
     dr = load_data()
     count = dr.num_train

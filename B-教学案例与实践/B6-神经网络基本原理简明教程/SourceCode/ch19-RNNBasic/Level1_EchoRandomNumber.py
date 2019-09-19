@@ -39,7 +39,7 @@ class timestep_1(object):
         self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_t2, self.W.T)) * Tanh().backward(self.h)
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
-        self.dW = np.dot(self.h.T, dz_t2)
+        self.dW = 0
         self.dba = self.da
         self.dbz = self.dz
 
@@ -53,12 +53,12 @@ class timestep_2(object):
         self.h = Tanh().forward(self.z)
         self.a = np.dot(self.h, V) + ba
 
-    def backward(self, y):
+    def backward(self, y, h_t1):
         self.da = self.a - y
         self.dz = np.dot(self.da, self.V.T) * Tanh().backward(self.h)
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
-        self.dW = 0
+        self.dW = np.dot(h_t1.T, self.dz)
         self.dba = self.da
         self.dbz = self.dz
 
@@ -101,7 +101,7 @@ class net(object):
                 self.t1.forward(xt1,self.U,self.V,self.W,self.bz,self.ba)
                 self.t2.forward(xt2,self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
                 # backward
-                self.t2.backward(yt2)
+                self.t2.backward(yt2, self.t1.h)
                 self.t1.backward(yt1, self.t2.dz)
                 # update
                 self.U = self.U - (self.t1.dU + self.t2.dU)*eta

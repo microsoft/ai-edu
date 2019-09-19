@@ -12,7 +12,7 @@ def create_data():
     b = []
     c = []
     for i in range(0,16):
-        for j in range(0,i+1):
+        for j in range(0,i):
             print(count,i,j)
             count+=1
             k = i - j

@@ -37,8 +37,8 @@ class timestep(object):
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
         self.dW = np.dot(h_prev.T, self.dz)
-        #self.dba = self.da
-        #self.dbz = self.dz
+        self.dba = self.da
+        self.dbz = self.dz
 
 class timestep_1(timestep):
     # compare with timestep class: no h_t value from previous layer
@@ -58,8 +58,8 @@ class timestep_1(timestep):
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
         self.dW = 0
-        #self.dba = self.da
-        #self.dbz = self.dz
+        self.dba = self.da
+        self.dbz = self.dz
 
 class timestep_4(timestep):
     # compare with timestep class: no dz_t from future layer
@@ -69,8 +69,8 @@ class timestep_4(timestep):
         self.dV = np.dot(self.h.T, self.da)
         self.dU = np.dot(self.x.T, self.dz)
         self.dW = np.dot(h_prev.T, self.dz)
-        #self.dba = self.da
-        #self.dbz = self.dz
+        self.dba = self.da
+        self.dbz = self.dz
 
 class net(object):
     def __init__(self, dr):
@@ -111,7 +111,7 @@ class net(object):
 
     def train(self):
         num_input = 2
-        num_hidden = 4
+        num_hidden = 3
         num_output = 1
         max_epoch = 100
         eta = 0.1
@@ -121,6 +121,7 @@ class net(object):
         self.bz = np.zeros((1,num_hidden))
         self.ba = np.zeros((1,num_output))
         for epoch in range(max_epoch):
+            dr.Shuffle()
             for i in range(dr.num_train):
                 # get data
                 batch_x, batch_y = self.dr.GetBatchTrainSamples(1, i)
@@ -131,8 +132,8 @@ class net(object):
                 self.U = self.U - (self.t1.dU + self.t2.dU + self.t3.dU + self.t4.dU)*eta
                 self.V = self.V - (self.t1.dV + self.t2.dV + self.t3.dV + self.t4.dV)*eta
                 self.W = self.W - (self.t1.dW + self.t2.dW + self.t3.dW + self.t4.dW)*eta
-                #self.ba = self.ba - (self.t1.dba + self.t2.dba + self.t3.dba + self.t4.dba)*eta
-                #self.bz = self.bz - (self.t1.dbz + self.t2.dbz + self.t3.dbz + self.t4.dbz)*eta
+                self.ba = self.ba - (self.t1.dba + self.t2.dba + self.t3.dba + self.t4.dba)*eta
+                self.bz = self.bz - (self.t1.dbz + self.t2.dbz + self.t3.dbz + self.t4.dbz)*eta
             #end for
             if (epoch % 1 == 0):                
                 X,Y = dr.GetValidationSet()

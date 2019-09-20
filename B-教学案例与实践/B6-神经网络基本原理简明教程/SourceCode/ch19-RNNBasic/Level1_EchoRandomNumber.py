@@ -25,42 +25,42 @@ def show(x1, y1, x2, y2, x_label, y_label):
     plt.show()
 
 class timestep_1(object):
-    def forward(self,x,U,V,W,bz,ba):
+    def forward(self,x,U,V,W,bh):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        self.z = np.dot(self.x, U) + bz
-        self.h = Tanh().forward(self.z)
-        self.a = 0
+        self.h = np.dot(self.x, U) + bh
+        self.s = Tanh().forward(self.h)
+        self.z = 0
 
     def backward(self, y, dz_t2):
-        self.da = self.a - y
-        self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_t2, self.W.T)) * Tanh().backward(self.h)
-        self.dV = np.dot(self.h.T, self.da)
-        self.dU = np.dot(self.x.T, self.dz)
+        self.dz = self.z - y
+        self.dh = (np.dot(self.dz, self.V.T) + np.dot(dz_t2, self.W.T)) * Tanh().backward(self.s)
+        self.dV = np.dot(self.s.T, self.dz)
+        self.dU = np.dot(self.x.T, self.dh)
         self.dW = 0
-        self.dba = self.da
         self.dbz = self.dz
+        self.dbh = self.dh
 
 class timestep_2(object):
-    def forward(self,x,h_t1,U,V,W,bz,ba):
+    def forward(self,x,s_t1,U,V,W,bh,bz):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        self.z = np.dot(x, U) + np.dot(h_t1, W) + bz
-        self.h = Tanh().forward(self.z)
-        self.a = np.dot(self.h, V) + ba
+        self.h = np.dot(x, U) + np.dot(s_t1, W) + bh
+        self.s = Tanh().forward(self.h)
+        self.z = np.dot(self.s, V) + bz
 
-    def backward(self, y, h_t1):
-        self.da = self.a - y
-        self.dz = np.dot(self.da, self.V.T) * Tanh().backward(self.h)
-        self.dV = np.dot(self.h.T, self.da)
-        self.dU = np.dot(self.x.T, self.dz)
-        self.dW = np.dot(h_t1.T, self.dz)
-        self.dba = self.da
+    def backward(self, y, s_t1):
+        self.dz = self.z - y
+        self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
+        self.dV = np.dot(self.s.T, self.dz)
+        self.dU = np.dot(self.x.T, self.dh)
+        self.dW = np.dot(s_t1.T, self.dh)
         self.dbz = self.dz
+        self.dbh = self.dh
 
 class net(object):
     def __init__(self, dr):
@@ -71,10 +71,10 @@ class net(object):
 
     def check_loss(self,dr):
         X,Y = dr.GetValidationSet()
-        self.t1.forward(X[:,0],self.U,self.V,self.W,self.bz,self.ba)
-        self.t2.forward(X[:,1],self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
+        self.t1.forward(X[:,0],self.U,self.V,self.W,self.bh)
+        self.t2.forward(X[:,1],self.t1.s,self.U,self.V,self.W,self.bh,self.bz)
         #loss1,acc1 = loss_fun.CheckLoss(t1.a,y1)
-        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.a,Y[:,1:2])
+        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.z,Y[:,1:2])
         #loss = loss1 + loss2
         return loss2,acc2
 
@@ -82,13 +82,13 @@ class net(object):
         num_input = 1
         num_hidden = 1
         num_output = 1
-        max_epoch = 1000
+        max_epoch = 100
         eta = 0.1
         self.U = np.random.random((num_input,num_hidden))*2-1
         self.W = np.random.random((num_hidden,num_hidden))*2-1
         self.V = np.random.random((num_hidden,num_output))*2-1
-        self.bz = np.zeros((1,num_hidden))
-        self.ba = np.zeros((1,num_output))
+        self.bh = np.zeros((1,num_hidden))
+        self.bz = np.zeros((1,num_output))
         for epoch in range(max_epoch):
             for i in range(dr.num_train):
                 # get data
@@ -98,8 +98,8 @@ class net(object):
                 yt1 = batch_y[:,0]
                 yt2 = batch_y[:,1]
                 # forward
-                self.t1.forward(xt1,self.U,self.V,self.W,self.bz,self.ba)
-                self.t2.forward(xt2,self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
+                self.t1.forward(xt1,self.U,self.V,self.W,self.bh)
+                self.t2.forward(xt2,self.t1.s,self.U,self.V,self.W,self.bh,self.bz)
                 # backward
                 self.t2.backward(yt2, self.t1.h)
                 self.t1.backward(yt1, self.t2.dz)
@@ -107,10 +107,10 @@ class net(object):
                 self.U = self.U - (self.t1.dU + self.t2.dU)*eta
                 self.V = self.V - (self.t1.dV + self.t2.dV)*eta
                 self.W = self.W - (self.t1.dW + self.t2.dW)*eta
-                self.ba = self.ba - (self.t1.dba + self.t2.dba)*eta
+                self.bh = self.bh - (self.t1.dbh + self.t2.dbh)*eta
                 self.bz = self.bz - (self.t1.dbz + self.t2.dbz)*eta
             #end for
-            if (epoch % 100 == 0):
+            if (epoch % 1 == 0):
                 loss,acc = self.check_loss(dr)
                 print(epoch)
                 print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
@@ -120,11 +120,11 @@ class net(object):
         print("testing...")
         X,Y = dr.GetTestSet()
         count = X.shape[0]
-        self.t1.forward(X[:,0],self.U,self.V,self.W,self.bz,self.ba)
-        self.t2.forward(X[:,1],self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
-        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.a,Y[:,1:2])
+        self.t1.forward(X[:,0],self.U,self.V,self.W,self.bh)
+        self.t2.forward(X[:,1],self.t1.s,self.U,self.V,self.W,self.bh,self.bz)
+        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.z,Y[:,1:2])
         print(str.format("loss={0:6f}, acc={1:6f}", loss2, acc2))
-        show(range(0,count), X[:,0], range(0,count), self.t2.a,"test","predication")
+        show(range(0,count), X[:,0], range(0,count), self.t2.z,"test","predication")
         
 if __name__=='__main__':
     dr = load_data()

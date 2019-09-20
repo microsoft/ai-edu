@@ -100,12 +100,12 @@ class net(object):
         loss3,acc3 = self.loss_fun.CheckLoss(self.t3.output,Y[:,2:3])
         loss4,acc4 = self.loss_fun.CheckLoss(self.t4.output,Y[:,3:4])
         output = np.concatenate((self.t1.output,self.t2.output,self.t3.output,self.t4.output), axis=1)
-        result = np.round(output)
-        count = 0
+        result = np.round(output).astype(int)
+        correct = 0
         for i in range(X.shape[0]):
             if (np.allclose(result[i], Y[i])):
-                count += 1
-        acc = count/X.shape[0]
+                correct += 1
+        acc = correct/X.shape[0]
         loss = (loss1 + loss2 + loss3 + loss4)/4
         return loss,acc,result
 
@@ -113,7 +113,7 @@ class net(object):
         num_input = 2
         num_hidden = 4
         num_output = 1
-        max_epoch = 20
+        max_epoch = 100
         eta = 0.1
         self.U = np.random.random((num_input,num_hidden))*2-1
         self.W = np.random.random((num_hidden,num_hidden))*2-1
@@ -134,21 +134,13 @@ class net(object):
                 #self.ba = self.ba - (self.t1.dba + self.t2.dba + self.t3.dba + self.t4.dba)*eta
                 #self.bz = self.bz - (self.t1.dbz + self.t2.dbz + self.t3.dbz + self.t4.dbz)*eta
             #end for
-            if (epoch % 1 == 0):
-                
-                d = np.empty((1,4))
-                d[0,0] = np.round(self.t1.output[0][0])
-                d[0,1] = np.round(self.t2.output[0][0])
-                d[0,2] = np.round(self.t3.output[0][0])
-                d[0,3] = np.round(self.t4.output[0][0])
-                print(batch_x)
-                print(batch_y)
-                print(d)
-                
+            if (epoch % 1 == 0):                
                 X,Y = dr.GetValidationSet()
                 loss,acc,_ = self.check_loss(X,Y)
                 print(epoch)
                 print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
+                if (acc == 1.0):
+                    break
         #end for
 
     def test(self):
@@ -157,8 +149,8 @@ class net(object):
         count = X.shape[0]
         loss,acc,result = self.check_loss(X,Y)
         print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
-        r = np.random.randint(0,count,2)
-        for i in range(2):
+        r = np.random.randint(0,count,10)
+        for i in range(10):
             idx = r[i]
             x1 = X[idx,:,0]
             x2 = X[idx,:,1]
@@ -167,7 +159,7 @@ class net(object):
             print("------------------")
             print("true:", reverse(Y[idx]))
             print("pred:", reverse(result[idx]))
-            print("==================")
+            print("====================")
 
 def reverse(a):
     l = a.tolist()

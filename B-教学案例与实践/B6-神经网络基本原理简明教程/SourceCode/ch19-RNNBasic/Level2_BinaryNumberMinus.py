@@ -21,56 +21,51 @@ def load_data():
     return dr
 
 class timestep(object):
-    def forward(self,x,h_prev,U,V,W,bz,ba):
+    def forward(self,x,U,V,W,prev_s):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        self.z = np.dot(x, U) + np.dot(h_prev, W) #+ bz
-        self.h = Tanh().forward(self.z)
-        self.a = np.dot(self.h, V) #+ ba
-        self.output = Logistic().forward(self.a)
+        self.h = np.dot(x, U) + np.dot(prev_s, W)
+        self.s = Tanh().forward(self.h)
+        self.z = np.dot(self.s, V)
+        self.a = Logistic().forward(self.z)
 
-    def backward(self, y, h_prev, dz_next):
-        self.da = (self.output - y)
-        self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_next, self.W.T)) * Tanh().backward(self.h)
-        self.dV = np.dot(self.h.T, self.da)
-        self.dU = np.dot(self.x.T, self.dz)
-        self.dW = np.dot(h_prev.T, self.dz)
-        self.dba = self.da
-        self.dbz = self.dz
+    def backward(self, y, prev_s, next_dh):
+        self.dz = (self.a - y)
+        self.dh = (np.dot(self.dz, self.V.T) + np.dot(next_dh, self.W.T)) * Tanh().backward(self.s)
+        self.dV = np.dot(self.s.T, self.dz)
+        self.dU = np.dot(self.x.T, self.dh)
+        self.dW = np.dot(prev_s.T, self.dh)
 
 class timestep_1(timestep):
     # compare with timestep class: no h_t value from previous layer
-    def forward(self,x,U,V,W,bz,ba):
+    def forward(self,x,U,V,W):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        self.z = np.dot(self.x, U) #+ bz
-        self.h = Tanh().forward(self.z)
-        self.a = np.dot(self.h, V) #+ ba
-        self.output = Logistic().forward(self.a)
+        self.h = np.dot(self.x, U)
+        self.s = Tanh().forward(self.h)
+        self.z = np.dot(self.s, V)
+        self.a = Logistic().forward(self.z)
 
-    def backward(self, y, dz_next):
-        self.da = (self.output - y)
-        self.dz = (np.dot(self.da, self.V.T) + np.dot(dz_next, self.W.T)) * Tanh().backward(self.h)
-        self.dV = np.dot(self.h.T, self.da)
-        self.dU = np.dot(self.x.T, self.dz)
+    # for the first timestep, there has no prev_s
+    def backward(self, y, next_dh):
+        self.dz = (self.a - y)
+        self.dh = (np.dot(self.dz, self.V.T) + np.dot(next_dh, self.W.T)) * Tanh().backward(self.s)
+        self.dV = np.dot(self.s.T, self.dz)
+        self.dU = np.dot(self.x.T, self.dh)
         self.dW = 0
-        self.dba = self.da
-        self.dbz = self.dz
 
 class timestep_4(timestep):
-    # compare with timestep class: no dz_t from future layer
-    def backward(self, y, h_prev):
-        self.da = self.output - y
-        self.dz = np.dot(self.da, self.V.T) * Tanh().backward(self.h)
-        self.dV = np.dot(self.h.T, self.da)
-        self.dU = np.dot(self.x.T, self.dz)
-        self.dW = np.dot(h_prev.T, self.dz)
-        self.dba = self.da
-        self.dbz = self.dz
+    # compare with timestep class: no next_dh from future layer
+    def backward(self, y, prev_s):
+        self.dz = self.a - y
+        self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
+        self.dV = np.dot(self.s.T, self.dz)
+        self.dU = np.dot(self.x.T, self.dh)
+        self.dW = np.dot(prev_s.T, self.dh)
 
 class net(object):
     def __init__(self, dr):
@@ -82,24 +77,24 @@ class net(object):
         self.t4 = timestep_4()
 
     def forward(self,X):
-        self.t1.forward(X[:,0],          self.U,self.V,self.W,self.bz,self.ba)
-        self.t2.forward(X[:,1],self.t1.h,self.U,self.V,self.W,self.bz,self.ba)
-        self.t3.forward(X[:,2],self.t2.h,self.U,self.V,self.W,self.bz,self.ba)
-        self.t4.forward(X[:,3],self.t3.h,self.U,self.V,self.W,self.bz,self.ba)
+        self.t1.forward(X[:,0],self.U,self.V,self.W)
+        self.t2.forward(X[:,1],self.U,self.V,self.W,self.t1.s)
+        self.t3.forward(X[:,2],self.U,self.V,self.W,self.t2.s)
+        self.t4.forward(X[:,3],self.U,self.V,self.W,self.t3.s)
 
     def backward(self,Y):
-        self.t4.backward(Y[:,3], self.t3.h)
-        self.t3.backward(Y[:,2], self.t2.h, self.t4.dz)
-        self.t2.backward(Y[:,1], self.t1.h, self.t3.dz)
-        self.t1.backward(Y[:,0],            self.t2.dz)
+        self.t4.backward(Y[:,3], self.t3.s)
+        self.t3.backward(Y[:,2], self.t2.s, self.t4.dh)
+        self.t2.backward(Y[:,1], self.t1.s, self.t3.dh)
+        self.t1.backward(Y[:,0],            self.t2.dh)
 
     def check_loss(self,X,Y):
         self.forward(X)
-        loss1,acc1 = self.loss_fun.CheckLoss(self.t1.output,Y[:,0:1])
-        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.output,Y[:,1:2])
-        loss3,acc3 = self.loss_fun.CheckLoss(self.t3.output,Y[:,2:3])
-        loss4,acc4 = self.loss_fun.CheckLoss(self.t4.output,Y[:,3:4])
-        output = np.concatenate((self.t1.output,self.t2.output,self.t3.output,self.t4.output), axis=1)
+        loss1,acc1 = self.loss_fun.CheckLoss(self.t1.a,Y[:,0:1])
+        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.a,Y[:,1:2])
+        loss3,acc3 = self.loss_fun.CheckLoss(self.t3.a,Y[:,2:3])
+        loss4,acc4 = self.loss_fun.CheckLoss(self.t4.a,Y[:,3:4])
+        output = np.concatenate((self.t1.a,self.t2.a,self.t3.a,self.t4.a), axis=1)
         result = np.round(output).astype(int)
         correct = 0
         for i in range(X.shape[0]):
@@ -118,8 +113,8 @@ class net(object):
         self.U = np.random.random((num_input,num_hidden))*2-1
         self.W = np.random.random((num_hidden,num_hidden))*2-1
         self.V = np.random.random((num_hidden,num_output))*2-1
-        self.bz = np.zeros((1,num_hidden))
-        self.ba = np.zeros((1,num_output))
+        self.bh = np.zeros((1,num_hidden))
+        self.bz = np.zeros((1,num_output))
         for epoch in range(max_epoch):
             dr.Shuffle()
             for i in range(dr.num_train):
@@ -132,8 +127,6 @@ class net(object):
                 self.U = self.U - (self.t1.dU + self.t2.dU + self.t3.dU + self.t4.dU)*eta
                 self.V = self.V - (self.t1.dV + self.t2.dV + self.t3.dV + self.t4.dV)*eta
                 self.W = self.W - (self.t1.dW + self.t2.dW + self.t3.dW + self.t4.dW)*eta
-                self.ba = self.ba - (self.t1.dba + self.t2.dba + self.t3.dba + self.t4.dba)*eta
-                self.bz = self.bz - (self.t1.dbz + self.t2.dbz + self.t3.dbz + self.t4.dbz)*eta
             #end for
             if (epoch % 1 == 0):                
                 X,Y = dr.GetValidationSet()

@@ -34,31 +34,33 @@ class timestep_1(object):
         self.s = Tanh().forward(self.h)
         self.z = 0
 
-    def backward(self, y, t2_dh):
-        self.dz = self.z - y
-        self.dh = (np.dot(self.dz, self.V.T) + np.dot(t2_dh, self.W.T)) * Tanh().backward(self.s)
-        self.dV = np.dot(self.s.T, self.dz)
+    def backward(self, y, dh_t2):
+        #self.dz = self.z - y
+        #self.dh = (np.dot(self.dz, self.V.T) + np.dot(dh_t2, self.W.T)) * Tanh().backward(self.s)
+        self.dh = np.dot(dh_t2, self.W.T) * Tanh().backward(self.s)
+        #self.dV = np.dot(self.s.T, self.dz)
+        self.dV = 0
         self.dU = np.dot(self.x.T, self.dh)
         self.dW = 0
-        self.dbz = self.dz
+        self.dbz = 0
         self.dbh = self.dh
 
 class timestep_2(object):
-    def forward(self,x,U,V,W,bh,bz,t1_s):
+    def forward(self,x,U,V,W,bh,bz,s_t1):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        self.h = np.dot(x, U) + np.dot(t1_s, W) + bh
+        self.h = np.dot(x, U) + np.dot(s_t1, W) + bh
         self.s = Tanh().forward(self.h)
         self.z = np.dot(self.s, V) + bz
 
-    def backward(self, y, t1_s):
+    def backward(self, y, s_t1):
         self.dz = self.z - y
         self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
         self.dV = np.dot(self.s.T, self.dz)
         self.dU = np.dot(self.x.T, self.dh)
-        self.dW = np.dot(t1_s.T, self.dh)
+        self.dW = np.dot(s_t1.T, self.dh)
         self.dbz = self.dz
         self.dbh = self.dh
 

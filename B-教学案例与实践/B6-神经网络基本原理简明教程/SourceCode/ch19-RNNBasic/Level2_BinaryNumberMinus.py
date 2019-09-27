@@ -28,9 +28,13 @@ class timestep(object):
         self.V = V
         self.W = W
         self.x = x
+        # 公式6
         self.h = np.dot(x, U) + np.dot(prev_s, W)
+        # 公式2
         self.s = Tanh().forward(self.h)
+        # 公式3
         self.z = np.dot(self.s, V)
+        # 公式4
         self.a = Logistic().forward(self.z)
 
     def backward(self, y, prev_s, next_dh):
@@ -47,9 +51,13 @@ class timestep_1(timestep):
         self.V = V
         self.W = W
         self.x = x
+        # 公式1
         self.h = np.dot(self.x, U)
+        # 公式2
         self.s = Tanh().forward(self.h)
+        # 公式3
         self.z = np.dot(self.s, V)
+        # 公式4
         self.a = Logistic().forward(self.z)
 
     # for the first timestep, there has no prev_s

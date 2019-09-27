@@ -38,10 +38,15 @@ class timestep(object):
         self.a = Logistic().forward(self.z)
 
     def backward(self, y, prev_s, next_dh):
+        # 公式7
         self.dz = (self.a - y)
+        # 公式11
         self.dh = (np.dot(self.dz, self.V.T) + np.dot(next_dh, self.W.T)) * Tanh().backward(self.s)
+        # 公式12
         self.dV = np.dot(self.s.T, self.dz)
+        # 公式13
         self.dU = np.dot(self.x.T, self.dh)
+        # 公式15
         self.dW = np.dot(prev_s.T, self.dh)
 
 class timestep_1(timestep):
@@ -62,19 +67,29 @@ class timestep_1(timestep):
 
     # for the first timestep, there has no prev_s
     def backward(self, y, next_dh):
+        # 公式7
         self.dz = (self.a - y)
+        # 公式11
         self.dh = (np.dot(self.dz, self.V.T) + np.dot(next_dh, self.W.T)) * Tanh().backward(self.s)
+        # 公式12
         self.dV = np.dot(self.s.T, self.dz)
+        # 公式13
         self.dU = np.dot(self.x.T, self.dh)
+        # 公式14
         self.dW = 0
 
 class timestep_4(timestep):
     # compare with timestep class: no next_dh from future layer
     def backward(self, y, prev_s):
+        # 公式7
         self.dz = self.a - y
+        # 公式9
         self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
+        # 公式12
         self.dV = np.dot(self.s.T, self.dz)
+        # 公式13
         self.dU = np.dot(self.x.T, self.dh)
+        # 公式15
         self.dW = np.dot(prev_s.T, self.dh)
 
 class net(object):

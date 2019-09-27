@@ -3,12 +3,14 @@
 
 from matplotlib import pyplot as plt
 import numpy as np
+import math
 
 from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.DataReader_2_0 import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 from MiniFramework.LossFunction_1_1 import *
+from MiniFramework.TrainingHistory_3_0 import *
 
 train_file = "../../data/ch19.train_minus.npz"
 test_file = "../../data/ch19.test_minus.npz"
@@ -26,16 +28,25 @@ class timestep(object):
         self.V = V
         self.W = W
         self.x = x
+        # 公式6
         self.h = np.dot(x, U) + np.dot(prev_s, W)
+        # 公式2
         self.s = Tanh().forward(self.h)
+        # 公式3
         self.z = np.dot(self.s, V)
+        # 公式4
         self.a = Logistic().forward(self.z)
 
     def backward(self, y, prev_s, next_dh):
+        # 公式7
         self.dz = (self.a - y)
+        # 公式11
         self.dh = (np.dot(self.dz, self.V.T) + np.dot(next_dh, self.W.T)) * Tanh().backward(self.s)
+        # 公式12
         self.dV = np.dot(self.s.T, self.dz)
+        # 公式13
         self.dU = np.dot(self.x.T, self.dh)
+        # 公式15
         self.dW = np.dot(prev_s.T, self.dh)
 
 class timestep_1(timestep):
@@ -45,32 +56,47 @@ class timestep_1(timestep):
         self.V = V
         self.W = W
         self.x = x
+        # 公式1
         self.h = np.dot(self.x, U)
+        # 公式2
         self.s = Tanh().forward(self.h)
+        # 公式3
         self.z = np.dot(self.s, V)
+        # 公式4
         self.a = Logistic().forward(self.z)
 
     # for the first timestep, there has no prev_s
     def backward(self, y, next_dh):
+        # 公式7
         self.dz = (self.a - y)
+        # 公式11
         self.dh = (np.dot(self.dz, self.V.T) + np.dot(next_dh, self.W.T)) * Tanh().backward(self.s)
+        # 公式12
         self.dV = np.dot(self.s.T, self.dz)
+        # 公式13
         self.dU = np.dot(self.x.T, self.dh)
+        # 公式14
         self.dW = 0
 
 class timestep_4(timestep):
     # compare with timestep class: no next_dh from future layer
     def backward(self, y, prev_s):
+        # 公式7
         self.dz = self.a - y
+        # 公式9
         self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
+        # 公式12
         self.dV = np.dot(self.s.T, self.dz)
+        # 公式13
         self.dU = np.dot(self.x.T, self.dh)
+        # 公式15
         self.dW = np.dot(prev_s.T, self.dh)
 
 class net(object):
     def __init__(self, dr):
         self.dr = dr
         self.loss_fun = LossFunction_1_1(NetType.BinaryClassifier)
+        self.loss_trace = TrainingHistory_3_0()
         self.t1 = timestep_1()
         self.t2 = timestep()
         self.t3 = timestep()
@@ -104,22 +130,24 @@ class net(object):
         loss = (loss1 + loss2 + loss3 + loss4)/4
         return loss,acc,result
 
-    def train(self):
+    def train(self, batch_size, checkpoint=0.1):
         num_input = 2
-        num_hidden = 3
+        num_hidden = 4
         num_output = 1
         max_epoch = 100
         eta = 0.1
-        self.U = np.random.random((num_input,num_hidden))*2-1
-        self.W = np.random.random((num_hidden,num_hidden))*2-1
-        self.V = np.random.random((num_hidden,num_output))*2-1
-        self.bh = np.zeros((1,num_hidden))
-        self.bz = np.zeros((1,num_output))
+        self.U = np.random.random((num_input,num_hidden))
+        self.W = np.random.random((num_hidden,num_hidden))
+        self.V = np.random.random((num_hidden,num_output))
+        
+        max_iteration = math.ceil(self.dr.num_train/batch_size)
+        checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
+
         for epoch in range(max_epoch):
             dr.Shuffle()
-            for i in range(dr.num_train):
+            for iteration in range(max_iteration):
                 # get data
-                batch_x, batch_y = self.dr.GetBatchTrainSamples(1, i)
+                batch_x, batch_y = self.dr.GetBatchTrainSamples(1, iteration)
                 # forward
                 self.forward(batch_x)
                 self.backward(batch_y)
@@ -127,15 +155,20 @@ class net(object):
                 self.U = self.U - (self.t1.dU + self.t2.dU + self.t3.dU + self.t4.dU)*eta
                 self.V = self.V - (self.t1.dV + self.t2.dV + self.t3.dV + self.t4.dV)*eta
                 self.W = self.W - (self.t1.dW + self.t2.dW + self.t3.dW + self.t4.dW)*eta
-            #end for
-            if (epoch % 1 == 0):                
-                X,Y = dr.GetValidationSet()
-                loss,acc,_ = self.check_loss(X,Y)
-                print(epoch)
-                print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
-                if (acc == 1.0):
-                    break
+                # check loss
+                total_iteration = epoch * max_iteration + iteration               
+                if (total_iteration+1) % checkpoint_iteration == 0:
+                    X,Y = dr.GetValidationSet()
+                    loss,acc,_ = self.check_loss(X,Y)
+                    self.loss_trace.Add(epoch, total_iteration, None, None, loss, acc, None)
+                    print(epoch, total_iteration)
+                    print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
+                #end if
+            #enf for
+            if (acc == 1.0):
+                break
         #end for
+        self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Iteration)
 
     def test(self):
         print("testing...")
@@ -154,6 +187,7 @@ class net(object):
             print("true:", reverse(Y[idx]))
             print("pred:", reverse(result[idx]))
             print("====================")
+        #end for
 
 def reverse(a):
     l = a.tolist()
@@ -164,5 +198,5 @@ if __name__=='__main__':
     dr = load_data()
     count = dr.num_train
     n = net(dr)
-    n.train()
+    n.train(batch_size=1, checkpoint=0.1)
     n.test()

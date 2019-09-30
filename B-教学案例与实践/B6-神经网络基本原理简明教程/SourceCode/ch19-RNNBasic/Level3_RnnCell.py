@@ -56,34 +56,56 @@ class timestep(object):
 
 
 class net(object):
-    def __init__(self, dr):
+    def __init__(self, dr, num_step, net_type):
         self.dr = dr
-        self.loss_fun = LossFunction_1_1(NetType.BinaryClassifier)
+        self.num_step = num_step
+        num_input = 2
+        num_hidden = 4
+        num_output = 1
+        max_epoch = 100
+        eta = 0.1
+        self.U = np.random.random((num_input,num_hidden))
+        self.W = np.random.random((num_hidden,num_hidden))
+        self.V = np.random.random((num_hidden,num_output))
+
+        self.loss_fun = LossFunction_1_1(net_type)
         self.loss_trace = TrainingHistory_3_0()
-        self.t1 = timestep_1()
-        self.t2 = timestep()
-        self.t3 = timestep()
-        self.t4 = timestep_4()
+        self.ts_list = []
+        for i in range(self.num_step):
+            ts = timestep()
+            ts_list.append(ts)
 
     def forward(self,X):
-        self.t1.forward(X[:,0],self.U,self.V,self.W)
-        self.t2.forward(X[:,1],self.U,self.V,self.W,self.t1.s)
-        self.t3.forward(X[:,2],self.U,self.V,self.W,self.t2.s)
-        self.t4.forward(X[:,3],self.U,self.V,self.W,self.t3.s)
+        for i in range(self.num_step):
+            if (i == 0):
+                self.ts_list[i].forward(X[:,i],self.U,self.V,self.W, None)
+            else:
+                self.ts_list[i].forward(X[:,i],self.U,self.V,self.W,self.ts_list[i-1].s)
+            #end if
+        #end for
 
     def backward(self,Y):
-        self.t4.backward(Y[:,3], self.t3.s)
-        self.t3.backward(Y[:,2], self.t2.s, self.t4.dh)
-        self.t2.backward(Y[:,1], self.t1.s, self.t3.dh)
-        self.t1.backward(Y[:,0],            self.t2.dh)
+        for i in range(self.num_step-1, -1, -1):
+            if (i == self.num_step-1):
+                self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, None)
+            elif (i == 0):
+                self.ts_list[i].backward(Y[:,i], None, self.ts_list[i+1].dh)
+            else:
+                self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, self.ts_list[i+1].dh)
+            #end if
+        #end for
 
     def check_loss(self,X,Y):
         self.forward(X)
-        loss1,acc1 = self.loss_fun.CheckLoss(self.t1.a,Y[:,0:1])
-        loss2,acc2 = self.loss_fun.CheckLoss(self.t2.a,Y[:,1:2])
-        loss3,acc3 = self.loss_fun.CheckLoss(self.t3.a,Y[:,2:3])
-        loss4,acc4 = self.loss_fun.CheckLoss(self.t4.a,Y[:,3:4])
-        output = np.concatenate((self.t1.a,self.t2.a,self.t3.a,self.t4.a), axis=1)
+        LOSS = 0
+        output = None
+        for i in range(self.num_step):
+            loss,_ = self.loss_fun.CheckLoss(self.ts_list[i].a,Y[:,i:i+1])
+            LOSS += loss
+            if (output is None):
+                output = self.ts_list[i].a
+            else:
+                output = np.concatenate((output, self.ts_list[i].a), axis=1)
         result = np.round(output).astype(int)
         correct = 0
         for i in range(X.shape[0]):
@@ -94,14 +116,6 @@ class net(object):
         return loss,acc,result
 
     def train(self, batch_size, checkpoint=0.1):
-        num_input = 2
-        num_hidden = 4
-        num_output = 1
-        max_epoch = 100
-        eta = 0.1
-        self.U = np.random.random((num_input,num_hidden))
-        self.W = np.random.random((num_hidden,num_hidden))
-        self.V = np.random.random((num_hidden,num_output))
         
         max_iteration = math.ceil(self.dr.num_train/batch_size)
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))

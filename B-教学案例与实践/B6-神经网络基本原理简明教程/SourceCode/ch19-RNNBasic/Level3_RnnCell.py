@@ -11,6 +11,7 @@ from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_3_0 import *
+from MiniFramework.HyperParameters_4_3 import *
 
 train_file = "../../data/ch19.train_minus.npz"
 test_file = "../../data/ch19.test_minus.npz"
@@ -56,50 +57,57 @@ class timestep(object):
 
 
 class net(object):
-    def __init__(self, dr, num_step, net_type):
-        self.dr = dr
-        self.num_step = num_step
-        num_input = 2
-        num_hidden = 4
-        num_output = 1
-        max_epoch = 100
-        eta = 0.1
-        self.U = np.random.random((num_input,num_hidden))
-        self.W = np.random.random((num_hidden,num_hidden))
-        self.V = np.random.random((num_hidden,num_output))
-
-        self.loss_fun = LossFunction_1_1(net_type)
+    def __init__(self, hp):
+        self.hp = hp
+        self.U = np.random.random((self.hp.num_input, self.hp.num_hidden))
+        self.W = np.random.random((self.hp.num_hidden, self.hp.num_hidden))
+        self.V = np.random.random((self.hp.num_hidden, self.hp.num_output))
+        self.zero_state = np.zeros((self.hp.batch_size, self.hp.num_hidden))
+        self.loss_fun = LossFunction_1_1(self.hp.net_type)
         self.loss_trace = TrainingHistory_3_0()
         self.ts_list = []
-        for i in range(self.num_step):
+        for i in range(self.hp.num_step):
             ts = timestep()
-            ts_list.append(ts)
+            self.ts_list.append(ts)
 
     def forward(self,X):
-        for i in range(self.num_step):
+        for i in range(self.hp.num_step):
             if (i == 0):
-                self.ts_list[i].forward(X[:,i],self.U,self.V,self.W, None)
+                self.ts_list[i].forward(X[:,i],self.U,self.V,self.W, self.zero_state)
             else:
                 self.ts_list[i].forward(X[:,i],self.U,self.V,self.W,self.ts_list[i-1].s)
             #end if
         #end for
 
     def backward(self,Y):
-        for i in range(self.num_step-1, -1, -1):
-            if (i == self.num_step-1):
-                self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, None)
+        for i in range(self.hp.num_step-1, -1, -1):
+            if (i == self.hp.num_step-1):
+                self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, self.zero_state)
             elif (i == 0):
-                self.ts_list[i].backward(Y[:,i], None, self.ts_list[i+1].dh)
+                self.ts_list[i].backward(Y[:,i], self.zero_state, self.ts_list[i+1].dh)
             else:
                 self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, self.ts_list[i+1].dh)
             #end if
         #end for
 
+    def update(self):
+        du = np.zeros_like(self.U)
+        dv = np.zeros_like(self.V)
+        dw = np.zeros_like(self.W)
+        for i in range(self.hp.num_step):
+            du += self.ts_list[i].dU
+            dv += self.ts_list[i].dV
+            dw += self.ts_list[i].dW
+        #end for
+        self.U = self.U - du * self.hp.eta
+        self.V = self.V - dv * self.hp.eta
+        self.W = self.W - dw * self.hp.eta
+
     def check_loss(self,X,Y):
         self.forward(X)
         LOSS = 0
         output = None
-        for i in range(self.num_step):
+        for i in range(self.hp.num_step):
             loss,_ = self.loss_fun.CheckLoss(self.ts_list[i].a,Y[:,i:i+1])
             LOSS += loss
             if (output is None):
@@ -112,30 +120,27 @@ class net(object):
             if (np.allclose(result[i], Y[i])):
                 correct += 1
         acc = correct/X.shape[0]
-        loss = (loss1 + loss2 + loss3 + loss4)/4
-        return loss,acc,result
+        return LOSS/4,acc,result
 
-    def train(self, batch_size, checkpoint=0.1):
-        
-        max_iteration = math.ceil(self.dr.num_train/batch_size)
+    def train(self, dataReader, checkpoint=0.1):
+        max_iteration = math.ceil(dataReader.num_train/self.hp.batch_size)
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
 
-        for epoch in range(max_epoch):
-            dr.Shuffle()
+        for epoch in range(self.hp.max_epoch):
+            dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get data
-                batch_x, batch_y = self.dr.GetBatchTrainSamples(1, iteration)
+                batch_x, batch_y = dataReader.GetBatchTrainSamples(1, iteration)
                 # forward
                 self.forward(batch_x)
+                # backward
                 self.backward(batch_y)
                 # update
-                self.U = self.U - (self.t1.dU + self.t2.dU + self.t3.dU + self.t4.dU)*eta
-                self.V = self.V - (self.t1.dV + self.t2.dV + self.t3.dV + self.t4.dV)*eta
-                self.W = self.W - (self.t1.dW + self.t2.dW + self.t3.dW + self.t4.dW)*eta
+                self.update()
                 # check loss
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
-                    X,Y = dr.GetValidationSet()
+                    X,Y = dataReader.GetValidationSet()
                     loss,acc,_ = self.check_loss(X,Y)
                     self.loss_trace.Add(epoch, total_iteration, None, None, loss, acc, None)
                     print(epoch, total_iteration)
@@ -147,9 +152,9 @@ class net(object):
         #end for
         self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Iteration)
 
-    def test(self):
+    def test(self, dataReader):
         print("testing...")
-        X,Y = dr.GetTestSet()
+        X,Y = dataReader.GetTestSet()
         count = X.shape[0]
         loss,acc,result = self.check_loss(X,Y)
         print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
@@ -172,8 +177,18 @@ def reverse(a):
     return l
 
 if __name__=='__main__':
-    dr = load_data()
-    count = dr.num_train
-    n = net(dr)
-    n.train(batch_size=1, checkpoint=0.1)
-    n.test()
+    dataReader = load_data()
+    eta = 0.1
+    max_epoch = 100
+    batch_size = 1
+    num_step = 4
+    num_input = 2
+    num_output = 1
+    num_hidden = 8
+    hp = HyperParameters_4_3(
+        eta, max_epoch, batch_size, 
+        num_step, num_input, num_hidden, num_output, 
+        NetType.Fitting)
+    n = net(hp)
+    n.train(dataReader, checkpoint=0.1)
+    n.test(dataReader)

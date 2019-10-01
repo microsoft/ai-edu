@@ -35,7 +35,7 @@
     <Compile Include="MiniFramework\DropoutLayer.py" />
     <Compile Include="MiniFramework\EnumDef_6_0.py" />
     <Compile Include="MiniFramework\FCLayer_2_0.py" />
-    <Compile Include="MiniFramework\HyperParameters_4_2.py" />
+    <Compile Include="MiniFramework\HyperParameters_4_3.py" />
     <Compile Include="MiniFramework\LossFunction_1_1.py" />
     <Compile Include="MiniFramework\NeuralNet_4_2.py" />
     <Compile Include="MiniFramework\Optimizer_1_0.py" />

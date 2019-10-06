@@ -101,9 +101,13 @@ class NameDataReader(object):
         return x,y
 
     def GenerateValidationSet(self, k = 10):
-        self.dev_x = self.X[4][0:k]
-        self.dev_y = self.Y[4][0:k]
-        self.num_test = k
+        self.dev_x = []
+        self.dev_y = []
+        for i in range(k):
+            x,y = self.GetRandomBatchTrainSamples(1)
+            self.dev_x.append(x)
+            self.dev_y.append(y)
+        self.num_dev = k
 
     def GetValidationSet(self):
         return self.dev_x, self.dev_y

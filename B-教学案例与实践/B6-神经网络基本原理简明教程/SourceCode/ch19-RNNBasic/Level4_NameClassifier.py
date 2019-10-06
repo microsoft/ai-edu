@@ -164,14 +164,17 @@ class net(object):
         self.W = data["W"]
 
     def check_loss(self,X,Y):
-        self.forward(X)
         LOSS = 0
-        output = None
-        i = X.shape[1]
-        loss,acc = self.loss_fun.CheckLoss(self.ts_list[i-1].a, Y)
-        return loss,acc
+        ACC = 0
+        for i in range(self.dataReader.num_dev):
+            a = self.forward(X[i])
+            loss,acc = self.loss_fun.CheckLoss(a, Y[i])
+            LOSS += loss
+            ACC += acc
+        return LOSS/self.dataReader.num_dev, ACC/self.dataReader.num_dev
 
     def train(self, dataReader, checkpoint=0.1):
+        self.dataReader = dataReader
         max_iteration = math.ceil(dataReader.num_train/self.hp.batch_size)
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
         loss = 0
@@ -241,12 +244,12 @@ class net(object):
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.005
-    max_epoch = 100
+    max_epoch = 50
     batch_size = 4
     num_input = dataReader.num_feature
-    num_hidden = 2
+    num_hidden = 4
     num_output = dataReader.num_category
-    model = "CharName_005_4_2"
+    model = "CharName_005_4_16"
     hp = HyperParameters_4_3(
         eta, max_epoch, batch_size, 
         dataReader.max_step, num_input, num_hidden, num_output, 

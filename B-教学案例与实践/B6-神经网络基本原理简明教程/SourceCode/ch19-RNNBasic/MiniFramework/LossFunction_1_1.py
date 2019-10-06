@@ -22,8 +22,6 @@ class LossFunction_1_1(object):
         elif self.net_type == NetType.MultipleClassifier:
             loss, acc = self.CE3(A, Y, m)
         #end if
-        if loss.ndim == 1:
-            return loss[0], acc[0]
         return loss, acc
     # end def
 

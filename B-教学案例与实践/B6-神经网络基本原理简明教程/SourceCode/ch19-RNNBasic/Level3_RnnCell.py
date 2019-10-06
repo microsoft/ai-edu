@@ -66,28 +66,21 @@ class net(object):
         self.loss_fun = LossFunction_1_1(self.hp.net_type)
         self.loss_trace = TrainingHistory_3_0()
         self.ts_list = []
-        for i in range(self.hp.num_step):
+        for i in range(self.hp.num_step+1):
             ts = timestep()
             self.ts_list.append(ts)
+        #end for
+        self.ts_list[self.hp.num_step].s = np.zeros((self.hp.batch_size, self.hp.num_hidden))
+        self.ts_list[self.hp.num_step].dh = np.zeros((self.hp.batch_size, self.hp.num_hidden))
 
     def forward(self,X):
-        for i in range(self.hp.num_step):
-            if (i == 0):
-                self.ts_list[i].forward(X[:,i],self.U,self.V,self.W, self.zero_state)
-            else:
-                self.ts_list[i].forward(X[:,i],self.U,self.V,self.W,self.ts_list[i-1].s)
-            #end if
+        for i in range(0,self.hp.num_step):
+            self.ts_list[i].forward(X[:,i],self.U,self.V,self.W,self.ts_list[i-1].s)
         #end for
 
     def backward(self,Y):
         for i in range(self.hp.num_step-1, -1, -1):
-            if (i == self.hp.num_step-1):
-                self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, self.zero_state)
-            elif (i == 0):
-                self.ts_list[i].backward(Y[:,i], self.zero_state, self.ts_list[i+1].dh)
-            else:
-                self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, self.ts_list[i+1].dh)
-            #end if
+            self.ts_list[i].backward(Y[:,i], self.ts_list[i-1].s, self.ts_list[i+1].dh)
         #end for
 
     def update(self):

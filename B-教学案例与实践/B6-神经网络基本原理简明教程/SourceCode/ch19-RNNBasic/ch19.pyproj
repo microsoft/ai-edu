@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_NameClassifier.py</StartupFile>
+    <StartupFile>Level3_NameClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -29,8 +29,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
-    <Compile Include="Level4_NameClassifier.py" />
-    <Compile Include="Level3_RnnCell.py" />
+    <Compile Include="Level3_NameClassifier.py" />
+    <Compile Include="Level2_RnnCell.py" />
     <Compile Include="Level1_EchoRandomNumber.py" />
     <Compile Include="MiniFramework\ActivationLayer.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py" />

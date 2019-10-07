@@ -17,32 +17,34 @@ from MiniFramework.HyperParameters_4_3 import *
 from MiniFramework.WeightsBias_2_1 import *
 from ExtendedDataReader.NameDataReader import *
 
-file = "../../data/name_language.txt"
+file = "../../data/ch19.name_language.txt"
 
 def load_data():
     dr = NameDataReader()
     dr.ReadData(file)
-    dr.GenerateValidationSet(100)
+    dr.GenerateValidationSet(1000)
     return dr
 
 class timestep(object):
     # for the first cell, prev_s should be zero
-    def forward(self, x, U, V, W, bh, bz, prev_s, isFirst, isLast):
+    def forward(self, x, U, V, W, prev_s, isFirst, isLast):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
-        # 公式6
+
         if (isFirst):
-            self.h = np.dot(x, U) #+ bh
+            # 公式1
+            self.h = np.dot(x, U)
         else:
-            self.h = np.dot(x, U) + np.dot(prev_s, W) #+ bh
-        # 公式2
+            # 公式2
+            self.h = np.dot(x, U) + np.dot(prev_s, W) 
+        # 公式3
         self.s = Tanh().forward(self.h)
         if (isLast):
-            # 公式3
-            self.z = np.dot(self.s, V) #+ bz
             # 公式4
+            self.z = np.dot(self.s, V)
+            # 公式5
             self.a = Softmax().forward(self.z)
 
     # for the first cell, prev_s should be zero
@@ -54,27 +56,24 @@ class timestep(object):
         else:
             self.dz = np.zeros_like(y)
         # end if
-        # 公式9
-        #self.dbz = self.dz
-        # 公式11
         if (isLast):
+            # 公式8
             self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
         else:
-            self.dh = (np.dot(self.dz, self.V.T) + np.dot(next_dh, self.W.T)) * Tanh().backward(self.s)
+            # 公式9
+            self.dh = np.dot(next_dh, self.W.T) * Tanh().backward(self.s)
         # end if
-        # 公式10
-        #self.dbh = self.dh
-        # 公式12
         if (isLast):
+            # 公式10
             self.dV = np.dot(self.s.T, self.dz)
         else:
             self.dV = np.zeros_like(self.V)
-        # 公式13
+        # 公式11
         self.dU = np.dot(self.x.T, self.dh)
-        # 公式15
         if (isFirst):
             self.dW = np.zeros_like(self.W)
         else:
+            # 公式12
             self.dW = np.dot(prev_s.T, self.dh)
         # end if
 
@@ -85,9 +84,11 @@ class net(object):
         self.subfolder = os.getcwd() + "/" + self.__create_subfolder()
         print(self.subfolder)
 
-        self.U, self.bh = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden, InitialMethod.Normal)
-        self.V, self.bz = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_output, InitialMethod.Normal)
-        self.W, _ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Normal)
+        if (self.load_init_value() == False):
+            self.U,_ = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden, InitialMethod.Normal)
+            self.V,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_output, InitialMethod.Normal)
+            self.W,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Normal)
+            self.save_init_value()
 
         self.zero_state = np.zeros((self.hp.batch_size, self.hp.num_hidden))
         self.loss_fun = LossFunction_1_1(self.hp.net_type)
@@ -97,8 +98,8 @@ class net(object):
             ts = timestep()
             self.ts_list.append(ts)
         #end for
-        self.ts_list[self.hp.num_step].s = np.zeros((self.hp.batch_size, self.hp.num_hidden))
-        self.ts_list[self.hp.num_step].dh = np.zeros((self.hp.batch_size, self.hp.num_hidden))
+        #self.ts_list[self.hp.num_step].s = np.zeros((self.hp.batch_size, self.hp.num_hidden))
+        #self.ts_list[self.hp.num_step].dh = np.zeros((self.hp.batch_size, self.hp.num_hidden))
 
     def __create_subfolder(self):
         if self.model_name != None:
@@ -115,18 +116,18 @@ class net(object):
         self.ts = self.x.shape[1]
         for i in range(0, self.ts):
             if (i == 0):
-                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, self.bh, self.bz, None, True, False)
+                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, None, True, False)
             elif (i == self.ts - 1):
-                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, self.bh, self.bz, self.ts_list[i-1].s[0:self.batch], False, True)
+                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, self.ts_list[i-1].s[0:self.batch], False, True)
             else:
-                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, self.bh, self.bz, self.ts_list[i-1].s[0:self.batch], False, False)
+                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, self.ts_list[i-1].s[0:self.batch], False, False)
         #end for
         return self.ts_list[self.ts-1].a
 
     def backward(self,Y):
         for i in range(self.ts-1, -1, -1):
             if (i == 0):
-                self.ts_list[i].backward(Y, self.ts_list[i-1].s[0:self.batch], self.ts_list[i+1].dh[0:self.batch], True, False)
+                self.ts_list[i].backward(Y, None, self.ts_list[i+1].dh[0:self.batch], True, False)
             elif (i == self.ts - 1):
                 self.ts_list[i].backward(Y, self.ts_list[i-1].s[0:self.batch], None, False, True)
             else:
@@ -137,20 +138,30 @@ class net(object):
         du = np.zeros_like(self.U)
         dv = np.zeros_like(self.V)
         dw = np.zeros_like(self.W)
-        dbz = np.zeros_like(self.bz)
-        dbh = np.zeros_like(self.bh)
         for i in range(self.ts):
             du += self.ts_list[i].dU
             dv += self.ts_list[i].dV
             dw += self.ts_list[i].dW
-        #    dbz += self.ts_list[i].dbz
-        #    dbh += self.ts_list[i].dbh
         #end for
         self.U = self.U - du * self.hp.eta
         self.V = self.V - dv * self.hp.eta
         self.W = self.W - dw * self.hp.eta
-        #self.bz = self.bz - dbz * self.hp.eta
-        #self.bh = self.bh - dbh * self.hp.eta
+
+    def save_init_value(self):
+        self.init_file_name = str.format("{0}/init.npz", self.subfolder)
+        np.savez(self.init_file_name, U=self.U, V=self.V, W=self.W)
+
+    def load_init_value(self):
+        self.init_file_name = str.format("{0}/init.npz", self.subfolder)
+        w_file = Path(self.init_file_name)
+        if w_file.exists():
+            data = np.load(self.init_file_name)
+            self.U = data["U"]
+            self.V = data["V"]
+            self.W = data["W"]
+            return True
+        else:
+            return False
 
     def save_parameters(self):
         self.result_file_name = str.format("{0}/result.npz", self.subfolder)
@@ -179,6 +190,7 @@ class net(object):
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
         loss = 0
         for epoch in range(self.hp.max_epoch):
+            self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get data
@@ -195,14 +207,27 @@ class net(object):
                     X,Y = dataReader.GetValidationSet()
                     loss,acc = self.check_loss(X,Y)
                     self.loss_trace.Add(epoch, total_iteration, None, None, loss, acc, None)
-                    print(epoch, total_iteration)
-                    print(str.format("{0}:{1} loss={2:6f}, acc={3:6f}", epoch, total_iteration, loss, acc))
+                    print(str.format("{0}:{1}:{2} loss={3:6f}, acc={4:6f}", epoch, total_iteration, self.hp.eta, loss, acc))
                     loss = 0
                 #end if
             #enf for
             self.save_parameters()
         #end for
         self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Epoch)
+
+    def lr_decay(self, epoch):
+        if (epoch < 20):
+            return 0.005
+        elif (epoch < 40):
+            return 0.004
+        elif (epoch < 60):
+            return 0.003
+        elif (epoch < 80):
+            return 0.002
+        elif (epoch < 100):
+            return 0.001
+        else:
+            return 0.0005
 
     def test(self, dataReader):
         confusion_matrix = np.zeros((dataReader.num_category, dataReader.num_category))
@@ -244,17 +269,17 @@ class net(object):
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.005
-    max_epoch = 50
+    max_epoch = 200
     batch_size = 4
     num_input = dataReader.num_feature
-    num_hidden = 4
+    num_hidden = 6
     num_output = dataReader.num_category
-    model = "CharName_005_4_16"
+    model = str.format("CharName_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
     hp = HyperParameters_4_3(
         eta, max_epoch, batch_size, 
         dataReader.max_step, num_input, num_hidden, num_output, 
         NetType.MultipleClassifier)
     n = net(hp, model)
-    n.train(dataReader, checkpoint=1)
     #n.load_parameters()
+    n.train(dataReader, checkpoint=1)
     n.test(dataReader)

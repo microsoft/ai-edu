@@ -100,7 +100,7 @@ class NameDataReader(object):
         y = self.Y[idx1][idx2:idx2+batch_size]
         return x,y
 
-    def GenerateValidationSet(self, k = 10):
+    def GenerateValidationSet(self, k):
         self.dev_x = []
         self.dev_y = []
         for i in range(k):

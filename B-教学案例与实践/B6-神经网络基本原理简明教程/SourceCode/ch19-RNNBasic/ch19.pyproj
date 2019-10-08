@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_BinaryNumberMinus.py</StartupFile>
+    <StartupFile>Level3_NameClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,10 +22,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ExtendedDataReader\MnistImageDataReader.py" />
+    <Compile Include="ExtendedDataReader\NameDataReader.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ExtendedDataReader\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
+    <Compile Include="Level3_NameClassifier.py" />
+    <Compile Include="Level2_RnnCell.py" />
     <Compile Include="Level1_EchoRandomNumber.py" />
     <Compile Include="MiniFramework\ActivationLayer.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py" />
@@ -34,7 +39,7 @@
     <Compile Include="MiniFramework\DropoutLayer.py" />
     <Compile Include="MiniFramework\EnumDef_6_0.py" />
     <Compile Include="MiniFramework\FCLayer_2_0.py" />
-    <Compile Include="MiniFramework\HyperParameters_4_2.py" />
+    <Compile Include="MiniFramework\HyperParameters_4_3.py" />
     <Compile Include="MiniFramework\LossFunction_1_1.py" />
     <Compile Include="MiniFramework\NeuralNet_4_2.py" />
     <Compile Include="MiniFramework\Optimizer_1_0.py" />

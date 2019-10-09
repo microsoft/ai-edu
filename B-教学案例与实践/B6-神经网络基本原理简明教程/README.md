@@ -1,6 +1,6 @@
 ﻿# AI-神经网络基本原理简明教程目录
-Copyright © Microsoft Corporation. All rights reserved.
-适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
+<!--Copyright © Microsoft Corporation. All rights reserved.
+适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可-->
 
 ## 如何浏览本系列教程
 
@@ -19,8 +19,8 @@ Copyright © Microsoft Corporation. All rights reserved.
 对于这份教程的内容，如果没有额外的说明，我们通常使用如下表格的命名约定：
 
 | 符号 | 含义|
-|:------------:|-------------|
-|X|输入样本 |
+|:---:|---|
+|X|输入样本|
 |Y|输入样本的标签 |
 |Z|线性运算的结果|
 |A|激活函数/结果|
@@ -30,7 +30,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 |大写字母|矩阵或矢量，如A,W,B|
 |小写字母|变量，标量，如a,w,b|
 |$x_{1,2}$|第1个样本的第2个特征值|
-|$w^L_{2,3}$|第L层第2个神经元对第L-1层第3个神经元的权重值
+|$w^L_{2,3}$|第L层第2个神经元对第L-1层第3个神经元的权重值|
 |矩阵的行|一批样本的某一个特征值的集合|
 |矩阵的列|一批样本的某一个样本的所有特征值|
 
@@ -62,18 +62,13 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 |网络结构名称|网络结构图|应用领域|
 |---|----|----|
-|单入<br>单出<br>一层|<img src="./Images/4/Setup.jpg"/>|一元线性回归/拟合<br>一般用于拟合直线，根据单输入值预测单输出值<br>|
-|多入<br>单出<br>一层|<img src="./Images/5/setup.jpg"/>|多元线性回归<br>根据一组输入值预测单输出值<br>|
-|多入<br>多出<br>一层|<img src="./Images/6/MultipleClassifierNN.png"/>|多元线性分类<br>|
-|单入<br>单出<br>两层|<img src="./Images/8/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|
-|多入<br>多出<br>两层|<img src="./Images/9/nn.png"/>|多元非线性分类<br>可以做任意复杂边界的分类|
-|多入<br>多出<br>三层|<img src="./Images/10/nn3.png"/>|多元非线性多分类|
+|单入<br>单出<br>一层|<img src="./Images/4/Setup.png"/>|一元线性回归|
+|多入<br>单出<br>一层|<img src="./Images/5/setup.png"/>|多元线性回归|
+|多入<br>单出<br>一层|<img src="./Images/6/BinaryClassifierNN.png"/>|线性二分类<br>|
+|多入<br>多出<br>一层|<img src="./Images/7/MultipleClassifierNN.png"/>|线性多分类<br>|
+|单入<br>单出<br>两层|<img src="./Images/9/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|
+|多入<br>单出<br>两层|<img src="./Images/10/xor_nn.png"/>|非线性二分类|
+|多入<br>多出<br>两层|<img src="./Images/11/nn.png"/>|非线性多分类|
+|多入<br>多出<br>三层|<img src="./Images/12/nn3.png"/>|非线性多分类|
 
-## 人物设定
-
-“铁柱”是一名老师，在神经网络中穿梭多年，挂了满身的蜘蛛网。
-
-“木头”是一名刚入门者，木头木脑的，有问题经常向铁柱请教。
-
-其实木头就是笔者本人的笔名，铁柱是我请教过的多位老师的合集。
 

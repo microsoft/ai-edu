@@ -21,6 +21,8 @@ N个玩家，每人写一个或两个0~100之间的有理数 (不包括0或100)�
 
   在 [BotDemoInCSharp](./BotDemoInCSharp) 和 [BotDemoInPython](./BotDemoInPython) 中，我们提供了一个简单的可以与“黄金点”服务器交互的控制台程序，只要将你的策略或者AI核心写到 `GeneratePredictionNumbers` 函数中，就可以让你的bot在服务器上大战三百回合了。
 
+  我们也提供了[依托于Azure Notebook的版本](https://aka.ms/goldennotebook)，可以脱离本地开发环境，在线直接运行示例BOT，免除环境安装配置的步骤。
+
 * 用你熟悉的语言来挑战
 
   服务端REST接口提供了Swagger描述文档： [swagger.json](https://goldennumber.aiedu.msra.cn/swagger/v1/swagger.json)  [中文版](https://goldennumber.aiedu.msra.cn/swagger/v1%20-%20Chinese/swagger.json) [英文版](https://goldennumber.aiedu.msra.cn/swagger/v1%20-%20English/swagger.json)
@@ -97,7 +99,7 @@ nickname | String | 必需 | 用户昵称，长度大于20会被截断
 -|-|-|-
 uid | string | 必需 | 房间创建者的标识
 numbers | Int | 可选 | 设置游戏支持的每个玩家可以提交的预测值的个数，目前支持提交1个或2个数<br>默认是1，表示每个玩家可以提交一个数
-duration | Int | 可选 | 设置游戏中每回合的间隔时间<br>默认值是60秒，取值范围在10~200之间
+duration | Int | 可选 | 设置游戏中每回合的间隔时间<br>默认值是60秒，取值范围在3~200之间
 userCount | int | 可选 | 设置游戏房间中允许的最大玩家数<br>默认值是0，表示没有限制<br>有玩家数量限制的房间，当所有玩家都提交预测值后，会立即计算本回合结果，并开始下一轮<br>注意：这里的玩家数量限制是针对房间的，不是针对一个回合，只要玩家在房间内任一回合提交过预测值，则认为该玩家始终在房间内
 roundCount | int | 可选 | 设置比赛总回合数<br>默认值是0，表示没有限制<br>如果某一回合没有玩家提交数据，认为该回合无效，不计在回合数内<br>如果有效回合数达到设置的总回合数，游戏结束，不再允许提交数据
 manuallyStart | Int | 可选 | 是否手动开始游戏<br>默认值0，表示创建完房间后，游戏自动开始<br>如果是1，表示需要由创建者手动开始游戏
@@ -189,6 +191,7 @@ n2 | Double | 可选 | 第二个预测值，如果当前游戏是支持两个数
 参数名 | 数据类型 | 是否必需 | 备注
 -|-|-|-
 roomid | String | 可选 | 房间编号<br>如果该参数为空，默认0号房间
+roundCount | Int | 可选 | 查询的回合数量<br>如果此参数为空，默认最近100回合的数据<br>如果需要查询所有数据，需设置为-1<br>注意：当回合数特别大时，返回的数据包会特别大
 
 响应报文内容中的属性：
 
@@ -211,6 +214,7 @@ goldenNumberList | Array | 房间中当天的黄金点历史数据，数组的�
 参数名 | 数据类型 | 是否必需 | 备注
 -|-|-|-
 roomid | int | 可选 | 房间编号<br>如果未设置，默认为0号游戏房间
+roundCount | Int | 可选 | 查询的回合数量<br>如果此参数为空，默认最近100回合的数据<br>如果需要查询所有数据，需设置为-1<br>注意：当回合数特别大时，返回的数据包会特别大
 
 响应报文内容中的属性：
 

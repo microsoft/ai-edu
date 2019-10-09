@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
 
-# Use `pip install pyswagger` to install pyswagger
+# Use `pip install pyswagger requests` to install pyswagger and requests
 from pyswagger import App
 from pyswagger.contrib.client.requests import Client
 
@@ -19,22 +19,21 @@ def GeneratePredictionNumbers(goldenNumberList, numberCount):
             number2 = 18.0
     else:
         # Use the average of latest 10 rounds golden number as the prediction number for next round
-        number1 = sum(goldenNumberList[-10:]) / float(len(goldenNumberList))
+        number1 = sum(goldenNumberList[-10:]) / float(len(goldenNumberList[-10:]))
         if numberCount == 2:
             # Use the latest round golden number as the prediction number for the next round
             number2 = goldenNumberList[-1]
 
     return number1, number2
 
+# Init swagger client
+host = 'https://goldennumber.aiedu.msra.cn/'
+jsonpath = '/swagger/v1/swagger.json'
+app = App._create_(host + jsonpath)
+client = Client()
 
 def main(roomId):
-    host = 'https://goldennumber.aiedu.msra.cn/'
-    jsonpath = '/swagger/v1/swagger.json'
-
-    app = App._create_(host + jsonpath)
-    client = Client()
-
-    if not roomId:
+    if roomId is None:
         # Input the roomid if there is no roomid in args
         roomId = input("Input room id: ")
         try:
@@ -74,7 +73,10 @@ def main(roomId):
                 uid=userId,
                 roomid=roomId
             ))
-        assert stateResp.status == 200
+        if stateResp.status != 200:
+            print('Network issue, query again after 1 second')
+            time.sleep(1)
+            continue
         state = stateResp.data
     
         if state.state == 2:
@@ -101,7 +103,10 @@ def main(roomId):
             app.op['TodayGoldenList'](
                 roomid=roomId
             ))
-        assert todayGoldenListResp.status == 200
+        if todayGoldenListResp.status != 200:
+            print('Network issue, query again after 1 second')
+            time.sleep(1)
+            continue
         todayGoldenList = todayGoldenListResp.data
         if len(todayGoldenList.goldenNumberList) != 0:
             print('Last golden number is: ' + str(todayGoldenList.goldenNumberList[-1]))
@@ -120,6 +125,7 @@ def main(roomId):
                 print('You submit numbers: ' + str(number1) + ', ' + str(number2))
             else:
                 print('Error: ' + submitRsp.data.message)
+                time.sleep(1)
 
         else:
             submitRsp = client.request(
@@ -132,6 +138,7 @@ def main(roomId):
                 print('You submit number: ' + str(number1))
             else:
                 print('Error: ' + submitRsp.data.message)
+                time.sleep(1)
 
 
 if __name__ == '__main__':

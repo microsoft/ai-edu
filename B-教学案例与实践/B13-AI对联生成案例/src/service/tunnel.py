@@ -12,6 +12,14 @@ class TunnelHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         """Serve a GET request."""
+        path = self.translate_path(self.path)
+        f = None
+        if os.path.isdir(path):
+            parts = urllib.parse.urlsplit(self.path)
+            if parts.path.endswith('/'):
+                self.send_error(HTTPStatus.UNAUTHORIZED)
+                return
+
         f = self.send_head()
         if f:
             try:

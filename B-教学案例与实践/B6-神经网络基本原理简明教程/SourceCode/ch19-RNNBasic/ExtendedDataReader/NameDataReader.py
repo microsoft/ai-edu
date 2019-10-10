@@ -81,6 +81,10 @@ class NameDataReader(object):
             return lang_id
 
     def GetBatchTrainSamples(self, batch_size):
+        if (self.batch_id >= len(self.X)):
+            self.batch_id = 0
+            return None, None
+
         start = self.name_id
         end = start + batch_size
         x = self.X[self.batch_id][start:end]
@@ -89,8 +93,6 @@ class NameDataReader(object):
         if (self.name_id >= len(self.X[self.batch_id])):
             self.name_id = 0
             self.batch_id += 1
-            if (self.batch_id >= len(self.X)):
-                self.batch_id = 0
         return x, y
     
     def GetRandomBatchTrainSamples(self, batch_size):
@@ -114,8 +116,9 @@ class NameDataReader(object):
 
     def Shuffle(self):
         count = len(self.X)
+        self.shuffle_list()
         for i in range(count):
-            self.X[i], self.Y[i] = self.shuffle(self.X[i], self.Y[i])
+            self.X[i], self.Y[i] = self.shuffle_array(self.X[i], self.Y[i])
         # end for
 
     def GetLanguageById(self, lang_id):
@@ -124,7 +127,14 @@ class NameDataReader(object):
     def GetLanguageIdByName(self, name):
         return self.language_list.index(name)
 
-    def shuffle(self, x, y):
+    def shuffle_list(self):
+        seed = random.randint(0,100)
+        random.seed(seed)
+        random.shuffle(self.X)
+        random.seed(seed)
+        random.shuffle(self.Y)
+
+    def shuffle_array(self, x, y):
         seed = np.random.randint(0,100)
         np.random.seed(seed)
         x_new = np.random.permutation(x)

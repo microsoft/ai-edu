@@ -89,6 +89,7 @@ class net(object):
             self.V,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_output, InitialMethod.Normal)
             self.W,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Normal)
             self.save_init_value()
+        #end if
 
         self.zero_state = np.zeros((self.hp.batch_size, self.hp.num_hidden))
         self.loss_fun = LossFunction_1_1(self.hp.net_type)
@@ -98,8 +99,6 @@ class net(object):
             ts = timestep()
             self.ts_list.append(ts)
         #end for
-        #self.ts_list[self.hp.num_step].s = np.zeros((self.hp.batch_size, self.hp.num_hidden))
-        #self.ts_list[self.hp.num_step].dh = np.zeros((self.hp.batch_size, self.hp.num_hidden))
 
     def __create_subfolder(self):
         if self.model_name != None:
@@ -164,10 +163,12 @@ class net(object):
             return False
 
     def save_parameters(self):
+        print("save parameters...")
         self.result_file_name = str.format("{0}/result.npz", self.subfolder)
         np.savez(self.result_file_name, U=self.U, V=self.V, W=self.W)
 
     def load_parameters(self):
+        print("load parameters...")
         self.result_file_name = str.format("{0}/result.npz", self.subfolder)
         data = np.load(self.result_file_name)
         self.U = data["U"]
@@ -186,33 +187,35 @@ class net(object):
 
     def train(self, dataReader, checkpoint=0.1):
         self.dataReader = dataReader
-        max_iteration = math.ceil(dataReader.num_train/self.hp.batch_size)
-        checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
-        loss = 0
+        min_loss = 10
+        total_iter = 0
         for epoch in range(self.hp.max_epoch):
             self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
-            for iteration in range(max_iteration):
+            while(True):
                 # get data
-                batch_x, batch_y = dataReader.GetRandomBatchTrainSamples(self.hp.batch_size)
+                batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size)
+                if (batch_x is None):
+                    break
                 # forward
                 self.forward(batch_x)
                 # backward
                 self.backward(batch_y)
                 # update
                 self.update()
-                # check loss
-                total_iteration = epoch * max_iteration + iteration               
-                if (total_iteration+1) % checkpoint_iteration == 0:
-                    X,Y = dataReader.GetValidationSet()
-                    loss,acc = self.check_loss(X,Y)
-                    self.loss_trace.Add(epoch, total_iteration, None, None, loss, acc, None)
-                    print(str.format("{0}:{1}:{2} loss={3:6f}, acc={4:6f}", epoch, total_iteration, self.hp.eta, loss, acc))
-                    loss = 0
-                #end if
-            #enf for
-            self.save_parameters()
+                total_iter += 1
+            #enf while
+            # check loss
+            X,Y = dataReader.GetValidationSet()
+            loss,acc = self.check_loss(X,Y)
+            self.loss_trace.Add(epoch, total_iter, None, None, loss, acc, None)
+            print(str.format("{0}:{1}:{2} loss={3:6f}, acc={4:6f}", epoch, total_iter, self.hp.eta, loss, acc))
+            if (loss < min_loss):
+                min_loss = loss
+                self.save_parameters()
+            #endif
         #end for
+        self.test(self.dataReader)
         self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Epoch)
 
     def lr_decay(self, epoch):
@@ -269,10 +272,10 @@ class net(object):
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.005
-    max_epoch = 200
+    max_epoch = 150
     batch_size = 4
     num_input = dataReader.num_feature
-    num_hidden = 6
+    num_hidden = 10
     num_output = dataReader.num_category
     model = str.format("CharName_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
     hp = HyperParameters_4_3(
@@ -282,4 +285,3 @@ if __name__=='__main__':
     n = net(hp, model)
     #n.load_parameters()
     n.train(dataReader, checkpoint=1)
-    n.test(dataReader)

@@ -29,6 +29,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
+    <Compile Include="Level4_DeepRnn.py" />
     <Compile Include="Level3_NameClassifier.py" />
     <Compile Include="Level2_RnnCell.py" />
     <Compile Include="Level1_EchoRandomNumber.py" />

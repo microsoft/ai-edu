@@ -99,6 +99,7 @@ class timestep(object):
             self.dW2 = np.dot(prev_s2.T, self.dh2)
         # end if
 
+
 class net(object):
     def __init__(self, hp, model_name):
         self.hp = hp
@@ -247,7 +248,7 @@ class net(object):
         min_loss = 10
         total_iter = 0
         for epoch in range(self.hp.max_epoch):
-            self.hp.eta = self.lr_decay(epoch)
+            #self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             while(True):
                 # get data

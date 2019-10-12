@@ -279,12 +279,10 @@ class net(object):
         if (epoch < 20):
             return 0.005
         elif (epoch < 40):
-            return 0.004
-        elif (epoch < 60):
             return 0.003
-        elif (epoch < 80):
+        elif (epoch < 60):
             return 0.002
-        elif (epoch < 100):
+        elif (epoch < 80):
             return 0.001
         else:
             return 0.0005
@@ -328,12 +326,12 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.001
-    max_epoch = 150
+    eta = 0.005
+    max_epoch = 100
     batch_size = 4
     num_input = dataReader.num_feature
-    num_hidden1 = 2
-    num_hidden2 = 3
+    num_hidden1 = 4
+    num_hidden2 = 8
     num_output = dataReader.num_category
     model = str.format("CharName_{0}_{1}_{2}_{3}_{4}", max_epoch, batch_size, num_hidden1, num_hidden2, eta)
     hp = HyperParameters_4_4(
@@ -342,4 +340,5 @@ if __name__=='__main__':
         NetType.MultipleClassifier)
     n = net(hp, model)
     #n.load_parameters()
+    #n.test(dataReader)
     n.train(dataReader, checkpoint=1)

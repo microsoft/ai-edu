@@ -40,61 +40,72 @@ class timestep(object):
             # 公式1
             self.h1 = np.dot(x, U)
         else:
-            # 公式2
+            # 公式5
             self.h1 = np.dot(x, U) + np.dot(prev_s1, W1) 
-        # 公式3
+        # 公式2
         self.s1 = Tanh().forward(self.h1)
 
         # level 2
         if (isFirst):
+            # 公式3
             self.h2 = np.dot(self.s1, self.Q)
         else:
+            # 公式6
             self.h2 = np.dot(self.s1, self.Q) + np.dot(prev_s2, W2)
+        # 公式4
         self.s2 = Tanh().forward(self.h2)
 
         if (isLast):
-            # 公式4
+            # 公式7
             self.z = np.dot(self.s2, V)
-            # 公式5
+            # 公式8
             self.a = Softmax().forward(self.z)
 
     # for the first cell, prev_s should be zero
     # for the last cell, next_dh should be zero
     def backward(self, y, prev_s1, prev_s2, next_dh1, next_dh2, isFirst, isLast):
         if (isLast):
-            # 公式7
+            # 公式12
             self.dz = (self.a - y)
         else:
+            # 公式16
             self.dz = np.zeros_like(y)
         # end if
+
         if (isLast):
-            # 公式8
+            # 公式13
             self.dh2 = np.dot(self.dz, self.V.T) * Tanh().backward(self.s2)
         else:
-            # 公式9
+            # 公式17
             self.dh2 = np.dot(next_dh2, self.W2.T) * Tanh().backward(self.s2)
         # end if
+
         if (isLast):
-            # 公式10
+            # 公式14
             self.dV = np.dot(self.s2.T, self.dz)
         else:
+            # 公式18
             self.dV = np.zeros_like(self.V)
-        # 公式11
-
+        
+        # 公式10
         self.dQ = np.dot(self.s1.T, self.dh2)
         
         if (isLast):
+            # 公式15
             self.dh1 = np.dot(self.dh2, self.Q.T) * Tanh().backward(self.s1)
         else:
+            # 公式19
             self.dh1 = np.dot(next_dh1, self.W1.T) * Tanh().backward(self.s1)
 
+        # 公式11
         self.dU = np.dot(self.x.T, self.dh1)
         
         if (isFirst):
+            # 公式20
             self.dW1 = np.zeros_like(self.W1)
             self.dW2 = np.zeros_like(self.W2)
         else:
-            # 公式12
+            # 公式21,22
             self.dW1 = np.dot(prev_s1.T, self.dh1)
             self.dW2 = np.dot(prev_s2.T, self.dh2)
         # end if
@@ -107,13 +118,13 @@ class net(object):
         self.subfolder = os.getcwd() + "/" + self.__create_subfolder()
         print(self.subfolder)
 
-        if (self.load_init_value() == False):
+        if (self.load_parameters(ParameterType.Init) == False):
             self.U,_ = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden1, InitialMethod.Normal)
             self.Q,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden1, self.hp.num_hidden2, InitialMethod.Normal)
             self.V,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden2, self.hp.num_output, InitialMethod.Normal)
             self.W1,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden1, self.hp.num_hidden1, InitialMethod.Normal)
             self.W2,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden2, self.hp.num_hidden2, InitialMethod.Normal)
-            self.save_init_value()
+            self.save_parameters(ParameterType.Init)
         #end if
 
         self.loss_fun = LossFunction_1_1(self.hp.net_type)
@@ -200,38 +211,40 @@ class net(object):
         self.W1 = self.W1 - dw1 * self.hp.eta
         self.W2 = self.W2 - dw2 * self.hp.eta
 
-    def save_init_value(self):
-        self.init_file_name = str.format("{0}/init.npz", self.subfolder)
-        np.savez(self.init_file_name, U=self.U, V=self.V, Q=self.Q, W1=self.W1, W2=self.W2)
+    def save_parameters(self, para_type):
+        if (para_type == ParameterType.Init):
+            print("save init parameters...")
+            self.file_name = str.format("{0}/init.npz", self.subfolder)
+        elif (para_type == ParameterType.Best):
+            print("save best parameters...")
+            self.file_name = str.format("{0}/best.npz", self.subfolder)
+        elif (para_type == ParameterType.Last):
+            print("save last parameters...")
+            self.file_name = str.format("{0}/last.npz", self.subfolder)
+        #endif
+        np.savez(self.file_name, U=self.U, V=self.V, Q=self.Q, W1=self.W1, W2=self.W2)
 
-    def load_init_value(self):
-        self.init_file_name = str.format("{0}/init.npz", self.subfolder)
-        w_file = Path(self.init_file_name)
-        if w_file.exists():
-            data = np.load(self.init_file_name)
-            self.U = data["U"]
-            self.V = data["V"]
-            self.Q = data["Q"]
-            self.W1 = data["W1"]
-            self.W2 = data["W2"]
-            return True
-        else:
-            return False
-
-    def save_parameters(self):
-        print("save parameters...")
-        self.result_file_name = str.format("{0}/result.npz", self.subfolder)
-        np.savez(self.result_file_name, U=self.U, V=self.V, Q=self.Q, W1=self.W1, W2=self.W2)
-
-    def load_parameters(self):
-        print("load parameters...")
-        self.result_file_name = str.format("{0}/result.npz", self.subfolder)
-        data = np.load(self.result_file_name)
+    def load_parameters(self, para_type):
+        if (para_type == ParameterType.Init):
+            print("load init parameters...")
+            self.file_name = str.format("{0}/init.npz", self.subfolder)
+            w_file = Path(self.file_name)
+            if w_file.exists() is False:
+                return False
+        elif (para_type == ParameterType.Best):
+            print("load best parameters...")
+            self.file_name = str.format("{0}/best.npz", self.subfolder)
+        elif (para_type == ParameterType.Last):
+            print("load last parameters...")
+            self.file_name = str.format("{0}/last.npz", self.subfolder)
+        #endif
+        data = np.load(self.file_name)
         self.U = data["U"]
         self.V = data["V"]
         self.Q = data["Q"]
         self.W1 = data["W1"]
         self.W2 = data["W2"]
+        return True
 
     def check_loss(self,X,Y):
         LOSS = 0
@@ -270,11 +283,16 @@ class net(object):
             print(str.format("{0}:{1}:{2} loss={3:6f}, acc={4:6f}", epoch, total_iter, self.hp.eta, loss, acc))
             if (loss < min_loss):
                 min_loss = loss
-                self.save_parameters()
+                self.save_parameters(ParameterType.Best)
             #endif
         #end for
+        self.save_parameters(ParameterType.Last)
         self.test(self.dataReader)
         self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Epoch)
+        self.load_parameters(ParameterType.Best)
+        self.test(self.dataReader)
+#        self.load_parameters(ParameterType.Last)
+#        self.test(self.dataReader)
 
     def lr_decay(self, epoch):
         if (epoch < 20):
@@ -285,21 +303,29 @@ class net(object):
             return 0.002
         elif (epoch < 80):
             return 0.001
-        else:
+        elif (epoch < 120):
             return 0.0005
+        else:
+            return 0.0001
 
     def test(self, dataReader):
+        dataReader.ResetPointer()
         confusion_matrix = np.zeros((dataReader.num_category, dataReader.num_category))
         correct = 0
-        for i in range(dataReader.num_train):
+        count = 0
+        while(True):
             x,y = dataReader.GetBatchTrainSamples(1)
+            if (x is None):
+                break
             output = self.forward(x)
             pred = np.argmax(output)
             label = np.argmax(y)
             confusion_matrix[label, pred] += 1
             if (pred == label):
                 correct += 1
+            count += 1
         #end for
+        assert(count == dataReader.num_train)
         print(str.format("correctness={0}/{1}={2}", correct, dataReader.num_train, correct / dataReader.num_train))
         self.draw_confusion_matrix(dataReader, confusion_matrix)
 
@@ -331,8 +357,8 @@ if __name__=='__main__':
     max_epoch = 100
     batch_size = 4
     num_input = dataReader.num_feature
-    num_hidden1 = 4
-    num_hidden2 = 8
+    num_hidden1 = 8
+    num_hidden2 = 4
     num_output = dataReader.num_category
     model = str.format("CharName_{0}_{1}_{2}_{3}_{4}", max_epoch, batch_size, num_hidden1, num_hidden2, eta)
     hp = HyperParameters_4_4(
@@ -340,6 +366,5 @@ if __name__=='__main__':
         dataReader.max_step, num_input, num_hidden1, num_hidden2, num_output, 
         NetType.MultipleClassifier)
     n = net(hp, model)
-    #n.load_parameters()
-    #n.test(dataReader)
     n.train(dataReader, checkpoint=1)
+

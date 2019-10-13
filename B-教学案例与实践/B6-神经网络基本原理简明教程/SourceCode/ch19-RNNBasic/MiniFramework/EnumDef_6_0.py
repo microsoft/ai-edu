@@ -58,3 +58,8 @@ class RegularMethod(Enum):
 class PoolingTypes(Enum):
     MAX = 0,
     MEAN = 1,
+
+class ParameterType(Enum):
+    Init = 0,
+    Best = 1,
+    Last = 2

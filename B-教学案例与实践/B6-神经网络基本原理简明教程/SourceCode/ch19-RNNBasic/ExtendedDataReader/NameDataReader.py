@@ -80,6 +80,10 @@ class NameDataReader(object):
         finally:
             return lang_id
 
+    def ResetPointer(self):
+        self.batch_id = 0
+        self.name_id = 0
+
     def GetBatchTrainSamples(self, batch_size):
         if (self.batch_id >= len(self.X)):
             self.batch_id = 0

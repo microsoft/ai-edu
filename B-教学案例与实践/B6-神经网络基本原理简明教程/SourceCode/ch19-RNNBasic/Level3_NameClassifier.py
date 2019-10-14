@@ -270,7 +270,7 @@ class net(object):
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.005
-    max_epoch = 100
+    max_epoch = 200
     batch_size = 4
     num_input = dataReader.num_feature
     num_hidden = 8

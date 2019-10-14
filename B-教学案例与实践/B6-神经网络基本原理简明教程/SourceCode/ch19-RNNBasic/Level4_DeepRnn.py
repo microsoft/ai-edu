@@ -261,7 +261,7 @@ class net(object):
         min_loss = 10
         total_iter = 0
         for epoch in range(self.hp.max_epoch):
-            #self.hp.eta = self.lr_decay(epoch)
+            self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             while(True):
                 # get data
@@ -296,17 +296,17 @@ class net(object):
 
     def lr_decay(self, epoch):
         if (epoch < 20):
-            return 0.005
+            return 0.01
+        elif (epoch < 20):
+            return 0.008
         elif (epoch < 40):
-            return 0.003
+            return 0.005
         elif (epoch < 60):
             return 0.002
         elif (epoch < 80):
             return 0.001
-        elif (epoch < 120):
-            return 0.0005
         else:
-            return 0.0001
+            return 0.0005
 
     def test(self, dataReader):
         dataReader.ResetPointer()
@@ -353,11 +353,11 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.005
-    max_epoch = 100
-    batch_size = 4
+    eta = 0.01
+    max_epoch = 500
+    batch_size = 8
     num_input = dataReader.num_feature
-    num_hidden1 = 8
+    num_hidden1 = 6
     num_hidden2 = 4
     num_output = dataReader.num_category
     model = str.format("CharName_{0}_{1}_{2}_{3}_{4}", max_epoch, batch_size, num_hidden1, num_hidden2, eta)

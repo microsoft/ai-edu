@@ -62,7 +62,7 @@ class timestep(object):
             self.a = Softmax().forward(self.z)
 
     def backward_e2f(self, y, prev_s1, next_dh1, isFirst, isLast):
-        if (isLast):
+        if (isLast or isFirst):
             self.dz = self.a - y
         else:
             self.dz = np.zeros_like(y)
@@ -329,11 +329,11 @@ class net(object):
 
     def lr_decay(self, epoch):
         if (epoch < 20):
-            return 0.01
-        elif (epoch < 20):
-            return 0.008
-        elif (epoch < 40):
             return 0.005
+        elif (epoch < 20):
+            return 0.004
+        elif (epoch < 40):
+            return 0.003
         elif (epoch < 60):
             return 0.002
         elif (epoch < 80):
@@ -386,12 +386,12 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.01
-    max_epoch = 100
+    eta = 0.005
+    max_epoch = 200
     batch_size = 8
     num_input = dataReader.num_feature
-    num_hidden1 = 6
-    num_hidden2 = 6
+    num_hidden1 = 8
+    num_hidden2 = 8
     num_output = dataReader.num_category
     model = str.format("Level5_{0}_{1}_{2}_{3}_{4}", max_epoch, batch_size, num_hidden1, num_hidden2, eta)
     hp = HyperParameters_4_4(

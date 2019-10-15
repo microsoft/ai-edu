@@ -29,6 +29,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
+    <Compile Include="Level3_SinCos.py" />
     <Compile Include="Level5_BiRnn.py" />
     <Compile Include="Level4_DeepRnn.py" />
     <Compile Include="Level3_NameClassifier.py" />

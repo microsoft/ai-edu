@@ -4,29 +4,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from MiniFramework.NeuralNet41 import *
-from MiniFramework.Optimizer import *
-from MiniFramework.LossFunction import *
-from MiniFramework.HyperParameters41 import *
-from MiniFramework.WeightsBias import *
-from MiniFramework.ActivatorLayer import *
-from MiniFramework.DropoutLayer import *
-from MnistAugmentationReader import *
+from MiniFramework.NeuralNet_4_2 import *
+from ExtendedDataReader.MnistAugmentationReader import *
 
-from Level0_OverFitNet import *
-
-
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
+from Level1_OverfittingNet_Classification import *
 
 def LoadData():
-    mdr = MnistAugmentationReader(None, None, test_image_file, test_label_file, "vector")
+    mdr = MnistAugmentationReader("vector")
     mdr.ReadData()
-    mdr.Normalize()
+    mdr.NormalizeX()
+    mdr.NormalizeY(NetType.MultipleClassifier, base=0)
     mdr.Shuffle()
-    mdr.GenerateDevSet(k=10)
+    mdr.GenerateValidationSet(k=10)
     return mdr
 
 if __name__ == '__main__':
@@ -37,15 +26,13 @@ if __name__ == '__main__':
     num_input = num_feature
     num_hidden = 30
     num_output = 10
-    max_epoch = 200
-    batch_size = 100
+    max_epoch = 100
+    batch_size = 32
     learning_rate = 0.1
-    eps = 1e-2
 
-    params = HyperParameters41(
-        learning_rate, max_epoch, batch_size, eps,                        
-        LossFunctionName.CrossEntropy3, 
-        InitialMethod.Xavier, 
-        OptimizerName.SGD)
+    params = HyperParameters_4_2(
+        learning_rate, max_epoch, batch_size,
+        net_type=NetType.MultipleClassifier,
+        init_method=InitialMethod.Xavier)
 
-    Net(dataReader, num_input, num_hidden, num_output, params)
+    Net("augmentation", dataReader, num_input, num_hidden, num_output, params)

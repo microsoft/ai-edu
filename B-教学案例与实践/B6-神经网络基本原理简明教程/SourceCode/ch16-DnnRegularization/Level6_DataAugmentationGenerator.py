@@ -6,9 +6,8 @@ import cv2
 import gzip
 import math
 import random
-
+import os
 import matplotlib.pyplot as plt
-
 
 IMAGE_SIZE = 28
 NUM_CHANNELS = 1
@@ -21,20 +20,12 @@ NUM_EPOCHS = 10
 EVAL_BATCH_SIZE = 64
 EVAL_FREQUENCY = 100  # Number of steps between evaluations.
 
-from MnistImageDataReader import *
-
-train_image_file = 'train-images-10'
-train_label_file = 'train-labels-10'
-test_image_file = 'test-images-10'
-test_label_file = 'test-labels-10'
-
+from ExtendedDataReader.MnistImageDataReader import *
 
 def LoadData():
-    mdr = MnistImageDataReader(train_image_file, train_label_file, test_image_file, test_label_file, "image")
+    mdr = MnistImageDataReader("image")
     mdr.ReadLessData(1000)
-    #mdr.ReadData()
-    mdr.Normalize()
-    #mdr.GenerateDevSet(k=10)
+    mdr.NormalizeX()
     return mdr
 
 def mnist_image_reader(path, index):
@@ -57,8 +48,7 @@ def mnist_image_reader(path, index):
         data = data.reshape(60000, IMAGE_SIZE, IMAGE_SIZE)
         data = np.array([data[i, :, :] for i in index])
     return data
-    
-
+ 
 def mnist_label_reader(path, index):
     """get label data from mnist file
 
@@ -79,7 +69,6 @@ def mnist_label_reader(path, index):
         labels = np.array([labels[i] for i in index])
     return labels
     
-
 def rotate(image, angle):
     """rotate the given image for a given angle
 
@@ -176,9 +165,9 @@ def noise(image, var=0.1):
     noise_image = image + gaussian_noise
     return np.clip(noise_image, 0, 1)
 
-def generate():
+def generate(subfolder):
     dataReader = LoadData()
-    image_list = dataReader.X.reshape(1000,28,28)
+    image_list = dataReader.XTrain.reshape(1000,28,28)
     label = dataReader.YTrainRaw
 
     rotated_image_10 = map(lambda x: rotate(x, 10), image_list)
@@ -200,27 +189,22 @@ def generate():
     all_label = np.concatenate([label for i in range(10)])
     all_image = all_image.astype(np.uint8)
     all_label = all_label.astype(np.uint8)
-    np.savez("level5_data.npz", data=all_image, label=all_label)
-    """
-    the example code to read data:
-        import numpy as np
-        data = np.load("data.npz")
-        image = data["data"] / 255
-        label = data["label"]
-    """
 
+    isExists = os.path.exists(subfolder)
+    if not isExists:
+        os.makedirs(subfolder)
+    np.savez(subfolder + "/data.npz", data=all_image, label=all_label)
 
 if __name__=="__main__":
 
-    #generate()
-    #exit()
+    generate("augmentation")
 
-    data = np.load("data.npz")
+    data = np.load("augmentation/data.npz")
     image = data["data"] 
     label = data["label"]
     print(image.shape, label.shape)
 
-    for i in range(1000):
+    for i in range(3):
         # rotate
         fig = plt.figure(figsize=(10,3))
         axes = plt.subplot(1,3,2)

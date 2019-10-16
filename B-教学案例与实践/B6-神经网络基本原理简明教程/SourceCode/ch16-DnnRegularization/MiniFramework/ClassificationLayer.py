@@ -11,7 +11,6 @@ class ClassificationLayer(CLayer):
         self.activator = activator
 
     def forward(self, input, train=True):
-        self.input_shape = input.shape
         self.x = input
         self.a = self.activator.forward(self.x)
         return self.a

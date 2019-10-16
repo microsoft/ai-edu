@@ -63,7 +63,7 @@ class NeuralNet_4_1(object):
         output = self.__forward(X, train=False)
         return output
 
-    def backward(self, X, Y):
+    def __backward(self, X, Y):
         delta_in = self.output - Y
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
@@ -71,12 +71,12 @@ class NeuralNet_4_1(object):
             # move back to previous layer
             delta_in = delta_out
 
-    def pre_update(self):
+    def __pre_update(self):
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             layer.pre_update()
 
-    def update(self):
+    def __update(self):
         for i in range(self.layer_count-1,-1,-1):
             layer = self.layer_list[i]
             layer.update()
@@ -100,14 +100,14 @@ class NeuralNet_4_1(object):
 
                 # for optimizers which need pre-update weights
                 if self.hp.optimizer_name == OptimizerName.Nag:
-                    self.pre_update()
+                    self.__pre_update()
 
                 # get z from x,y
                 self.__forward(batch_x, train=True)
                 # calculate gradient of w and b
-                self.backward(batch_x, batch_y)
+                self.__backward(batch_x, batch_y)
                 # final update w,b
-                self.update()
+                self.__update()
                 
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
@@ -144,7 +144,6 @@ class NeuralNet_4_1(object):
         # calculate train loss
         self.__forward(train_x, train=False)
         loss_train = self.lossFunc.CheckLoss(self.output, train_y)
-        loss_train = loss_train# + regular_cost / train_x.shape[0]
         accuracy_train = self.__CalAccuracy(self.output, train_y)
         print("loss_train=%.6f, accuracy_train=%f" %(loss_train, accuracy_train))
 
@@ -152,7 +151,6 @@ class NeuralNet_4_1(object):
         vld_x, vld_y = dataReader.GetValidationSet()
         self.__forward(vld_x, train=False)
         loss_vld = self.lossFunc.CheckLoss(self.output, vld_y)
-        loss_vld = loss_vld #+ regular_cost / vld_x.shape[0]
         accuracy_vld = self.__CalAccuracy(self.output, vld_y)
         print("loss_valid=%.6f, accuracy_valid=%f" %(loss_vld, accuracy_vld))
 
@@ -190,10 +188,6 @@ class NeuralNet_4_1(object):
             r = (ra == ry)
             correct = r.sum()
             return correct/m
-
-    def inference(self, X):
-        self.__forward(X, train=False)
-        return self.output
 
     # save weights value when got low loss than before
     def save_parameters(self):

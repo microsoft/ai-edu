@@ -11,7 +11,6 @@ class ClassificationLayer(CLayer):
         self.classifier = classifier
 
     def forward(self, input, train=True):
-        self.input_shape = input.shape
         self.x = input
         self.a = self.classifier.forward(self.x)
         return self.a

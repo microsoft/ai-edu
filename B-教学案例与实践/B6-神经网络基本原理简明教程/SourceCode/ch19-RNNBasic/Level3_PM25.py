@@ -17,7 +17,6 @@ from MiniFramework.HyperParameters_4_3 import *
 from MiniFramework.WeightsBias_2_1 import *
 from ExtendedDataReader.NameDataReader import *
 
-file = "../../data/ch19.name_language.txt"
 
 def load_data():
     dr = NameDataReader()

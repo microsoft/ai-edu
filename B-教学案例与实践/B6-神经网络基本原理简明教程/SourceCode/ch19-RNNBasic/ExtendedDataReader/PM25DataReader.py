@@ -15,8 +15,9 @@ field: year, month, day, hour, dew, temp, air_press, wind_direction, wind_speed
 """
 
 class PM25DataReader(DataReader_2_0):
-    def __init__(self, mode):
+    def __init__(self, mode, timestep):
         self.mode = mode    # mode = NetType.Fitting : NetType.MulitpleClassifier
+        self.timestep = timestep
         self.train_file_name = train_file
         self.test_file_name = test_file
         self.num_example = 0
@@ -26,7 +27,7 @@ class PM25DataReader(DataReader_2_0):
         self.num_test = 0
         self.num_train = 0
 
-    def ReadData(self, timestep = 24):
+    def ReadData(self):
         super().ReadData()
         if (self.mode == NetType.Fitting):
             self.YTrainRaw = self.YTrainRaw[:,0]
@@ -36,22 +37,30 @@ class PM25DataReader(DataReader_2_0):
             self.YTestRaw = self.YTestRaw[:,1].reshape(-1,1)
             self.num_category = len(npy.unique(self.YTrainRaw))
     
-        self.num_example = self.YTrainRaw.shape[0]
-        self.num_train = self.num_example - timestep
-        tmp_x = np.empty((self.num_train, timestep, self.num_feature))
-        tmp_y = np.empty((self.num_train, 1))
-        for i in range(self.num_train):
-            for j in range(timestep):
-                tmp_x[i,j] = self.XTrainRaw[i+j]
-            tmp_y[i] = self.YTrainRaw[i + timestep]
+    def Normalize(self):
+        super().NormalizeX()
+        super().NormalizeY(self.mode)
+        self.num_train = self.num_train - self.timestep
+        self.XTrain, self.YTrain = self.GenerateTimestepData(self.XTrain, self.YTrain, self.num_train)
+        self.num_test = self.num_test - self.timestep
+        self.XTest, self.YTest = self.GenerateTimestepData(self.XTest, self.YTest, self.num_test)
 
-    def GetBatchTrainSamples(self, batch_size, time_step):
-        start = random.randint(0, self.num_train - time_step)
-        end = start + batch_size
-        batch_X = np.empty((batch_size, time_step, self.num_feature))
+    def GenerateTimestepData(self, x, y, count):
+        tmp_x = np.zeros((count, self.timestep, self.num_feature))
+        tmp_y = np.zeros((count, self.num_category))
+        for i in range(count):
+            for j in range(self.timestep):
+                tmp_x[i,j] = x[i+j]
+            #endfor
+            tmp_y[i] = y[i + self.timestep]
+        #endfor
+        return tmp_x, tmp_y
 
-
-        batch_X = self.XTrain[start:end]
-        batch_Y = self.YTrain[start:end]
-        return batch_X, batch_Y
-
+    def GenerateValidationSet(self, k):
+        self.num_dev = k
+        a = np.random.randint(0, self.num_test, k)
+        self.XDev = np.zeros((k, self.XTest.shape[1], self.XTest.shape[2]))
+        self.YDev = np.zeros((k, self.YTest.shape[1]))
+        for i in range(k):
+            self.XDev[i] = self.XTest[a[i]]
+            self.YDev[i] = self.YTest[a[i]]

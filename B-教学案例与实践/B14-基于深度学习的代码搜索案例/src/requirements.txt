@@ -1,0 +1,16 @@
+astor
+Keras-Preprocessing
+nltk
+numpy
+pandas
+scikit-learn
+spacy
+tables
+tensorboard
+tensorboardX
+textacy
+tornado
+tqdm
+Unidecode
+bs4
+torch

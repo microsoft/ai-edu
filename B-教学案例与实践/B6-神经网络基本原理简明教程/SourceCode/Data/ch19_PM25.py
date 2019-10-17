@@ -53,7 +53,6 @@ dataset.drop('Ir', axis=1, inplace=True)
 dataset.drop('Is', axis=1, inplace=True)
 
 # manually specify column names
-#dataset.columns = ['pollution', 'dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain']
 dataset.columns = ['month', 'day', 'hour', 'pollution', 'dew', 'temp', 'press', 'wnd_dir', 'wnd_spd']
 #dataset.index.name = 'date'
 dataset = dataset.replace('NW',9)
@@ -97,7 +96,7 @@ pollution_y[:,0] = ds['pollution'].to_numpy()
 for i in range(total):
     pollution_y[i,1] = get_pollution_class(pollution_y[i,0])
 
-dataset.drop('pollution', axis=1, inplace=True)
+ds.drop('pollution', axis=1, inplace=True)
 pollution_x = ds.to_numpy()
 
 np.savez("../../data/ch19_pm25_train.npz", data=pollution_x[0:total-8760], label=pollution_y[0:total-8760])

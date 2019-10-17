@@ -15,13 +15,15 @@ from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_3_0 import *
 from MiniFramework.HyperParameters_4_3 import *
 from MiniFramework.WeightsBias_2_1 import *
-from ExtendedDataReader.NameDataReader import *
+from ExtendedDataReader.PM25DataReader import *
 
 
-def load_data():
-    dr = NameDataReader()
-    dr.ReadData(file)
-    dr.GenerateValidationSet(1000)
+def load_data(net_type):
+    dr = PM25DataReader(net_type)
+    dr.ReadData()
+    dr.NormalizeX()
+    dr.NormalizeY(net_type)
+    dr.GetBatchTrainSamples(3, 4)
     return dr
 
 class timestep(object):
@@ -267,7 +269,8 @@ class net(object):
 
 
 if __name__=='__main__':
-    dataReader = load_data()
+    net_type = NetType.MultipleClassifier
+    dataReader = load_data(net_type)
     eta = 0.005
     max_epoch = 200
     batch_size = 4
@@ -278,7 +281,7 @@ if __name__=='__main__':
     hp = HyperParameters_4_3(
         eta, max_epoch, batch_size, 
         dataReader.max_step, num_input, num_hidden, num_output, 
-        NetType.MultipleClassifier)
+        net_type)
     n = net(hp, model)
     #n.load_parameters()
     n.train(dataReader, checkpoint=1)

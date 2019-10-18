@@ -75,7 +75,8 @@ for i in range(total):
         next_value = get_next_pollution_value(ds, j, 3)
         print(start,end)
         ds = set_pollution_value(ds, start, end, prev_value, next_value)
-    
+
+
 # process accumulated wind_speed value
 prev_value = 0
 prev_dir = 0
@@ -89,6 +90,9 @@ for i in range(total):
     prev_value = accumulated_value
     prev_dir = current_dir
 
+
+
+
 print(ds.head(24))
 
 pollution_y = np.zeros((total,2))
@@ -97,6 +101,9 @@ for i in range(total):
     pollution_y[i,1] = get_pollution_class(pollution_y[i,0])
 
 ds.drop('pollution', axis=1, inplace=True)
+ds.drop('month', axis=1, inplace=True)
+ds.drop('day', axis=1, inplace=True)
+ds.drop('hour', axis=1, inplace=True)
 pollution_x = ds.to_numpy()
 
 np.savez("../../data/ch19_pm25_train.npz", data=pollution_x[0:total-8760], label=pollution_y[0:total-8760])

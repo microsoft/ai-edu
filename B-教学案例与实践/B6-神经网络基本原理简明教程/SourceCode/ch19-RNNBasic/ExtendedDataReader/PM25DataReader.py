@@ -30,8 +30,9 @@ class PM25DataReader(DataReader_2_0):
     def ReadData(self):
         super().ReadData()
         if (self.mode == NetType.Fitting):
-            self.YTrainRaw = self.YTrainRaw[:,0]
-            self.YTestRaw = self.YTestRaw[:,0]
+            self.num_category = 1
+            self.YTrainRaw = self.YTrainRaw[:,0].reshape(-1,1)
+            self.YTestRaw = self.YTestRaw[:,0].reshape(-1,1)
         elif (self.mode == NetType.MultipleClassifier):
             self.YTrainRaw = self.YTrainRaw[:,1].reshape(-1,1)
             self.YTestRaw = self.YTestRaw[:,1].reshape(-1,1)

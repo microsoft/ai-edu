@@ -22,23 +22,25 @@ def load_data(net_type, num_step):
     dr = PM25DataReader(net_type, num_step)
     dr.ReadData()
     dr.Normalize()
-    dr.GenerateValidationSet(k=100)
+    dr.GenerateValidationSet(k=1000)
     return dr
 
-class timestep(object):
+class timestep_classification(object):
     # for the first cell, prev_s should be zero
-    def forward(self, x, U, V, W, prev_s, isFirst, isLast):
+    def forward(self, x, U, bu, V, bv, W, prev_s, isFirst, isLast):
         self.U = U
+        self.bu = bu
         self.V = V
+        self.bv = bv
         self.W = W
         self.x = x
 
         if (isFirst):
             # 公式1
-            self.h = np.dot(x, U)
+            self.h = np.dot(x, U) + self.bu
         else:
             # 公式2
-            self.h = np.dot(x, U) + np.dot(prev_s, W) 
+            self.h = np.dot(x, U) + np.dot(prev_s, W) + self.bu
         #endif
 
         # 公式3
@@ -46,7 +48,7 @@ class timestep(object):
 
         if (isLast):
             # 公式4
-            self.z = np.dot(self.s, V)
+            self.z = np.dot(self.s, V) + self.bv
             # 公式5
             self.a = Softmax().forward(self.z)
 
@@ -60,12 +62,73 @@ class timestep(object):
             self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
             # 公式10
             self.dV = np.dot(self.s.T, self.dz)
+            self.dbv = self.dz
         else:
             self.dz = np.zeros_like(y)
+            self.dbv = np.zeros_like(self.bv)
             # 公式9
             self.dh = np.dot(next_dh, self.W.T) * Tanh().backward(self.s)
             self.dV = np.zeros_like(self.V)
         #endif
+        self.dbv = np.sum(self.dz, axis=0, keepdims=True)/y.shape[0]
+        self.dbu = np.sum(self.dh, axis=0, keepdims=True)/y.shape[0]
+
+        # 公式11
+        self.dU = np.dot(self.x.T, self.dh)
+
+        if (isFirst):
+            self.dW = np.zeros_like(self.W)
+        else:
+            # 公式12
+            self.dW = np.dot(prev_s.T, self.dh)
+        # end if
+
+class timestep_fit(object):
+    # for the first cell, prev_s should be zero
+    def forward(self, x, U, bu, V, bv, W, prev_s, isFirst, isLast):
+        self.U = U
+        self.bu = bu
+        self.V = V
+        self.bv = bv
+        self.W = W
+        self.x = x
+
+        if (isFirst):
+            # 公式1
+            self.h = np.dot(x, U) + self.bu
+        else:
+            # 公式2
+            self.h = np.dot(x, U) + np.dot(prev_s, W) + self.bu
+        #endif
+
+        # 公式3
+        self.s = Tanh().forward(self.h)
+
+        if (isLast):
+            # 公式4
+            self.z = np.dot(self.s, V) + self.bv
+            self.a = self.z
+
+    # for the first cell, prev_s should be zero
+    # for the last cell, next_dh should be zero
+    def backward(self, y, prev_s, next_dh, isFirst, isLast):
+        if (isLast):
+            # 公式7
+            self.dz = (self.z - y)
+            # 公式8
+            self.dh = np.dot(self.dz, self.V.T) * Tanh().backward(self.s)
+            # 公式10
+            self.dV = np.dot(self.s.T, self.dz)
+            self.dbv = self.dz
+        else:
+            self.dz = np.zeros_like(y)
+            self.dbv = np.zeros_like(self.bv)
+            # 公式9
+            self.dh = np.dot(next_dh, self.W.T) * Tanh().backward(self.s)
+            self.dV = np.zeros_like(self.V)
+        #endif
+        #self.dbv = np.sum(self.dz, axis=0, keepdims=True)/y.shape[0]
+        #self.dbu = np.sum(self.dh, axis=0, keepdims=True)/y.shape[0]
 
         # 公式11
         self.dU = np.dot(self.x.T, self.dh)
@@ -90,13 +153,15 @@ class net(object):
             self.W,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Normal)
             self.save_parameters(ParameterType.Init)
         #end if
+        self.bu = np.zeros((1, self.hp.num_hidden))
+        self.bv = np.zeros((1, self.hp.num_output))
 
         self.zero_state = np.zeros((self.hp.batch_size, self.hp.num_hidden))
         self.loss_fun = LossFunction_1_1(self.hp.net_type)
         self.loss_trace = TrainingHistory_3_0()
         self.ts_list = []
         for i in range(self.hp.num_step+1): # create one more ts to hold zero values
-            ts = timestep()
+            ts = timestep_fit()
             self.ts_list.append(ts)
         #end for
 
@@ -115,11 +180,11 @@ class net(object):
         self.ts = self.x.shape[1]
         for i in range(0, self.ts):
             if (i == 0):
-                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, None, True, False)
+                self.ts_list[i].forward(X[:,i], self.U, self.bu, self.V, self.bv, self.W, None, True, False)
             elif (i == self.ts - 1):
-                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, self.ts_list[i-1].s[0:self.batch], False, True)
+                self.ts_list[i].forward(X[:,i], self.U, self.bu, self.V, self.bv, self.W, self.ts_list[i-1].s[0:self.batch], False, True)
             else:
-                self.ts_list[i].forward(X[:,i], self.U, self.V, self.W, self.ts_list[i-1].s[0:self.batch], False, False)
+                self.ts_list[i].forward(X[:,i], self.U, self.bu, self.V, self.bv, self.W, self.ts_list[i-1].s[0:self.batch], False, False)
         #end for
         return self.ts_list[self.ts-1].a
 
@@ -133,18 +198,24 @@ class net(object):
                 self.ts_list[i].backward(Y, self.ts_list[i-1].s[0:self.batch], self.ts_list[i+1].dh[0:self.batch], False, False)
         #end for
 
-    def update(self):
+    def update(self, batch_size):
         du = np.zeros_like(self.U)
+        #dbu = np.zeros_like(self.bu)
         dv = np.zeros_like(self.V)
+        #dbv = np.zeros_like(self.bv)
         dw = np.zeros_like(self.W)
         for i in range(self.ts):
             du += self.ts_list[i].dU
+            #dbu += self.ts_list[i].dbu
             dv += self.ts_list[i].dV
+            #dbv += self.ts_list[i].dbv
             dw += self.ts_list[i].dW
         #end for
-        self.U = self.U - du * self.hp.eta
-        self.V = self.V - dv * self.hp.eta
-        self.W = self.W - dw * self.hp.eta
+        self.U = self.U - du * self.hp.eta / batch_size
+        #self.bu = self.bu - dbu * self.hp.eta
+        self.V = self.V - dv * self.hp.eta / batch_size
+        #self.bv = self.bv - dbv * self.hp.eta
+        self.W = self.W - dw * self.hp.eta / batch_size
 
     def save_parameters(self, para_type):
         if (para_type == ParameterType.Init):
@@ -191,7 +262,7 @@ class net(object):
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
 
         for epoch in range(self.hp.max_epoch):
-            #self.hp.eta = self.lr_decay(epoch)
+            self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get data
@@ -201,7 +272,7 @@ class net(object):
                 # backward
                 self.backward(batch_y)
                 # update
-                self.update()
+                self.update(batch_x.shape[0])
                 # check loss
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
@@ -225,15 +296,15 @@ class net(object):
 
     def lr_decay(self, epoch):
         if (epoch < 20):
-            return 0.001
+            return 0.005
         elif (epoch < 40):
-            return 0.0005
+            return 0.003
         elif (epoch < 60):
-            return 0.0002
+            return 0.002
         elif (epoch < 80):
-            return 0.0001
+            return 0.001
         else:
-            return 0.00005
+            return 0.0005
 
     def test(self, dataReader):
         print("testing...")
@@ -241,38 +312,22 @@ class net(object):
         count = X.shape[0]
         loss,acc = self.check_loss(X,Y)
         print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
-
-    def draw_confusion_matrix(self, dataReader, confusion_matrix):
-        for i in range(dataReader.num_category):
-            confusion_matrix[i] = confusion_matrix[i] / confusion_matrix[i].sum()
-
-        # Set up plot
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        cax = ax.matshow(confusion_matrix)
-        fig.colorbar(cax)
-
-        # Set up axes
-        ax.set_xticklabels([''] + dataReader.language_list, rotation=90)
-        ax.set_yticklabels([''] + dataReader.language_list)
-
-        # Force label at every tick
-        ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
-        ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
-
-        # sphinx_gallery_thumbnail_number = 2
+        a = self.forward(X[0:200])
+        p1, = plt.plot(a)
+        p2, = plt.plot(Y[0:200])
+        plt.legend([p1,p2], ["pred","true"])
         plt.show()
 
 
 if __name__=='__main__':
-    net_type = NetType.MultipleClassifier
-    num_step = 12 #24
+    net_type = NetType.Fitting
+    num_step = 8 #8
     dataReader = load_data(net_type, num_step)
-    eta = 0.0001   # 0.0001
+    eta = 0.005   # 0.005
     max_epoch = 200
-    batch_size = 128
+    batch_size = 64 #64
     num_input = dataReader.num_feature
-    num_hidden = 32  # 16
+    num_hidden = 16  # 16
     num_output = dataReader.num_category
     model = str.format("Level3_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
     hp = HyperParameters_4_3(

@@ -216,21 +216,24 @@ class net(object):
         #end for
         self.save_parameters(ParameterType.Last)
         self.test(self.dataReader)
-        self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Epoch)
         self.load_parameters(ParameterType.Best)
         self.test(self.dataReader)
+        self.loss_trace.ShowLossHistory(
+            str.format("epoch:{0},batch:{1},hidden:{2},eta:{3}", max_epoch, batch_size, num_hidden, eta), 
+            XCoordinate.Epoch)
+
 
     def lr_decay(self, epoch):
         if (epoch < 20):
-            return 0.0001
+            return 0.001
         elif (epoch < 40):
-            return 0.00008
+            return 0.0005
         elif (epoch < 60):
-            return 0.00005
+            return 0.0002
         elif (epoch < 80):
-            return 0.00002
+            return 0.0001
         else:
-            return 0.00001
+            return 0.00005
 
     def test(self, dataReader):
         print("testing...")
@@ -265,11 +268,11 @@ if __name__=='__main__':
     net_type = NetType.MultipleClassifier
     num_step = 12 #24
     dataReader = load_data(net_type, num_step)
-    eta = 0.0001    # 0.0001
+    eta = 0.0001   # 0.0001
     max_epoch = 200
-    batch_size = 72
+    batch_size = 128
     num_input = dataReader.num_feature
-    num_hidden = 8  # 16
+    num_hidden = 32  # 16
     num_output = dataReader.num_category
     model = str.format("Level3_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
     hp = HyperParameters_4_3(

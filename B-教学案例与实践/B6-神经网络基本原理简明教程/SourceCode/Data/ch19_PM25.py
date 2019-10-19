@@ -35,15 +35,15 @@ def get_pollution_class(value):
     if (value < 50):
         return 0
     elif (value < 100):
-        return 1
+        return 0
     elif (value < 150):
-        return 2
+        return 1
     elif (value < 200):
-        return 3
+        return 1
     elif (value < 300):
-        return 4
+        return 2
     else:
-        return 5
+        return 2
 
 #dataset = read_csv('../../data/PM25_data.csv',  parse_dates = [['year', 'month', 'day', 'hour']], index_col=0, date_parser=parse)
 dataset = read_csv('../../data/PM25_data.csv')
@@ -78,6 +78,7 @@ for i in range(total):
 
 
 # process accumulated wind_speed value
+"""
 prev_value = 0
 prev_dir = 0
 for i in range(total):
@@ -89,7 +90,7 @@ for i in range(total):
     #endif
     prev_value = accumulated_value
     prev_dir = current_dir
-
+"""
 
 
 
@@ -101,9 +102,9 @@ for i in range(total):
     pollution_y[i,1] = get_pollution_class(pollution_y[i,0])
 
 ds.drop('pollution', axis=1, inplace=True)
-ds.drop('month', axis=1, inplace=True)
-ds.drop('day', axis=1, inplace=True)
-ds.drop('hour', axis=1, inplace=True)
+#ds.drop('month', axis=1, inplace=True)
+#ds.drop('day', axis=1, inplace=True)
+#ds.drop('hour', axis=1, inplace=True)
 pollution_x = ds.to_numpy()
 
 np.savez("../../data/ch19_pm25_train.npz", data=pollution_x[0:total-8760], label=pollution_y[0:total-8760])

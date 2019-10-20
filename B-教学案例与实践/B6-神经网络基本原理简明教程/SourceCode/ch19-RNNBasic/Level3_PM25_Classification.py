@@ -337,7 +337,7 @@ if __name__=='__main__':
     num_step = 8 #8
     dataReader = load_data(net_type, num_step)
     eta = 0.1   
-    max_epoch = 200
+    max_epoch = 100
     batch_size = 64 #64
     num_input = dataReader.num_feature
     num_hidden = 16  # 16

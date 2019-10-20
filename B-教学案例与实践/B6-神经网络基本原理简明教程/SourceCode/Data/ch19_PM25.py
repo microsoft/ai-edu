@@ -101,10 +101,18 @@ pollution_y[:,0] = ds['pollution'].to_numpy()
 for i in range(total):
     pollution_y[i,1] = get_pollution_class(pollution_y[i,0])
 
-ds.drop('pollution', axis=1, inplace=True)
-#ds.drop('month', axis=1, inplace=True)
-#ds.drop('day', axis=1, inplace=True)
-#ds.drop('hour', axis=1, inplace=True)
+
+ds.drop('month', axis=1, inplace=True)
+ds.drop('day', axis=1, inplace=True)
+ds.drop('hour', axis=1, inplace=True)
+#ds.drop('dew', axis=1, inplace=True)
+#ds.drop('temp', axis=1, inplace=True)
+#ds.drop('press', axis=1, inplace=True)
+#ds.drop('wnd_dir', axis=1, inplace=True)
+#ds.drop('pollution', axis=1, inplace=True)
+
+print(ds.head(24))
+
 pollution_x = ds.to_numpy()
 
 np.savez("../../data/ch19_pm25_train.npz", data=pollution_x[0:total-8760], label=pollution_y[0:total-8760])

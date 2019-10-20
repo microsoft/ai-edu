@@ -64,13 +64,12 @@ class timestep_fit(object):
             self.dbv = self.dz
         else:
             self.dz = np.zeros_like(y)
-            self.dbv = np.zeros_like(self.bv)
             # 公式9
             self.dh = np.dot(next_dh, self.W.T) * Tanh().backward(self.s)
             self.dV = np.zeros_like(self.V)
         #endif
-        #self.dbv = np.sum(self.dz, axis=0, keepdims=True)/y.shape[0]
-        #self.dbu = np.sum(self.dh, axis=0, keepdims=True)/y.shape[0]
+        self.dbv = np.sum(self.dz, axis=0, keepdims=True)
+        self.dbu = np.sum(self.dh, axis=0, keepdims=True)
 
         # 公式11
         self.dU = np.dot(self.x.T, self.dh)
@@ -104,7 +103,6 @@ class net(object):
         self.ts_list = []
         for i in range(self.hp.num_step+1): # create one more ts to hold zero values
             ts = timestep_fit()
-            #ts = timestep_classification()
             self.ts_list.append(ts)
         #end for
 
@@ -143,22 +141,22 @@ class net(object):
 
     def update(self, batch_size):
         du = np.zeros_like(self.U)
-        #dbu = np.zeros_like(self.bu)
+        dbu = np.zeros_like(self.bu)
         dv = np.zeros_like(self.V)
-        #dbv = np.zeros_like(self.bv)
+        dbv = np.zeros_like(self.bv)
         dw = np.zeros_like(self.W)
         for i in range(self.ts):
             du += self.ts_list[i].dU
-            #dbu += self.ts_list[i].dbu
+            dbu += self.ts_list[i].dbu
             dv += self.ts_list[i].dV
-            #dbv += self.ts_list[i].dbv
+            dbv += self.ts_list[i].dbv
             dw += self.ts_list[i].dW
         #end for
         self.U = self.U - du * self.hp.eta / batch_size
-        #self.bu = self.bu - dbu * self.hp.eta
         self.V = self.V - dv * self.hp.eta / batch_size
-        #self.bv = self.bv - dbv * self.hp.eta
         self.W = self.W - dw * self.hp.eta / batch_size
+        self.bu = self.bu - dbu * self.hp.eta / batch_size
+        self.bv = self.bv - dbv * self.hp.eta / batch_size
 
     def save_parameters(self, para_type):
         if (para_type == ParameterType.Init):
@@ -204,7 +202,7 @@ class net(object):
         max_iteration = math.ceil(self.dataReader.num_train/batch_size)
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
         lr_start = self.hp.eta
-        decay = 0.02
+        decay = 0.01
         for epoch in range(self.hp.max_epoch):
             self.hp.eta = self.lr_decay(lr_start, decay, epoch)
             dataReader.Shuffle()
@@ -223,7 +221,7 @@ class net(object):
                     X,Y = dataReader.GetValidationSet()
                     loss,acc = self.check_loss(X,Y)
                     self.loss_trace.Add(epoch, total_iteration, None, None, loss, acc, None)
-                    print(str.format("{0}:{1}:{2:3f}, loss={3:6f}, acc={4:6f}", epoch, total_iteration, self.hp.eta, loss, acc))
+                    print(str.format("{0}-{1}-{2:3f}, loss={3:6f}, acc={4:6f}", epoch, total_iteration, self.hp.eta, loss, acc))
                     if (loss < min_loss):
                         min_loss = loss
                         self.save_parameters(ParameterType.Best)
@@ -239,17 +237,19 @@ class net(object):
 
 
     def lr_decay(self, lr_start, decay, epoch):
-        lr = lr_start / (1.0 + decay * epoch)
-        return lr
+        return lr_start
+        
+        #lr = lr_start / (1.0 + decay * epoch)
+        #return lr
 
-        if (epoch < 20):
-            return 0.005
-        elif (epoch < 40):
-            return 0.003
-        elif (epoch < 60):
-            return 0.002
+        if (epoch < 15):
+            return 0.1
+        elif (epoch < 20):
+            return 0.05
+        elif (epoch < 50):
+            return 0.02
         elif (epoch < 80):
-            return 0.001
+            return 0.01
         else:
             return 0.0005
 
@@ -263,19 +263,38 @@ class net(object):
         a = self.forward(X)
         p1, = plt.plot(a[1000:1200])
         p2, = plt.plot(Y[1000:1200])
+        #p3, = plt.plot(X[1000:1200,self.ts-1,dataReader.num_feature-1])
+        #plt.legend([p1,p2,p3], ["pred","true","wind"])
         plt.legend([p1,p2], ["pred","true"])
         plt.show()
         
+    def test2(self, dataReader):
+        X,Y = dataReader.GetTestSet()
+        count = X.shape[0]
+        p2, = plt.plot(Y[0:200])
+        A = np.zeros_like(Y)
+        for i in range(count-1):
+            a = self.forward(X[i:i+1])
+            X[i+1,self.ts-1,0] = a # replace Y groud truth data with predict data
+            A[i] = a
+        #end for
+        loss,acc = self.loss_fun.CheckLoss(A, Y)
+        print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
+        p1, = plt.plot(A[0:200])
+        #plt.legend([p1,p2,p3], ["pred","true","wind"])
+        plt.legend([p1,p2], ["pred","true"])
+        plt.show()
+
 
 if __name__=='__main__':
     net_type = NetType.Fitting
     num_step = 8
     dataReader = load_data(net_type, num_step)
-    eta = 0.1
-    max_epoch = 1000
+    eta = 0.1 #0.1
+    max_epoch = 100
     batch_size = 64 #64
     num_input = dataReader.num_feature
-    num_hidden = 16  # 16
+    num_hidden = 4  # 16
     num_output = dataReader.num_category
     model = str.format("Level3_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
     hp = HyperParameters_4_3(

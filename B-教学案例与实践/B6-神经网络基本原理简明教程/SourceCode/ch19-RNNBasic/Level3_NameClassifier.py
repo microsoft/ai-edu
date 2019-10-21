@@ -222,12 +222,10 @@ class net(object):
         if (epoch < 20):
             return 0.005
         elif (epoch < 40):
-            return 0.004
-        elif (epoch < 60):
             return 0.003
-        elif (epoch < 80):
+        elif (epoch < 60):
             return 0.002
-        elif (epoch < 100):
+        elif (epoch < 80):
             return 0.001
         else:
             return 0.0005
@@ -272,10 +270,10 @@ class net(object):
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.005
-    max_epoch = 150
+    max_epoch = 200
     batch_size = 4
     num_input = dataReader.num_feature
-    num_hidden = 10
+    num_hidden = 8
     num_output = dataReader.num_category
     model = str.format("CharName_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
     hp = HyperParameters_4_3(

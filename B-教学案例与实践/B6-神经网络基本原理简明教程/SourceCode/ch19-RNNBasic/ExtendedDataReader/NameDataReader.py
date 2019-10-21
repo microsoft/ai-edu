@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
 from pathlib import Path
@@ -79,6 +81,10 @@ class NameDataReader(object):
             lang_id = self.language_list.index(language)
         finally:
             return lang_id
+
+    def ResetPointer(self):
+        self.batch_id = 0
+        self.name_id = 0
 
     def GetBatchTrainSamples(self, batch_size):
         if (self.batch_id >= len(self.X)):

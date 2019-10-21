@@ -273,6 +273,10 @@ class net(object):
         count = X.shape[0]
         p2, = plt.plot(Y[0:200])
         A = np.zeros_like(Y)
+
+        for i in range(0, count-1, self.ts):
+            a = predict_step_hours(X[i:i+self.ts])
+
         for i in range(count-1):
             a = self.forward(X[i:i+1])
             X[i+1,self.ts-1,0] = a # replace Y groud truth data with predict data
@@ -285,9 +289,17 @@ class net(object):
         plt.legend([p1,p2], ["pred","true"])
         plt.show()
 
-    def predict_step_hours(self, dataReader):
-        X,Y = dataReader.GetTestSet()
-
+    def predict_step_hours(self, X):
+        A = np.zeros((self.ts, 1))
+        for i in range(self.ts):
+            a = self.forward(X[i:i+1])  # single record with 'self.ts' timestep
+            # replace Y groud truth data with predict data
+            # record, timestep, feature(0) is pullution value
+            # 把第二个记录的最后一个时间步的污染数据换成我们预测的
+            X[i+1,self.ts-1,0] = a
+            A[i,0] = a
+        #endfor
+        return A
 
 
 if __name__=='__main__':

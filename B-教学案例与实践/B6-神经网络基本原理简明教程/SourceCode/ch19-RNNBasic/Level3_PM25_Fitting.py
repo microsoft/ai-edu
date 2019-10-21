@@ -285,6 +285,10 @@ class net(object):
         plt.legend([p1,p2], ["pred","true"])
         plt.show()
 
+    def predict_step_hours(self, dataReader):
+        X,Y = dataReader.GetTestSet()
+
+
 
 if __name__=='__main__':
     net_type = NetType.Fitting

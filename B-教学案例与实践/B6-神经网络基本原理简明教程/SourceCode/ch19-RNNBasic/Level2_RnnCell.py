@@ -24,18 +24,22 @@ def load_data():
     return dr
 
 class timestep(object):
+    def __init__(self, isFirst, isLast):
+        self.isFirst = isFirst
+        self.isLast = isLast
+
     # for the first cell, prev_s should be zero
-    def forward(self,x,U,V,W,prev_s):
+    def forward(self,x,U,bu,V,bv,W,prev_s):
         self.U = U
         self.V = V
         self.W = W
         self.x = x
         # 公式6
-        self.h = np.dot(x, U) + np.dot(prev_s, W)
+        self.h = np.dot(x, U) + np.dot(prev_s, W) + bu
         # 公式2
         self.s = Tanh().forward(self.h)
         # 公式3
-        self.z = np.dot(self.s, V)
+        self.z = np.dot(self.s, V) + bv
         # 公式4
         self.a = Logistic().forward(self.z)
 
@@ -59,9 +63,9 @@ class timestep(object):
 class net(object):
     def __init__(self, hp):
         self.hp = hp
-        self.U = np.random.random((self.hp.num_input, self.hp.num_hidden))
+        self.U, self.bu = np.random.random((self.hp.num_input, self.hp.num_hidden))
         self.W = np.random.random((self.hp.num_hidden, self.hp.num_hidden))
-        self.V = np.random.random((self.hp.num_hidden, self.hp.num_output))
+        self.V, self.bv = np.random.random((self.hp.num_hidden, self.hp.num_output))
         self.zero_state = np.zeros((self.hp.batch_size, self.hp.num_hidden))
         self.loss_fun = LossFunction_1_1(self.hp.net_type)
         self.loss_trace = TrainingHistory_3_0()

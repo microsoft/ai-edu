@@ -78,5 +78,12 @@ https://www.cnblogs.com/xinz/archive/2012/10/05/2712602.html
     * https://github.com/guxd/deep-code-search
   * [Aroma: Code Recommendation via Structural Code Search](https://arxiv.org/pdf/1812.01158.pdf)
   * [When Deep Learning Met Code Search](https://arxiv.org/pdf/1905.03813.pdf)
+  * [Introducing the CodeSearchNet challenge](https://github.blog/2019-09-26-introducing-the-codesearchnet-challenge/)
+    * https://arxiv.org/abs/1909.09436
+    * https://github.com/github/CodeSearchNet
+    * https://app.wandb.ai/github/codesearchnet/benchmark
+  * [Releasing a new benchmark and data set for evaluating neural code search models](https://ai.facebook.com/blog/neural-code-search-evaluation-dataset/)
+    * https://arxiv.org/abs/1908.09804
+    * https://github.com/facebookresearch/Neural-Code-Search-Evaluation-Dataset
 * Visual Studio Code Extension Development
   * [Visual Studio Code Extension API](https://code.visualstudio.com/api)

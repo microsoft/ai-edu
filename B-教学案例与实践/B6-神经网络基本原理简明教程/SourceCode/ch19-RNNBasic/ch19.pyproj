@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level2_RnnCell.py</StartupFile>
+    <StartupFile>Level3_Base_PM25_Classifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,7 +31,9 @@
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
     <Compile Include="Level3_Base.py" />
+    <Compile Include="Level3_Base_PM25_Classifier.py" />
     <Compile Include="Level3_PM25_Classification.py" />
+    <Compile Include="Level3_Base_PM25_Fitting.py" />
     <Compile Include="Level3_PM25_Fitting.py" />
     <Compile Include="Level5_BiRnn.py" />
     <Compile Include="Level4_DeepRnn.py" />

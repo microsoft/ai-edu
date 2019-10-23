@@ -96,11 +96,12 @@ for i in range(total):
 
 print(ds.head(24))
 
-pollution_y = np.zeros((total,2))
+pollution_y = np.zeros((total,1))
 pollution_y[:,0] = ds['pollution'].to_numpy()
+"""
 for i in range(total):
     pollution_y[i,1] = get_pollution_class(pollution_y[i,0])
-
+"""
 
 ds.drop('month', axis=1, inplace=True)
 ds.drop('day', axis=1, inplace=True)

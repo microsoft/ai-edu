@@ -251,9 +251,6 @@ class net(object):
             #endif
         #end for
         self.save_parameters(ParameterType.Last)
-        self.test(self.dataReader)
-        self.load_parameters(ParameterType.Best)
-        self.test(self.dataReader)
         self.loss_trace.ShowLossHistory(
             self.hp.toString(),
             XCoordinate.Epoch)

@@ -42,19 +42,17 @@ def predict(net, X, num_step, pred_step, num_category):
 def set_predicated_value(X, A, num_step, predicated_step):
     x = X.copy()
     for i in range(predicated_step):
-        x[0, num_step - predicated_step + i, 0] = A[i]
+        x[0, num_step - predicated_step + i, 0] = np.argmax(A[i]) / (dataReader.num_category - 1)
     #endfor
     return x
-
 
 if __name__=='__main__':
     net_type = NetType.MultipleClassifier
     output_type = OutputType.LastStep
-    num_step = 8
-    pred_step = 4
+    num_step = 24
     dataReader = load_data(net_type, num_step)
     eta = 0.1 #0.1
-    max_epoch = 10
+    max_epoch = 50
     batch_size = 64 #64
     num_input = dataReader.num_feature
     num_hidden = 4  # 16
@@ -66,6 +64,7 @@ if __name__=='__main__':
         output_type, net_type)
     n = net(hp, model)
     n.train(dataReader, checkpoint=1)
-    test(n, dataReader, num_step, pred_step, 1000, 1200)
-    n.load_parameters(ParameterType.Best)
-    test(n, dataReader, num_step, 1, 1000, 1200)
+
+    pred_steps = [8,4,2,1]
+    for i in range(4):
+        test(n, dataReader, num_step, pred_steps[i], 1000, 1200)

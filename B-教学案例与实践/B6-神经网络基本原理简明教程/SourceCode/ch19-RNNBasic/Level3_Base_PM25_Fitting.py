@@ -48,23 +48,21 @@ def set_predicated_value(X, A, num_step, predicated_step):
 if __name__=='__main__':
     net_type = NetType.Fitting
     output_type = OutputType.LastStep
-    num_step = 8
-    pred_step = 4
+    num_step = 24
     dataReader = load_data(net_type, num_step)
     eta = 0.1 #0.1
-    max_epoch = 100
+    max_epoch = 50
     batch_size = 64 #64
     num_input = dataReader.num_feature
     num_hidden = 4  # 16
     num_output = dataReader.num_category
-    model = str.format("Level3_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
+    model = str.format("Level3_Fitting_{0}_{1}_{2}_{3}", max_epoch, batch_size, num_hidden, eta)
     hp = HyperParameters_4_3(
         eta, max_epoch, batch_size, 
         num_step, num_input, num_hidden, num_output,
         output_type, net_type)
     n = net(hp, model)
-    #n.load_parameters()
     n.train(dataReader, checkpoint=1)
-    test(n, dataReader, num_step, pred_step, 1000, 1200)
-    n.load_parameters(ParameterType.Best)
-    test(n, dataReader, num_step, 1, 1000, 1200)
+    pred_steps = [8,4,2,1]
+    for i in range(4):
+        test(n, dataReader, num_step, pred_steps[i], 1000, 1200)

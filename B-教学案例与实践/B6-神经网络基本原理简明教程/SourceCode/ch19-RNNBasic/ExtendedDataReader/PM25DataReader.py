@@ -31,13 +31,32 @@ class PM25DataReader(DataReader_2_0):
         super().ReadData()
         if (self.mode == NetType.Fitting):
             self.num_category = 1
-            self.YTrainRaw = self.YTrainRaw[:,0].reshape(-1,1)
-            self.YTestRaw = self.YTestRaw[:,0].reshape(-1,1)
         elif (self.mode == NetType.MultipleClassifier):
-            self.YTrainRaw = self.YTrainRaw[:,1].reshape(-1,1)
-            self.YTestRaw = self.YTestRaw[:,1].reshape(-1,1)
+            self.value_to_category(self.XTrainRaw, self.YTrainRaw)
+            self.value_to_category(self.XTestRaw, self.YTestRaw)
             self.num_category = len(npy.unique(self.YTrainRaw))
-    
+
+    def value_to_category(self, x, y):
+        assert(x.shape[0] == y.shape[0])
+        for i in range(x.shape[0]):
+            x[i,0] = self.get_pollution_class(x[i,0])
+            y[i,0] = self.get_pollution_class(y[i,0])
+        return x, y
+
+    def get_pollution_class(self, value):
+        if (value < 50):
+            return 0
+        elif (value < 100):
+            return 1
+        elif (value < 150):
+            return 2
+        elif (value < 200):
+            return 3
+        elif (value < 300):
+            return 4
+        else:
+            return 5
+
     def Normalize(self):
         super().NormalizeX()
         super().NormalizeY(self.mode)

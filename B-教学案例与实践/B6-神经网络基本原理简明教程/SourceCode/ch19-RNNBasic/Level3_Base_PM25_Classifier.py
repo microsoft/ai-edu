@@ -38,7 +38,7 @@ def predict(net, X, num_step, pred_step, num_category):
         A[i] = a
     #endfor
     return A
-
+ 
 def set_predicated_value(X, A, num_step, predicated_step):
     x = X.copy()
     for i in range(predicated_step):

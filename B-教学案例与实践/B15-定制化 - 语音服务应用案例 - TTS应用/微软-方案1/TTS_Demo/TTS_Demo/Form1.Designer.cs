@@ -33,34 +33,39 @@
             this.playButton = new System.Windows.Forms.Button();
             this.saveButton = new System.Windows.Forms.Button();
             this.tips = new System.Windows.Forms.Label();
+            this.title = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(12, 22);
+            this.textBox1.Font = new System.Drawing.Font("微软雅黑", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(35, 95);
+            this.textBox1.MaxLength = 1000;
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(592, 230);
+            this.textBox1.Size = new System.Drawing.Size(557, 218);
             this.textBox1.TabIndex = 0;
-
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // transferButton
             // 
-            this.transferButton.Location = new System.Drawing.Point(12, 283);
+            this.transferButton.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.transferButton.Location = new System.Drawing.Point(35, 334);
             this.transferButton.Name = "transferButton";
-            this.transferButton.Size = new System.Drawing.Size(110, 48);
+            this.transferButton.Size = new System.Drawing.Size(110, 35);
             this.transferButton.TabIndex = 1;
-            this.transferButton.Text = "转换";
+            this.transferButton.Text = "生成";
             this.transferButton.UseVisualStyleBackColor = true;
             this.transferButton.Click += new System.EventHandler(this.transferButton_Click);
             // 
             // playButton
             // 
             this.playButton.Enabled = false;
-            this.playButton.Location = new System.Drawing.Point(425, 296);
+            this.playButton.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.playButton.Location = new System.Drawing.Point(425, 334);
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(75, 23);
+            this.playButton.Size = new System.Drawing.Size(75, 35);
             this.playButton.TabIndex = 2;
             this.playButton.Text = "播放";
             this.playButton.UseVisualStyleBackColor = true;
@@ -69,9 +74,10 @@
             // saveButton
             // 
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(529, 296);
+            this.saveButton.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.saveButton.Location = new System.Drawing.Point(517, 334);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.Size = new System.Drawing.Size(75, 35);
             this.saveButton.TabIndex = 3;
             this.saveButton.Text = "保存";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -80,17 +86,40 @@
             // tips
             // 
             this.tips.AutoSize = true;
-            this.tips.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tips.Location = new System.Drawing.Point(205, 296);
+            this.tips.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tips.Location = new System.Drawing.Point(394, 35);
             this.tips.Name = "tips";
-            this.tips.Size = new System.Drawing.Size(0, 24);
+            this.tips.Size = new System.Drawing.Size(0, 25);
             this.tips.TabIndex = 4;
+            // 
+            // title
+            // 
+            this.title.AutoSize = true;
+            this.title.Font = new System.Drawing.Font("微软雅黑", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.title.Location = new System.Drawing.Point(30, 17);
+            this.title.Name = "title";
+            this.title.Size = new System.Drawing.Size(167, 30);
+            this.title.TabIndex = 6;
+            this.title.Text = "文本转语音服务";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.label1.Location = new System.Drawing.Point(31, 65);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(138, 21);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "请在下方输入内容";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(628, 362);
+            this.ClientSize = new System.Drawing.Size(628, 393);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.title);
             this.Controls.Add(this.tips);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.playButton);
@@ -110,6 +139,8 @@
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Label tips;
+        private System.Windows.Forms.Label title;
+        private System.Windows.Forms.Label label1;
     }
 }
 

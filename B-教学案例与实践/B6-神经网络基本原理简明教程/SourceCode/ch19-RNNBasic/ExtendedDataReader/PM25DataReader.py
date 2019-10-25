@@ -35,6 +35,9 @@ class PM25DataReader(DataReader_2_0):
             self.value_to_category(self.XTrainRaw, self.YTrainRaw)
             self.value_to_category(self.XTestRaw, self.YTestRaw)
             self.num_category = len(npy.unique(self.YTrainRaw))
+        #endif
+        self.YTrainRaw = self.move_label_data_up(self.YTrainRaw)
+        self.YTestRaw = self.move_label_data_up(self.YTestRaw)
 
     def value_to_category(self, x, y):
         assert(x.shape[0] == y.shape[0])
@@ -56,6 +59,13 @@ class PM25DataReader(DataReader_2_0):
             return 4
         else:
             return 5
+
+    def move_label_data_up(self, y):
+        tmp = np.zeros_like(y)
+        count = y.shape[0]
+        tmp[0:count-1] = y[1:count]
+        tmp[-1] = y[-1]*2 - y[-2]
+        return tmp
 
     def Normalize(self):
         super().NormalizeX()
@@ -84,7 +94,7 @@ class PM25DataReader(DataReader_2_0):
             for j in range(self.timestep):
                 tmp_x[i,j] = x[i+j]
             #endfor
-            tmp_y[i] = y[i + self.timestep]
+            tmp_y[i] = y[i + self.timestep-1]
         #endfor
         return tmp_x, tmp_y
 

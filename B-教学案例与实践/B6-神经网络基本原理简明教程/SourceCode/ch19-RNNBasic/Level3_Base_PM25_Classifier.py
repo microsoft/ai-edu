@@ -4,6 +4,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 from Level3_Base import *
+from ExtendedDataReader.PM25DataReader import *
 
 def load_data(net_type, num_step):
     dr = PM25DataReader(net_type, num_step)
@@ -25,7 +26,7 @@ def test(net, dataReader, num_step, pred_step, start, end):
 
     ra = np.argmax(A, axis=1)
     ry = np.argmax(Y, axis=1)
-    p1, = plt.plot(ra[start:end])
+    p1, = plt.plot(ra[start+1:end+1])
     p2, = plt.plot(ry[start:end])
     plt.legend([p1,p2], ["pred","true"])
     plt.show()

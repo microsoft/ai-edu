@@ -32,9 +32,7 @@
     <Compile Include="Level2_BinaryNumberMinus.py" />
     <Compile Include="Level3_Base.py" />
     <Compile Include="Level3_Base_PM25_Classifier.py" />
-    <Compile Include="Level3_PM25_Classification.py" />
     <Compile Include="Level3_Base_PM25_Fitting.py" />
-    <Compile Include="Level3_PM25_Fitting.py" />
     <Compile Include="Level5_BiRnn.py" />
     <Compile Include="Level4_DeepRnn.py" />
     <Compile Include="Level3_NameClassifier.py" />

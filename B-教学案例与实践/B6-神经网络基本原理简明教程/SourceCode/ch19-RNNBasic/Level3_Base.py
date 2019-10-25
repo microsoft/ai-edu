@@ -15,7 +15,6 @@ from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_3_0 import *
 from MiniFramework.HyperParameters_4_3 import *
 from MiniFramework.WeightsBias_2_1 import *
-from ExtendedDataReader.PM25DataReader import *
 
 class timestep(object):
     def __init__(self, net_type, output_type, isFirst=False, isLast=False):
@@ -78,13 +77,11 @@ class timestep(object):
         self.dbv = np.sum(self.dz, axis=0, keepdims=True)
         self.dbu = np.sum(self.dh, axis=0, keepdims=True)
 
-        # 公式11
         self.dU = np.dot(self.x.T, self.dh)
 
         if (self.isFirst):
             self.dW = np.zeros_like(self.W)
         else:
-            # 公式12
             self.dW = np.dot(prev_s.T, self.dh)
         # end if
 
@@ -226,7 +223,6 @@ class net(object):
         lr_start = self.hp.eta
         decay = 0.01
         for epoch in range(self.hp.max_epoch):
-            self.hp.eta = self.lr_decay(lr_start, decay, epoch)
             dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get data
@@ -255,22 +251,6 @@ class net(object):
             self.hp.toString(),
             XCoordinate.Epoch)
 
-
-    def lr_decay(self, lr_start, decay, epoch):
-        return lr_start
-
-        #lr = lr_start / (1.0 + decay * epoch)
-        #return lr
-        if (epoch < 20):
-            return 0.1
-        elif (epoch < 50):
-            return 0.05
-        elif (epoch < 80):
-            return 0.01
-        elif (epoch < 100):
-            return 0.005
-        else:
-            return 0.001
 
     def test(self, dataReader):
         print("testing...")

@@ -36,8 +36,6 @@ class PM25DataReader(DataReader_2_0):
             self.value_to_category(self.XTestRaw, self.YTestRaw)
             self.num_category = len(npy.unique(self.YTrainRaw))
         #endif
-        self.YTrainRaw = self.move_label_data_up(self.YTrainRaw)
-        self.YTestRaw = self.move_label_data_up(self.YTestRaw)
 
     def value_to_category(self, x, y):
         assert(x.shape[0] == y.shape[0])
@@ -60,32 +58,13 @@ class PM25DataReader(DataReader_2_0):
         else:
             return 5
 
-    def move_label_data_up(self, y):
-        tmp = np.zeros_like(y)
-        count = y.shape[0]
-        tmp[0:count-1] = y[1:count]
-        tmp[-1] = y[-1]*2 - y[-2]
-        return tmp
-
     def Normalize(self):
         super().NormalizeX()
         super().NormalizeY(self.mode)
-        # pm2.5 value could not be in XTest, so we use 4-year's average value instead
-        #self.SetAveragePollutionValueToXTest()
-
         self.num_train = self.num_train - self.timestep
         self.XTrain, self.YTrain = self.GenerateTimestepData(self.XTrain, self.YTrain, self.num_train)
         self.num_test = self.num_test - self.timestep
         self.XTest, self.YTest = self.GenerateTimestepData(self.XTest, self.YTest, self.num_test)
-
-    def SetAveragePollutionValueToXTest(self):
-        for i in range(self.XTest.shape[0]):
-            v = 0
-            for j in range(4):
-                v += self.YTrain[i+j*365*24,0]
-            #end for
-            self.XTest[i,0] = v/4
-        #end for
 
     def GenerateTimestepData(self, x, y, count):
         tmp_x = np.zeros((count, self.timestep, self.num_feature))

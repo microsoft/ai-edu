@@ -4,6 +4,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 from Level3_Base import *
+from ExtendedDataReader.PM25DataReader import *
 
 def load_data(net_type, num_step):
     dr = PM25DataReader(net_type, num_step)
@@ -14,16 +15,17 @@ def load_data(net_type, num_step):
 
 def test(net, dataReader, num_step, pred_step, start, end):
     X,Y = dataReader.GetTestSet()
-    count = X.shape[0]
-    A = np.zeros_like(Y)
+    assert(X.shape[0] == Y.shape[0])
+    count = X.shape[0] - X.shape[0] % pred_step
+    A = np.zeros((count,1))
 
     for i in range(0, count, pred_step):
         A[i:i+pred_step] = predict(net, X[i:i+pred_step], num_step, pred_step)
 
-    loss,acc = net.loss_fun.CheckLoss(A, Y)
+    loss,acc = net.loss_fun.CheckLoss(A, Y[0:count])
     print(str.format("loss={0:6f}, acc={1:6f}", loss, acc))
 
-    p1, = plt.plot(A[start:end])
+    p1, = plt.plot(A[start+1:end+1])
     p2, = plt.plot(Y[start:end])
     plt.legend([p1,p2], ["pred","true"])
     plt.show()
@@ -51,7 +53,7 @@ if __name__=='__main__':
     num_step = 24
     dataReader = load_data(net_type, num_step)
     eta = 0.1 #0.1
-    max_epoch = 50
+    max_epoch = 150
     batch_size = 64 #64
     num_input = dataReader.num_feature
     num_hidden = 4  # 16

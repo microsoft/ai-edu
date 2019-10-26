@@ -132,9 +132,7 @@ class net(object):
             else:
                 prev_s = self.ts_list[i-1].s[0:self.batch]
             #endif
-
             self.ts_list[i].forward(X[:,i], self.U, self.bu, self.V, self.bv, self.W, prev_s)
-
         #end for
         return self.ts_list[self.ts-1].a
 

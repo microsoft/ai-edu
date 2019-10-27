@@ -5,6 +5,8 @@ import numpy as np
 from pathlib import Path
 import string
 import random
+from MiniFramework.DataReader_2_0 import *
+from MiniFramework.EnumDef_6_0 import *
 
 all_letters = string.ascii_letters[0:26] + " ,'"
 num_letter = len(all_letters)
@@ -27,7 +29,7 @@ class NameData(object):
         lang_onehot[0,self.lang_id] = 1
         return name_onehot, lang_onehot
 
-class NameDataReader(object):
+class NameDataReader(DataReader_2_0):
     def __init__(self):
         self.name_data = []
         self.language_list = []

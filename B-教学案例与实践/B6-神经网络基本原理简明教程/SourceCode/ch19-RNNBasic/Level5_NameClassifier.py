@@ -142,9 +142,9 @@ class net(object):
             dv += self.ts_list[i].dV
             dw += self.ts_list[i].dW
         #end for
-        self.U = self.U - du * self.hp.eta
-        self.V = self.V - dv * self.hp.eta
-        self.W = self.W - dw * self.hp.eta
+        self.U = self.U - du * self.hp.eta / self.batch
+        self.V = self.V - dv * self.hp.eta / self.batch
+        self.W = self.W - dw * self.hp.eta / self.batch
 
     def save_init_value(self):
         self.init_file_name = str.format("{0}/init.npz", self.subfolder)
@@ -190,7 +190,7 @@ class net(object):
         min_loss = 10
         total_iter = 0
         for epoch in range(self.hp.max_epoch):
-            self.hp.eta = self.lr_decay(epoch)
+            #self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             while(True):
                 # get data
@@ -269,9 +269,9 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.005
+    eta = 0.1
     max_epoch = 200
-    batch_size = 4
+    batch_size = 64
     num_input = dataReader.num_feature
     num_hidden = 8
     num_output = dataReader.num_category
@@ -279,7 +279,7 @@ if __name__=='__main__':
     hp = HyperParameters_4_3(
         eta, max_epoch, batch_size, 
         dataReader.max_step, num_input, num_hidden, num_output, 
-        NetType.MultipleClassifier)
+        OutputType.LastStep, NetType.MultipleClassifier)
     n = net(hp, model)
     #n.load_parameters()
     n.train(dataReader, checkpoint=1)

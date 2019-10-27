@@ -218,13 +218,13 @@ class net(object):
         min_loss = 10
         max_iteration = math.ceil(self.dataReader.num_train/self.hp.batch_size)
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
-        lr_start = self.hp.eta
-        decay = 0.01
         for epoch in range(self.hp.max_epoch):
             dataReader.Shuffle()
             for iteration in range(max_iteration):
                 # get data
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
+                if (batch_x is None):
+                    break
                 # forward
                 self.forward(batch_x)
                 # backward

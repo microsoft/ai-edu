@@ -4,17 +4,11 @@
 import numpy as np
 import pandas as pd
 from pandas import read_csv
-from datetime import datetime
-from matplotlib import pyplot
-
-# load data
-def parse(x):
-    return datetime.strptime(x, '%Y %m %d %H')
 
 def set_pollution_value(ds, start, end, start_value, end_value):
     step_value = (end_value - start_value) / (end - start)
-    value = start_value
-    for i in range(start, end, 1):
+    value = start_value + step_value
+    for i in range(start+1, end, 1):
         ds.iat[i,3] = value
         value = value + step_value
     return ds
@@ -31,29 +25,14 @@ def get_next_pollution_value(ds, row, col):
         next_value = ds.iat[row,col]
     return next_value
 
-def get_pollution_class(value):
-    if (value < 50):
-        return 0
-    elif (value < 100):
-        return 0
-    elif (value < 150):
-        return 1
-    elif (value < 200):
-        return 1
-    elif (value < 300):
-        return 2
-    else:
-        return 2
 
 #dataset = read_csv('../../data/PM25_data.csv',  parse_dates = [['year', 'month', 'day', 'hour']], index_col=0, date_parser=parse)
 dataset = read_csv('../../data/PM25_data.csv')
 dataset.drop('No', axis=1, inplace=True)
 dataset.drop('year', axis=1, inplace=True)
-dataset.drop('Ir', axis=1, inplace=True)
-dataset.drop('Is', axis=1, inplace=True)
 
 # manually specify column names
-dataset.columns = ['month', 'day', 'hour', 'pollution', 'dew', 'temp', 'press', 'wnd_dir', 'wnd_spd']
+dataset.columns = ['month', 'day', 'hour', 'pollution', 'dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'rain', 'snow']
 #dataset.index.name = 'date'
 dataset = dataset.replace('NW',9)
 dataset = dataset.replace('NE',3)
@@ -65,7 +44,7 @@ total = len(ds)
 # fill NaN pollution value
 for i in range(total):
     if (pd.isnull(ds.iat[i,3])):
-        start = i
+        start = i - 1
         # read previous pollution value
         prev_value = get_previous_pollution_value(ds, i, 3)
         for j in range(i+1, total, 1):
@@ -78,7 +57,6 @@ for i in range(total):
 
 
 # process accumulated wind_speed value
-"""
 prev_value = 0
 prev_dir = 0
 for i in range(total):
@@ -90,26 +68,23 @@ for i in range(total):
     #endif
     prev_value = accumulated_value
     prev_dir = current_dir
-"""
-
-
 
 print(ds.head(24))
 
-pollution_y = np.zeros((total,2))
-pollution_y[:,0] = ds['pollution'].to_numpy()
-for i in range(total):
-    pollution_y[i,1] = get_pollution_class(pollution_y[i,0])
-
+# shift y value up
+# reason: the current situation continous for 1 hour to make next hour's PM2.5 value
+# 当前的气象条件（及当前污染指数值）持续一小时后会产生下一个小时的污染指数
+pollution_y = np.zeros((total,1))
+tmp = ds['pollution'].to_numpy()
+count = tmp.shape[0]
+pollution_y[0:count-1] = tmp[1:count].reshape(-1,1)
+pollution_y[-1] = tmp[-1]*2 - tmp[-2]
 
 ds.drop('month', axis=1, inplace=True)
 ds.drop('day', axis=1, inplace=True)
 ds.drop('hour', axis=1, inplace=True)
-#ds.drop('dew', axis=1, inplace=True)
-#ds.drop('temp', axis=1, inplace=True)
-#ds.drop('press', axis=1, inplace=True)
-#ds.drop('wnd_dir', axis=1, inplace=True)
-#ds.drop('pollution', axis=1, inplace=True)
+ds.drop('rain', axis=1, inplace=True)
+ds.drop('snow', axis=1, inplace=True)
 
 print(ds.head(24))
 

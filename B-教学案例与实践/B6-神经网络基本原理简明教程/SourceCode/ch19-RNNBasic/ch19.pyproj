@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level3_PM25_Fitting.py</StartupFile>
+    <StartupFile>Level5_NameClassifier.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -30,12 +30,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
-    <Compile Include="Level3_PM25_Classification.py" />
-    <Compile Include="Level3_PM25_Fitting.py" />
+    <Compile Include="Level3_Base.py" />
+    <Compile Include="Level4_Base_PM25_Classifier.py" />
+    <Compile Include="Level4_Base_PM25_Fitting.py" />
     <Compile Include="Level5_BiRnn.py" />
     <Compile Include="Level4_DeepRnn.py" />
-    <Compile Include="Level3_NameClassifier.py" />
-    <Compile Include="Level2_RnnCell.py" />
+    <Compile Include="Level5_NameClassifier.py" />
     <Compile Include="Level1_EchoRandomNumber.py" />
     <Compile Include="MiniFramework\ActivationLayer.py" />
     <Compile Include="MiniFramework\BatchNormLayer.py" />

@@ -31,32 +31,40 @@ class PM25DataReader(DataReader_2_0):
         super().ReadData()
         if (self.mode == NetType.Fitting):
             self.num_category = 1
-            self.YTrainRaw = self.YTrainRaw[:,0].reshape(-1,1)
-            self.YTestRaw = self.YTestRaw[:,0].reshape(-1,1)
         elif (self.mode == NetType.MultipleClassifier):
-            self.YTrainRaw = self.YTrainRaw[:,1].reshape(-1,1)
-            self.YTestRaw = self.YTestRaw[:,1].reshape(-1,1)
+            self.value_to_category(self.XTrainRaw, self.YTrainRaw)
+            self.value_to_category(self.XTestRaw, self.YTestRaw)
             self.num_category = len(npy.unique(self.YTrainRaw))
-    
+        #endif
+
+    def value_to_category(self, x, y):
+        assert(x.shape[0] == y.shape[0])
+        for i in range(x.shape[0]):
+            x[i,0] = self.get_pollution_class(x[i,0])
+            y[i,0] = self.get_pollution_class(y[i,0])
+        return x, y
+
+    def get_pollution_class(self, value):
+        if (value < 50):
+            return 0
+        elif (value < 100):
+            return 1
+        elif (value < 150):
+            return 2
+        elif (value < 200):
+            return 3
+        elif (value < 300):
+            return 4
+        else:
+            return 5
+
     def Normalize(self):
         super().NormalizeX()
         super().NormalizeY(self.mode)
-        # pm2.5 value could not be in XTest, so we use 4-year's average value instead
-        #self.SetAveragePollutionValueToXTest()
-
         self.num_train = self.num_train - self.timestep
         self.XTrain, self.YTrain = self.GenerateTimestepData(self.XTrain, self.YTrain, self.num_train)
         self.num_test = self.num_test - self.timestep
         self.XTest, self.YTest = self.GenerateTimestepData(self.XTest, self.YTest, self.num_test)
-
-    def SetAveragePollutionValueToXTest(self):
-        for i in range(self.XTest.shape[0]):
-            v = 0
-            for j in range(4):
-                v += self.YTrain[i+j*365*24,0]
-            #end for
-            self.XTest[i,0] = v/4
-        #end for
 
     def GenerateTimestepData(self, x, y, count):
         tmp_x = np.zeros((count, self.timestep, self.num_feature))
@@ -65,7 +73,7 @@ class PM25DataReader(DataReader_2_0):
             for j in range(self.timestep):
                 tmp_x[i,j] = x[i+j]
             #endfor
-            tmp_y[i] = y[i + self.timestep]
+            tmp_y[i] = y[i + self.timestep-1]
         #endfor
         return tmp_x, tmp_y
 

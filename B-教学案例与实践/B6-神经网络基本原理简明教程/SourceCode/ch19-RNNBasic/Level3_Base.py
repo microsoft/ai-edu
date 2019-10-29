@@ -223,8 +223,6 @@ class net(object):
             for iteration in range(max_iteration):
                 # get data
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
-                if (batch_x is None):
-                    break
                 # forward
                 self.forward(batch_x)
                 # backward

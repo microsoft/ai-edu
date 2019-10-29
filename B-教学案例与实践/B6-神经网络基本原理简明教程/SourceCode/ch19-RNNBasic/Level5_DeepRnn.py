@@ -312,7 +312,7 @@ class net(object):
         dataReader.ResetPointer()
         confusion_matrix = np.zeros((dataReader.num_category, dataReader.num_category))
         correct = 0
-        count = 0
+
         while(True):
             x,y = dataReader.GetBatchTrainSamples(1)
             if (x is None):
@@ -323,9 +323,8 @@ class net(object):
             confusion_matrix[label][pred] += 1
             if (pred == label):
                 correct += 1
-            count += 1
         #end for
-        assert(count == dataReader.num_train)
+
         print(str.format("correctness={0}/{1}={2}", correct, dataReader.num_train, correct / dataReader.num_train))
         self.draw_confusion_matrix(dataReader, confusion_matrix)
 
@@ -353,11 +352,11 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.02
+    eta = 0.01
     max_epoch = 200
-    batch_size = 32
+    batch_size = 16
     num_input = dataReader.num_feature
-    num_hidden1 = 6
+    num_hidden1 = 8
     num_hidden2 = 8
     num_output = dataReader.num_category
     model = str.format(

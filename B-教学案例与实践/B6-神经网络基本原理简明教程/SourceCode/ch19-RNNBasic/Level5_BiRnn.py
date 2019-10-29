@@ -236,12 +236,12 @@ class net(object):
             dw1 += self.ts_list[i].dW1
             dw2 += self.ts_list[i].dW2
         #end for
-        self.U1 = self.U1 - du1 * self.hp.eta
-        self.U2 = self.U2 - du2 * self.hp.eta
-        self.V1 = self.V1 - dv1 * self.hp.eta
-        self.V2 = self.V2 - dv2 * self.hp.eta
-        self.W1 = self.W1 - dw1 * self.hp.eta
-        self.W2 = self.W2 - dw2 * self.hp.eta
+        self.U1 = self.U1 - du1 * self.hp.eta / self.batch
+        self.U2 = self.U2 - du2 * self.hp.eta / self.batch
+        self.V1 = self.V1 - dv1 * self.hp.eta / self.batch
+        self.V2 = self.V2 - dv2 * self.hp.eta / self.batch
+        self.W1 = self.W1 - dw1 * self.hp.eta / self.batch
+        self.W2 = self.W2 - dw2 * self.hp.eta / self.batch
 
     def save_parameters(self, para_type):
         if (para_type == ParameterType.Init):
@@ -294,7 +294,7 @@ class net(object):
         min_loss = 10
         total_iter = 0
         for epoch in range(self.hp.max_epoch):
-            self.hp.eta = self.lr_decay(epoch)
+            #self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             while(True):
                 # get data
@@ -353,7 +353,7 @@ class net(object):
             output = self.forward(x)
             pred = np.argmax(output)
             label = np.argmax(y)
-            confusion_matrix[label, pred] += 1
+            confusion_matrix[label][pred] += 1
             if (pred == label):
                 correct += 1
             count += 1
@@ -386,14 +386,16 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.005
-    max_epoch = 200
-    batch_size = 8
+    eta = 0.1
+    max_epoch = 100
+    batch_size = 64
     num_input = dataReader.num_feature
     num_hidden1 = 8
     num_hidden2 = 8
     num_output = dataReader.num_category
-    model = str.format("Level5_{0}_{1}_{2}_{3}_{4}", max_epoch, batch_size, num_hidden1, num_hidden2, eta)
+    model = str.format(
+        "Level5_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        
+        max_epoch, batch_size, num_input, num_hidden1, num_hidden2, num_output, eta)
     hp = HyperParameters_4_4(
         eta, max_epoch, batch_size, 
         dataReader.max_step, num_input, num_hidden1, num_hidden2, num_output, 

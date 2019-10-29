@@ -8,7 +8,8 @@ import unicodedata
 import string
 import numpy as np
 
-all_letters = string.ascii_letters + " .,;'"
+#all_letters = string.ascii_letters + " .,;'"
+all_letters = string.ascii_letters
 lower_letters = string.ascii_letters[0:26] + " .,;'"
 language_index = []
 

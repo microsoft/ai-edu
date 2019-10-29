@@ -268,11 +268,11 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.05
-    max_epoch = 200
+    eta = 0.005
+    max_epoch = 100
     batch_size = 16
     num_input = dataReader.num_feature
-    num_hidden = 6
+    num_hidden = 4
     num_output = dataReader.num_category
     model = str.format("CharName_{0}_{1}_{2}_{3}_{4}_{5}", max_epoch, batch_size, num_input, num_hidden, num_output, eta)
     hp = HyperParameters_4_3(

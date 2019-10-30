@@ -66,13 +66,11 @@ namespace TTS_Demo
             SaveFileDialog saveFile = new SaveFileDialog();
             saveFile.FileName = fileName;
             saveFile.Filter = "音频文件 (*.wav) | *.wav";
-            //保存对话框是否记忆上次打开的目录 
-            saveFile.RestoreDirectory = true;
+            saveFile.RestoreDirectory = true; //保存并显示上次打开的目录
 
-            //点了保存按钮进入 
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
-                filePath = saveFile.FileName.ToString(); //获得文件路径
+                filePath = saveFile.FileName.ToString(); 
 
                 if (File.Exists(tempFile))
                 {

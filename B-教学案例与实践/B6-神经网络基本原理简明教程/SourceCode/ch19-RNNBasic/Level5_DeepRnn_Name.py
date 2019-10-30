@@ -352,12 +352,12 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.01
+    eta = 0.05 
     max_epoch = 200
-    batch_size = 16
+    batch_size = 32
     num_input = dataReader.num_feature
-    num_hidden1 = 8
-    num_hidden2 = 8
+    num_hidden1 = 4
+    num_hidden2 = 6
     num_output = dataReader.num_category
     model = str.format(
         "Level5_DeepRnn_{0}_{1}_{2}_{3}_{4}_{5}_{6}", 

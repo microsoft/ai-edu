@@ -116,7 +116,7 @@ Azure提供了30天的免费使用版，如果需要注册免费试用，请转�
 
     将“button”拖至右侧界面中适当位置，调整大小至合适尺寸。
     
-    ![](./md_resources/buttonOnForm.png)
+    <img src="./md_resources/buttonOnForm.png" width="650" />
 
     右侧属性框可以设置按钮属性。将Text设置成“保存”，Font设置成“微软雅黑, 10pt”。
 
@@ -128,7 +128,7 @@ Azure提供了30天的免费使用版，如果需要注册免费试用，请转�
 
 3. 按上述方法依次创建按钮“播放”、“生成”，并放置到适当的位置，将其属性框内Design中的Name分别设置成“playButton”、“transferButton”。
 
-    ![](./md_resources/threeButton.png)
+     <img src="./md_resources/threeButton.png" width="650" />
 
 4. 在“工具箱”中选择“TextBox”，拖至右侧界面中适当位置。在属性框内的Behavior中的Multiline设置为“True”。在界面中调整TextBox大小至合适尺寸。
 

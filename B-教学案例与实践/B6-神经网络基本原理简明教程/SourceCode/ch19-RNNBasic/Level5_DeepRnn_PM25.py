@@ -40,26 +40,25 @@ class timestep(object):
             # 公式1
             self.h1 = np.dot(x, U)
         else:
-            # 公式5
+            # 公式3
             self.h1 = np.dot(x, U) + np.dot(prev_s1, W1) 
-        # 公式2
+        # 公式5
         self.s1 = Tanh().forward(self.h1)
 
         # level 2
         if (isFirst):
-            # 公式3
+            # 公式2
             self.h2 = np.dot(self.s1, self.Q)
         else:
-            # 公式6
+            # 公式4
             self.h2 = np.dot(self.s1, self.Q) + np.dot(prev_s2, W2)
-        # 公式4
+        # 公式6
         self.s2 = Tanh().forward(self.h2)
 
         if (isLast):
             # 公式7
             self.z = np.dot(self.s2, V)
             # 公式8
-           # self.a = Softmax().forward(self.z)
             self.a = self.z
 
     # for the first cell, prev_s should be zero
@@ -328,16 +327,15 @@ def set_predicated_value(X, A, num_step, predicated_step):
 
 if __name__=='__main__':
     net_type = NetType.Fitting
-    num_step = 72
+    num_step = 48
     dataReader = load_data(net_type, num_step)
     eta = 0.1 #0.1
-    max_epoch = 100 # 100
+    max_epoch = 200 # 100
     batch_size = 64 #64
     num_input = dataReader.num_feature
-    num_hidden1 = 4
+    num_hidden1 = 3
     num_hidden2 = 2
     num_output = dataReader.num_category
-
 
     model = str.format(
         "Level5_DeepRnn_{0}_{1}_{2}_{3}_{4}_{5}_{6}", 
@@ -347,10 +345,9 @@ if __name__=='__main__':
         num_step, num_input, num_hidden1, num_hidden2, num_output, 
         net_type)
 
-
     n = net(hp, model)
-    n.train(dataReader, checkpoint=1)
-    #n.load_parameters(ParameterType.Last)
+    n.load_parameters(ParameterType.Best)
+    #n.train(dataReader, checkpoint=1)
     pred_steps = [8,4,2,1]
     for i in range(4):
         test(n, dataReader, num_step, pred_steps[i], 1050, 1150)

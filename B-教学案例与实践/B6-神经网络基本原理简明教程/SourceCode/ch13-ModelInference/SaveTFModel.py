@@ -27,7 +27,7 @@ def main():
     # initialize all variables
     tf.global_variables_initializer().run()
     # save the model in the file path
-    saver.save(sess, './model')
+    saver.save(sess, './tfmodel')
 
 if __name__ == "__main__":
   main()

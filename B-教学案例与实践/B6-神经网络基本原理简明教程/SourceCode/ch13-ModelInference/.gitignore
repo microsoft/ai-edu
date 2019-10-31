@@ -4,6 +4,9 @@ checkpoint
 tfmodel.meta
 tfmodel.index
 tfmodel.data-*
+*.h5
+*.pt
+*.onnx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

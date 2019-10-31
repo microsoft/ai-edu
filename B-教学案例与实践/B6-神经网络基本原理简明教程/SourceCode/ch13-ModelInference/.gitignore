@@ -1,4 +1,9 @@
 handwriting.png
+.vscode/
+checkpoint
+model.meta
+model.index
+model.data-*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

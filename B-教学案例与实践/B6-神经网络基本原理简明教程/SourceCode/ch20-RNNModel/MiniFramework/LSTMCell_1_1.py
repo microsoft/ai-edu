@@ -1,13 +1,19 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+"""
+This version is 1.1
+Implement the basic functions of lstm cell and linear cell
+Can't support batch input
+"""
+
 import sys
-import os
 import math
 import numpy as np
 from MiniFramework.Layer import *
 from MiniFramework.ActivationLayer import *
 
-class LSTMCell(object):
+class LSTMCell_1_1(object):
     def __init__(self, input_size, hidden_size, bias=True):
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -85,7 +91,7 @@ class LSTMCell(object):
         self.dx = np.dot(self.dzf, self.uf.T) + np.dot(self.dzi, self.ui.T) + np.dot(self.dzg, self.ug.T) + np.dot(self.dzo, self.uo.T)
 
 
-class LinearCell(object):
+class LinearCell_1_1(object):
     def __init__(self, input_size, output_size, bias=True):
         self.input_size = input_size
         self.output_size = output_size

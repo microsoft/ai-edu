@@ -294,7 +294,7 @@ class net(object):
         min_loss = 10
         total_iter = 0
         for epoch in range(self.hp.max_epoch):
-            self.hp.eta = self.lr_decay(epoch)
+            #self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             while(True):
                 # get data
@@ -310,12 +310,13 @@ class net(object):
                 total_iter += 1
             #enf while
             # check loss
+            #loss_train, acc_train = self.check_loss(batch_x, batch_y)
             X,Y = dataReader.GetValidationSet()
-            loss,acc = self.check_loss(X,Y)
-            self.loss_trace.Add(epoch, total_iter, None, None, loss, acc, None)
-            print(str.format("{0}:{1}:{2} loss={3:6f}, acc={4:6f}", epoch, total_iter, self.hp.eta, loss, acc))
-            if (loss < min_loss):
-                min_loss = loss
+            loss_val, acc_val = self.check_loss(X,Y)
+            self.loss_trace.Add(epoch, total_iter, None, None, loss_val, acc_val, None)
+            print(str.format("{0}:{1}:{2} loss={3:6f}, acc={4:6f}", epoch, total_iter, self.hp.eta, loss_val, acc_val))
+            if (loss_val < min_loss):
+                min_loss = loss_val
                 self.save_parameters(ParameterType.Best)
             #endif
         #end for
@@ -328,7 +329,7 @@ class net(object):
         elif (epoch < 100):
             return 0.05
         else:
-            return 0.01
+            return 0.02
 
     def test(self, dataReader):
         dataReader.ResetPointer()
@@ -375,12 +376,12 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.1
-    max_epoch = 200
-    batch_size = 64
+    eta = 0.001
+    max_epoch = 10000
+    batch_size = 4
     num_input = dataReader.num_feature
-    num_hidden1 = 4
-    num_hidden2 = 4
+    num_hidden1 = 16
+    num_hidden2 = 16
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        
@@ -390,6 +391,7 @@ if __name__=='__main__':
         dataReader.max_step, num_input, num_hidden1, num_hidden2, num_output, 
         NetType.MultipleClassifier)
     n = net(hp, model)
+    #n.load_parameters(ParameterType.Last)
     n.train(dataReader, checkpoint=1)
 
     n.test(dataReader)# last

@@ -63,3 +63,7 @@ class ParameterType(Enum):
     Init = 0,
     Best = 1,
     Last = 2
+
+class OutputType(Enum):
+    EachStep = 1,
+    LastStep = 2

@@ -41,7 +41,8 @@ namespace TTS_Demo
                 tips.Text = "语音生成中...";
 
                 await tts.textToSpeechAsync(text, tempFile);
-                
+
+                MessageBox.Show("语音生成完成！您可以播放或保存","完成");
                 tips.Text = "";
                 playButton.Enabled = true;
                 saveButton.Enabled = true;
@@ -87,6 +88,32 @@ namespace TTS_Demo
         {
             playButton.Enabled = false;
             saveButton.Enabled = false;
+        }
+
+        //打开文件
+        private void openButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "文本文件 (*.txt)|*.txt";
+            openFileDialog1.RestoreDirectory = true;
+            
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog1.FileName;
+
+                var fileStream = openFileDialog1.OpenFile();
+
+                using (StreamReader reader = new StreamReader(fileStream))
+                {
+                    string fileContent = reader.ReadToEnd();
+
+                    if (fileContent.Length > 0)
+                    {
+                        textBox1.Text = fileContent; // 显示内容
+                    }
+
+                }
+            }
         }
     }
 }

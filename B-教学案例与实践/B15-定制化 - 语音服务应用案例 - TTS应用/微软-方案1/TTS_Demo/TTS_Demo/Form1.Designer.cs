@@ -35,15 +35,17 @@
             this.tips = new System.Windows.Forms.Label();
             this.title = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.openButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("微软雅黑", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(35, 95);
-            this.textBox1.MaxLength = 1000;
+            this.textBox1.MaxLength = 5000;
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBox1.Size = new System.Drawing.Size(557, 218);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -87,7 +89,7 @@
             // 
             this.tips.AutoSize = true;
             this.tips.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tips.Location = new System.Drawing.Point(394, 35);
+            this.tips.Location = new System.Drawing.Point(316, 35);
             this.tips.Name = "tips";
             this.tips.Size = new System.Drawing.Size(0, 25);
             this.tips.TabIndex = 4;
@@ -113,11 +115,23 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "请在下方输入内容";
             // 
+            // openButton
+            // 
+            this.openButton.Font = new System.Drawing.Font("微软雅黑", 8F);
+            this.openButton.Location = new System.Drawing.Point(517, 56);
+            this.openButton.Name = "openButton";
+            this.openButton.Size = new System.Drawing.Size(75, 30);
+            this.openButton.TabIndex = 9;
+            this.openButton.Text = "打开文件";
+            this.openButton.UseVisualStyleBackColor = true;
+            this.openButton.Click += new System.EventHandler(this.openButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(628, 393);
+            this.Controls.Add(this.openButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.title);
             this.Controls.Add(this.tips);
@@ -141,6 +155,7 @@
         private System.Windows.Forms.Label tips;
         private System.Windows.Forms.Label title;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button openButton;
     }
 }
 

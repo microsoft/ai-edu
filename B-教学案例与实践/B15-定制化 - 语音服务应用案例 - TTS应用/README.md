@@ -1,4 +1,4 @@
-# 语音服务应用案例 - TTS应用
+# 语音服务应用案例 - 文本朗读应用
 Copyright © Microsoft Corporation. All rights reserved.
   适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
   

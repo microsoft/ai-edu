@@ -190,7 +190,7 @@ class net(object):
         min_loss = 10
         total_iter = 0
         for epoch in range(self.hp.max_epoch):
-            #self.hp.eta = self.lr_decay(epoch)
+            self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             while(True):
                 # get data
@@ -218,16 +218,12 @@ class net(object):
         self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Epoch)
 
     def lr_decay(self, epoch):
-        if (epoch < 20):
-            return 0.005
-        elif (epoch < 40):
-            return 0.003
-        elif (epoch < 60):
-            return 0.002
-        elif (epoch < 80):
-            return 0.001
+        if (epoch < 50):
+            return 0.1
+        elif (epoch < 100):
+            return 0.05
         else:
-            return 0.0005
+            return 0.01
 
     def test(self, dataReader):
         confusion_matrix = np.zeros((dataReader.num_category, dataReader.num_category))
@@ -274,7 +270,7 @@ if __name__=='__main__':
     num_input = dataReader.num_feature
     num_hidden = 6 # 8
     num_output = dataReader.num_category
-    model = str.format("CharName_{0}_{1}_{2}_{3}_{4}_{5}", max_epoch, batch_size, num_input, num_hidden, num_output, eta)
+    model = str.format("Level5_{0}_{1}_{2}_{3}_{4}_{5}", max_epoch, batch_size, num_input, num_hidden, num_output, eta)
     hp = HyperParameters_4_3(
         eta, max_epoch, batch_size, 
         dataReader.max_step, num_input, num_hidden, num_output, 

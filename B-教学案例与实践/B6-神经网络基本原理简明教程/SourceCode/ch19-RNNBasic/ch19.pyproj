@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level5_DeepRnn_PM25.py</StartupFile>
+    <StartupFile>Level5_NameClassifier_Last.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -33,9 +33,8 @@
     <Compile Include="Level3_Base.py" />
     <Compile Include="Level4_Base_PM25_Classifier.py" />
     <Compile Include="Level4_Base_PM25_Fitting.py" />
-    <Compile Include="Level5_BiRnn.py" />
-    <Compile Include="Level5_DeepRnn_Name.py" />
-    <Compile Include="Level5_DeepRnn_PM25.py" />
+    <Compile Include="Level7_BiRnn.py" />
+    <Compile Include="Level6_DeepRnn_PM25.py" />
     <Compile Include="Level5_NameClassifier_Last.py" />
     <Compile Include="Level1_EchoRandomNumber.py" />
     <Compile Include="MiniFramework\ActivationLayer.py" />

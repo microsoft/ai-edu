@@ -1,7 +1,4 @@
-GAN_MNIST/
-GAN_output/
-CGAN_MNIST/
-CGAN_output/
+handwriting.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

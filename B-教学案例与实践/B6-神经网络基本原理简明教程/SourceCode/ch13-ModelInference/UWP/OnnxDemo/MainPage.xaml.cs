@@ -92,14 +92,14 @@ namespace OnnxDemo
 
             // 组织输入
             var inputArray = await GetInputDataFromInk();
-            var inputTensor = TensorFloat.CreateFromArray(new List<long> { 784 }, inputArray);
-            var modelInput = new mnistInput { port = inputTensor };
+            var inputTensor = TensorFloat.CreateFromArray(new List<long> { 1, 784 }, inputArray);
+            var modelInput = new mnistInput { fc1x = inputTensor };
 
             // 推理
             var result = await model.EvaluateAsync(modelInput);
 
             // 得到每个数字的得分
-            var scoreList = result.dense3port.GetAsVectorView().ToList();
+            var scoreList = result.activation3y.GetAsVectorView().ToList();
 
             // 从输出中取出得分最高的
             var max = scoreList.IndexOf(scoreList.Max());

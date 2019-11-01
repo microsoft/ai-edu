@@ -13,12 +13,12 @@ namespace OnnxDemo
     
     public sealed class mnistInput
     {
-        public TensorFloat port; // shape(784)
+        public TensorFloat fc1x; // shape(1,784)
     }
     
     public sealed class mnistOutput
     {
-        public TensorFloat dense3port; // shape(1,10)
+        public TensorFloat activation3y; // shape(1,10)
     }
     
     public sealed class mnistModel
@@ -36,10 +36,10 @@ namespace OnnxDemo
         }
         public async Task<mnistOutput> EvaluateAsync(mnistInput input)
         {
-            binding.Bind("port", input.port);
+            binding.Bind("fc1x", input.fc1x);
             var result = await session.EvaluateAsync(binding, "0");
             var output = new mnistOutput();
-            output.dense3port = result.Outputs["dense3port"] as TensorFloat;
+            output.activation3y = result.Outputs["activation3y"] as TensorFloat;
             return output;
         }
     }

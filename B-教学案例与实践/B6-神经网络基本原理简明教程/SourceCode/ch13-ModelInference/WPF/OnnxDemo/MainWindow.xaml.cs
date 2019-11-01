@@ -2,10 +2,10 @@
 // Licensed under the MIT License.
 
 using Microsoft.ML.OnnxRuntime;
+using Microsoft.ML.OnnxRuntime.Tensors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics.Tensors;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -115,10 +115,10 @@ namespace OnnxDemo
                 var container = new List<NamedOnnxValue>();
 
                 // 输入是大小784的一维数组
-                var tensor = new DenseTensor<float>(inputData, new int[] { 784 });
+                var tensor = new DenseTensor<float>(inputData, new int[] { 1, 784 });
 
                 // 输入的名称是port
-                container.Add(NamedOnnxValue.CreateFromTensor<float>("port", tensor));
+                container.Add(NamedOnnxValue.CreateFromTensor<float>("fc1x", tensor));
 
                 // 推理
                 var results = session.Run(container);

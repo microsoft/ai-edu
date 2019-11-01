@@ -5,8 +5,6 @@ tfmodel.meta
 tfmodel.index
 tfmodel.data-*
 *.h5
-*.pt
-*.onnx
 *_init.npz
 ONNX/
 

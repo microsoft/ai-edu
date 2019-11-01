@@ -4,6 +4,7 @@ import json
 
 def model_save(numpy_model, save_path):
     assert type(numpy_model) == list
+    os.makedirs(save_path, exist_ok = True)
     model = {}
     index = 0
     for (index,layer) in enumerate(numpy_model):

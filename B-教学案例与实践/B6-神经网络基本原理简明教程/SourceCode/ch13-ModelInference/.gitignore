@@ -8,6 +8,7 @@ tfmodel.data-*
 *.pt
 *.onnx
 *_init.npz
+ONNX/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

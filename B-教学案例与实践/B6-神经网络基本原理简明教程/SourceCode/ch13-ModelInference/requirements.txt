@@ -1,4 +1,5 @@
 matplotlib
 numpy
+onnx
 pillow
 tensorflow

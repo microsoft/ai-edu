@@ -125,7 +125,7 @@ namespace OnnxDemo
 
                 // 输出结果是IReadOnlyList<NamedOnnxValue>，支持多个输出，对于mnist模型，只有一个输出
                 var result = results.FirstOrDefault()?.AsTensor<float>()?.ToList();
-                
+
                 // 从输出中取出得分最高的
                 var max = result.IndexOf(result.Max());
 

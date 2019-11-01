@@ -114,7 +114,7 @@ namespace OnnxDemo
                 // 支持多个输入，对于mnist模型，只需要一个输入
                 var container = new List<NamedOnnxValue>();
 
-                // 输入是大小784的一维数组
+                // 输入是大小1*784的一维数组
                 var tensor = new DenseTensor<float>(inputData, new int[] { 1, 784 });
 
                 // 输入的名称是port

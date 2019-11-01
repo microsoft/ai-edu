@@ -7,7 +7,7 @@ class Csoftmax(object):
         self.batchSize = inputSize[0]
 
         self.type = "Softmax"
-        self.input_name = exname + "y"
+        self.input_name = f'{exname}y' if exname else f'{name}x'
         self.input_size = [1] + list(inputSize)[1:]
         self.output_name = name + "y"
         self.output_size = [1] + list(inputSize)[1:]

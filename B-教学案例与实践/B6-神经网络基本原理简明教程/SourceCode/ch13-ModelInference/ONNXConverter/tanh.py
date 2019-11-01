@@ -5,7 +5,7 @@ class Ctanh(object):
         self.shape = inputSize
 
         self.type = "Tanh"
-        self.input_name = exname + "y"
+        self.input_name = f'{exname}y' if exname else f'{name}x'
         self.input_size = [1] + list(inputSize)[1:]
         self.output_name = name + "y"
         self.output_size = [1] + list(inputSize)[1:]

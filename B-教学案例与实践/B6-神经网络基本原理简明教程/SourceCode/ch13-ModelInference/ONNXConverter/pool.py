@@ -12,7 +12,7 @@ class Cpool(object):
         self.outputShape = self.output.shape
 
         self.type = "MaxPool"
-        self.input_name = exname + "y"
+        self.input_name = f'{exname}y' if exname else f'{name}x'
         self.input_size = [1] + list(inputSize)[1:]
         self.output_name = name + "y"
         self.output_size = [1] + list(self.outputShape)[1:]

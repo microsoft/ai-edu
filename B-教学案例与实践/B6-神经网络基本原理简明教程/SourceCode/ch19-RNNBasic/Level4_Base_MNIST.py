@@ -8,7 +8,8 @@ from ExtendedDataReader.MnistImageDataReader import *
 
 def load_data():
     dataReader = MnistImageDataReader(mode="timestep")
-    dataReader.ReadLessData(10000)
+    #dataReader.ReadLessData(10000)
+    dataReader.ReadData()
     dataReader.NormalizeX()
     dataReader.NormalizeY(NetType.MultipleClassifier, base=0)
     dataReader.Shuffle()
@@ -21,8 +22,8 @@ if __name__=='__main__':
     output_type = OutputType.LastStep
     num_step = 28
     dataReader = load_data()
-    eta = 0.001 #0.1
-    max_epoch = 100 # 100
+    eta = 0.01 #0.1
+    max_epoch = 10 # 100
     batch_size = 32 #64
     num_input = dataReader.num_feature
     num_hidden = 8  # 4
@@ -33,6 +34,6 @@ if __name__=='__main__':
         num_step, num_input, num_hidden, num_output,
         output_type, net_type)
     n = net(hp, model)
-    #n.load_parameters(ParameterType.Last)
-    n.train(dataReader, checkpoint=1)
+    #n.load_parameters(ParameterType.Best)
+    n.train(dataReader, checkpoint=0.3)
     n.test(dataReader)

@@ -93,9 +93,9 @@ class net(object):
         print(self.subfolder)
 
         if (self.load_parameters(ParameterType.Init) == False):
-            self.U,self.bu = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden, InitialMethod.Normal)
-            self.V,self.bv = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_output, InitialMethod.Normal)
-            self.W,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Normal)
+            self.U,self.bu = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden, InitialMethod.Xavier)
+            self.V,self.bv = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_output, InitialMethod.Xavier)
+            self.W,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Xavier)
             self.save_parameters(ParameterType.Init)
         #end if
 
@@ -232,10 +232,10 @@ class net(object):
                 # check loss
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
-                    #loss_train,acc_train = self.check_loss(batch_x, batch_y)
+                    loss_train,acc_train = self.check_loss(batch_x, batch_y)
                     X,Y = dataReader.GetValidationSet()
                     loss_vld,acc_vld = self.check_loss(X,Y)
-                    self.loss_trace.Add(epoch, total_iteration, None, None, loss_vld, acc_vld, None)
+                    self.loss_trace.Add(epoch, total_iteration, loss_train, acc_train, loss_vld, acc_vld, None)
                     print(str.format("{0}:{1}:{2:3f} loss={3:6f}, acc={4:6f}", epoch, total_iteration, self.hp.eta, loss_vld, acc_vld))
                     if (loss_vld < min_loss):
                         min_loss = loss_vld

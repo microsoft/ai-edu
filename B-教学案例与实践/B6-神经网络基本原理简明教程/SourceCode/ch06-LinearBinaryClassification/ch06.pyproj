@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>b8096ba8-8472-485f-9af5-fc1c2692d75b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level4_TanhAsBinaryClassifier.py</StartupFile>
+    <StartupFile>Level4_LogicGates.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

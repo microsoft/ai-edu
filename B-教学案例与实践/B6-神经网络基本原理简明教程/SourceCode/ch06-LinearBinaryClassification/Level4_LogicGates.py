@@ -11,6 +11,13 @@ class LogicDataReader(DataReader_1_1):
     def __init__(self):
         pass
 
+    def Read_Logic_NOT_Data(self):
+        X = np.array([0,1]).reshape(2,1)
+        Y = np.array([1,0]).reshape(2,1)
+        self.XTrain = self.XRaw = X
+        self.YTrain = self.YRaw = Y
+        self.num_train = self.XRaw.shape[0]
+
     def Read_Logic_AND_Data(self):
         X = np.array([0,0,0,1,1,0,1,1]).reshape(4,2)
         Y = np.array([0,0,0,1]).reshape(4,1)
@@ -52,8 +59,12 @@ def Test(net, reader):
         return False
 
 def draw_split_line(net):
-    w = -net.W[0,0] / net.W[1,0]
-    b = -net.B[0,0] / net.W[1,0]
+    if (net.W.shape == 2):
+        w = -net.W[0,0] / net.W[1,0]
+        b = -net.B[0,0] / net.W[1,0]
+    else:
+        w = net.W[0]
+        b = net.B[0]
     x = np.array([-0.1,1.1])
     y = w * x + b
     plt.plot(x,y)
@@ -64,12 +75,12 @@ def draw_source_data(reader, title, show=False):
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.title(title)
     X,Y = reader.GetWholeTrainSamples()
-    DrawTwoCategoryPoints(X[:,0], X[:,1], Y[:,0], title=title, show=show)
+    DrawTwoCategoryPoints(X[:,0], np.zeros_like(X[:,0]), Y[:,0], title=title, show=show)
 
 def train(reader, title):
     draw_source_data(reader, title, show=True)
     # net train
-    num_input = 2
+    num_input = reader.XTrain.shape[1]
     num_output = 1
     hp = HyperParameters_1_1(num_input, num_output, eta=0.5, max_epoch=10000, batch_size=1, eps=2e-3, net_type=NetType.BinaryClassifier)
     net = NeuralNet_1_2(hp)
@@ -82,6 +93,10 @@ def train(reader, title):
     plt.show()
 
 if __name__ == '__main__':
+    reader = LogicDataReader()
+    reader.Read_Logic_NOT_Data()
+    train(reader, "Logic NOT operator")
+
     reader = LogicDataReader()
     reader.Read_Logic_AND_Data()
     train(reader, "Logic AND operator")

@@ -18,7 +18,7 @@ from HelperClass.DataReader_1_1 import *
 from HelperClass.HyperParameters_1_1 import *
 from HelperClass.TrainingHistory_1_0 import *
 from HelperClass.LossFunction_1_0 import *
-from HelperClass.ClassifierFunction import *
+from HelperClass.ClassifierFunction_1_0 import *
 
 class NeuralNet_1_2(object):
     def __init__(self, hp):

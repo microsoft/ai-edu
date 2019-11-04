@@ -264,11 +264,11 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.001 # 0.1
-    max_epoch = 1000 # 100
-    batch_size = 4 # 32
+    eta = 0.001 # 0.001 | 0.01
+    max_epoch = 1000 # 1000 | 1000
+    batch_size = 4 # 4 | 32
     num_input = dataReader.num_feature
-    num_hidden = 10 # 8
+    num_hidden = 8 # 8 | 10
     num_output = dataReader.num_category
     model = str.format("Level5_{0}_{1}_{2}_{3}_{4}_{5}", max_epoch, batch_size, num_input, num_hidden, num_output, eta)
     hp = HyperParameters_4_3(
@@ -276,6 +276,8 @@ if __name__=='__main__':
         dataReader.max_step, num_input, num_hidden, num_output, 
         OutputType.LastStep, NetType.MultipleClassifier)
     n = net(hp, model)
+    
+    #n.load_parameters()
     
     n.train(dataReader, checkpoint=1)
 

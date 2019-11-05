@@ -378,10 +378,10 @@ if __name__=='__main__':
     dataReader = load_data()
     eta = 0.001
     max_epoch = 1000
-    batch_size = 4
+    batch_size = 8
     num_input = dataReader.num_feature
-    num_hidden1 = 8
-    num_hidden2 = 4
+    num_hidden1 = 28
+    num_hidden2 = 28
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        
@@ -392,6 +392,7 @@ if __name__=='__main__':
         NetType.MultipleClassifier)
     n = net(hp, model)
     #n.load_parameters(ParameterType.Last)
+
     n.train(dataReader, checkpoint=1)
 
     n.test(dataReader)# last

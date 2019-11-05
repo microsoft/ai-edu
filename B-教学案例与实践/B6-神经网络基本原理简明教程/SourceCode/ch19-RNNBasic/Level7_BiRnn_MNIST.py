@@ -338,12 +338,12 @@ class net(object):
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.01
-    max_epoch = 1000
-    batch_size = 128
+    max_epoch = 100
+    batch_size = 32
     num_step = 28
     num_input = dataReader.num_feature
-    num_hidden1 = 16
-    num_hidden2 = 16
+    num_hidden1 = 64
+    num_hidden2 = 64
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        

@@ -342,8 +342,8 @@ if __name__=='__main__':
     batch_size = 32
     num_step = 28
     num_input = dataReader.num_feature
-    num_hidden1 = 64
-    num_hidden2 = 64
+    num_hidden1 = 32
+    num_hidden2 = 32
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        

@@ -125,7 +125,7 @@ class net(object):
                 self.backward(batch_y)
                 # update
                 for i in range(self.times):
-                    self.lstmcell[i].merge_params()
+                    # self.lstmcell[i].merge_params()
                     self.U = self.U - self.lstmcell[i].dU * eta /self.batch_size
                     self.W = self.W - self.lstmcell[i].dW * eta /self.batch_size
                     self.V = self.V - self.linearcell[i].dV * eta /self.batch_size

@@ -80,6 +80,8 @@ class LSTMCell_1_2(object):
             self.dbi = np.sum(self.dzi,axis=0, keepdims=True)
             self.dbf = np.sum(self.dzf,axis=0, keepdims=True)
 
+        # merge weights
+        self.merge_params()
         # pass to previous time step
         self.dh = np.dot(self.dzf, self.wf.T) + np.dot(self.dzi, self.wi.T) + np.dot(self.dzg, self.wg.T) + np.dot(self.dzo, self.wo.T)
         # pass to previous layer

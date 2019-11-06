@@ -65,7 +65,7 @@ class LSTMCell_1_1(object):
         tanh = lambda x : Tanh().forward(x)
         self.dzo = in_grad * tanh(self.c) * self.o * (1 - self.o)
         self.dc = in_grad * self.o * (1 - tanh(self.c) * tanh(self.c))
-        self.dzg = self.dc * self.i * (1- tanh(self.g) * tanh(self.g))
+        self.dzg = self.dc * self.i * (1- self.g * self.g)
         self.dzi = self.dc * self.g * self.i * (1 - self.i)
         self.dzf = self.dc * c_p * self.f * (1 - self.f)
 

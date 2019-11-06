@@ -1,6 +1,7 @@
-﻿# AI-神经网络基本原理简明教程目录
-<!--Copyright © Microsoft Corporation. All rights reserved.
-适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可-->
+﻿<!--Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可-->
+
+# AI-神经网络基本原理简明教程目录
 
 ## 如何浏览本系列教程
 

@@ -10,7 +10,7 @@ test_image_file = '../../Data/test-images-10'
 test_label_file = '../../Data/test-labels-10'
 
 class MnistImageDataReader(DataReader_2_0):
-    # mode: "image"=Nx1x28x28,  "vector"=1x784
+    # mode: "image"=Nx1x28x28,  "vector"=Nx1x784,  "timestep"=Nx28x28
     def __init__(self, mode="image"):
         self.train_image_file = train_image_file
         self.train_label_file = train_label_file
@@ -39,8 +39,11 @@ class MnistImageDataReader(DataReader_2_0):
         self.num_train = self.num_example
         if self.mode == "vector":
             self.num_feature = 784
+        elif self.mode == "image":
+            self.num_feature = 28
+        elif self.mode == "timestep":
+            self.num_feature = 28
         self.num_validation = 0
-
 
     def ReadData(self):
         self.XTrainRaw = self.ReadImageFile(self.train_image_file)
@@ -53,6 +56,10 @@ class MnistImageDataReader(DataReader_2_0):
         self.num_train = self.num_example
         if self.mode == "vector":
             self.num_feature = 784
+        elif self.mode == "image":
+            self.num_feature = 28
+        elif self.mode == "timestep":
+            self.num_feature = 28
         self.num_validation = 0
 
     # output array: num_images * channel * 28 * 28
@@ -118,12 +125,13 @@ class MnistImageDataReader(DataReader_2_0):
             batch_Y = self.YTrain[start:end]
         # end if
 
-        if self.mode == "vector":
+        if (self.mode == "vector"):
             return batch_X.reshape(-1, 784), batch_Y
-        elif self.mode == "image":
+        elif (self.mode == "image"):
             return batch_X, batch_Y
+        elif (self.mode == "timestep"):
+            return batch_X.reshape(-1,28,28), batch_Y
 
-    # recommend not use this function in DeepLearning
     def GetValidationSet(self):
         batch_X = self.XDev
         batch_Y = self.YDev
@@ -131,14 +139,17 @@ class MnistImageDataReader(DataReader_2_0):
             return batch_X.reshape(self.num_validation, -1), batch_Y
         elif self.mode == "image":
             return batch_X, batch_Y
+        elif self.mode == "timestep":
+            return batch_X.reshape(self.num_validation,28,28), batch_Y
 
     def GetTestSet(self):
         if self.mode == "vector":
             return self.XTest.reshape(self.num_test,-1), self.YTest
         elif self.mode == "image":
             return self.XTest, self.YTest
+        elif self.mode == "timestep":
+            return self.XTest.reshape(self.num_test,28,28), self.YTest
 
-    # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format
     # suggest to call this function for each epoch
     def Shuffle(self):

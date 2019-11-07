@@ -13,7 +13,7 @@ def draw_fun(X,Y):
 
     plt.plot(X,Y,'x')
 
-    d = 1/(x*np.sqrt(np.log(x)))
+    d = 1/(x*np.sqrt(np.log(x**2)))
     plt.plot(x,d)
     plt.show()
 

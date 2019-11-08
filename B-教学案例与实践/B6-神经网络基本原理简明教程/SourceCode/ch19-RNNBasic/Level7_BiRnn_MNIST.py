@@ -19,7 +19,8 @@ from ExtendedDataReader.MnistImageDataReader import *
 
 def load_data():
     dataReader = MnistImageDataReader(mode="timestep")
-    dataReader.ReadLessData(10000)
+    #dataReader.ReadLessData(10000)
+    dataReader.ReadData()
     dataReader.NormalizeX()
     dataReader.NormalizeY(NetType.MultipleClassifier, base=0)
     dataReader.Shuffle()
@@ -315,9 +316,7 @@ class net(object):
             #endif
         #end for
         self.save_parameters(ParameterType.Last)
-        self.loss_trace.ShowLossHistory(
-            self.hp.toString(),
-            XCoordinate.Epoch)
+        self.loss_trace.ShowLossHistory(self.hp.toString(), XCoordinate.Iteration)
 
     def test(self, dataReader):
         print("testing...")
@@ -337,13 +336,13 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.01
-    max_epoch = 100
+    eta = 0.005
+    max_epoch = 10
     batch_size = 32
     num_step = 28
     num_input = dataReader.num_feature
-    num_hidden1 = 32
-    num_hidden2 = 32
+    num_hidden1 = 16
+    num_hidden2 = 16
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        
@@ -354,7 +353,7 @@ if __name__=='__main__':
         NetType.MultipleClassifier)
     n = net(hp, model)
     #n.load_parameters(ParameterType.Last)
-    n.train(dataReader, checkpoint=1)
+    n.train(dataReader, checkpoint=0.29)
 
     n.test(dataReader)# last
     n.load_parameters(ParameterType.Best)

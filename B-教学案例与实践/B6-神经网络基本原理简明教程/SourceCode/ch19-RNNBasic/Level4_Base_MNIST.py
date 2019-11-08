@@ -22,11 +22,11 @@ if __name__=='__main__':
     output_type = OutputType.LastStep
     num_step = 28
     dataReader = load_data()
-    eta = 0.01 #0.1
-    max_epoch = 10 # 100
+    eta = 0.005 #0.1
+    max_epoch = 20 # 100
     batch_size = 32 #64
     num_input = dataReader.num_feature
-    num_hidden = 8  # 4
+    num_hidden = 32
     num_output = dataReader.num_category
     model = str.format("Level3_MNIST_{0}_{1}_{2}_{3}_{4}_{5}_{6}", max_epoch, batch_size, num_step, num_input, num_hidden, num_output, eta)
     hp = HyperParameters_4_3(
@@ -34,6 +34,8 @@ if __name__=='__main__':
         num_step, num_input, num_hidden, num_output,
         output_type, net_type)
     n = net(hp, model)
+
     #n.load_parameters(ParameterType.Best)
-    n.train(dataReader, checkpoint=0.3)
+    n.train(dataReader, checkpoint=0.29)
+    n.loss_trace.ShowLossHistory(hp.toString(), XCoordinate.Iteration)
     n.test(dataReader)

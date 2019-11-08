@@ -243,9 +243,7 @@ class net(object):
             #endif
         #end for
         self.save_parameters(ParameterType.Last)
-        self.loss_trace.ShowLossHistory(
-            self.hp.toString(),
-            XCoordinate.Epoch)
+        #self.loss_trace.ShowLossHistory(self.hp.toString(), XCoordinate.Epoch)
 
 
     def test(self, dataReader):

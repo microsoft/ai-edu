@@ -28,21 +28,23 @@ def load_data():
     return dataReader
 
 class timestep(object):
-    def forward_f2e(self, x, U1, U2, V1, V2, W1, W2, prev_s1, isFirst):
+    def forward_f2e(self, x, U1, bU1, U2, bU2, V, bV, W1, W2, prev_s1, isFirst):
         self.x = x
         self.U1 = U1
         self.U2 = U2
-        self.V1 = V1
-        self.V2 = V2
+        self.V = V
+        self.bU1 = bU1
+        self.bU2 = bU2
+        self.bV = bV
         self.W1 = W1
         self.W2 = W2
 
         if (isFirst):
             # 公式1
-            self.h1 = np.dot(x, U1)
+            self.h1 = np.dot(x, U1) + self.bU1
         else:
-            # 公式5
-            self.h1 = np.dot(x, U1) + np.dot(prev_s1, W1) 
+            # 公式1
+            self.h1 = np.dot(x, U1) + np.dot(prev_s1, W1)  + self.bU1
         #endif
         # 公式2
         self.s1 = Tanh().forward(self.h1)
@@ -51,70 +53,80 @@ class timestep(object):
         # backward
         if (isLast):
             # 公式3
-            self.h2 = np.dot(self.x, self.U2)
+            self.h2 = np.dot(self.x, self.U2) + self.bU2
         else:
-            # 公式6
-            self.h2 = np.dot(self.x, self.U2) + np.dot(next_s2, self.W2)
+            # 公式3
+            self.h2 = np.dot(self.x, self.U2) + np.dot(next_s2, self.W2) + self.bU2
         #endif
         # 公式4
         self.s2 = Tanh().forward(self.h2)
-
+        # 公式5
+        self.s = self.s1 + self.s2
         if (isFirst or isLast):
-            self.z = np.dot(self.s1, self.V1) + np.dot(self.s2, self.V2)
+            # 公式6
+            self.z = np.dot(self.s, self.V) + self.bV
+            # 公式7
             self.a = Softmax().forward(self.z)
 
     def backward_e2f(self, y, prev_s1, next_dh1, isFirst, isLast):
+        # 公式8
         if (isLast or isFirst):
             self.dz = self.a - y
         else:
             self.dz = np.zeros_like(y)
+        self.dbV = np.sum(self.dz, axis=0, keepdims=True)
+
+        # 公式11
+        self.dV = np.dot(self.s.T, self.dz)
 
         if (isLast):
-            # 公式13
-            self.dh1 = np.dot(self.dz, self.V1.T) * Tanh().backward(self.s1)
+            # 公式9
+            self.dh1 = np.dot(self.dz, self.V.T) * Tanh().backward(self.s1)
         else:
-            # 公式17
-            self.dh1 = (np.dot(self.dz, self.V1.T) + np.dot(next_dh1, self.W1.T)) * Tanh().backward(self.s1)
-        # end if
+            # 公式10
+            self.dh1 = (np.dot(self.dz, self.V.T) + np.dot(next_dh1, self.W1.T)) * Tanh().backward(self.s1)
+        self.dbU1 = np.sum(self.dh1, axis=0, keepdims=True)
 
-        self.dV1 = np.dot(self.s1.T, self.dz)
-        # 公式11
+        # 公式12
         self.dU1 = np.dot(self.x.T, self.dh1)
         
         if (isFirst):
-            # 公式20
+            # 公式14
             self.dW1 = np.zeros_like(self.W1)
         else:
-            # 公式21,22
+            # 公式13
             self.dW1 = np.dot(prev_s1.T, self.dh1)
         # end if
 
-
     def backward_f2e(self, y, next_s2, prev_dh2, isFirst, isLast):
-        if (isFirst):
+        # 公式15
+        if (isFirst or isLast):
             self.dz = self.a - y
         else:
             self.dz = np.zeros_like(y)
+        self.dbV = np.sum(self.dz, axis=0, keepdims=True)
+
+        # 公式11
+        self.dV = np.dot(self.s.T, self.dz)
 
         if (isFirst):
-            # 公式15
-            self.dh2 = np.dot(self.dz, self.V2.T) * Tanh().backward(self.s2)
+            # 公式16
+            self.dh2 = np.dot(self.dz, self.V.T) * Tanh().backward(self.s2)
         else:
-            # 公式19
-            self.dh2 = (np.dot(self.dz, self.V2.T) + np.dot(prev_dh2, self.W2.T)) * Tanh().backward(self.s2)
-        #end if
-
-        self.dV2 = np.dot(self.s2.T, self.dz)     
-        self.dU2 = np.dot(self.x.T, self.dh2)      
+            # 公式17
+            self.dh2 = (np.dot(self.dz, self.V.T) + np.dot(prev_dh2, self.W2.T)) * Tanh().backward(self.s2)
+        self.dbU2 = np.sum(self.dh2, axis=0, keepdims=True)
+        
+        # 公式18
+        self.dU2 = np.dot(self.x.T, self.dh2)
 
         if (isLast):
             # 公式20
             self.dW2 = np.zeros_like(self.W2)
         else:
-            # 公式21,22
+            # 公式19
             self.dW2 = np.dot(next_s2.T, self.dh2)
         # end if
-
 
 class net(object):
     def __init__(self, hp, model_name):
@@ -122,12 +134,11 @@ class net(object):
         self.model_name = model_name
         self.subfolder = os.getcwd() + "/" + self.__create_subfolder()
         print(self.subfolder)
-
+        assert(self.hp.num_hidden1 == self.hp.num_hidden2)
         if (self.load_parameters(ParameterType.Init) == False):
-            self.U1,_ = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden1, InitialMethod.Normal)
-            self.U2,_ = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden2, InitialMethod.Normal)
-            self.V1,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden1, self.hp.num_output, InitialMethod.Normal)
-            self.V2,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden2, self.hp.num_output, InitialMethod.Normal)
+            self.U1,self.bU1 = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden1, InitialMethod.Normal)
+            self.U2,self.bU2 = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden2, InitialMethod.Normal)
+            self.V,self.bV = WeightsBias_2_1.InitialParameters(self.hp.num_hidden1, self.hp.num_output, InitialMethod.Normal)
             self.W1,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden1, self.hp.num_hidden1, InitialMethod.Normal)
             self.W2,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden2, self.hp.num_hidden2, InitialMethod.Normal)
             self.save_parameters(ParameterType.Init)
@@ -160,12 +171,12 @@ class net(object):
             if (i == 0):
                 self.ts_list[i].forward_f2e(
                     X[:,i], 
-                    self.U1, self.U2, self.V1, self.V2, self.W1, self.W2, 
+                    self.U1, self.bU1, self.U2, self.bU2, self.V, self.bV, self.W1, self.W2, 
                     None, True)
             else:
                 self.ts_list[i].forward_f2e(
                     X[:,i], 
-                    self.U1, self.U2, self.V1, self.V2, self.W1, self.W2, 
+                    self.U1, self.bU1, self.U2, self.bU2, self.V, self.bV, self.W1, self.W2, 
                     self.ts_list[i-1].s1[0:self.batch], False)
         #endfor
         #end to front
@@ -224,26 +235,32 @@ class net(object):
         #end for
 
     def update(self):
-        du1 = np.zeros_like(self.U1)
-        du2 = np.zeros_like(self.U2)
-        dv1 = np.zeros_like(self.V1)
-        dv2 = np.zeros_like(self.V2)
-        dw1 = np.zeros_like(self.W1)
-        dw2 = np.zeros_like(self.W2)
+        dU1 = np.zeros_like(self.U1)
+        dbU1 = np.zeros_like(self.bU1)
+        dU2 = np.zeros_like(self.U2)
+        dbU2 = np.zeros_like(self.bU2)
+        dV = np.zeros_like(self.V)
+        dbV = np.zeros_like(self.bV)
+        dW1 = np.zeros_like(self.W1)
+        dW2 = np.zeros_like(self.W2)
         for i in range(self.ts):
-            du1 += self.ts_list[i].dU1
-            du2 += self.ts_list[i].dU2
-            dv1 += self.ts_list[i].dV1
-            dv2 += self.ts_list[i].dV2
-            dw1 += self.ts_list[i].dW1
-            dw2 += self.ts_list[i].dW2
+            dU1 += self.ts_list[i].dU1
+            dbU1 += self.ts_list[i].dbU1
+            dU2 += self.ts_list[i].dU2
+            dbU2 += self.ts_list[i].dbU2
+            dV  += self.ts_list[i].dV
+            dbV  += self.ts_list[i].dbV
+            dW1 += self.ts_list[i].dW1
+            dW2 += self.ts_list[i].dW2
         #end for
-        self.U1 = self.U1 - du1 * self.hp.eta / self.batch
-        self.U2 = self.U2 - du2 * self.hp.eta / self.batch
-        self.V1 = self.V1 - dv1 * self.hp.eta / self.batch
-        self.V2 = self.V2 - dv2 * self.hp.eta / self.batch
-        self.W1 = self.W1 - dw1 * self.hp.eta / self.batch
-        self.W2 = self.W2 - dw2 * self.hp.eta / self.batch
+        self.U1 = self.U1 - dU1 * self.hp.eta / self.batch
+        self.bU1 = self.bU1 - dbU1 * self.hp.eta / self.batch
+        self.U2 = self.U2 - dU2 * self.hp.eta / self.batch
+        self.bU2 = self.bU2 - dbU2 * self.hp.eta / self.batch
+        self.V  = self.V  - dV  * self.hp.eta / self.batch
+        self.bV  = self.bV - dbV  * self.hp.eta / self.batch
+        self.W1 = self.W1 - dW1 * self.hp.eta / self.batch
+        self.W2 = self.W2 - dW2 * self.hp.eta / self.batch
 
     def save_parameters(self, para_type):
         if (para_type == ParameterType.Init):
@@ -256,7 +273,7 @@ class net(object):
             print("save last parameters...")
             self.file_name = str.format("{0}/last.npz", self.subfolder)
         #endif
-        np.savez(self.file_name, U1=self.U1, U2=self.U2, V1=self.V1, V2=self.V2, W1=self.W1, W2=self.W2)
+        np.savez(self.file_name, U1=self.U1, bU1=self.bU1, U2=self.U2, bU2=self.bU2, V=self.V, bV=self.bV, W1=self.W1, W2=self.W2)
 
     def load_parameters(self, para_type):
         if (para_type == ParameterType.Init):
@@ -274,9 +291,11 @@ class net(object):
         #endif
         data = np.load(self.file_name)
         self.U1 = data["U1"]
+        self.bU1 = data["bU1"]
         self.U2 = data["U2"]
-        self.V1 = data["V1"]
-        self.V2 = data["V2"]
+        self.bU2 = data["bU2"]
+        self.V  = data["V"]
+        self.bV  = data["bV"]
         self.W1 = data["W1"]
         self.W2 = data["W2"]
         return True
@@ -305,10 +324,10 @@ class net(object):
                 # check loss
                 total_iteration = epoch * max_iteration + iteration               
                 if (total_iteration+1) % checkpoint_iteration == 0:
-                    #loss_train,acc_train = self.check_loss(batch_x, batch_y)
+                    loss_train,acc_train = self.check_loss(batch_x, batch_y)
                     X,Y = dataReader.GetValidationSet()
                     loss_vld,acc_vld = self.check_loss(X,Y)
-                    self.loss_trace.Add(epoch, total_iteration, None, None, loss_vld, acc_vld, None)
+                    self.loss_trace.Add(epoch, total_iteration, loss_train, acc_train, loss_vld, acc_vld, None)
                     print(str.format("{0}:{1}:{2:3f} loss={3:6f}, acc={4:6f}", epoch, total_iteration, self.hp.eta, loss_vld, acc_vld))
                     if (loss_vld < min_loss):
                         min_loss = loss_vld
@@ -336,13 +355,13 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.005
+    eta = 0.01
     max_epoch = 10
     batch_size = 32
     num_step = 28
     num_input = dataReader.num_feature
-    num_hidden1 = 16
-    num_hidden2 = 16
+    num_hidden1 = 20
+    num_hidden2 = 20
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        

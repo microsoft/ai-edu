@@ -28,7 +28,7 @@ def load_data():
     return dataReader
 
 class timestep(object):
-    def forward_f2e(self, x, U1, bU1, U2, bU2, V, bV, W1, W2, prev_s1, isFirst):
+    def forward_1(self, x, U1, bU1, U2, bU2, V, bV, W1, W2, prev_s1, isFirst):
         self.x = x
         self.U1 = U1
         self.U2 = U2
@@ -49,7 +49,7 @@ class timestep(object):
         # 公式2
         self.s1 = Tanh().forward(self.h1)
 
-    def forward_e2f(self, next_s2, isFirst, isLast):
+    def forward_2(self, next_s2, isLast):
         # backward
         if (isLast):
             # 公式3
@@ -60,31 +60,30 @@ class timestep(object):
         #endif
         # 公式4
         self.s2 = Tanh().forward(self.h2)
+
+    def forward_sum(self):
         # 公式5
         self.s = self.s1 + self.s2
-        if (isFirst or isLast):
-            # 公式6
-            self.z = np.dot(self.s, self.V) + self.bV
-            # 公式7
-            self.a = Softmax().forward(self.z)
+        #if (isFirst or isLast):
+        # 公式6
+        self.z = np.dot(self.s, self.V) + self.bV
+        # 公式7
+        self.a = Softmax().forward(self.z)
 
-    def backward_e2f(self, y, prev_s1, next_dh1, isFirst, isLast):
-        # 公式8
-        if (isLast or isFirst):
-            self.dz = self.a - y
-        else:
-            self.dz = np.zeros_like(y)
+    def backward_sum(self, y):
+        self.dz = self.a - y
         self.dbV = np.sum(self.dz, axis=0, keepdims=True)
-
         # 公式11
         self.dV = np.dot(self.s.T, self.dz)
 
+    def backward_1(self, prev_s1, next_dh1, isFirst, isLast):
         if (isLast):
             # 公式9
             self.dh1 = np.dot(self.dz, self.V.T) * Tanh().backward(self.s1)
         else:
             # 公式10
             self.dh1 = (np.dot(self.dz, self.V.T) + np.dot(next_dh1, self.W1.T)) * Tanh().backward(self.s1)
+
         self.dbU1 = np.sum(self.dh1, axis=0, keepdims=True)
 
         # 公式12
@@ -98,23 +97,14 @@ class timestep(object):
             self.dW1 = np.dot(prev_s1.T, self.dh1)
         # end if
 
-    def backward_f2e(self, y, next_s2, prev_dh2, isFirst, isLast):
-        # 公式15
-        if (isFirst or isLast):
-            self.dz = self.a - y
-        else:
-            self.dz = np.zeros_like(y)
-        self.dbV = np.sum(self.dz, axis=0, keepdims=True)
-
-        # 公式11
-        self.dV = np.dot(self.s.T, self.dz)
-
+    def backward_2(self, next_s2, prev_dh2, isFirst, isLast):
         if (isFirst):
             # 公式16
             self.dh2 = np.dot(self.dz, self.V.T) * Tanh().backward(self.s2)
         else:
             # 公式17
             self.dh2 = (np.dot(self.dz, self.V.T) + np.dot(prev_dh2, self.W2.T)) * Tanh().backward(self.s2)
+
         self.dbU2 = np.sum(self.dh2, axis=0, keepdims=True)
         
         # 公式18
@@ -147,7 +137,7 @@ class net(object):
         self.loss_fun = LossFunction_1_1(self.hp.net_type)
         self.loss_trace = TrainingHistory_3_0()
         self.ts_list = []
-        for i in range(self.hp.num_step+1):
+        for i in range(self.hp.num_step):
             ts = timestep()
             self.ts_list.append(ts)
         #end for
@@ -166,72 +156,80 @@ class net(object):
         self.batch = self.x.shape[0]
         self.ts = self.x.shape[1]
 
-        #front to end
+        # 1
         for i in range(0, self.ts):
             if (i == 0):
-                self.ts_list[i].forward_f2e(
-                    X[:,i], 
-                    self.U1, self.bU1, self.U2, self.bU2, self.V, self.bV, self.W1, self.W2, 
-                    None, True)
+                prev_s1 = None
+                isFirst = True
             else:
-                self.ts_list[i].forward_f2e(
-                    X[:,i], 
-                    self.U1, self.bU1, self.U2, self.bU2, self.V, self.bV, self.W1, self.W2, 
-                    self.ts_list[i-1].s1[0:self.batch], False)
+                prev_s1 = self.ts_list[i-1].s1
+                isFirst = False
+            #endif
+            self.ts_list[i].forward_1(X[:,i], 
+                self.U1, self.bU1, self.U2, self.bU2, self.V, self.bV, self.W1, self.W2, 
+                prev_s1, isFirst)
         #endfor
-        #end to front
+        # 2
         for i in range(self.ts-1, -1, -1):
             if (i == self.ts - 1):
-                self.ts_list[i].forward_e2f(None, False, True)
-            elif (i == 0):
-                self.ts_list[i].forward_e2f(self.ts_list[i+1].s2[0:self.batch], True, False)
+                isLast = True
+                next_s2 = None
             else:
-                self.ts_list[i].forward_e2f(self.ts_list[i+1].s2[0:self.batch], False, False)
+                isLast = False
+                next_s2 = self.ts_list[i+1].s2
+            #endif
+            self.ts_list[i].forward_2(next_s2, isLast)
         #end for
-        return self.ts_list[self.ts-1].a
+        # sum
+        for i in range(0, self.ts):
+            self.ts_list[i].forward_sum()
 
-    def backward(self,Y):
-        #e2f
+        #return self.ts_list[self.ts-1].a
+        return self.ts_list[0].a
+
+    def backward(self, Y):
+        # sum
+        for i in range(0, self.ts):
+            self.ts_list[i].backward_sum(Y)
+        # 1
         for i in range(self.ts-1, -1, -1):
             if (i == self.ts - 1):
-                self.ts_list[i].backward_e2f(
-                    Y, 
-                    self.ts_list[i-1].s1[0:self.batch], 
-                    None, 
-                    False, True)
+                next_dh1 = None
+                prev_s1 = self.ts_list[i-1].s1
+                isLast = True
+                isFirst = False
             elif (i == 0):
-                self.ts_list[i].backward_e2f(
-                    Y, 
-                    None,
-                    self.ts_list[i+1].dh1[0:self.batch],
-                    True, False)
+                next_dh1 = self.ts_list[i+1].dh1
+                prev_s1 = None
+                isLast = False
+                isFirst = True
             else:
-                self.ts_list[i].backward_e2f(
-                    Y, 
-                    self.ts_list[i-1].s1[0:self.batch],
-                    self.ts_list[i+1].dh1[0:self.batch],
-                    False, False)
+                next_dh1 = self.ts_list[i+1].dh1
+                prev_s1 = self.ts_list[i-1].s1
+                isLast = False
+                isFirst = False
+            #endif
+            self.ts_list[i].backward_1(prev_s1, next_dh1, isFirst, isLast)
         #end for
-        #fron to end
+        #2
         for i in range(0, self.ts):
             if (i == 0):
-                self.ts_list[i].backward_f2e(
-                    Y, 
-                    self.ts_list[i+1].s2[0:self.batch],
-                    None,
-                    True, False)
+                isFirst = True
+                isLast = False
+                prev_dh2 = None
+                next_s2 = self.ts_list[i+1].s2
             elif (i == self.ts - 1):
-                self.ts_list[i].backward_f2e(
-                    Y, 
-                    None,
-                    self.ts_list[i-1].dh2[0:self.batch], 
-                    False, True)
+                isFirst = False
+                isLast = True
+                prev_dh2 = self.ts_list[i-1].dh2
+                next_s2 = None
             else:
-                self.ts_list[i].backward_f2e(
-                    Y, 
-                    self.ts_list[i+1].s2[0:self.batch],
-                    self.ts_list[i-1].dh2[0:self.batch],
-                    False, False)
+                isFirst = False
+                isLast = False
+                prev_dh2 = self.ts_list[i-1].dh2
+                next_s2 = self.ts_list[i+1].s2
+            #endif
+            self.ts_list[i].backward_2(next_s2, prev_dh2, isFirst, isLast)
         #end for
 
     def update(self):
@@ -254,11 +252,11 @@ class net(object):
             dW2 += self.ts_list[i].dW2
         #end for
         self.U1 = self.U1 - dU1 * self.hp.eta / self.batch
-        self.bU1 = self.bU1 - dbU1 * self.hp.eta / self.batch
+        #self.bU1 = self.bU1 - dbU1 * self.hp.eta / self.batch
         self.U2 = self.U2 - dU2 * self.hp.eta / self.batch
-        self.bU2 = self.bU2 - dbU2 * self.hp.eta / self.batch
+        #self.bU2 = self.bU2 - dbU2 * self.hp.eta / self.batch
         self.V  = self.V  - dV  * self.hp.eta / self.batch
-        self.bV  = self.bV - dbV  * self.hp.eta / self.batch
+        #self.bV  = self.bV - dbV  * self.hp.eta / self.batch
         self.W1 = self.W1 - dW1 * self.hp.eta / self.batch
         self.W2 = self.W2 - dW2 * self.hp.eta / self.batch
 
@@ -344,15 +342,6 @@ class net(object):
         loss,acc = self.check_loss(X,Y)
         print(str.format("loss={0:6f}, acc={1:6f}", loss, acc)) 
     
-    def lr_decay(self, epoch):
-        if (epoch < 50):
-            return 0.1
-        elif (epoch < 100):
-            return 0.05
-        else:
-            return 0.02
-
-
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.01
@@ -360,8 +349,8 @@ if __name__=='__main__':
     batch_size = 32
     num_step = 28
     num_input = dataReader.num_feature
-    num_hidden1 = 20
-    num_hidden2 = 20
+    num_hidden1 = 24
+    num_hidden2 = 24
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        

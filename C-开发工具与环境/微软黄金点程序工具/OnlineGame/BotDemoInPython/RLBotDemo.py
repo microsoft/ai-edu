@@ -5,24 +5,27 @@
 from pyswagger import App
 from pyswagger.contrib.client.requests import Client
 
-import random
-import time
-import argparse
-
 # Use `pip install numpy pandas` to install numpy and pandas
 import numpy as np
 import pandas as pd
+
+import argparse
+import base64
+import hashlib
+import os
+import random
+import time
 
 # Below class QLearningTable is copy from MorvanZhou's tutorials
 # https://github.com/MorvanZhou/Reinforcement-learning-with-tensorflow/blob/master/contents/2_Q_Learning_maze/RL_brain.py
 class QLearningTable:
     def __init__(self, actions, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9):
-        self.actions = actions  # a list
+        self.actions = actions    # a list
         self.lr = learning_rate
         self.gamma = reward_decay
         self.epsilon = e_greedy
         self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
-        
+
     def choose_action(self, state):
         self.check_state_exist(state)
         # action selection
@@ -40,10 +43,10 @@ class QLearningTable:
         self.check_state_exist(s_)
         q_predict = self.q_table.loc[s, a]
         if s_ != 'terminal':
-            q_target = r + self.gamma * self.q_table.loc[s_, :].max()  # next state is not terminal
+            q_target = r + self.gamma * self.q_table.loc[s_, :].max()    # next state is not terminal
         else:
-            q_target = r  # next state is terminal
-        self.q_table.loc[s, a] += self.lr * (q_target - q_predict)  # update
+            q_target = r    # next state is terminal
+        self.q_table.loc[s, a] += self.lr * (q_target - q_predict)    # update
 
     def check_state_exist(self, state):
         if state not in self.q_table.index:
@@ -128,7 +131,7 @@ RL = QLearningTable(actions=list(range(n_actions)))
 def getState(gArray):
     if len(gArray) == 0 or len(gArray) == 1:
         return '0_0'
-    else:        
+    else:
         sub = np.array(gArray[-10:])
         sub1 = sub[:-1]
         sub2 = sub[1:]
@@ -143,18 +146,18 @@ lastAction=None
 def GeneratePredictionNumbers(goldenNumberList, lastScore, numberCount):
     global lastState
     global lastAction
-    
+
     state = getState(goldenNumberList)
-    
+
     if lastState != None and lastAction != None:
         RL.learn(lastState, lastAction, lastScore, state)
-        
+
     action = RL.choose_action(state)
     number1, number2 = actions[action](goldenNumberList)
-    
+
     lastState = state
     lastAction = action
-    
+
     return number1, number2
 
 # Init swagger client
@@ -163,53 +166,81 @@ jsonpath = '/swagger/v1/swagger.json'
 app = App._create_(host + jsonpath)
 client = Client()
 
-def main(roomId):
-    if roomId is None:
-        # Input the roomid if there is no roomid in args
-        roomId = input("Input room id: ")
-        try:
-            roomId = int(roomId)
-        except:
-            roomId = 0
-            print('Parse room id failed, default join in to room 0')
+# Make sure all the parameters have the right value
+def perProcess(roomid, userid, usertoken):
+    userInfoFile = 'userinfo.txt'
+    nickname = None
+    tokenFile = 'token.txt'
 
-    userInfoFile = "userinfo.txt"
-    userId = None
-    nickName = None
-    try:
-        # Use an exist player
-        with open(userInfoFile) as f:
-            userId, nickName = f.read().split(',')[:2]
-        print('Use an exist player: ' + nickName + '  Id: ' + userId)
-    except:
-        # Create a new player
+    # if not specify userid, try read userid locally
+    if userid is None:
+        if os.path.isfile(userInfoFile):
+            with open(userInfoFile) as f:
+                userid = f.read().split(',')[0]
+
+    # verify userid is valide or not
+    if userid:
+        userResp = client.request(
+                app.op['User'](
+                    uid = userid
+                ))
+        if userResp.status == 400:
+            print(f'Verify user ID failed: {userResp.data.message}')
+            userid = None
+        else:
+            userid = userResp.data.userId
+            nickname = userResp.data.nickName
+            print(f'Use an exist player: {nickname}, User ID: {userid}')
+
+    # create user if userid is empty or invalide
+    if not userid:
+        # random nickname
+        nickname = 'AI Player ' + str(random.randint(0, 9999))
         userResp = client.request(
             app.op['NewUser'](
-                nickName='AI Player ' + str(random.randint(0, 9999))
+                nickName = nickname
             ))
         assert userResp.status == 200
-        user = userResp.data
-        userId = user.userId
-        nickName = user.nickName
-        print('Create a new player: ' + nickName + '  Id: ' + userId)
+        userid = userResp.data.userId
+        nickname = userResp.data.nickName
+        print(f'Create a new player: {nickname}, User ID: {userid}')
 
-        with open(userInfoFile, "w") as f:
-            f.write("%s,%s" % (userId, nickName))
+    # save user information locally
+    with open(userInfoFile, "w") as f:
+        f.write("%s,%s" % (userid, nickname))
 
-    print('Room id: ' + str(roomId))
+    if roomid is None:
+        # Input the roomid if there is no roomid in args
+        roomid = input("Input room id: ")
+        try:
+            roomid = int(roomid)
+            print(f'You are using room {roomid}')
+        except:
+            roomid = 0
+            print('Parse room id failed, default use room 0')
+
+    if not usertoken and os.path.isfile(tokenFile):
+        with open(tokenFile) as f:
+            usertoken = f.read()
+
+    return roomid, userid, usertoken
+
+def main(roomid, userid, usertoken):
+    # Make sure all the parameters have the right value
+    roomid, userid, usertoken = perProcess(roomid, userid, usertoken)
 
     while True:
         stateResp = client.request(
             app.op['State'](
-                uid=userId,
-                roomid=roomId
+                uid = userid,
+                roomid = roomid
             ))
         if stateResp.status != 200:
             print('Network issue, query again after 1 second')
             time.sleep(1)
             continue
         state = stateResp.data
-    
+
         if state.state == 2:
             print('The game has finished')
             break
@@ -232,7 +263,7 @@ def main(roomId):
 
         todayGoldenListResp = client.request(
             app.op['TodayGoldenList'](
-                roomid=roomId
+                roomid = roomid
             ))
         if todayGoldenListResp.status != 200:
             print('Network issue, query again after 1 second')
@@ -244,8 +275,8 @@ def main(roomId):
 
         lastRoundResp = client.request(
             app.op['History'](
-                roomid=roomId,
-                count=1
+                roomid = roomid,
+                count = 1
             ))
         if lastRoundResp.status != 200:
             print('Network issue, query again after 1 second')
@@ -253,20 +284,26 @@ def main(roomId):
             continue
         lastScore = 0
         if len(lastRoundResp.data.rounds) > 0:
-            scoreArray = [user for user in lastRoundResp.data.rounds[0].userNumbers if user.userId == userId]
+            scoreArray = [user for user in lastRoundResp.data.rounds[0].userNumbers if user.userId == userid]
             if len(scoreArray) == 1:
                 lastScore = scoreArray[0].score
         print('Last round score: {}'.format(lastScore))
 
         number1, number2 = GeneratePredictionNumbers(todayGoldenList.goldenNumberList, lastScore, state.numbers)
 
-        if (state.numbers == 2):
+        computedToken = ''
+        if state.enabledToken:
+            mergedString = userid + state.roundId + usertoken
+            computedToken = base64.b64encode(hashlib.sha256(mergedString.encode('utf-8')).digest()).decode('utf-8')
+
+        if state.numbers == 2:
             submitRsp = client.request(
                 app.op['Submit'](
-                    uid=userId,
-                    rid=state.roundId,
-                    n1=str(number1),
-                    n2=str(number2)
+                    uid = userid,
+                    rid = state.roundId,
+                    n1 = str(number1),
+                    n2 = str(number2),
+                    token = computedToken
                 ))
             if submitRsp.status == 200:
                 print('You submit numbers: ' + str(number1) + ', ' + str(number2))
@@ -277,9 +314,10 @@ def main(roomId):
         else:
             submitRsp = client.request(
                 app.op['Submit'](
-                    uid=userId,
-                    rid=state.roundId,
-                    n1=str(number1)
+                    uid = userid,
+                    rid = state.roundId,
+                    n1 = str(number1),
+                    token = computedToken
                 ))
             if submitRsp.status == 200:
                 print('You submit number: ' + str(number1))
@@ -287,11 +325,10 @@ def main(roomId):
                 print('Error: ' + submitRsp.data.message)
                 time.sleep(1)
 
-
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser()
-    parser.add_argument('--room', type=int, help='Room ID', required=False)
+    parser.add_argument('--roomid', type=int, help='Room ID', required=False)
+    parser.add_argument('--userid', type=str, help='User ID', required=False)
+    parser.add_argument('--token', type=str, help='User token', required=False)
     args = parser.parse_args()
-
-    main(args.room)
+    main(args.roomid, args.userid, args.token)

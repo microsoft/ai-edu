@@ -61,20 +61,24 @@ class timestep(object):
         # 公式4
         self.s2 = Tanh().forward(self.h2)
 
-    def forward_sum(self):
-        # 公式5
+    def forward_sum(self, isLast, first_s2):
         self.s = self.s1 + self.s2
-        #if (isFirst or isLast):
         # 公式6
         self.z = np.dot(self.s, self.V) + self.bV
         # 公式7
         self.a = Softmax().forward(self.z)
 
-    def backward_sum(self, y):
+
+    def backward_sum(self, y, isFirst, isLast):
+        #if (isLast):
         self.dz = self.a - y
         self.dbV = np.sum(self.dz, axis=0, keepdims=True)
         # 公式11
         self.dV = np.dot(self.s.T, self.dz)
+#        else:
+#            self.dz = np.zeros_like(y)
+#            self.dbV = np.zeros_like(self.bV)
+#            self.dV = np.zeros_like(self.V)
 
     def backward_1(self, prev_s1, next_dh1, isFirst, isLast):
         if (isLast):
@@ -181,16 +185,31 @@ class net(object):
             self.ts_list[i].forward_2(next_s2, isLast)
         #end for
         # sum
+        first_s2 = self.ts_list[0].s2
         for i in range(0, self.ts):
-            self.ts_list[i].forward_sum()
-
-        #return self.ts_list[self.ts-1].a
-        return self.ts_list[0].a
+            if (i == self.ts - 1):
+                isLast = True
+            else:
+                isLast = False
+            #endif
+            self.ts_list[i].forward_sum(isLast, first_s2)
+        #endfor
+        return self.ts_list[self.ts-1].a
 
     def backward(self, Y):
         # sum
         for i in range(0, self.ts):
-            self.ts_list[i].backward_sum(Y)
+            if (i == 0):
+                isFirst = True
+                isLast = False
+            elif (i == self.ts-1):
+                isFirst = False
+                isLast = True
+            else:
+                isFirst = False
+                isLast = False
+            #endif
+            self.ts_list[i].backward_sum(Y, isFirst, isLast)
         # 1
         for i in range(self.ts-1, -1, -1):
             if (i == self.ts - 1):
@@ -252,11 +271,11 @@ class net(object):
             dW2 += self.ts_list[i].dW2
         #end for
         self.U1 = self.U1 - dU1 * self.hp.eta / self.batch
-        #self.bU1 = self.bU1 - dbU1 * self.hp.eta / self.batch
+        self.bU1 = self.bU1 - dbU1 * self.hp.eta / self.batch
         self.U2 = self.U2 - dU2 * self.hp.eta / self.batch
-        #self.bU2 = self.bU2 - dbU2 * self.hp.eta / self.batch
+        self.bU2 = self.bU2 - dbU2 * self.hp.eta / self.batch
         self.V  = self.V  - dV  * self.hp.eta / self.batch
-        #self.bV  = self.bV - dbV  * self.hp.eta / self.batch
+        self.bV  = self.bV - dbV  * self.hp.eta / self.batch
         self.W1 = self.W1 - dW1 * self.hp.eta / self.batch
         self.W2 = self.W2 - dW2 * self.hp.eta / self.batch
 
@@ -349,8 +368,8 @@ if __name__=='__main__':
     batch_size = 32
     num_step = 28
     num_input = dataReader.num_feature
-    num_hidden1 = 24
-    num_hidden2 = 24
+    num_hidden1 = 16
+    num_hidden2 = 16
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        

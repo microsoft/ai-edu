@@ -114,4 +114,5 @@
   - [北京航空航天大学2019春季](./E-Challenge/BeihangUniversity2019Spring)
   - [山东大学2019春季](./E-Challenge/ShandongUniversity2019Spring)
   - [Code Search](./E-Challenge/CodeSearch)
+  - [2019实践空间站](./E-Challenge/2019studentclub)
 

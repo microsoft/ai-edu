@@ -75,14 +75,14 @@ class WeightsBias_2_1(object):
     @staticmethod
     def InitialParameters(num_input, num_output, method):
         if method == InitialMethod.Zero:
-            W = np.zeros((num_input, num_output)).astype('float32')
+            W = np.zeros((num_input, num_output))
         elif method == InitialMethod.Normal:
-            W = np.random.normal(size=(num_input, num_output)).astype('float32')
+            W = np.random.normal(0, 1/np.sqrt(num_input), size=(num_input, num_output))
         elif method == InitialMethod.MSRA:
-            W = np.random.normal(0, np.sqrt(2/num_output), size=(num_input, num_output)).astype('float32')
+            W = np.random.normal(0, np.sqrt(2/num_output), size=(num_input, num_output))
         elif method == InitialMethod.Xavier:
             t = math.sqrt(6/(num_output+num_input))
-            W = np.random.uniform(-t, t, (num_input, num_output)).astype('float32')
+            W = np.random.uniform(-t, t, (num_input, num_output))
         # end if
-        B = np.zeros((1, num_output)).astype('float32')
+        B = np.zeros((1, num_output))
         return W, B

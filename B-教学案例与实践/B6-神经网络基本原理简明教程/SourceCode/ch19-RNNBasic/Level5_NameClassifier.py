@@ -264,9 +264,9 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.001 # 0.001 | 0.01
-    max_epoch = 1000 # 1000 | 1000
-    batch_size = 4 # 4 | 32
+    eta = 0.01 # 0.001 | 0.01
+    max_epoch = 100 # 1000 | 1000
+    batch_size = 16 # 4 | 32
     num_input = dataReader.num_feature
     num_hidden = 8 # 8 | 10
     num_output = dataReader.num_category
@@ -276,9 +276,6 @@ if __name__=='__main__':
         dataReader.max_step, num_input, num_hidden, num_output, 
         OutputType.LastStep, NetType.MultipleClassifier)
     n = net(hp, model)
-    
-    #n.load_parameters()
-    
     n.train(dataReader, checkpoint=1)
 
     # last 

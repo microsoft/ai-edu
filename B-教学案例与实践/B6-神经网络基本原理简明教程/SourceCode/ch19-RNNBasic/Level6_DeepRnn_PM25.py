@@ -330,7 +330,7 @@ if __name__=='__main__':
     num_step = 48
     dataReader = load_data(net_type, num_step)
     eta = 0.1 #0.1
-    max_epoch = 200 # 100
+    max_epoch = 100 # 100
     batch_size = 64 #64
     num_input = dataReader.num_feature
     num_hidden1 = 3
@@ -346,8 +346,7 @@ if __name__=='__main__':
         net_type)
 
     n = net(hp, model)
-    n.load_parameters(ParameterType.Best)
-    #n.train(dataReader, checkpoint=1)
+    n.train(dataReader, checkpoint=1)
     pred_steps = [8,4,2,1]
     for i in range(4):
         test(n, dataReader, num_step, pred_steps[i], 1050, 1150)

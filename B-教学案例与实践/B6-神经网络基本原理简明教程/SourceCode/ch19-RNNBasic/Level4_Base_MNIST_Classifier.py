@@ -22,9 +22,9 @@ if __name__=='__main__':
     output_type = OutputType.LastStep
     num_step = 28
     dataReader = load_data()
-    eta = 0.005 #0.1
-    max_epoch = 20 # 100
-    batch_size = 32 #64
+    eta = 0.01 #0.01
+    max_epoch = 10 # 10
+    batch_size = 32 # 32
     num_input = dataReader.num_feature
     num_hidden = 32
     num_output = dataReader.num_category
@@ -35,7 +35,8 @@ if __name__=='__main__':
         output_type, net_type)
     n = net(hp, model)
 
-    #n.load_parameters(ParameterType.Best)
-    n.train(dataReader, checkpoint=0.29)
+    n.train(dataReader, checkpoint=0.5)
     n.loss_trace.ShowLossHistory(hp.toString(), XCoordinate.Iteration)
+    n.test(dataReader)
+    n.load_parameters(ParameterType.Best)
     n.test(dataReader)

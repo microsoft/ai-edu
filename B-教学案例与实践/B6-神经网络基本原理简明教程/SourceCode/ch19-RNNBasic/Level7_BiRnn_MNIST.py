@@ -28,57 +28,57 @@ def load_data():
     return dataReader
 
 class timestep(object):
-    def forward_1(self, x, U1, bU1, U2, bU2, V, bV, W1, W2, prev_s1, isFirst):
-        self.x = x
+    def forward_1(self, x1, U1, bU1, W1, prev_s1, isFirst):
+        self.x1 = x1
         self.U1 = U1
-        self.U2 = U2
-        self.V = V
         self.bU1 = bU1
-        self.bU2 = bU2
-        self.bV = bV
         self.W1 = W1
-        self.W2 = W2
 
         if (isFirst):
             # 公式1
-            self.h1 = np.dot(x, U1) + self.bU1
+            self.h1 = np.dot(x1, U1) + self.bU1
         else:
             # 公式1
-            self.h1 = np.dot(x, U1) + np.dot(prev_s1, W1)  + self.bU1
+            self.h1 = np.dot(x1, U1) + np.dot(prev_s1, W1)  + self.bU1
         #endif
         # 公式2
         self.s1 = Tanh().forward(self.h1)
 
-    def forward_2(self, next_s2, isLast):
-        # backward
-        if (isLast):
+    def forward_2(self, x2, U2, bU2, W2, prev_s2, isFirst):
+        self.x2 = x2
+        self.U2 = U2
+        self.bU2 = bU2
+        self.W2 = W2
+        if (isFirst):
             # 公式3
-            self.h2 = np.dot(self.x, self.U2) + self.bU2
+            self.h2 = np.dot(self.x2, self.U2) + self.bU2
         else:
             # 公式3
-            self.h2 = np.dot(self.x, self.U2) + np.dot(next_s2, self.W2) + self.bU2
+            self.h2 = np.dot(self.x2, self.U2) + np.dot(prev_s2, self.W2) + self.bU2
         #endif
         # 公式4
         self.s2 = Tanh().forward(self.h2)
 
-    def forward_sum(self, isLast, first_s2):
+    def forward_sum(self, V, bV, isLast):
+        self.V = V
+        self.bV = bV
         self.s = self.s1 + self.s2
-        # 公式6
-        self.z = np.dot(self.s, self.V) + self.bV
-        # 公式7
-        self.a = Softmax().forward(self.z)
-
+        if (isLast):
+            # 公式6
+            self.z = np.dot(self.s, self.V) + self.bV
+            # 公式7
+            self.a = Softmax().forward(self.z)
 
     def backward_sum(self, y, isFirst, isLast):
-        #if (isLast):
-        self.dz = self.a - y
+
+        if (isLast):
+            self.dz = self.a - y
+        else:
+            self.dz = np.zeros_like(y)
+#        self.dz = self.a - y
         self.dbV = np.sum(self.dz, axis=0, keepdims=True)
         # 公式11
         self.dV = np.dot(self.s.T, self.dz)
-#        else:
-#            self.dz = np.zeros_like(y)
-#            self.dbV = np.zeros_like(self.bV)
-#            self.dV = np.zeros_like(self.V)
 
     def backward_1(self, prev_s1, next_dh1, isFirst, isLast):
         if (isLast):
@@ -91,7 +91,7 @@ class timestep(object):
         self.dbU1 = np.sum(self.dh1, axis=0, keepdims=True)
 
         # 公式12
-        self.dU1 = np.dot(self.x.T, self.dh1)
+        self.dU1 = np.dot(self.x1.T, self.dh1)
         
         if (isFirst):
             # 公式14
@@ -101,25 +101,25 @@ class timestep(object):
             self.dW1 = np.dot(prev_s1.T, self.dh1)
         # end if
 
-    def backward_2(self, next_s2, prev_dh2, isFirst, isLast):
-        if (isFirst):
-            # 公式16
+    def backward_2(self, prev_s2, next_dh2, isFirst, isLast):
+        if (isLast):
+            # 公式9
             self.dh2 = np.dot(self.dz, self.V.T) * Tanh().backward(self.s2)
         else:
-            # 公式17
-            self.dh2 = (np.dot(self.dz, self.V.T) + np.dot(prev_dh2, self.W2.T)) * Tanh().backward(self.s2)
+            # 公式10
+            self.dh2 = (np.dot(self.dz, self.V.T) + np.dot(next_dh2, self.W2.T)) * Tanh().backward(self.s2)
 
         self.dbU2 = np.sum(self.dh2, axis=0, keepdims=True)
-        
-        # 公式18
-        self.dU2 = np.dot(self.x.T, self.dh2)
 
-        if (isLast):
-            # 公式20
+        # 公式12
+        self.dU2 = np.dot(self.x2.T, self.dh2)
+        
+        if (isFirst):
+            # 公式14
             self.dW2 = np.zeros_like(self.W2)
         else:
-            # 公式19
-            self.dW2 = np.dot(next_s2.T, self.dh2)
+            # 公式13
+            self.dW2 = np.dot(prev_s2.T, self.dh2)
         # end if
 
 class net(object):
@@ -169,30 +169,27 @@ class net(object):
                 prev_s1 = self.ts_list[i-1].s1
                 isFirst = False
             #endif
-            self.ts_list[i].forward_1(X[:,i], 
-                self.U1, self.bU1, self.U2, self.bU2, self.V, self.bV, self.W1, self.W2, 
-                prev_s1, isFirst)
+            self.ts_list[i].forward_1(X[:,i], self.U1, self.bU1, self.W1, prev_s1, isFirst)
         #endfor
         # 2
-        for i in range(self.ts-1, -1, -1):
-            if (i == self.ts - 1):
-                isLast = True
-                next_s2 = None
+        for i in range(0, self.ts):
+            if (i == 0):
+                isFirst = True
+                prev_s2 = None
             else:
-                isLast = False
-                next_s2 = self.ts_list[i+1].s2
+                isFirst = False
+                prev_s2 = self.ts_list[i-1].s2
             #endif
-            self.ts_list[i].forward_2(next_s2, isLast)
+            self.ts_list[i].forward_2(X[:,self.ts-i-1], self.U2, self.bU2, self.W2, prev_s2, isFirst)
         #end for
         # sum
-        first_s2 = self.ts_list[0].s2
         for i in range(0, self.ts):
             if (i == self.ts - 1):
                 isLast = True
             else:
                 isLast = False
             #endif
-            self.ts_list[i].forward_sum(isLast, first_s2)
+            self.ts_list[i].forward_sum(self.V, self.bV, isLast)
         #endfor
         return self.ts_list[self.ts-1].a
 
@@ -231,24 +228,25 @@ class net(object):
             self.ts_list[i].backward_1(prev_s1, next_dh1, isFirst, isLast)
         #end for
         #2
-        for i in range(0, self.ts):
-            if (i == 0):
-                isFirst = True
-                isLast = False
-                prev_dh2 = None
-                next_s2 = self.ts_list[i+1].s2
-            elif (i == self.ts - 1):
-                isFirst = False
+        for i in range(self.ts-1, -1, -1):
+            if (i == self.ts - 1):
+                next_dh2 = None
+                prev_s2 = self.ts_list[i-1].s2
                 isLast = True
-                prev_dh2 = self.ts_list[i-1].dh2
-                next_s2 = None
-            else:
                 isFirst = False
+            elif (i == 0):
+                next_dh2 = self.ts_list[i+1].dh2
+                prev_s2 = None
                 isLast = False
-                prev_dh2 = self.ts_list[i-1].dh2
-                next_s2 = self.ts_list[i+1].s2
+                isFirst = True
+            else:
+                next_dh2 = self.ts_list[i+1].dh2
+                prev_s2 = self.ts_list[i-1].s2
+                isLast = False
+                isFirst = False
             #endif
-            self.ts_list[i].backward_2(next_s2, prev_dh2, isFirst, isLast)
+            self.ts_list[i].backward_2(prev_s2, next_dh2, isFirst, isLast)
+        #end for
         #end for
 
     def update(self):
@@ -379,9 +377,7 @@ if __name__=='__main__':
         num_step, num_input, num_hidden1, num_hidden2, num_output, 
         NetType.MultipleClassifier)
     n = net(hp, model)
-    #n.load_parameters(ParameterType.Last)
-    n.train(dataReader, checkpoint=0.29)
-
+    n.train(dataReader, checkpoint=0.5)
     n.test(dataReader)# last
     n.load_parameters(ParameterType.Best)
     n.test(dataReader)# best

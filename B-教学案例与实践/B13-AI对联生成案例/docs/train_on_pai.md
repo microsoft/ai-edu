@@ -99,9 +99,9 @@ data \
 
 ### 新建文件
 要提交训练任务，我们需要新建如下几个文件：
-* [train.sh](/src/pai_config/train.sh)
-* [run_samples.py](/src/pai_config/run_samples.py)
-* [new_job.pai.json](/src/pai_config/new_job.pai.json)
+* [train.sh](../src/pai_config/train.sh)
+* [run_samples.py](../src/pai_config/run_samples.py)
+* [new_job.pai.json](../src/pai_config/new_job.pai.json)
 
 
 

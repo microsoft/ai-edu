@@ -9,10 +9,10 @@ class CoupletReader(object):
     def __init__(self, train_dir, test_dir):
         self.train_dir = os.path.abspath(train_dir)
         self.test_dir = os.path.abspath(test_dir)
-        self.train_up = self.readtxt(os.path.join(self.train_dir, "in.txt"))
-        self.train_down = self.readtxt(os.path.join(self.train_dir, "out.txt"))
-        self.test_up = self.readtxt(os.path.join(self.test_dir, "in.txt"))
-        self.test_down = self.readtxt(os.path.join(self.test_dir, "out.txt"))
+        self.train_up = self.ReadTxt(os.path.join(self.train_dir, "in.txt"))
+        self.train_down = self.ReadTxt(os.path.join(self.train_dir, "out.txt"))
+        self.test_up = self.ReadTxt(os.path.join(self.test_dir, "in.txt"))
+        self.test_down = self.ReadTxt(os.path.join(self.test_dir, "out.txt"))
 
     def ReadTxt(self, filename, encoding='utf-8'):
         lines=[]
@@ -23,7 +23,7 @@ class CoupletReader(object):
         return lines
 
 
-class PoetryReader(object):
+class PoetryReGen(object):
     def __init__(self, poetry_file):
         self.poetry_file = poetry_file
 
@@ -34,8 +34,11 @@ class PoetryReader(object):
         self.word2ix = content['word2ix'].item()
         self.vocabsize = len(self.word2ix)
 
-    def DataFilter(self, outfile):
-        filter = []
+    def DataFilter(self):
+        filter_5 = []
+        filter_7 = []
+        filter_others = []
+        print("Start reading data ...")
         for i in range(self.data.shape[0]):
             line = []
             for j in range(self.data.shape[1]):
@@ -45,17 +48,27 @@ class PoetryReader(object):
                     continue
                 line.append(idx)
                 if (w == u'。'):
-                    #tmp = []
-                    #for l in line:
-                    #    tmp.append(self.ix2word[l])
-                    #print(tmp)
                     if (len(line) is 12):
-                        filter.append(line)
+                        filter_5.append(line)
+                    elif (len(line) is 16):
+                        filter_7.append(line)
+                    else:
+                        filter_others.append(line)
                     line = []
-        print(len(filter))
-        filter = np.asarray(filter)
-        print(filter.shape)
+        filter_5 = np.asarray(filter_5)
+        filter_7 = np.asarray(filter_7)
+        filter_others = np.asarray(filter_others)
 
+        print("shape of filter_5 file: ", filter_5.shape)
+        print("shape of filter_7 file: ", filter_7.shape)
+        print("shape of filter_others file: ", filter_others.shape)
+
+        print("start writing to file ...")
+        np.savez_compressed("filter_5.npz", data=filter_5)
+        np.savez_compressed("filter_7.npz", data=filter_7)
+        np.savez_compressed("filter_others.npz", data=filter_others)
+        np.savez_compressed("index.npz", ix2word=self.ix2word, word2ix=self.word2ix)
+        print("Done.")
 
 
     def DataAnalysis(self):
@@ -71,8 +84,6 @@ class PoetryReader(object):
 
 
 
-
-
 if __name__=='__main__':
     # test couplet data
     # train_dir = "coupletdata/train"
@@ -82,7 +93,7 @@ if __name__=='__main__':
 
     # test tang data
     tang_data = "tang.npz"
-    pr = PoetryReader(tang_data)
+    pr = PoetryReGen(tang_data)
     pr.ReadData()
     pr.DataFilter()
-    pr.DataAnalysis()
+    # pr.DataAnalysis()

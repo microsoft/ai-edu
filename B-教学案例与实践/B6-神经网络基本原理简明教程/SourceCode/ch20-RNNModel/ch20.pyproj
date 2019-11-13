@@ -22,15 +22,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Level1_BinaryNumberMinus.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level2_LSTM.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Level3_PoemGenerator.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Level1_LSTM_BinaryNumberMinus.py" />
+    <Compile Include="Level2_GRU_BinaryNumberMinus.py" />
+    <Compile Include="Level3_LSTM.py" />
+    <Compile Include="Level4_PoemGenerator.py" />
     <Compile Include="MiniFramework\ActivationLayer.py" />
     <Compile Include="MiniFramework\ClassificationLayer.py" />
     <Compile Include="MiniFramework\CoupletDataReader.py">
@@ -38,6 +33,9 @@
     </Compile>
     <Compile Include="MiniFramework\DataReader_2_0.py" />
     <Compile Include="MiniFramework\EnumDef_6_0.py" />
+    <Compile Include="MiniFramework\GRUCell.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MiniFramework\Layer.py" />
     <Compile Include="MiniFramework\LossFunction_1_1.py" />
     <Compile Include="MiniFramework\LSTMCell_1_1.py">

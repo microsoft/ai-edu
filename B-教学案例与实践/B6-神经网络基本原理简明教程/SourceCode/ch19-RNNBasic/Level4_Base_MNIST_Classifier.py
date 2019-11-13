@@ -22,9 +22,9 @@ if __name__=='__main__':
     output_type = OutputType.LastStep
     num_step = 28
     dataReader = load_data()
-    eta = 0.01 #0.01
-    max_epoch = 10 # 10
-    batch_size = 32 # 32
+    eta = 0.005
+    max_epoch = 100
+    batch_size = 128
     num_input = dataReader.num_feature
     num_hidden = 32
     num_output = dataReader.num_category

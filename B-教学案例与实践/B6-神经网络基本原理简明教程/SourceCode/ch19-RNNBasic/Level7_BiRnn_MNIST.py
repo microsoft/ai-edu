@@ -70,7 +70,6 @@ class timestep(object):
             self.a = Softmax().forward(self.z)
 
     def backward_sum(self, y, isFirst, isLast):
-
         if (isLast):
             self.dz = self.a - y
         else:
@@ -362,8 +361,8 @@ class net(object):
 if __name__=='__main__':
     dataReader = load_data()
     eta = 0.01
-    max_epoch = 10
-    batch_size = 32
+    max_epoch = 100
+    batch_size = 128
     num_step = 28
     num_input = dataReader.num_feature
     num_hidden1 = 16

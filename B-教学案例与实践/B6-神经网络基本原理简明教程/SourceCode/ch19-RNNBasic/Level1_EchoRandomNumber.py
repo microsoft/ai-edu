@@ -98,9 +98,9 @@ class net(object):
         num_output = 1
         max_epoch = 100
         eta = 0.1
-        self.U = np.random.random((num_input,num_hidden))*2-1
-        self.W = np.random.random((num_hidden,num_hidden))*2-1
-        self.V = np.random.random((num_hidden,num_output))*2-1
+        self.U = np.random.normal(size=(num_input,num_hidden))
+        self.W = np.random.normal(size=(num_hidden,num_hidden))
+        self.V = np.random.normal(size=(num_hidden,num_output))
         self.bh = np.zeros((1,num_hidden))
         self.bz = np.zeros((1,num_output))
         max_iteration = dr.num_train

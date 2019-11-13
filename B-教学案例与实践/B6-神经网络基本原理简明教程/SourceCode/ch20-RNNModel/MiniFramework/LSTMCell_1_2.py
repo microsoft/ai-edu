@@ -1,8 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
-import numpy as np
-from MiniFramework.Layer import *
-from MiniFramework.ActivationLayer import *
 
 """
 This version is 1.2
@@ -105,7 +102,7 @@ class LinearCell_1_2(object):
         self.batch_size = self.x.shape[0]
         self.V = V
         self.b = b if self.bias else np.zeros((self.output_size))
-        self.z = np.dot(x, V) + b
+        self.z = np.dot(x, V) + self.b
         if self.activator:
             self.a = self.activator.forward(self.z)
 

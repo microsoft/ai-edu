@@ -55,7 +55,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 近年来，深度神经网络学习的发展为机器翻译提供了新的思路。通常情况下，神经机器翻译使用编码器-解码器框架。编码阶段将整个源序列编码成一个（或一组）向量，解码阶段通过最大化预测序列概率，从中解码出整个目标序列，完成翻译过程。
 
-![编码解码过程](./images/encode-decode.png "编码解码过程")
+![编码解码过程](./docs/md_resources/encode-decode.png "编码解码过程")
 
 编码器、解码器通常使用 RNN、LSTM 来实现，也有的用 CNN 来实现，达到了比较好的性能和结果。
 

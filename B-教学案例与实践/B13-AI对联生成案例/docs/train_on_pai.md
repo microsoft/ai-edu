@@ -6,6 +6,8 @@
 > 2. 在组织内共享或重用 AI 资产（如模型、数据、运行环境等) 。
 > 3. 构建易于 IT 运维管理的 AI 计算平台。
 > 4. 在同一个环境中完成模型训练过程。
+> 
+> [了解更多](https://github.com/microsoft/pai/blob/master/README_zh_CN.md#ai-%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0openpai-)
 
 
 ## 前提准备
@@ -102,7 +104,6 @@ data \
 * [train.sh](../src/pai_config/train.sh)
 * [run_samples.py](../src/pai_config/run_samples.py)
 * [new_job.pai.json](../src/pai_config/new_job.pai.json)
-
 
 
 以上文件（除`new_job.pai.json`外）会随任务的提交自动上传至服务器（需要配置`.vscode/settings.json`，后续会提到），同时也会自动下载到Docker环境中，因此我们可以在Docker中访问到它们，这里面包含了训练任务的脚本。

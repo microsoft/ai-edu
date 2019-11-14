@@ -93,9 +93,9 @@ class net(object):
         print(self.subfolder)
 
         if (self.load_parameters(ParameterType.Init) == False):
-            self.U,self.bu = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden, InitialMethod.Xavier)
-            self.V,self.bv = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_output, InitialMethod.Xavier)
-            self.W,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Xavier)
+            self.U,self.bu = WeightsBias_2_1.InitialParameters(self.hp.num_input, self.hp.num_hidden, InitialMethod.Normal)
+            self.V,self.bv = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_output, InitialMethod.Normal)
+            self.W,_ = WeightsBias_2_1.InitialParameters(self.hp.num_hidden, self.hp.num_hidden, InitialMethod.Normal)
             self.save_parameters(ParameterType.Init)
         #end if
 
@@ -243,9 +243,7 @@ class net(object):
             #endif
         #end for
         self.save_parameters(ParameterType.Last)
-        self.loss_trace.ShowLossHistory(
-            self.hp.toString(),
-            XCoordinate.Epoch)
+        #self.loss_trace.ShowLossHistory(self.hp.toString(), XCoordinate.Epoch)
 
 
     def test(self, dataReader):

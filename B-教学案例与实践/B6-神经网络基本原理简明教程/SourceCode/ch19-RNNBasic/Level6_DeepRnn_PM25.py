@@ -65,47 +65,47 @@ class timestep(object):
     # for the last cell, next_dh should be zero
     def backward(self, y, prev_s1, prev_s2, next_dh1, next_dh2, isFirst, isLast):
         if (isLast):
-            # 公式12
+            # 公式10
             self.dz = (self.a - y)
         else:
-            # 公式16
+            # 公式14
             self.dz = np.zeros_like(y)
         # end if
 
         if (isLast):
-            # 公式13
+            # 公式12
             self.dh2 = np.dot(self.dz, self.V.T) * Tanh().backward(self.s2)
         else:
-            # 公式17
+            # 公式15
             self.dh2 = np.dot(next_dh2, self.W2.T) * Tanh().backward(self.s2)
         # end if
 
         if (isLast):
-            # 公式14
+            # 公式11
             self.dV = np.dot(self.s2.T, self.dz)
         else:
-            # 公式18
+            # 公式16
             self.dV = np.zeros_like(self.V)
         
-        # 公式10
+        # 公式21
         self.dQ = np.dot(self.s1.T, self.dh2)
         
         if (isLast):
-            # 公式15
+            # 公式13
             self.dh1 = np.dot(self.dh2, self.Q.T) * Tanh().backward(self.s1)
         else:
-            # 公式19
+            # 公式17
             self.dh1 = np.dot(next_dh1, self.W1.T) * Tanh().backward(self.s1)
 
-        # 公式11
+        # 公式22
         self.dU = np.dot(self.x.T, self.dh1)
         
         if (isFirst):
-            # 公式20
+            # 公式18
             self.dW1 = np.zeros_like(self.W1)
             self.dW2 = np.zeros_like(self.W2)
         else:
-            # 公式21,22
+            # 公式19,20
             self.dW1 = np.dot(prev_s1.T, self.dh1)
             self.dW2 = np.dot(prev_s2.T, self.dh2)
         # end if
@@ -327,13 +327,13 @@ def set_predicated_value(X, A, num_step, predicated_step):
 
 if __name__=='__main__':
     net_type = NetType.Fitting
-    num_step = 48
+    num_step = 24
     dataReader = load_data(net_type, num_step)
-    eta = 0.1 #0.1
-    max_epoch = 200 # 100
+    eta = 0.05 # 0.1
+    max_epoch = 100 # 100
     batch_size = 64 #64
     num_input = dataReader.num_feature
-    num_hidden1 = 3
+    num_hidden1 = 2
     num_hidden2 = 2
     num_output = dataReader.num_category
 
@@ -346,8 +346,14 @@ if __name__=='__main__':
         net_type)
 
     n = net(hp, model)
-    n.load_parameters(ParameterType.Best)
     #n.train(dataReader, checkpoint=1)
+
+    n.load_parameters(ParameterType.Last)
+    pred_steps = [8,4,2,1]
+    for i in range(4):
+        test(n, dataReader, num_step, pred_steps[i], 1050, 1150)
+
+    n.load_parameters(ParameterType.Best)
     pred_steps = [8,4,2,1]
     for i in range(4):
         test(n, dataReader, num_step, pred_steps[i], 1050, 1150)

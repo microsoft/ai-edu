@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Level7_BiRnn_Name.py</StartupFile>
+    <StartupFile>Level7_BiRnn_MNIST.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -32,10 +32,8 @@
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
     <Compile Include="Level3_Base.py" />
-    <Compile Include="Level4_Base_PM25_Classifier.py" />
-    <Compile Include="Level4_Base_MNIST.py" />
+    <Compile Include="Level7_Base_MNIST.py" />
     <Compile Include="Level4_Base_PM25_Fitting.py" />
-    <Compile Include="Level7_BiRnn_Name.py" />
     <Compile Include="Level7_BiRnn_MNIST.py" />
     <Compile Include="Level6_DeepRnn_PM25.py" />
     <Compile Include="Level5_NameClassifier.py" />

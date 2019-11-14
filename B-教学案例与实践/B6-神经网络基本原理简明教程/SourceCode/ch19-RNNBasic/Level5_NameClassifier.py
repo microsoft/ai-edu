@@ -163,12 +163,12 @@ class net(object):
             return False
 
     def save_parameters(self):
-        print("save parameters...")
+        print("save best parameters...")
         self.result_file_name = str.format("{0}/result.npz", self.subfolder)
         np.savez(self.result_file_name, U=self.U, V=self.V, W=self.W)
 
     def load_parameters(self):
-        print("load parameters...")
+        print("load best parameters...")
         self.result_file_name = str.format("{0}/result.npz", self.subfolder)
         data = np.load(self.result_file_name)
         self.U = data["U"]
@@ -190,7 +190,6 @@ class net(object):
         min_loss = 10
         total_iter = 0
         for epoch in range(self.hp.max_epoch):
-            #self.hp.eta = self.lr_decay(epoch)
             dataReader.Shuffle()
             while(True):
                 # get data
@@ -216,14 +215,6 @@ class net(object):
             #endif
         #end for
         self.loss_trace.ShowLossHistory("Loss and Accuracy", XCoordinate.Epoch)
-
-    def lr_decay(self, epoch):
-        if (epoch < 50):
-            return 0.1
-        elif (epoch < 100):
-            return 0.05
-        else:
-            return 0.01
 
     def test(self, dataReader):
         confusion_matrix = np.zeros((dataReader.num_category, dataReader.num_category))
@@ -264,11 +255,11 @@ class net(object):
 
 if __name__=='__main__':
     dataReader = load_data()
-    eta = 0.001 # 0.001 | 0.01
-    max_epoch = 1000 # 1000 | 1000
-    batch_size = 4 # 4 | 32
+    eta = 0.02 # 0.02
+    max_epoch = 100 # 100
+    batch_size = 8 # 8
     num_input = dataReader.num_feature
-    num_hidden = 8 # 8 | 10
+    num_hidden = 16 # 16
     num_output = dataReader.num_category
     model = str.format("Level5_{0}_{1}_{2}_{3}_{4}_{5}", max_epoch, batch_size, num_input, num_hidden, num_output, eta)
     hp = HyperParameters_4_3(
@@ -276,9 +267,6 @@ if __name__=='__main__':
         dataReader.max_step, num_input, num_hidden, num_output, 
         OutputType.LastStep, NetType.MultipleClassifier)
     n = net(hp, model)
-    
-    #n.load_parameters()
-    
     n.train(dataReader, checkpoint=1)
 
     # last 

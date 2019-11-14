@@ -50,11 +50,11 @@ def set_predicated_value(X, A, num_step, predicated_step):
 if __name__=='__main__':
     net_type = NetType.Fitting
     output_type = OutputType.LastStep
-    num_step = 48 # 72
+    num_step = 24 # 24
     dataReader = load_data(net_type, num_step)
-    eta = 0.1 #0.1
-    max_epoch = 200 # 100
-    batch_size = 64 #64
+    eta = 0.05 # 0.05
+    max_epoch = 100 # 100
+    batch_size = 64 # 64
     num_input = dataReader.num_feature
     num_hidden = 4  # 4
     num_output = dataReader.num_category
@@ -64,8 +64,15 @@ if __name__=='__main__':
         num_step, num_input, num_hidden, num_output,
         output_type, net_type)
     n = net(hp, model)
+
     n.train(dataReader, checkpoint=1)
+    n.loss_trace.ShowLossHistory(hp.toString(), XCoordinate.Iteration)
     #n.load_parameters(ParameterType.Last)
+    pred_steps = [8,4,2,1]
+    for i in range(4):
+        test(n, dataReader, num_step, pred_steps[i], 1050, 1150)
+
+    n.load_parameters(ParameterType.Best)
     pred_steps = [8,4,2,1]
     for i in range(4):
         test(n, dataReader, num_step, pred_steps[i], 1050, 1150)

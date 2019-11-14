@@ -39,7 +39,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 扫描如下二维码即可打开小程序体验：
 
-![联景联情](./src/imgs/qrcode.jpg "扫码使用小程序")
+![联景联情](./docs/md_resources/qrcode.jpg "扫码使用小程序")
 
 在此案例中，我们将重点介绍对联生成的实现过程。
 
@@ -100,8 +100,8 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 在开始之前，请确保安装好以下依赖：
 
-1. 训练所需 python packages 在文件 [train_requirements.txt](./src/training/train_requirerments.txt) 中。
-2. 服务所需 python packages 在文件 [conda_requirements.txt](./src/service/conda_requirements.txt) 中。
+1. 训练所需 python packages 在文件 [train_requirements.txt](./code/train/train_requirerments.txt) 中。
+2. 服务所需 python packages 在文件 [conda_requirements.txt](./code/service/conda_requirements.txt) 中。
 
 安装示例：
 ```
@@ -231,7 +231,7 @@ pip install -r train_reqquirements.txt
 
 1. 新建`usr_dir`目录。
 
-2. 在[merge_vocab.py](./src/training/usr_dir/merge_vocab.py) 文件中编写下联生成模型的问题定义。
+2. 在[merge_vocab.py](./code/train/usr_dir/merge_vocab.py) 文件中编写下联生成模型的问题定义。
 
     修改如下参数：
     1. `SRC_TRAIN_DATA` 为训练集上联数据文件

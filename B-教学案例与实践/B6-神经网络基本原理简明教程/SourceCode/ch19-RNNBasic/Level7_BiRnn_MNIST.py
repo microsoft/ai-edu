@@ -59,7 +59,7 @@ class timestep(object):
         # 公式4
         self.s2 = Tanh().forward(self.h2)
 
-    def forward_sum(self, V, bV, isLast):
+    def forward_3(self, V, bV, isLast):
         self.V = V
         self.bV = bV
         self.s = self.s1 + self.s2
@@ -69,7 +69,7 @@ class timestep(object):
             # 公式7
             self.a = Softmax().forward(self.z)
 
-    def backward_sum(self, y, isFirst, isLast):
+    def backward_3(self, y, isFirst, isLast):
         if (isLast):
             self.dz = self.a - y
         else:
@@ -188,7 +188,7 @@ class net(object):
             else:
                 isLast = False
             #endif
-            self.ts_list[i].forward_sum(self.V, self.bV, isLast)
+            self.ts_list[i].forward_3(self.V, self.bV, isLast)
         #endfor
         return self.ts_list[self.ts-1].a
 
@@ -205,7 +205,7 @@ class net(object):
                 isFirst = False
                 isLast = False
             #endif
-            self.ts_list[i].backward_sum(Y, isFirst, isLast)
+            self.ts_list[i].backward_3(Y, isFirst, isLast)
         # 1
         for i in range(self.ts-1, -1, -1):
             if (i == self.ts - 1):
@@ -319,6 +319,16 @@ class net(object):
         loss,acc = self.loss_fun.CheckLoss(a, Y)
         return loss, acc
 
+    def learning_rate_decay(self, epoch):
+        if (epoch < 30):
+            return self.hp.eta
+        elif (epoch < 50):
+            return 0.008
+        elif (epoch < 70):
+            return 0.005
+        else:
+            return 0.002
+
     def train(self, dataReader, checkpoint=0.1):
         self.dataReader = dataReader
         min_loss = 10
@@ -326,6 +336,7 @@ class net(object):
         checkpoint_iteration = (int)(math.ceil(max_iteration * checkpoint))
         for epoch in range(self.hp.max_epoch):
             dataReader.Shuffle()
+            self.hp.eta = self.learning_rate_decay(epoch)
             for iteration in range(max_iteration):
                 # get data
                 batch_x, batch_y = dataReader.GetBatchTrainSamples(self.hp.batch_size, iteration)
@@ -365,8 +376,8 @@ if __name__=='__main__':
     batch_size = 128
     num_step = 28
     num_input = dataReader.num_feature
-    num_hidden1 = 16
-    num_hidden2 = 16
+    num_hidden1 = 20
+    num_hidden2 = 20
     num_output = dataReader.num_category
     model = str.format(
         "Level7_BiRNN_{0}_{1}_{2}_{3}_{4}_{5}_{6}",                        

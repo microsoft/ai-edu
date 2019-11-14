@@ -32,7 +32,7 @@
     </Compile>
     <Compile Include="Level2_BinaryNumberMinus.py" />
     <Compile Include="Level3_Base.py" />
-    <Compile Include="Level4_Base_MNIST_Classifier.py" />
+    <Compile Include="Level7_Base_MNIST.py" />
     <Compile Include="Level4_Base_PM25_Fitting.py" />
     <Compile Include="Level7_BiRnn_MNIST.py" />
     <Compile Include="Level6_DeepRnn_PM25.py" />

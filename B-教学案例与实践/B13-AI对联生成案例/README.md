@@ -297,6 +297,8 @@ t2t-datagen \
 
 ## 模型训练
 
+模型训练的代码请参考[train.sh](./code/train/train.sh)。
+
 有了处理好的数据，我们就可以进行训练了。你可以选择**本地训练**或[在OpenPAI上训练](docs/train_on_pai.md)。
 
 下面我们介绍一下如何在本地训练。
@@ -388,6 +390,8 @@ t2t-trainer \
 在这一阶段，我们将使用上述训练得到的模型文件进行模型推理，利用上联生成下联。
 
 ### 新建推理脚本文件`inference.sh`
+
+点击查看[inference.sh](./code/train/inference.sh)的代码。
 
 在推理之前，需要注意如下几个目录：
 - `TRAIN_DIR`：上述的训练模型文件存放的目录。

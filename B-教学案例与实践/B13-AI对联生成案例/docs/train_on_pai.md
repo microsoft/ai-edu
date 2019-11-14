@@ -101,9 +101,9 @@ data \
 
 ### 新建文件
 要提交训练任务，我们需要新建如下几个文件：
-* [train.sh](../src/pai_config/train.sh)
-* [run_samples.py](../src/pai_config/run_samples.py)
-* [new_job.pai.json](../src/pai_config/new_job.pai.json)
+* [train.sh](../code/train_on_pai/train.sh)
+* [run_samples.py](../code/train_on_pai/run_samples.py)
+* [new_job.pai.json](../code/train_on_pai/new_job.pai.json)
 
 
 以上文件（除`new_job.pai.json`外）会随任务的提交自动上传至服务器（需要配置`.vscode/settings.json`，后续会提到），同时也会自动下载到Docker环境中，因此我们可以在Docker中访问到它们，这里面包含了训练任务的脚本。

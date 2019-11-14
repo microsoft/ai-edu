@@ -142,7 +142,11 @@
 
 # <font size=5>AI 前沿精选</font> 
 [大规模利用单语数据提升神经机器翻译](https://www.msra.cn/zh-cn/news/features/emnlp-2019-exploiting-monolingual-data-at-scale-for-nmt) 
+
 [基于层次化注意力图网络和多视角学习的商品推荐](https://www.msra.cn/zh-cn/news/features/emnlp-2019-rmg)
+
 [AI换脸鉴别率超99.6%，微软用技术应对虚假信息](https://www.msra.cn/zh-cn/news/features/ai-detect-fake-face)
+
 [微软亚洲研究院精选论文解读](https://www.msra.cn/zh-cn/news/features/emnlp-2019)
+
 [查看更多...](https://www.msra.cn/zh-cn/news?wd&content-type=posts)

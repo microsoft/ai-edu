@@ -56,14 +56,14 @@
 
 ## 提交训练任务
 
-OpenPAI的每一个任务是通过创建一个独立的Docker环境进行的，Docker的文件系统与服务器的文件系统是隔离的，所以在Docker中无法通过相对路径或绝对路径直接访问到我们需要训练的数据。因此，在提交任务之前，我们需要先将训练数据上传至服务器，以便提交任务后能够将数据下载到Docker环境中训练，训练完成后，我们也需要将数据导出至服务器，以便我们下载使用训练数据。具体流程可以参考下图。
+OpenPAI的每一个任务是通过创建一个独立的Docker环境进行的，Docker的文件系统与服务器的文件系统是隔离的，所以在Docker中无法通过相对路径或绝对路径直接访问到我们需要训练的数据。我们可以通过把共享文件夹挂载到Docker中，从而实现对数据的访问。具体流程可以参考下图。
 
-![](./md_resources/openPAIFramework.jpg)
+![](./md_resources/openPaiShareDirFramework.jpg)
 
 
-### 上传数据
+### 共享文件夹
 
-为了上传数据方便，我们将`usr_dir`和`data_dir`合并为一个文件夹，目录结构如下。
+为了方便起见，我们将`usr_dir`和`data_dir`合并为一个文件夹，目录结构如下。
 
 ```
 data \
@@ -73,40 +73,21 @@ data \
     train.txt.down.clean
     merge.txt.vocab.clean
 ```
-因此，在上传时仅需上传data文件夹即可。
 
 但是，需要注意的是，在后续训练的目录定义中，需要将`t2t_usr_dir`和`data_dir`都指定为该data目录。
 
+在这里我们仅需将data文件夹共享，并挂载到Docker上即可开始训练。
 
-上传数据的方式有几种：
-
-#### 1. OpenPAI中的HDFS
-
-> **注意：** OpenPAI 部署了一个 HDFS 服务来保存日志和其它文件。 虽然此 HDFS 也可用来存储文件，但**不推荐**这样做。 因为 OpenPAI 集群的服务器可能会频繁增减，磁盘空间也有可能不够，因此无法保证存储的质量。
-
-由于我们使用的管理员就是用户，因此使用 HDFS 来简化部署。
-
-我们可以直接在`HDFS EXPLORER`中选择文件夹后右键，选择上传文件或文件夹。
-
-![](./md_resources/uploadFile.png)
-
-我们只需要将预处理完后的data文件夹上传至相应的目录即可。在此，我们选择上传到`/demo/data`，当然，你也可以上传到其他目录，该目录在后续下载数据到Docker时会使用到。
-
-
-#### 2. 其余方法（推荐）
-除HDFS外，我们更推荐使用共享文件夹，直接内置文件到 Docker 映像中，或复制进出 Docker 容器。通用流程与HDFS一致，区别主要在于数据的上传和下载。
-
-具体操作请参考：[主要方法](https://github.com/microsoft/pai/blob/master/docs/zh_CN/user/storage.md#%E4%B8%BB%E8%A6%81%E6%96%B9%E6%B3%95)。
+具体操作请参考：[通用流程](https://github.com/microsoft/pai/blob/master/docs/zh_CN/user/storage.md#通用流程)。
 
 
 ### 新建文件
 要提交训练任务，我们需要新建如下几个文件：
 * [train.sh](../code/train_on_pai/train.sh)
-* [run_samples.py](../code/train_on_pai/run_samples.py)
 * [new_job.pai.json](../code/train_on_pai/new_job.pai.json)
 
 
-以上文件（除`new_job.pai.json`外）会随任务的提交自动上传至服务器（需要配置`.vscode/settings.json`，后续会提到），同时也会自动下载到Docker环境中，因此我们可以在Docker中访问到它们，这里面包含了训练任务的脚本。
+`train.sh`会随任务的提交自动上传至服务器（需要配置`.vscode/settings.json`，后续会提到），同时也会自动下载到Docker环境中，因此我们可以在Docker中访问到它们，这里面包含了训练任务的脚本。
 
 #### 1. `train.sh`
 
@@ -165,59 +146,11 @@ t2t-trainer \
 
 ```
 
-#### 2. `run_samples.py` 
 
-   此为用于执行任务的运行脚本，包含了下载数据至Docker，调用`train.sh`脚本开始训练，以及完成训练以后的数据上传。这是我们训练任务程序运行的入口，在OpenPAI开始任务后，我们会首先调用此脚本，具体调用方法在`new_job.pai.json`中介绍。
-   
-   注意这里需要替换以下几个变量：
-1. `hdfs_url` ： 替换为openPAI中的pai-master结点
-2. `hdfs_user_name` ：替换为你的用户名
-3. `root_dir` ：替换为存放数据的根目录，用于下载训练数据至Docker。在此，由于我们将数据上传至了`/demo/data`，因此将`root_dir`替换为`/demo`。项目训练完成后会将结果上传至`/demo/output`。
-
-```
-import os
-import sys
-import hdfs
-import subprocess
-
-hdfs_url = "YOUR_HDFS_URL" 
-hdfs_user_name = "YOUR_HDFS_USERNAME"
-root_dir = "YOUR_PROJECT_ROOT_DIR"
-
-class HDFSHelper(object):
-
-    def __init__(self, hdfs_url, hdfs_user_name, hdfs_root):
-        self.__client = hdfs.InsecureClient(hdfs_url, root=hdfs_root, user=hdfs_user_name)
-        self.__client.set_permission(hdfs_root,777)
-
-    def Download(self, hdfs_path, local_path):
-        print("Downloading from {} to {}".format(hdfs_path, local_path))
-        os.makedirs(local_path, exist_ok=True)
-        self.__client.download(hdfs_path, local_path)
-
-    def Upload(self, local_path, hdfs_path):
-        print("Uploading from {} to {}".format(local_path, hdfs_path))
-        self.__client.makedirs(hdfs_path)
-        self.__client.upload(hdfs_path, local_path, overwrite=True)
-
-hdfsHelper = HDFSHelper(hdfs_url, hdfs_user_name, root_dir)
-
-# Downloading data
-hdfsHelper.Download(os.path.join(root_dir, "data"), ".")
-
-# Call train.sh
-subprocess.call("./train.sh", shell=True)
-
-# Uploading data
-jobName = os.environ['PAI_JOB_NAME']
-output_dir = os.path.join(root_dir, "output", jobName)
-hdfsHelper.Upload("./output/", output_dir)
-```
-
-
-#### 3. `new_job.pai.json`
+#### 2. `new_job.pai.json`
 此为用于提交训练任务的配置文件，其中`taskRoles`字段下的`command`为openPAI创建完Docker环境后开始执行的命令，`image`字段用于指定docker hub中的Docker镜像。
 
+开始前应先替换所有变量为相应的值，包括：\<AddressOfSharedServer\>，\<SharedFolder\>，\<Username\>，以及 \<Password\>。
 ```
 {
     "jobName": "train_couplet_demo",
@@ -230,17 +163,24 @@ hdfsHelper.Upload("./output/", output_dir)
             "cpuNumber": 2,
             "gpuNumber": 1,
             "memoryMB": 8192,
-            "command": "pip3 --quiet install future && cd $PAI_JOB_NAME && ls -al && chmod +x train.sh && python3 run_samples.py"
+            "command": "apt update && apt install -y cifs-utils && mkdir /models && mount -t cifs //<AddressOfSharedServer>/<SharedFolder> /models -o username=<Username>,password=<Password> && cd /models && pip3 --quiet install future && chmod +x train.sh && train.sh"
         }
     ]
 }
 ```
 
-我们在此文件中配置`command`为
-```
-pip3 --quiet install future && cd $PAI_JOB_NAME && ls -al && chmod +x train.sh && python3 run_samples.py
-```
-这就实现了在任务一开始便运行`run_samples.py`。
+command 字段分为以下几步：
+
+1. **准备环境**。`apt update && apt install -y cifs-utils` 安装了 `cifs-utils` 来挂载代码文件夹。
+如果将所有依赖都包含在 Docker 映像中，可以在每次运行前省下下载和安装时间。 但如果这些依赖更新得非常频繁，或不同的 Job 需要大量的依赖，则可以在 Job 运行时安装。
+
+2. **准备文件**。 `mkdir /models && mount -t cifs //<AddressOfSharedServer>/<SharedFolder> /models -o username=<UserName>,password=<Password> && cd /models`，挂在了包含代码的共享文件夹。 如果还有其它文件夹包含了数据或模型，也可以在此挂载上。
+
+3. **执行核心逻辑**。 `chmod +x train.sh && train.sh`运行训练脚本`train.sh`。
+
+4. **保存输出**。 Docker 容器会在每次 Job 完成后被删除。 因此，如果需要任何结果文件，要将其保存到 Docker 容器之外。`train.sh`脚本中将训练后的模型和检查点都保存在了共享文件夹`models/output`。
+
+注意，此例将所有步骤都放到了 command 字段中。 有些步骤可以放到 Bash 或 Python 脚本中，然后用一条命令来运行。这样可以用脚本来处理更复杂的逻辑。
 
 
 
@@ -252,13 +192,12 @@ pip3 --quiet install future && cd $PAI_JOB_NAME && ls -al && chmod +x train.sh &
         "pai.job.upload.enabled": true,
         "pai.job.upload.exclude": [],
         "pai.job.upload.include": [
-            "**/*.py",
             "**/*.sh"
         ],
         "pai.job.generateJobName.enabled": true
     }
     ```
-    完成以后，提交任务会自动将当前目录中的.py文件和.sh文件一起上传。
+    完成以后，提交任务会自动将当前目录中的.sh文件一起上传。
 
 2. 右键`new_job.pai.json`，选择`Submit Job to PAI Cluster`。
 
@@ -266,15 +205,11 @@ pip3 --quiet install future && cd $PAI_JOB_NAME && ls -al && chmod +x train.sh &
 
     此时，就完成了任务的提交。
 
-成功提交任务后，VS Code会将上一步新建的若干.py和.sh文件同时上传至此次任务的目录，在Docker创建完后会自动执行`new_job.pai.json`文件中`taskRoles`下的`command`字段内容。
+成功提交任务后，VS Code会将上一步新建的.sh文件同时上传至此次任务的目录，在Docker创建完后会自动执行`new_job.pai.json`文件中`taskRoles`下的`command`字段内容。
 
 
-### 下载数据
+### 训练结果
 
-在任务运行完成后，Docker会自动销毁，对此我们在`run_sample.py`中实现了让Docker训练完成后自动将结果上传至服务器相应的目录。因此，我们只需要在`HDFS EXPLORER`的相应目录中找到我们训练的结果即可。在示例中，我们可以在`/demo/output`中找到训练结果。
-
-找到对应的结果，右键可以选择下载到本地。
-
-![](./md_resources/downloadData.png)
+在任务运行完成后，Docker会自动销毁，由于我们将训练结果保存至了共享文件夹的`output`目录，我们可以在`output`中找到我们的训练结果。
 
 至此，我们便完成了OpenPAI的任务提交、训练以及获取训练结果啦。

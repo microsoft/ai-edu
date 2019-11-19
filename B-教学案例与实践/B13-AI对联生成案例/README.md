@@ -2,7 +2,7 @@ Copyright © Microsoft Corporation. All rights reserved.
   适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可
 
 
-# AI对联生成
+# 智能对联
 
 自然语言处理（Natural Language Processing, NLP）是人工智能领域中最重要的分支之一。本案例使用深度学习的方法，利用常见的机器翻译模型，构建了一个智能对联生成的微信小程序。通过对该案例的学习，读者能够了解NLP领域的基础理论，包括词嵌入（Word Embedding）、编码解码模型（Encoder-Decoder）、注意力机制（Attention）等重要知识点，并具备应用、实践能力。通过阅读详实的步骤介绍和参考代码，读者也能了解RNN、LSTM、GRU、Transformer等流行算法，以及Tensor2Tensor等模型库的使用，从而在应用场景中将NLP的理论知识转变成相应的实战技能。
 
@@ -107,9 +107,21 @@ LSTM主要解决了RNN中容易出现的梯度爆炸和梯度消失的问题，�
 
 # 先修知识
 * 了解RNN的基本概念和原理
+  
+  参考链接： [循环神经网络](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/19.0-循环神经网络.md)
+
 * Seq2Seq模型的基本概念
+  
+  参考链接：[序列到序列](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/20.4-序列到序列.md)
+
 * 了解主流深度学习框架
+ 
+  参考链接：[tensorflow](https://www.tensorflow.org/tutorials/quickstart/beginner), [Pytorch](https://pytorch-cn.readthedocs.io/zh/latest/)
+
 * 熟悉github的使用
+ 
+  参考链接：[GitHub入门](https://help.github.com/cn/github/using-git)
+
 
 # 环境与工具
 
@@ -340,11 +352,21 @@ t2t-datagen \
 
 ## 模型训练
 
+有了处理好的数据，我们就可以进行训练了。你可以选择**本地训练**或**在OpenPAI上训练**。
+
+### OpenPAI上训练
+OpenPAI 作为开源平台，提供了完整的 AI 模型训练和资源管理能力，能轻松扩展，并支持各种规模的私有部署、云和混合环境。因此，我们推荐在OpenPAI上训练。
+
+完整训练过程请查阅：
+[在OpenPAI上训练](docs/train_on_pai.md)
+
+
+### 本地训练
+
+如果你的本地机器性能较好，也可以在本地训练。
+
 模型训练的代码请参考[train.sh](./code/train/train.sh)。
 
-有了处理好的数据，我们就可以进行训练了。你可以选择**本地训练**或[在OpenPAI上训练](docs/train_on_pai.md)。
-
-下面我们介绍一下如何在本地训练。
 
 训练过程依然调用t2t模型训练命令：`t2t_trainer`。具体命令如下：
 ```
@@ -654,7 +676,6 @@ chmod +x ./inference.sh
 
 
 
-
 # 作业和挑战
 
 1. 程序复现
@@ -672,3 +693,22 @@ chmod +x ./inference.sh
    4. 扩展对联生成程序，用于古诗、绝句等的自动生成。
 
 
+# 总结
+
+本案例利用深度学习方法构建了一个上联预测下联的对联生成模型。首先通过词嵌入对数据集编码，再利用已编码的数据训练一个Encoder-Decoder模型，从而实现对联生成的功能。另外，该案例还结合微软Cognitive Service中的目标检测，对用户上传图片进行分析，利用分析结果匹配上联，再通过训练好的模型生成下联。最后，搭建后端服务实现完整的应用功能。该案例很好地演示了从模型选择、训练、推理到搭建后端服务等完整的应用开发流程，将理论与实践结合。
+
+
+# 推荐阅读
+
+## 最新论文
+
+* [ACL 2019 | 微软8篇精选论文解读，一览最新研究进展](https://www.msra.cn/zh-cn/news/features/acl-2019)
+
+## 深度文章
+
+* [参数少一半，效果还更好，天津大学和微软提出Transformer压缩模型](https://www.msra.cn/zh-cn/news/features/a-tensorized-transformer-for-language-modeling)
+* [通过全新学习和推断机制提升seq2seq 模型的语法改错性能](https://www.msra.cn/zh-cn/news/features/fluency-boost-learning-and-inference-for-neural-grammatical-error-correction)
+* [微软亚洲研究院发布业界最全面的语义分析数据集MSParS](https://www.msra.cn/zh-cn/news/features/mspars)
+* [七大NLP任务最新方法与进展](https://www.msra.cn/zh-cn/news/features/machine-reasoning)
+* [机器推理在常识问答任务中的应用](https://www.msra.cn/zh-cn/news/features/machine-reasoning-for-commonsense-question-answering)
+* [机器推理在事实检测任务中的应用](https://www.msra.cn/zh-cn/news/features/machine-reasoning-for-fact-checking)

@@ -59,7 +59,7 @@ def Test(net, reader):
         return False
 
 def draw_split_line(net):
-    if (net.W.shape == 2):
+    if (net.W.shape[0] == 2):
         w = -net.W[0,0] / net.W[1,0]
         b = -net.B[0,0] / net.W[1,0]
     else:
@@ -75,7 +75,10 @@ def draw_source_data(reader, title, show=False):
     plt.axis([-0.1,1.1,-0.1,1.1])
     plt.title(title)
     X,Y = reader.GetWholeTrainSamples()
-    DrawTwoCategoryPoints(X[:,0], np.zeros_like(X[:,0]), Y[:,0], title=title, show=show)
+    if title == "Logic NOT operator":
+        DrawTwoCategoryPoints(X[:,0], np.zeros_like(X[:,0]), Y[:,0], title=title, show=show)
+    else:
+        DrawTwoCategoryPoints(X[:,0], X[:,1], Y[:,0], title=title, show=show)
 
 def train(reader, title):
     draw_source_data(reader, title, show=True)

@@ -29,6 +29,8 @@ Copyright © Microsoft Corporation. All rights reserved.
   * [模型推理](#模型推理)
   * [搭建后端服务](#搭建后端服务)
 * [作业和挑战](#作业和挑战)
+* [总结](#总结)
+* [推荐阅读](#推荐阅读)
 
 
 

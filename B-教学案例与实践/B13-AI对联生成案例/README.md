@@ -29,6 +29,8 @@ Copyright © Microsoft Corporation. All rights reserved.
   * [模型推理](#模型推理)
   * [搭建后端服务](#搭建后端服务)
 * [作业和挑战](#作业和挑战)
+* [总结](#总结)
+* [推荐阅读](#推荐阅读)
 
 
 
@@ -79,7 +81,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 在本次案例中，我们将使用深度学习的方法，实现一个对联自动生成的应用。
 
 当前，常见的深度学习算法有
-    [RNN](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/19.0-循环神经网络.md)、
+    [RNN](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/19.0-普通循环神经网络.md)、
     [LSTM](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/20.1-LSTM基本原理.md)、[GRU](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/20.3-GRU基本原理.md)、
     [Transformer](http://jalammar.github.io/illustrated-transformer/)。
 
@@ -108,7 +110,7 @@ LSTM主要解决了RNN中容易出现的梯度爆炸和梯度消失的问题，�
 # 先修知识
 * 了解RNN的基本概念和原理
   
-  参考链接： [循环神经网络](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/19.0-循环神经网络.md)
+  参考链接： [循环神经网络](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/19.0-普通循环神经网络.md)
 
 * Seq2Seq模型的基本概念
   

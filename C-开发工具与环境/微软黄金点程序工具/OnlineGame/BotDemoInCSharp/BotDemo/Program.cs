@@ -5,6 +5,7 @@ using GoldenNumber;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -16,12 +17,19 @@ namespace BotDemo
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Input room id: ");
-            string inputRoomId = Console.ReadLine();
             int roomId = 0;
-            if (!int.TryParse(inputRoomId, out roomId))
+
+            // Read roomid from args --room
+            var index = args.ToList().FindIndex(item => item.Equals("--room", StringComparison.OrdinalIgnoreCase));
+            if (index < 0 || args.Length <= index + 1 || !int.TryParse(args[index + 1], out roomId))
             {
-                Console.WriteLine("Parse room id failed, default join in to room 0");
+                // Input the roomid if there is no roomid in args
+                Console.WriteLine("Input room id: ");
+                string inputRoomId = Console.ReadLine();
+                if (!int.TryParse(inputRoomId, out roomId))
+                {
+                    Console.WriteLine("Parse room id failed, default join in to room 0");
+                }
             }
 
             RunBot(roomId).Wait();
@@ -57,21 +65,40 @@ namespace BotDemo
         static async Task RunBot(int roomId)
         {
             GoldenNumberService service = new GoldenNumberService(new HttpClient());
-            service.BaseUrl = "https://goldennumber.aiedu.msra.cn/";
+            service.BaseUrl = "https://goldennumber.aiedu.msra.cn";
 
             try
             {
-                // Create a player
-                var user = await service.NewUserAsync($"AI Player {new Random().Next() % 10000}");
-                var userId = user.UserId;
-                Console.WriteLine($"Player: {user.NickName}  Id: {user.UserId}");
+                var userInfoFile = "userinfo.txt";
+                var userId = string.Empty;
+                var nickName = string.Empty;
+
+                try
+                {
+                    // Use an exist player
+                    var userInfo = File.ReadAllText(userInfoFile).Split(',');
+                    userId = userInfo[0];
+                    nickName = userInfo[1];
+
+                    Console.WriteLine($"Use an exist player: {nickName}  Id: {userId}");
+                }
+                catch (Exception)
+                {
+                    // Create a new player
+                    var user = await service.NewUserAsync($"AI Player {new Random().Next() % 10000}");
+                    userId = user.UserId;
+                    nickName = user.NickName;
+                    Console.WriteLine($"Create a new player: {nickName}  Id: {userId}");
+
+                    File.WriteAllText(userInfoFile, $"{userId},{nickName}");
+                }
 
                 Console.WriteLine($"Room id: {roomId}");
 
                 while (true)
                 {
                     // Get the room state
-                    var state = await service.GetStateAsync(userId, roomId);
+                    var state = await service.StateAsync(userId, roomId);
 
                     if (state.State == 2)
                     {
@@ -101,10 +128,10 @@ namespace BotDemo
                         continue;
                     }
 
-                    Console.WriteLine($"This is round {state.FinishedRoundCount + 1}");
+                    Console.WriteLine($"\r\nThis is round {state.FinishedRoundCount + 1}");
 
                     // Get history of golden numbers
-                    var todayGoldenList = await service.GetTodayGoldenListAsync(roomId);
+                    var todayGoldenList = await service.TodayGoldenListAsync(roomId);
 
                     if (todayGoldenList.GoldenNumberList.Count != 0)
                     {

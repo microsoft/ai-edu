@@ -1,0 +1,15 @@
+{
+    "jobName": "train_couplet_demo",
+    "image": "vzich/poet:tensorflow",
+    "codeDir": "$PAI_DEFAULT_FS_URI/$PAI_USER_NAME/$PAI_JOB_NAME",
+    "taskRoles": [
+        {
+            "name": "test_001",
+            "taskNumber": 1,
+            "cpuNumber": 2,
+            "gpuNumber": 1,
+            "memoryMB": 8192,
+            "command": "pip3 --quiet install future && cd $PAI_JOB_NAME && ls -al && chmod +x train.sh && python3 run_samples.py"
+        }
+    ]
+}

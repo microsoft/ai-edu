@@ -525,158 +525,196 @@ chmod +x ./inference.sh
 
 ## 搭建后端服务
 
+现在，我们将利用训练好的模型，搭建一个后端服务，从而实现小程序上传图片，后端生成对联图片。
+
 ### 实体提取
 
-当用户通过小程序上传图片或照片时，程序需要从图片中提取出能够描述图片的信息。本案例编写了utils.py文件。其中 do_upload_image 函数完成从上传的图片中提取实体的工作。具体过程如下：
+当用户通过小程序上传图片时，程序需要从图片中提取出能够描述图片的信息。
+本案例编写了`cognitive_service.py`文件。其中， `get_tags_from_image`函数完成从上传的图片中提取实体的工作。该函数会调用微软的cognitive service并将结果返回。
 
-1. 将传入的图片，去掉网络报头，提取图片文件的二进制信息，并存入 raw_images 目录，供后续合成图片时使用。
-2. 调用微软认知服务（Cognitive Service）中的计算机视觉服务（Computer Vision），完成图片中实体的提取。本案例编写 cognitive_service.py 文件，编写 `call_cv_api` 函数来完成调用过程。
-为了使用微软认知服务，用户需要在微软认知服务的网站上申请计算机视觉服务。可以申请30天试用版，也可以创建 Azure 账号，申请免费的服务。
-3. 调用结束，返回的结果包含了提取出的实体信息。一张图片可以提取多个实体，组成实体数组。
+下面是返回结果的示例：
+```
+{
+    'tags': 
+        [
+            {'name': 'person', 'confidence': 0.99773770570755}, 
+            {'name': 'birthday cake', 'confidence': 0.992998480796814}, 
+            {'name': 'food', 'confidence': 0.9029457569122314}, 
+            ...
+        ], 
+    'description': 
+        [
+            'person', 'woman', 'holding', 'smiling', ... 
+        ]
+}
+```
+返回结果中包含了`tags`和`description`字段，里面分别包含了该图片的意象。
+
+
+### 筛选及翻译Tag
+可以看到，调用cognitive service以后，会返回大量的tags，而我们需要从中挑选出符合要求的tag。在这个阶段，我们有两个目标：
+
+1. 找到能**准确描述**图片内容的tag
+2. 找到**概括性强**的的tag
+
+例如，在'birthday cake'和'food'中，显然'food'的概括性更好，又能描述图片内容，因此我们应当选则'food'而不是'birthday cake'作为我们的tag。
+
+首先，我们为了找出能准确描述图片内容的tag，我们取了返回结果中`tags`和`description`中都存在的tag作为对图片描述的tag。这样就初步筛选出了更贴近图片内容的tag。
+
+其次，通过简单的实验，我们发现出现频率越高的tag越符合我们的要求：高频的tag多为'person', 'food', 'animal', 'building'等概括性强的tag。从直观上理解，概括能力越好的tag自然是出现频率越高的。
+
+为此，我们构建了一个高频词典，收集了出现频率前500的tag，并给出了对应的中文翻译。我们仅保留并翻译在词典内的tag，而不在词典内的tag会在这个阶段被进一步地过滤掉。
+
+在高频词典的构建中，我们对中文翻译做了改进，使其与古文意象更接近，便于搜索出对应的上联。因此，高频词典不再是纯粹的中英互译的词典，而是英文tag到相关意象的映射。例如，我们将'building'映射为'楼'，'skiing'映射为'雪'，'day'映射为'昼'等。
+
+利用这样的高频词典，就完成了翻译及过滤tag的过程。
+
+高频词典的具体内容可以查看`tag_dict.txt`。
+
+
+**思考：会不会出现把tag全部过滤掉的或tag太少可能？**
+
+为此，我们做实验统计了两个指标，若仅保留前500个高频tag，**tag覆盖率**约为100%，**tag平均覆盖数**约为10个/张。
+
+（ 注：tag覆盖率 = 至少有一个tag在高频词典内的图片数 / 总图片数 * 100% ， tag平均覆盖数 = 每张图片中在高频词典内的tag数之和/ 总图片数 * 100% ）
+
+因此可以确保极大多数的图片是不会全部tag都被过滤掉的，并且剩余的tag数量适中。
 
 
 ### 上联匹配
 
-提取完实体信息，我们要找出与实体相匹配的上联数据。find_shanglian 函数实现了该需求，具体函数实现在 word_matching.py 中，感兴趣的同学可以查看源代码。
+提取完实体信息，我们要找出与实体相匹配的上联数据。这一步我们的目标是尽量找出包含2个tag的上联数据，这样能够保证匹配程度较高。
 
-#### 使用数据
+匹配分为如下几个步骤：
 
-在上联匹配中，我们需要用到如下几个数据文件，它们的描述如下表：
+1. 分别找出包含每个tag的上联的索引
+    
+    例如，假设通过上一步的翻译及过滤最终得到了：'天'， '草'，'沙滩'这几个tag，我们需要分别找出包含这几个tag的上联的索引，如：
 
----
-文件名 | 描述 | 格式 |
-:----:|------|------
-**train.txt.up** | 存储5-7字上联数据 | 文本格式，每行一个上联，‘\n’为分隔符。（如果句中有逗号，按两句分开处理）
-**en2cn_dict.txt** | 实体字词中英文翻译，cache 文件 | 以词典形式存储，初始为空。key 为英文实体字词，value为中文翻译结果
-**synonyms_words_dict.txt** | 同义词表，保存实体中文字词的三个同义词，cache 文件 | 以词典形式存储，初始为空。key 为中文实体词语，value 为同义词
-**dict_1.txt** | 单个字在上联中出现的位置 | 以词典形式存储。key 为单个字，value 为数组，表示在train.txt.up 中的第几条中出现
-**dict_2.txt** | 实体词语在上联中出现的位置 | 以词典形式存储。key 为一个词语，value 为数组，表示在train.txt.up 中的第几条中出现
+    * '天'：{ 3, 74, 237, 345, 457, 847 }
+    * '草'：{ 23, 74, 455, 674, 54, 87, 198 } 
+    * '沙滩'：{ 86, 87, 354, 457 }
 
----
+2. 找出包含两个tag的对每组索引分别取交集
+    
+    例如，
+    * '天' + '草'：{ 74 }
+    * '天' + '沙滩': { 457 }
+    * '草' + '沙滩'：{ 87 }
 
-其中，dict_1.txt 和dict_2.txt 文件需要根据上联数据文件 train.txt.up 进行处理。
-- dict_1：统计上联数据出现的每个字，作为 key 。并找到 train.txt.up 中含有该字的上联 ID，将该 ID 作为 value 数组的元素，生成词表。
-- dict_2：将上联两两相连的字组成词语（有可能两个相连字并不能称为词语，但依然组合在一起），作为key。并找到 train.txt.up 中含有该词语的上联 ID ，将该 ID 作为 value 数组的元素，生成词表。
+3. 合并取交集的结果
+
+    例如，得到结果{ 74, 457, 87}。
+
+4. 若交集为空，则随机从各自tag中选取部分索引。
+
+5. 从上面的结果中随机选出上联数据。
 
 
-#### 传入参数
-
-函数 find_shanglian 传入至少5个参数：
-
-（1） 实体信息
-
-（2） 上联数据
-
-（3） dict_1 文件，初始化为空，保存单个字在上联中出现的位置
-
-（4） dict_2 文件，初始化为空，保存一个词语在上联中出现的位置
-
-（5） 返回上联结果的数目
-
-#### 实体标签翻译
-
-从微软认知服务得到的实体标签（Tag）都是英文的，需要先翻译成中文。程序调用有道 API 完成中英翻译（在 Translate 函数中实现），并将{英文标签：中文翻译}保存在词典文件 en2cn_dict.txt 中。每次先在该文件中查找有否翻译完成的实体，如没有，再调用有道API。
-
-#### 查找同义词
-
-为了更多找到相关对联，我们还需要对实体词语进行同义词扩展。这用到名为 **synonyms** 的 python 包。该包的提供 nearby 方法，寻找并返回输入词语的同义词，以及他们的得分。本案例针对对每个实体标签，找到并保留至多三个得分大于 **0.7** 的同义词，并将结果在文件 synonyms_words_dict.txt 文件中缓存，方便下次查找。
-
-#### 随机筛选词语
-
-对每个实体，都找到至多三个同义词，并保存在同一个数组中。程序可以从当前数组包含的词语中，随机筛选75%的词汇，生成最终实体词汇列表，用于后续操作。剩下的词汇，保存在备用列表中。
-
-#### 遍历词表
-
-将实体词汇列表中的实体在词表文件 dict_1.txt 和 dict_2.txt 中进行遍历，找到含有该词汇的上联ID。具体步骤如下：
-
-1. 将实体Tag拆分成单个字，在 dict_1 中遍历，寻找包含该词语的上联。
-
-2. 将实体Tag过滤掉超过两个字的Tag，剩下的在 dict_2 中遍历，寻找包含该词语的上联。
-
-3. 合并两次得到的上联 ID 结果，去重，并保存在 results 字典中，key = 上联 ID，value = 出现次数，作为得分。出现次数越多，得分越高。
-
-4. 将结果按出现次序从高到低排序。
-
-5. 返回指定数目的上联 ID，存在数组中。指定数目=要求返回上联数目+10。如果程序要求返回5个结果，则在这里返回15个结果。
-
-6. 如果每个结果都只有一分，则将备用列表中的实体词汇也检索一遍，扩充上联 ID。
-
-7. 在做一遍操作5
-
-8. 根据最终上联 ID，得到具体上联数据。返回该数据。
+通过以上几个步骤，我们可以找出至少包含1个tag的上联。这部分的实现请参考`choose_upper_couplet_from_tags`函数（位于`get_couplet_from_image.py`文件中）。
 
 
 ### 生成下联
+生成下联需要利用我们训练好的模型，首先我们需要先利用`tensorflow-serving-api`为模型开启服务，再通过封装好的代码请求服务获取下联。
 
-得到了所需要的上联数据，就要开始生成下联的工作了。该工作在 utils.py 的 `do_upload_image` 函数中继续完成。
+开启T2T服务有以下几个步骤：
+1. 安装`tensorflow-serving-api`
 
-调用 up2down_class.py 中的 `get_next` 函数，将上联数据作为参数一并传入。程序会用训练好的NLP模型进行推理（解码工作），对每一个候选上联，生成一个下联。
+    ```
+    pip install tensorflow-serving-api==1.14.0
+    ```
 
-### 合成对联
+2. 导出我们训练好的模型
 
-接下来，程序将每个上联和生成的下联合成一个以逗号分隔的对联形式，并以 json 的格式返回 ID 和前 N 个对联的结果（本案例中目前 code 写死为前三个）。
+    ```
+    cd up2down_model
 
-### 重新创作
+    t2t-exporter --model=transformer  \
+            --hparams_set=transformer_small  \
+            --problem=translate_up2down  \
+            --t2t_usr_dir=./data \
+            --data_dir=./data \
+            --output_dir=./output
 
-如果生成的下联用户不喜欢，可以更换对联。程序会根据当前上联，再次调用 `get_next` 函数，生成新的下联。该功能在函数 `do_modify_poetry` 中实现（ utils.py 文件）。
+    ```
+
+3. 启动服务
+
+    ```
+    tensorflow_model_server --port=9000 --model_name=up2down --model_base_path=$HOME/output/export 
+    ```
+
+
+我们将生成下联的函数封装在了`up2down_model.py`中。
+启动T2T服务后，通过以下两行代码即可完成下联数据的生成。
+
+```
+from up2down_model.up2down_model import up2down
+
+up2down.get_down_couplet(upper_couplet)
+```
+
+
 
 ### 合成图片
+在这一步，我们需要根据用户选择的对联，与用户上传的图片合成带有对联的图片。
+具体实现请参考：`draw_image.py`
 
-程序生成下联后，会显示几个备选对联（默认是3个）。用户可以选择自己喜欢的对联，并和上传的图片合成新的对联。具体处理过程如下：
+### 搭建web服务
+实现完上面的功能之后，我们可以利用flask部署我们的服务。
 
-1. 获取元数据信息
+#### 安装flask
+```
+pip install flask
+```
 
-获取此次服务请求的 id 和选中的对联项。
+#### 搭建服务
+我们需要新建一个`app.py`文件，内容如下：
+```
+from flask import Flask
+from flask import request
 
-2. 合成最终图片
+from services.get_couplet_from_image import get_couplet_from_image
 
-包括：1) 用户上传图片 2) 程序背景图片3) 程序二维码图片 4) 微信图片 5) Logo图片 6) 对联内容
-
-具体程序在 synthesis_2.py 文件中实现。合成好的图片保存在相应目录下，供前端应用查找并显示给用户。
-
-
-### 启动服务
-
-我们在Azure上申请了一个VM，部署好我们的环境和代码，运行后端服务。
-
-1. 登录VM，进入程序所在目录。
-2. 若 VM 开启了 nginx 服务，则先关闭服务：
-    ```
-    sudo service nginx stop
-    ```
-3. 本案例使用 anaconda python 3.6 virtual environment，所以需要先激活 environment 。命令如下：
-    ```
-    activate py3_backend
-    ```
-4. 启动tmux，进入不同工作窗口进行工作：
-    ```
-    tmux new -s engine
-    ```
-5. 创建新的 tmux window，同时按下 ctrl+b，再按c
-6. 在新窗口跳转到 syn_images 目录：`cd syn_images`
-7. 启动 master 进程，并使用 https 访问的443默认端口：
-    ```
-    sudo python ~/code/Poetic-Image/tunnel.py 443
-    ```
-8. 重复步骤5
-9.  在新窗口启动 slave server 1，用于生成下联的服务：
-    ```
-    python ~/code/Poetic-Image/http_server_py3.py 8001
-    ```
-10. 重复步骤5
-11. 在新窗口启动 slave server 2，同样用于生成下联的服务：
-    ```
-    python ~/code/Poetic-Image/http_server_py3.py 8002
-    ```
-12. 重复步骤5
-13. 在新窗口启动 slave server 3 ，用于合成对联和图片的服务：
-    ```
-    python ~/code/Poetic-Image/http_server_py3.py 8003
-    ```
-
-程序启动完毕。这时，在微信小程序端就可以使用对联服务啦。
+app = Flask(__name__)
 
 
+@app.route('/image',methods=['POST'])
+def upload_image():
+    if request.method == 'POST':
+
+        image = request.files['image']
+
+        result = get_couplet_from_image(image)
+
+    return result
+
+# 省略后面代码...
+
+
+```
+
+
+我们把上述的功能都封装在`get_couplet_from_image.py`中，因此通过短短几行我们就实现了一个web服务。
+
+#### 启动服务
+测试环境我们可使用flask自带的服务，生产环境应使用uwsgi+nginx部署，有兴趣的同学可以自行查阅资料。
+
+In Ubuntu
+
+```
+export FLASK_APP=app.py
+python -m flask run
+```
+
+In Windows
+```
+set FLASK_APP=app.py
+python -m flask run
+```
+此时，服务就启动啦。
+
+我们仅需向后端 http://127.0.0.1:5000/image 发起post请求，并用'image'字段上传图片，即可返回生成的对联到前端。
 
 # 作业和挑战
 

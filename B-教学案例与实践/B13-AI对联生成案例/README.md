@@ -243,7 +243,7 @@ pip install -r train_requirements.txt
     c. 合并文件为 merge.txt
 
     ```
-    cat train.txt.up train.txt.down > merge.txt
+    cat train.txt.up.clean train.txt.down.clean > merge.txt
     ```
 
 2. 统计文件中出现的不同字和每个字的出现次数。

@@ -28,7 +28,7 @@ Copyright © Microsoft Corporation. All rights reserved.
   * [模型训练](#模型训练)
   * [模型推理](#模型推理)
   * [搭建后端服务](#搭建后端服务)
-  * [案例拓展](#案例拓展)
+  * [案例拓展](#案例拓展(选读))
 * [作业和挑战](#作业和挑战)
 * [总结](#总结)
 * [推荐阅读](#推荐阅读)
@@ -140,12 +140,12 @@ LSTM主要解决了RNN中容易出现的梯度爆炸和梯度消失的问题，�
 
 在开始之前，请确保安装好以下依赖：
 
-1. 训练所需 python packages 在文件 [train_requirements.txt](./code/train/train_requirerments.txt) 中。
-2. 服务所需 python packages 在文件 [conda_requirements.txt](./code/service/conda_requirements.txt) 中。
+* 训练所需 python packages 在文件 [train_requirements.txt](./code/train/train_requirerments.txt) 中。
+
 
 安装示例：
 ```
-pip install -r train_reqquirements.txt
+pip install -r train_requirements.txt
 ```
 
 # 案例大纲
@@ -662,8 +662,8 @@ up2down.get_down_couplet(upper_couplet)
 
 
 
-## 案例拓展
-至此，我们已经学会了小程序的核心部分：训练模型、推理模型及搭建后端服务使用模型。小程序的其余实现部分涉及比较多的开发知识，超出了NLP的范畴，因此我们不再详细介绍，而是在该部分简单讲解其实现思路，对上层应用开发感兴趣的同学可以参考并实现。
+## 案例拓展（选读）
+至此，我们已经学会了小程序的核心部分：训练模型、推理模型及搭建后端服务使用模型。由于小程序的其余实现部分涉及比较多的开发知识，超出了NLP的范畴，因此我们不再详细介绍，而是在该部分简单讲解其实现思路，对上层应用开发感兴趣的同学可以参考并实现。
 
 ### 实体提取
 

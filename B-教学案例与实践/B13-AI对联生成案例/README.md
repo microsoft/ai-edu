@@ -173,7 +173,7 @@ pip install -r train_requirements.txt
 
 ![程序结构图](./docs/md_resources/codeflow.jpg)
 
-由于该结构中，NLP的核心内容在上联生成下联的实现，因此我们将会在案例中关注此部分的实现，并搭建一个简单的web应用将模型封装成api。
+由于在该结构中，NLP的核心内容在于上联生成下联，因此我们将会在案例中关注此部分的实现，并搭建一个简单的web应用将模型封装成api。
 
 ## 工具包的选择
 

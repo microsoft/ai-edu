@@ -28,6 +28,7 @@ Copyright © Microsoft Corporation. All rights reserved.
   * [模型训练](#模型训练)
   * [模型推理](#模型推理)
   * [搭建后端服务](#搭建后端服务)
+  * [案例拓展](#案例拓展)
 * [作业和挑战](#作业和挑战)
 * [总结](#总结)
 * [推荐阅读](#推荐阅读)
@@ -173,8 +174,7 @@ pip install -r train_reqquirements.txt
 
 ![程序结构图](./docs/md_resources/codeflow.jpg)
 
-后续将会对每个部分进行详细说明。
-
+由于该结构中，NLP的核心内容在上联生成下联的实现，因此我们将会在案例中关注此部分的实现，并搭建一个简单的web应用将模型封装成api。
 
 ## 工具包的选择
 
@@ -323,7 +323,7 @@ data_dir \
 
 在本案例中，若要使用 T2T 工具包进行训练，需要把数据转换成T2T认可的二进制文件形式。
 
-使用如下命令生成训练数据。
+使用如下命令生成训练数据：
 
 ```
 USR_DIR=./usr_dir
@@ -522,15 +522,153 @@ chmod +x ./inference.sh
 推理结果也保存到了`result.txt`文件中。
 
 
-
 ## 搭建后端服务
 
-现在，我们将利用训练好的模型，搭建一个后端服务，从而实现小程序上传图片，后端生成对联图片。
+训练好了模型，我们显然不能每次都通过命令行来调用，既不用户友好，又需要多次加载模型。因此，我们可以通过搭建一个后端服务，将模型封装成一个api，以便构建应用。
+
+我们后端服务架构如下：
+
+![](./docs/md_resources/webServer.jpg)
+
+首先，利用`tensorflow-serving-api`为我们的模型开启服务，再通过Flask构建一个Web应用接收和响应http请求，并与我们的模型服务通信获取推理结果。
+
+### 开启模型服务
+
+开启模型服务有以下几个步骤：
+1. 安装`tensorflow-serving-api`
+
+    ```
+    pip install tensorflow-serving-api==1.14.0
+    ```
+
+2. 导出我们训练好的模型
+
+    ```
+    cd up2down_model
+
+    t2t-exporter --model=transformer  \
+            --hparams_set=transformer_small  \
+            --problem=translate_up2down  \
+            --t2t_usr_dir=./data \
+            --data_dir=./data \
+            --output_dir=./output
+    ```
+
+3. 启动服务
+    ```
+    tensorflow_model_server --port=9000 --model_name=up2down --model_base_path=$HOME/output/export 
+    ```
+    此处需要注意，
+    * `--port`：服务开启的端口
+    * `--model_name`：模型名称，可自定义，会在后续使用到
+    * `--model_base_path`：导出的模型的目录
+
+
+
+    我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中。
+
+
+    我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
+
+    ```
+    {
+        "t2t_usr_dir":"./up2down_model/data",
+        "problem":"translate_up2down",
+        "model_name":"up2down",
+        "server_address":"127.0.0.1:9000"
+    }
+    ```
+
+    * `t2t_usr_dir`：对联问题模块的定义文件及字典的存放目录
+    * `model_name`：开启`tensorflow-serving-api`时定义的模型名称
+    * `problem`：定义的问题名称
+    * `server_address`: 服务开启的地址及端口
+
+
+
+在启动完服务以后，通过以下两行代码即可完成模型的推理并生成下联。
+
+```
+from up2down_model.up2down_model import up2down
+
+up2down.get_down_couplet(upper_couplet)
+```
+
+由于服务开启后无需再次加载模型和其余相关文件，因此模型推理速度非常快，适合作为应用的接口调用。
+
+### 搭建Flask Web应用
+
+主要分为以下几个步骤：
+
+1. 安装flask
+
+    ```
+    pip install flask
+    ```
+
+2. 搭建服务
+
+    我们需要新建一个`app.py`文件，内容如下：
+    ```
+    from flask import Flask
+    from flask import request
+    from up2down_model.up2down_model import up2down
+
+    app = Flask(__name__)
+
+    @app.route('/',methods=['GET'])
+    def get_couplet_down():
+        couplet_up = request.args.get('upper','')
+
+        couplet_down = up2down.get_down_couplet(couplet_up)
+
+        return couplet_up + "," + couplet_down
+
+    ```
+
+    由于我们把推理下联的功能封装在`up2down_model.py`中，因此通过几行代码我们就实现了一个web服务。
+
+3. 启动服务
+
+    在测试环境中，我们使用flask自带的web服务即可（注：生产环境应使用uwsgi+nginx部署，有兴趣的同学可以自行查阅资料）。
+
+    使用以下两条命令：
+
+    In Ubuntu，
+
+    ```
+    export FLASK_APP=app.py
+    python -m flask run
+    ```
+
+    In Windows，
+    ```
+    set FLASK_APP=app.py
+    python -m flask run
+    ```
+    此时，服务就启动啦。
+
+    我们仅需向后端 http://127.0.0.1:5000/ 发起get请求，并带上上联参数`upper`，即可返回生成的对联到前端。
+
+    示例，
+    ```
+    http://127.0.0.1:5000/?upper=海内存知己
+    ```
+    返回结果如图：
+
+    ![](./docs/md_resources/getDownCouplet.png)
+
+后端服务的完整代码请参考：[code/service](code/service)
+
+
+
+## 案例拓展
+至此，我们已经学会了小程序的核心部分：训练模型、推理模型及搭建后端服务使用模型。小程序的其余实现部分涉及比较多的开发知识，超出了NLP的范畴，因此我们不再详细介绍，而是在该部分简单讲解其实现思路，对上层应用开发感兴趣的同学可以参考并实现。
 
 ### 实体提取
 
 当用户通过小程序上传图片时，程序需要从图片中提取出能够描述图片的信息。
-本案例编写了`cognitive_service.py`文件。其中， `get_tags_from_image`函数完成从上传的图片中提取实体的工作。该函数会调用微软的cognitive service并将结果返回。
+本案例利用了微软的Cognitive Service完成从上传的图片中提取实体的工作。上传图片后，程序会调用微软的Cognitive Service并将结果返回。
 
 下面是返回结果的示例：
 ```
@@ -557,22 +695,16 @@ chmod +x ./inference.sh
 1. 找到能**准确描述**图片内容的tag
 2. 找到**概括性强**的的tag
 
-例如，在'birthday cake'和'food'中，显然'food'的概括性更好，又能描述图片内容，因此我们应当选则'food'而不是'birthday cake'作为我们的tag。
-
 首先，我们为了找出能准确描述图片内容的tag，我们取了返回结果中`tags`和`description`中都存在的tag作为对图片描述的tag。这样就初步筛选出了更贴近图片内容的tag。
 
-其次，通过简单的实验，我们发现出现频率越高的tag越符合我们的要求：高频的tag多为'person', 'food', 'animal', 'building'等概括性强的tag。从直观上理解，概括能力越好的tag自然是出现频率越高的。
-
-为此，我们构建了一个高频词典，收集了出现频率前500的tag，并给出了对应的中文翻译。我们仅保留并翻译在词典内的tag，而不在词典内的tag会在这个阶段被进一步地过滤掉。
+从直观上理解，概括能力越好的tag自然是出现频率越高的。因此，我们构建了一个高频词典，收集了出现频率前500的tag，并给出了对应的中文翻译。我们仅保留并翻译在词典内的tag，而不在词典内的tag会在这个阶段被进一步地过滤掉。
 
 在高频词典的构建中，我们对中文翻译做了改进，使其与古文意象更接近，便于搜索出对应的上联。因此，高频词典不再是纯粹的中英互译的词典，而是英文tag到相关意象的映射。例如，我们将'building'映射为'楼'，'skiing'映射为'雪'，'day'映射为'昼'等。
 
 利用这样的高频词典，就完成了翻译及过滤tag的过程。
 
-高频词典的具体内容可以查看`tag_dict.txt`。
 
-
-**思考：会不会出现把tag全部过滤掉的或tag太少可能？**
+**思考：会不会出现过滤后的tag太少的情况？**
 
 为此，我们做实验统计了两个指标，若仅保留前500个高频tag，**tag覆盖率**约为100%，**tag平均覆盖数**约为10个/张。
 
@@ -583,7 +715,7 @@ chmod +x ./inference.sh
 
 ### 上联匹配
 
-提取完实体信息，我们要找出与实体相匹配的上联数据。这一步我们的目标是尽量找出包含2个tag的上联数据，这样能够保证匹配程度较高。
+提取完实体信息，我们的目标是找出与实体匹配程度较高的上联数据。于是，我们希望尽量找出包含两个tag的上联数据，这样能够保证匹配程度较高。
 
 匹配分为如下几个步骤：
 
@@ -611,110 +743,10 @@ chmod +x ./inference.sh
 5. 从上面的结果中随机选出上联数据。
 
 
-通过以上几个步骤，我们可以找出至少包含1个tag的上联。这部分的实现请参考`choose_upper_couplet_from_tags`函数（位于`get_couplet_from_image.py`文件中）。
+通过以上几个步骤，我们可以在确保至少包含一个tag的同时，尽可能找出包含两个tag的上联。
 
+至此，我们就可以利用上述的方式搭建一个Web服务，从上传图片开始到生成下联，实现一个小程序应用的后端服务。再单独构建一个小程序的前端即可完成整个应用的构建。 
 
-### 生成下联
-生成下联需要利用我们训练好的模型，首先我们需要先利用`tensorflow-serving-api`为模型开启服务，再通过封装好的代码请求服务获取下联。
-
-开启T2T服务有以下几个步骤：
-1. 安装`tensorflow-serving-api`
-
-    ```
-    pip install tensorflow-serving-api==1.14.0
-    ```
-
-2. 导出我们训练好的模型
-
-    ```
-    cd up2down_model
-
-    t2t-exporter --model=transformer  \
-            --hparams_set=transformer_small  \
-            --problem=translate_up2down  \
-            --t2t_usr_dir=./data \
-            --data_dir=./data \
-            --output_dir=./output
-
-    ```
-
-3. 启动服务
-
-    ```
-    tensorflow_model_server --port=9000 --model_name=up2down --model_base_path=$HOME/output/export 
-    ```
-
-
-我们将生成下联的函数封装在了`up2down_model.py`中。
-启动T2T服务后，通过以下两行代码即可完成下联数据的生成。
-
-```
-from up2down_model.up2down_model import up2down
-
-up2down.get_down_couplet(upper_couplet)
-```
-
-
-
-### 合成图片
-在这一步，我们需要根据用户选择的对联，与用户上传的图片合成带有对联的图片。
-具体实现请参考：`draw_image.py`
-
-### 搭建web服务
-实现完上面的功能之后，我们可以利用flask部署我们的服务。
-
-#### 安装flask
-```
-pip install flask
-```
-
-#### 搭建服务
-我们需要新建一个`app.py`文件，内容如下：
-```
-from flask import Flask
-from flask import request
-
-from services.get_couplet_from_image import get_couplet_from_image
-
-app = Flask(__name__)
-
-
-@app.route('/image',methods=['POST'])
-def upload_image():
-    if request.method == 'POST':
-
-        image = request.files['image']
-
-        result = get_couplet_from_image(image)
-
-    return result
-
-# 省略后面代码...
-
-
-```
-
-
-我们把上述的功能都封装在`get_couplet_from_image.py`中，因此通过短短几行我们就实现了一个web服务。
-
-#### 启动服务
-测试环境我们可使用flask自带的服务，生产环境应使用uwsgi+nginx部署，有兴趣的同学可以自行查阅资料。
-
-In Ubuntu
-
-```
-export FLASK_APP=app.py
-python -m flask run
-```
-
-In Windows
-```
-set FLASK_APP=app.py
-python -m flask run
-```
-此时，服务就启动啦。
-
-我们仅需向后端 http://127.0.0.1:5000/image 发起post请求，并用'image'字段上传图片，即可返回生成的对联到前端。
 
 # 作业和挑战
 

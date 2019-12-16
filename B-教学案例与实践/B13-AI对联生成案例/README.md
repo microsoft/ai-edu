@@ -187,7 +187,7 @@ pip install -r train_requirements.txt
     + Fairseq 工具包：[Fairseq](https://github.com/pytorch/fairseq) 是 Facebook 推出的一个序列建模工具包，这个工具包允许研究和开发人员自定义训练翻译、摘要、语言模型等文本生成任务。这里是它的 PyTorch 实现。
 
     本案例中，我们使用 T2T 工具包进行模型训练。
-
+ 
 
 
 ## 数据收集
@@ -258,15 +258,7 @@ pip install -r train_requirements.txt
     cat merge.txt.vocab | awk ‘{print $1}’ > merge.txt.vocab.clean
     ```
 
-4. 将 merge.txt.vocab.clean 的前三行填充如下内容，并将字表字数加3：
-    
-    ```
-    <pad>
-    <EOS>
-    <UNK>
-    ```
-
-5. 生成测试集。
+4. 生成测试集。
 
     取训练集中前 100 个数据作为测试集。（在实际训练过程中，没有用到测试集）
 
@@ -281,7 +273,7 @@ pip install -r train_requirements.txt
 * train.txt.down.clean
 * merge.txt.vocab.clean
 
-将上述文件放到`data_dir`目录。
+将上述文件放到`usr_dir`目录（新建目录）。
 
 ### 自定义T2T问题
 
@@ -312,7 +304,6 @@ pip install -r train_requirements.txt
 usr_dir \
     __init__.py
     merge_vocab.py
-data_dir \
     train.txt.up.clean
     train.txt.down.clean
     merge.txt.vocab.clean
@@ -339,9 +330,10 @@ t2t-datagen \
 
 `t2t_usr_dir`：指定了一个目录，该目录中包含 \_\_init\_\_.py 文件，并可以导入处理对联问题的 python 模块。在该目录中，编写 merge_vocab.py 文件，注册对联问题。
 
-`data_dir`：数据目录。存放生成训练数据所需的所有源数据资源，以及生成的训练数据文件。
+`data_dir`：数据目录。存放生成的训练数据文件。
 
-`problem`：定义问题名称，本案例中问题名称为 translate_up2down
+`problem`：定义问题名称，本案例中问题名称为 translate_up2down。
+
 当命令执行完毕，将会在 data 目录下生成两个文件：
 
     translate_up2down-train-00000-of-00001
@@ -539,6 +531,8 @@ chmod +x ./inference.sh
     ```
     pip install tensorflow-serving-api==1.14.0
     ```
+    注意：安装`tensorflow-serving-api`会自动安装`tensorflow`的cpu版本，会覆盖`tensorflow-gpu`版本。
+
 
 2. 导出我们训练好的模型
 
@@ -590,7 +584,7 @@ chmod +x ./inference.sh
 ```
 from up2down_model.up2down_model import up2down
 
-up2down.get_down_couplet(upper_couplet)
+up2down.get_down_couplet([upper_couplet])
 ```
 
 由于服务开启后无需再次加载模型和其余相关文件，因此模型推理速度非常快，适合作为应用的接口调用。
@@ -619,9 +613,9 @@ up2down.get_down_couplet(upper_couplet)
     def get_couplet_down():
         couplet_up = request.args.get('upper','')
 
-        couplet_down = up2down.get_down_couplet(couplet_up)
+        couplet_down = up2down.get_down_couplet([couplet_up])
 
-        return couplet_up + "," + couplet_down
+        return couplet_up + "," + couplet_down[0]
 
     ```
 

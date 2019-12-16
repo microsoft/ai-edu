@@ -59,7 +59,7 @@ class up2down_class:
         raw_outputs = serving_utils.predict(input_sentence_list, self.problem, self.request_fn)
         
         outputs = self.format_output(raw_outputs)
-        outputs = reduce(lambda x,y: x+y,outputs) 
+
         return outputs
 
     def format_input(self, input_sentence_raw_list):

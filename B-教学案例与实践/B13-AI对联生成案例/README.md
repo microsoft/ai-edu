@@ -140,7 +140,7 @@ LSTM主要解决了RNN中容易出现的梯度爆炸和梯度消失的问题，�
 
 在开始之前，请确保安装好以下依赖：
 
-* 训练所需 python packages 在文件 [train_requirements.txt](./code/train/train_requirerments.txt) 中。
+* 训练所需 python packages 在文件 [train_requirements.txt](./code/train/train_requirements.txt) 中。
 
 
 安装示例：

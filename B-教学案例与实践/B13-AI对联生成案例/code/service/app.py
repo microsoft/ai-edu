@@ -9,7 +9,7 @@ app = Flask(__name__)
 def get_couplet_down():
     couplet_up = request.args.get('upper','')
 
-    couplet_down = up2down.get_down_couplet(couplet_up)
+    couplet_down = up2down.get_down_couplet([couplet_up])
 
-    return couplet_up + "," + couplet_down
+    return couplet_up + "," + couplet_down[0]
 

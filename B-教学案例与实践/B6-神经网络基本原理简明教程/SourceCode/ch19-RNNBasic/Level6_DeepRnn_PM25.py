@@ -95,7 +95,9 @@ class timestep(object):
             self.dh1 = np.dot(self.dh2, self.Q.T) * Tanh().backward(self.s1)
         else:
             # 公式17
-            self.dh1 = np.dot(next_dh1, self.W1.T) * Tanh().backward(self.s1)
+            self.dh1 = (np.dot(self.dh2, self.Q.T) + np.dot(next_dh1, self.W1.T)) * Tanh().backward(self.s1)
+
+#             self.dh1 = np.dot(next_dh1, self.W1.T) * Tanh().backward(self.s1)
 
         # 公式22
         self.dU = np.dot(self.x.T, self.dh1)

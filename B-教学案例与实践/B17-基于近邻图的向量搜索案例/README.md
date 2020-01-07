@@ -89,7 +89,7 @@ SPTAG解决的问题是如何从大规模的向量中快速找出近似最近邻
 SPTAG分为了Tree部分和Graph部分。Tree部分利用KD-Tree或BKTree实现，Graph部分使用了基于KNN图改进的KNG。在进行搜索时，SPTAG首先会从Tree部分获取“种子”向量，将该种子向量作为Graph中的起始点进一步搜索近邻点。
 
 ## Tree部分
-Tree部分SPTAG使用了KDTree和BKTree实现。在调用时，可以根据需求选择任意一种。KD-Tree适合低维度的向量，反之，BKTree适合高维度的向量。
+Tree部分SPTAG使用了KDTree和BKTree实现。在调用时，可以根据需求选择任意一种。KD-Tree适合低维度（如小于100维）的向量，反之，BKTree适合高维度的向量。
 
 ### KD-Tree
 KD-Tree的本质是每个结点都为以k维划分的二叉树，是二叉搜索树（BST）的拓展。二叉搜索树的每个结点可以视为一个划分，小于等于该结点的归入左子树，大于该结点的归入右子树。

@@ -201,16 +201,15 @@ Graph部分，通过先构建KNN图，再根据RNG Rule移除不符合要求的�
 ### KNN图的构建
 KNN图是指对于样本数据中的每一个点，将其自身与K个近邻点连接而形成的图。
 
-由于样本数据规模非常大，我们采用了一定的算法构建近似的KNN图，具体算法如下：
-1. 随机划分一组子空间。在这里我们可以采用不同的划分的方式，SPTAG采用了TPTree的方式划分，即通过构建一定深度的TPTree，取其中一个叶子结点的作为子空间。
+由于样本数据规模非常大，我们采用了一定的算法构建近似的KNN图，具体算法[1]如下：
+1. 随机划分一组子空间。在这里我们可以采用不同的划分的方式，SPTAG采用了TPTree[2]的方式划分，即通过构建一定深度的TPTree，取其中一个叶子结点的作为子空间。
 2. 对该子空间内的点，利用Brute-Force方式，构建KNN子图。
 3. 重复以上步骤N次。N越大，得到的KNN图越接近真实的KNN图。
 
-上述的TPTree可以认为是KDTree的变种，主要区别在于采用了不同的划分函数，相比KDTree能对空间更灵活地划分。KDTree在论文《[Trinary-Projection Trees for Approximate Nearest Neighbor Search](https://jingdongwang2017.github.io/Pubs/TPAMI-TPTree.pdf)》中被提出。
-
-![](./resource/partition.png)
 
 由于每次随机划分一组子空间，会包含部分新的近邻点，而与之前划分的空间重叠的近邻点，可以将两组子空间构建的KNN子图连接成更大的KNN图。因此，划分次数越多，KNN子图越大，直到得到真实的KNN图为止。
+
+![](./resource/partition.png)
 
 例如，
 
@@ -226,8 +225,15 @@ KNN图是指对于样本数据中的每一个点，将其自身与K个近邻点�
 
     ![](./resource/moredivisions.png)
 
-* 算法来源：[Scalable k-NN graph construction for visual descriptors. Jing Wang, Jingdong Wang, Gang Zeng, Zhuowen Tu, Rui Gan, Shipeng Li. CVPR 2012.
+注：
+* [1] 算法来源：[Scalable k-NN graph construction for visual descriptors. Jing Wang, Jingdong Wang, Gang Zeng, Zhuowen Tu, Rui Gan, Shipeng Li. CVPR 2012.
 ](http://pages.ucsd.edu/~ztu/publication/cvpr12_knnG.pdf)
+
+* [2] 上述的TPTree可以认为是KDTree的变种，在论文《[Trinary-Projection Trees for Approximate Nearest Neighbor Search](https://jingdongwang2017.github.io/Pubs/TPAMI-TPTree.pdf)》中被提出。其与KDTree主要区别在于采用了不同的划分函数，相比KDTree能对空间更灵活地划分，如下图：
+
+    ![](./resource/TPTree.png)
+
+
  
 
 ### KNG的构建

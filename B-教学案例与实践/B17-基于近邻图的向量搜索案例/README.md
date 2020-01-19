@@ -247,3 +247,80 @@ RNG Rule：删除三角形中的最长的边。
 
 
 # SPTAG的使用
+## 安装
+确保安装以下依赖：
+* swig >= 3.0
+* cmake >=3.12.0
+* boost == 1.67.0
+
+Window安装可以参考文档：[Windows Installation](https://github.com/microsoft/SPTAG/blob/master/docs/WindowsInstallation.md)。
+
+
+## 构建
+1. 克隆仓库[mcirosoft/SPTAG](https://github.com/microsoft/SPTAG)。
+
+    ```
+    git clone https://github.com/microsoft/SPTAG
+    ```
+
+2. 进入克隆的仓库的目录，执行以下命令：
+   ```
+    mkdir build
+    cd build
+    cmake -A x64 ..
+   ```
+   注：如果提示"CMAKE Could not find Boost 1.67"，可以使用以下命令指定Boost目录。
+   ```
+    cmake -DBOOST_ROOT=[your boost root] -DBOOST_INCLUDEDIR=[your boost include directory] -DBOOST_LIBRARYDIR=[your boost library directory] ..
+   ```
+
+   其中，
+    * `BOOST_INCLUDEDIR`:`C:\INSTALL_DIR\boost_1_67_0\`
+    * `BOOST_LIBRARYDIR`: `C:\INSTALL_DIR\boost_1_67_0\lib64-msvc-12.0`
+    * `BOOST_ROOT`: `C:\INSTALL_DIR\boost_1_67_0\boost`
+
+3. 进入刚刚新建的`build`目录，在Visual Studio中打开`SPTAGLib.sln`，编译运行。
+4. 编译完成后，会在`build/release`目录下生成我们需要的内容，将这个目录添加到环境变量`PYTHONPATH`中。
+5. 打开Python，执行`import SPTAG`，若无报错则已完成SPTAG的构建。
+
+
+## 使用
+完成了SPTAG的构建后，可以在Python中使用，下面提供了两个使用示例。
+
+### 随机数据示例
+
+下面代码生成了包含100条2维的随机向量数据集，我们利用该数据集构建索引，再通过索引查询向量。
+```
+import SPTAG
+import numpy as np
+
+d = 2  # Dimension
+nb = 100  # Dataset size
+
+np.random.seed(1234)
+randomData = np.random.random((nb,d)).astype('float32')
+
+xq = np.array([0.2 , 0.4 ]).astype('float32') # The query vector
+k=4 # Number of results to return
+
+# Build index
+algorithm = 'KDT' # 'BKT' or 'KDT'
+distmethod = 'L2' # 'L2' or 'Cosine'
+
+i=SPTAG.AnnIndex(algorithm,'Float',randomData.shape[1])
+i.SetBuildParam("NumberOfThreads",'4')
+i.SetBuildParam("DistCalcMethod",distmethod)
+
+if i.Build(randomData,randomData.shape[0]):
+    i.Save("testIndex")
+
+# Search
+i = SPTAG.AnnIndex.Load('testIndex') # load index
+result = i.Search(xq,k)
+print(result[0]) # ids
+print(result[1]) # distances
+```
+
+### 图片向量搜索示例
+
+利用SPTAG实现对图片的搜索，请参考[图片向量搜索示例](./codes/imageSearchDemo.ipynb)。

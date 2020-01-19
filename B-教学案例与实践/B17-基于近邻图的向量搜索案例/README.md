@@ -285,13 +285,73 @@ Window安装可以参考文档：[Windows Installation](https://github.com/micro
 
 
 ## 使用
-完成了SPTAG的构建后，可以在Python中使用，下面提供了两个使用示例。
+完成了SPTAG的构建后，我们可以在Python中使用，下面是SPTAG的Python接口。详细使用内容请参考：[SPTAG Quick Start](https://github.com/microsoft/SPTAG/blob/master/docs/GettingStart.md)。
 
-### 随机数据示例
+### Python接口
 
-下面代码生成了包含100条2维的随机向量数据集，我们利用该数据集构建索引，再通过索引查询向量。
+1. 初始化索引
+    ```
+    SPTAG.AnnIndex(algo, type, dimension)
+        algo: 索引算法的类型，可选'BKT', 'KDT'
+        type: 向量数据类型，如'Float','Int8', 'Int16'
+        dimension: 输入向量的维度
+    ```
+
+2. 设置构建参数
+   ```
+    SPTAG.AnnIndex.SetBuildParam(key,value)
+        key: 参数名
+        value：参数值
+   ```
+
+3. 构建索引
+   ```
+    SPTAG.AnnIndex.Build(vectors, sample_num)
+        vectors: 输入向量数据集
+        sample_num： 输入向量的数量
+   ```
+
+4. 保存索引
+   ```
+    SPTAG.AnnIndex.Save(index)
+        index: 输出保存的索引名，加载索引时需指定
+   ```
+
+5. 加载索引
+   ```
+    SPTAG.AnnIndex.Load(index)
+        index: 待加载的索引名 
+   ```
+
+6. 搜索
+   ```
+    SPTAG.AnnIndex.Search(query, k)
+        query: 查询向量
+        k: 指定返回前k个最近邻
+   ```
+
+7. 添加至索引
+   ```
+    SPTAG.AnnIndex.Add(vectors, sample_num)
+        vectors: 待添加向量数据集
+        sample_num： 待添加向量的数量
+   ```
+
+8. 从索引中删除
+   ```
+    SPTAG.AnnIndex.Delete(vectors, sample_num)
+        vectors: 待删除向量数据集
+        sample_num： 待删除向量的数量
+   ```
+
+### 使用示例
+
+下面我们提供了两个SPTAG的使用示例。
+
+#### 随机数据示例
+
+我们先随机生成包含100条2维的随机向量数据集
 ```
-import SPTAG
 import numpy as np
 
 d = 2  # Dimension
@@ -299,9 +359,11 @@ nb = 100  # Dataset size
 
 np.random.seed(1234)
 randomData = np.random.random((nb,d)).astype('float32')
+```
 
-xq = np.array([0.2 , 0.4 ]).astype('float32') # The query vector
-k=4 # Number of results to return
+利用生成的数据构建索引`testIndex`
+```
+import SPTAG
 
 # Build index
 algorithm = 'KDT' # 'BKT' or 'KDT'
@@ -313,14 +375,27 @@ i.SetBuildParam("DistCalcMethod",distmethod)
 
 if i.Build(randomData,randomData.shape[0]):
     i.Save("testIndex")
+```
 
+任意指定查询向量，在此我们指定查询向量xq为[0.2, 0.4]。加载索引`testIndex`，搜索并指定返回前4个与xq的最近邻。
+```
 # Search
+
+k=4 # Number of results to return
+xq = np.array([0.2 , 0.4 ]).astype('float32') # The query vector
+
 i = SPTAG.AnnIndex.Load('testIndex') # load index
+
 result = i.Search(xq,k)
+
 print(result[0]) # ids
 print(result[1]) # distances
 ```
 
-### 图片向量搜索示例
+#### 图片向量搜索示例
 
-利用SPTAG实现对图片的搜索，请参考[图片向量搜索示例](./codes/imageSearchDemo.ipynb)。
+图片向量搜索的原理是：利用特定算法将图片数据集转换成向量，再利用SPTAG构建索引。当给定查询图片时，我们利用同样的算法将图片转换成查询向量，使用查询向量在索引中搜索最近邻向量，搜索得到的最近邻向量对应的原图片即为我们搜索的结果。
+
+在示例中，我们选择了VGG16模型将图片转换成向量。
+
+请参考[图片向量搜索示例](./codes/imageSearchDemo.ipynb)查看详细的图片向量搜索演示。

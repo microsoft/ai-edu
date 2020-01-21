@@ -27,4 +27,4 @@ synonyms==3.10.1
 tensorflow==1.14.0
 tensor2tensor==1.14.1
 urllib3
-Werkzeug==0.14.1
+Werkzeug==0.15.3

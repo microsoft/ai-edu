@@ -40,13 +40,13 @@
    - README.md # 可作为目录，在此引用其余内容
    
    /Chapter1 # 将本章节相关资源放置在此目录下
-   	- README.md # 打开此目录时会自动加载此文件
+   	 - README.md # 打开此目录时会自动加载此文件
      - Example.md
      - Example.pdf
      ...
      
    /Chapter2 # 将本章节相关资源放置在此目录下
-   	- README.md
+   	 - README.md
      ...
      
    ...

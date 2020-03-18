@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 from io import open
 import glob
@@ -6,7 +8,8 @@ import unicodedata
 import string
 import numpy as np
 
-all_letters = string.ascii_letters + " .,;'"
+#all_letters = string.ascii_letters + " .,;'"
+all_letters = string.ascii_letters
 lower_letters = string.ascii_letters[0:26] + " .,;'"
 language_index = []
 

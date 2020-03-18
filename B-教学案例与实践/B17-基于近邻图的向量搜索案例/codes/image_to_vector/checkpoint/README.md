@@ -1,0 +1,1 @@
+在[Pre-Train Model](https://github.com/tensorflow/models/tree/master/research/slim#pre-trained-models)中下载VGG 16的Checkpoint并保存至此目录

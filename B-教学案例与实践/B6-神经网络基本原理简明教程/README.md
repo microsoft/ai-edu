@@ -1,12 +1,17 @@
-﻿# AI-神经网络基本原理简明教程目录
-<!--Copyright © Microsoft Corporation. All rights reserved.
-适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可-->
+﻿<!--Copyright © Microsoft Corporation. All rights reserved.
+  适用于[License](https://github.com/Microsoft/ai-edu/blob/master/LICENSE.md)版权许可-->
+
+# 神经网络基本原理教程说明
+
+## 写在前面
+
+如果您觉得这个教程对您有用，请不要忘记给本站加星（点击网页顶部的Star标签），星越多说明本教程越对大家有帮助，我们就越会努力完善本站。
 
 ## 如何浏览本系列教程
 
 1. 如果使用浏览器在线观看的话，可以使用Chrome浏览器，[加这个Math展示控件](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
 
-2. 也可以clone全部内容到本地，然后用VSCode浏览，但VSCode中需要安装能读取Markdown格式的扩展，比如Markdown Preview Enhanced.
+2. 也可以clone全部内容到本地，然后用VSCode浏览，但VSCode中需要安装能读取Markdown格式的扩展，比如Markdown AllInOne插件。
 
 ## 写在前面，为什么要出这个系列的教程呢？
 
@@ -15,24 +20,6 @@
 这取决于你是想真正地掌握“深度学习”的思想，还是只想成为一个调参师？在我们看来，如TensorFlow，CNTK这些伟大的深度学习工具，是为了解决实际的应用问题而生的，而不是用来学习“深度学习”知识和思想的。所以我们根据自己亲身经历的学习轨迹，归纳出了以下教程，可以帮助小白做到真正的从入门到精通。
 
 通过以下循序渐进地学习与动手实践，一方面可以帮助读者深刻理解“深度学习”的基础知识，更好地理解并使用现有框架，另一方面可以助力读者快速学习最新出现的各种神经网络的扩展或者变型，跟上快速发展的AI浪潮。
-
-对于这份教程的内容，如果没有额外的说明，我们通常使用如下表格的命名约定：
-
-| 符号 | 含义|
-|:---:|---|
-|X|输入样本|
-|Y|输入样本的标签 |
-|Z|线性运算的结果|
-|A|激活函数/结果|
-|W|权重矩阵|
-|B|偏移矩阵|
-|J|损失函数|
-|大写字母|矩阵或矢量，如A,W,B|
-|小写字母|变量，标量，如a,w,b|
-|$x_{1,2}$|第1个样本的第2个特征值|
-|$w^L_{2,3}$|第L层第2个神经元对第L-1层第3个神经元的权重值|
-|矩阵的行|一批样本的某一个特征值的集合|
-|矩阵的列|一批样本的某一个样本的所有特征值|
 
 ## 适用范围
   
@@ -49,14 +36,13 @@
   环境：
   
   - Windows 10 version 1809
-  - Visual Studio 2017 Community or above
   - Python 3.6.6
-  - Jupyter Notebook (可选)
+  - Visual Studio 2017 Community or above
+  - VS Code
   
   自己：
 
   清醒的头脑（困了的同学请自觉泡茶），纸和笔（如果想跟着推公式的话），闹钟（防止久坐按时起来转转），厚厚的衣服（有暖气的同学请忽略）
-
 
 ## 网络结构概览
 
@@ -70,5 +56,16 @@
 |多入<br>单出<br>两层|<img src="./Images/10/xor_nn.png"/>|非线性二分类|
 |多入<br>多出<br>两层|<img src="./Images/11/nn.png"/>|非线性多分类|
 |多入<br>多出<br>三层|<img src="./Images/12/nn3.png"/>|非线性多分类|
+|多层全连接网络|<img src="./Images/14/mnist_net.png"/>|非线性多分类|
+|带批归一化层的多层全连接网络|<img src="./Images/15/bn_mnist.png"/>|非线性多分类|
+|带丢弃层的多层全连接网络|<img src="./Images/16/dropout_net.png"/>|非线性多分类|
+|简单的卷积神经网络|<img src="./Images/17/conv_net.png"/>|非线性多分类|
+|复杂的卷积神经网络|<img src="./Images/18/mnist_net.png"/>|非线性多分类|
+|单向循环神经网络|<img src="./Images/19/bptt_simple.png"/>|非线性多分类|
+|双向循环神经网络|<img src="./Images/19/bi_rnn_net_right.png"/>|非线性多分类|
+|深度循环神经网络|<img src="./Images/19/deep_rnn_net.png"/>|非线性多分类|
 
+## 写在后面
 
+加星点赞是一种良好的Open Source的程序员素养，作者的目标是得到10000颗星！星越多，我们的创作团队越努力！
+送人玫瑰，手有余香，传播给你的朋友，让大家一起进步！

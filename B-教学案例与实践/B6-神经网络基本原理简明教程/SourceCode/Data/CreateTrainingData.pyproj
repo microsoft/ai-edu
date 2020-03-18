@@ -51,6 +51,10 @@
     <Compile Include="ch19_EchoRandom.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ch19_PM25.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ch19_SinCos.py" />
     <Compile Include="ch19_NameClassifier.py">
       <SubType>Code</SubType>
     </Compile>

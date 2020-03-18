@@ -39,7 +39,7 @@ def ShowLossHistory(folder, file1, hp1, file2, hp2, file3, hp3, file4, hp4):
 
 def try_hyperParameters(folder, n_hidden, batch_size, eta):
     hp = HyperParameters_2_0(1, n_hidden, 1, eta, 10000, batch_size, 0.001, NetType.Fitting, InitialMethod.Xavier)
-    filename = str.format("{0}\\{1}_{2}_{3}.pkl", folder, ne, batch, eta).replace('.', '', 1)
+    filename = str.format("{0}\\{1}_{2}_{3}.pkl", folder, n_hidden, batch_size, eta).replace('.', '', 1)
     file = Path(filename)
     if file.exists():
         return file, hp

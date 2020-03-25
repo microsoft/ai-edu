@@ -1,0 +1,49 @@
+<!-- Copyright (c) Microsoft. All rights reserved.
+     Licensed under the MIT License. See LICENSE file in the project root for full license information. -->
+<Window x:Class="CartoonTranslate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CartoonTranslate"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBlock Grid.Row="0" Text="Input URL:"/>
+            <TextBox x:Name="tb_Url" Grid.Row="1" Width="600"
+                     Text="http://stat.ameba.jp/user_images/20121222/18/secretcube/2e/19/j/o0800112012341269548.jpg"/>
+            <Button x:Name="btn_Show" Content="Show" Click="btn_Show_Click" Width="100"/>
+            <Button x:Name="btn_OCR" Content="OCR" Click="btn_OCR_Click" Width="100"/>
+            <!--<Button x:Name="btn_Cluster" Content="Cluster" Click="btn_Cluster_Click" Width="100"/>-->
+            <Button x:Name="btn_Translate" Content="Translate" Click="btn_Translate_Click" Width="100"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Text="Engine:"/>
+            <RadioButton x:Name="rb_V1" GroupName="gn_Engine" Content="OCR" Margin="20,0" IsChecked="True" Click="rb_V1_Click"/>
+            <RadioButton x:Name="rb_V2" GroupName="gn_Engine" Content="Recognize Text" Click="rb_V2_Click"/>
+            <TextBlock Text="Language:" Margin="20,0"/>
+            <RadioButton x:Name="rb_English" GroupName="gn_Language" Content="English"/>
+            <RadioButton x:Name="rb_Japanese" GroupName="gn_Language" Content="Japanese" IsChecked="True" Margin="20,0"/>
+        </StackPanel>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Source Image" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="Target Image" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Image x:Name="imgSource" Grid.Column="0" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Image x:Name="imgTarget" Grid.Column="2" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Canvas x:Name="canvas_1" Grid.Column="0"/>
+            <Canvas x:Name="canvas_2" Grid.Column="2"/>
+        </Grid>
+    </Grid>
+</Window>

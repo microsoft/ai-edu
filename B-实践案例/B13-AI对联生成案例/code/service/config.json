@@ -1,0 +1,6 @@
+{
+    "t2t_usr_dir":"./up2down_model/data",
+    "problem":"translate_up2down",
+    "model_name":"up2down",
+    "server_address":"127.0.0.1:9000"
+}

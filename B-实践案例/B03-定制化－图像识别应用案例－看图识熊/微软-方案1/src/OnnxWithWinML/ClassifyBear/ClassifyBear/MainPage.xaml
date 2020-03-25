@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="ClassifyBear.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ClassifyBear"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <StackPanel Margin="12">
+            <TextBlock Text="输入要识别的图片地址:" Margin="12"></TextBlock>
+            <TextBox x:Name="tbImageUrl" Margin="12"></TextBox>
+            <Button x:Name="tbRun" Content="识别" Tapped="TbRun_Tapped" Margin="12"></Button>
+            <TextBlock x:Name="tbBearType" Margin="12"></TextBlock>
+            <Grid BorderBrush="Gray" BorderThickness="1" Margin="12" Width="454" Height="454">
+                <Image x:Name="imgBear" Stretch="Fill" ImageOpened="ImgBear_ImageOpened" ImageFailed="ImgBear_ImageFailed"></Image>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Page>

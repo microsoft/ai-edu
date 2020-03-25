@@ -1,0 +1,52 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>d6d2a726-eb70-4989-b823-7e7373df1b43</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>Level1_DrawActivators1.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>ch06</Name>
+    <RootNamespace>ch06</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Level1_DrawActivators1.py" />
+    <Compile Include="Level2_DrawActivators2.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Activators\Elu.py" />
+    <Compile Include="Activators\LeakyRelu.py" />
+    <Compile Include="Activators\BenIdentity.py" />
+    <Compile Include="Activators\Softplus.py" />
+    <Compile Include="Activators\Relu.py" />
+    <Compile Include="Activators\Step.py" />
+    <Compile Include="Activators\Tanh.py" />
+    <Compile Include="Activators\Sigmoid.py" />
+    <Compile Include="Activators\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Activators\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>

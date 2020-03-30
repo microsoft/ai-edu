@@ -255,7 +255,7 @@ pip install -r train_requirements.txt
 3. 去掉出现次数，只保留字
     
     ```
-    cat merge.txt.vocab | awk ‘{print $1}’ > merge.txt.vocab.clean
+    cat merge.txt.vocab | awk '{print $1}' > merge.txt.vocab.clean
     ```
 
 4. 生成测试集。

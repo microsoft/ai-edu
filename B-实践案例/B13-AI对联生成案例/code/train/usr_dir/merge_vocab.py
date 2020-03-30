@@ -19,11 +19,11 @@ from tensor2tensor.utils import registry
 
 import tensorflow as tf
 
-SRC_TRAIN_DATA = 'train.in.txt'
-TGT_TRAIN_DATA = 'train.out.txt'
-SRC_DEV_DATA = 'test.in.txt'
-TGT_DEV_DATA = 'text.out.txt'
-MERGE_VOCAB = 'vocab.txt'
+SRC_TRAIN_DATA = 'train.txt.up.clean'
+TGT_TRAIN_DATA = 'train.txt.down.clean'
+SRC_DEV_DATA = 'dev.txt.up.clean'
+TGT_DEV_DATA = 'dev.txt.down.clean'
+MERGE_VOCAB = 'merge.txt.vocab.clean'
 VOCAB_SIZE = 9122
 LOCATION_OF_DATA = os.path.abspath(os.path.dirname(__file__)) + '/'
 

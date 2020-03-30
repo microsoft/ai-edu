@@ -12,12 +12,12 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 * [案例介绍](#案例介绍)
   * [使用场景](#使用场景)
-  * [发展历程及实现方法](#发展历程及实现方法) 
+  * [发展历程及实现方法](#发展历程及实现方法)
   * [案例价值](#案例价值)
 * [核心知识点](#核心知识点)
 * [先修知识](#先修知识)
 * [环境与工具](#环境与工具)
-  * [软件依赖](#软件依赖) 
+  * [软件依赖](#软件依赖)
 * [案例大纲](#案例大纲)
 * [推荐学习时长](#推荐学习时长)
 * [案例详解](#案例详解)
@@ -110,19 +110,19 @@ LSTM主要解决了RNN中容易出现的梯度爆炸和梯度消失的问题，�
 
 # 先修知识
 * 了解RNN的基本概念和原理
-  
+
   参考链接： [循环神经网络](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/19.0-普通循环神经网络.md)
 
 * Seq2Seq模型的基本概念
-  
+
   参考链接：[序列到序列](../B6-神经网络基本原理简明教程/Step9%20-%20RNN/20.4-序列到序列.md)
 
 * 了解主流深度学习框架
- 
+
   参考链接：[tensorflow](https://www.tensorflow.org/tutorials/quickstart/beginner), [Pytorch](https://pytorch-cn.readthedocs.io/zh/latest/)
 
 * 熟悉github的使用
- 
+
   参考链接：[GitHub入门](https://help.github.com/cn/github/using-git)
 
 
@@ -145,7 +145,7 @@ LSTM主要解决了RNN中容易出现的梯度爆炸和梯度消失的问题，�
 
 安装示例：
 ```
-pip install -r train_requirements.txt
+pip3 install -r train_requirements.txt
 ```
 
 # 案例大纲
@@ -157,7 +157,7 @@ pip install -r train_requirements.txt
 | 3 | 语言模型简介| 传统语言模型； 基于神经网络的语言模型 | 了解语言模型发展历程及基本原理 |
 | 4 | Seq2Seq序列模型 | Seq2Seq, Encoder-Decoder, Attention, Transformer | 掌握Seq2Seq模型原理 |
 | 5 | 模型库的使用 | Tensor2Tensor, Fairseq | 使用模型库构建并训练语言模型；使用训练好的模型进行推理 |
-| 6 | 应用开发 | 后端开发 | HTTP服务搭建 | 
+| 6 | 应用开发 | 后端开发 | HTTP服务搭建 |
 
 # 推荐学习时长
 
@@ -187,7 +187,7 @@ pip install -r train_requirements.txt
     + Fairseq 工具包：[Fairseq](https://github.com/pytorch/fairseq) 是 Facebook 推出的一个序列建模工具包，这个工具包允许研究和开发人员自定义训练翻译、摘要、语言模型等文本生成任务。这里是它的 PyTorch 实现。
 
     本案例中，我们使用 T2T 工具包进行模型训练。
- 
+
 
 
 ## 数据收集
@@ -234,8 +234,8 @@ pip install -r train_requirements.txt
     b. 执行如下命令完成文件分隔
 
     ```
-    python split_data.py train.txt.up
-    python split_data.py train.txt.down
+    python3 split_data.py train.txt.up
+    python3 split_data.py train.txt.down
     ```
 
     分隔后生成两个文件：train.txt.up.clean 和 train.txt.down.clean
@@ -247,15 +247,16 @@ pip install -r train_requirements.txt
     ```
 
 2. 统计文件中出现的不同字和每个字的出现次数。
-   
+
     ```
-    subword-nmt get-vocab -–input merge.txt -–output merge.txt.vocab
+    subword-nmt get-vocab --input merge.txt --output merge.txt.vocab
     ```
 
-3. 去掉出现次数，只保留字
-    
+3. 去掉出现次数，只保留字，并统计字数
+
     ```
-    cat merge.txt.vocab | awk ‘{print $1}’ > merge.txt.vocab.clean
+    cat merge.txt.vocab | awk '{print $1}' > merge.txt.vocab.clean
+    wc -l merge.txt.vocab.clean
     ```
 
 4. 生成测试集。
@@ -263,14 +264,16 @@ pip install -r train_requirements.txt
     取训练集中前 100 个数据作为测试集。（在实际训练过程中，没有用到测试集）
 
     ```
-    head -n 100 train.txt.up > dev.txt.up
-    head -n 100 train.txt.down > dev.txt.down
+    head -n 100 train.txt.up.clean > dev.txt.up.clean
+    head -n 100 train.txt.down.clean > dev.txt.down.clean
     ```
 
 完成以上预处理以后，我们最终得到以下文件：
 
 * train.txt.up.clean
 * train.txt.down.clean
+* dev.txt.up.clean
+* dev.txt.down.clean
 * merge.txt.vocab.clean
 
 将上述文件放到`usr_dir`目录（新建目录）。
@@ -306,6 +309,8 @@ usr_dir \
     merge_vocab.py
     train.txt.up.clean
     train.txt.down.clean
+    dev.txt.up.clean
+    dev.txt.down.clean
     merge.txt.vocab.clean
 ```
 
@@ -485,7 +490,7 @@ cat result.txt
 ```
 
 ### 开始推理
-   
+
 给`inference.sh`增加可执行权限
 ```
 chmod +x ./inference.sh
@@ -549,7 +554,7 @@ chmod +x ./inference.sh
 
 3. 启动服务
     ```
-    tensorflow_model_server --port=9000 --model_name=up2down --model_base_path=$HOME/output/export 
+    tensorflow_model_server --port=9000 --model_name=up2down --model_base_path=$HOME/output/export
     ```
     此处需要注意，
     * `--port`：服务开启的端口
@@ -666,16 +671,16 @@ up2down.get_down_couplet([upper_couplet])
 下面是返回结果的示例：
 ```
 {
-    'tags': 
+    'tags':
         [
-            {'name': 'person', 'confidence': 0.99773770570755}, 
-            {'name': 'birthday cake', 'confidence': 0.992998480796814}, 
-            {'name': 'food', 'confidence': 0.9029457569122314}, 
+            {'name': 'person', 'confidence': 0.99773770570755},
+            {'name': 'birthday cake', 'confidence': 0.992998480796814},
+            {'name': 'food', 'confidence': 0.9029457569122314},
             ...
-        ], 
-    'description': 
+        ],
+    'description':
         [
-            'person', 'woman', 'holding', 'smiling', ... 
+            'person', 'woman', 'holding', 'smiling', ...
         ]
 }
 ```
@@ -713,15 +718,15 @@ up2down.get_down_couplet([upper_couplet])
 匹配分为如下几个步骤：
 
 1. 分别找出包含每个tag的上联的索引
-    
+
     例如，假设通过上一步的翻译及过滤最终得到了：'天'， '草'，'沙滩'这几个tag，我们需要分别找出包含这几个tag的上联的索引，如：
 
     * '天'：{ 3, 74, 237, 345, 457, 847 }
-    * '草'：{ 23, 74, 455, 674, 54, 87, 198 } 
+    * '草'：{ 23, 74, 455, 674, 54, 87, 198 }
     * '沙滩'：{ 86, 87, 354, 457 }
 
 2. 找出包含两个tag的对每组索引分别取交集
-    
+
     例如，
     * '天' + '草'：{ 74 }
     * '天' + '沙滩': { 457 }

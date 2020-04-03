@@ -571,50 +571,52 @@ chmod +x ./inference.sh
 
 
 ### 在Python中调用
-    
-    启动模型服务后，完成以下步骤即可在Python中调用模型完成推理。
 
-    首先，新建目录，并将文件按如下目录结构放置。
-    ```
-    service \
-      config.json
-      up2down_model \
-        up2down_model.py
-        data \
-          __init__.py
-          merge.txt.vocab.clean
-          merge_vocab.py
-    ```
-    其中，字典文件`merge.txt.vocab.clean`和`merge_vocab.py`需拷贝到`service\up2down_model\data`目录。
+启动模型服务后，完成以下步骤即可在Python中调用模型完成推理。
 
-    此外，我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载该文件后拷贝到`service\up2down_model`目录。
+首先，新建目录，并将文件按如下目录结构放置。
 
-    另外，我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
+```
+service \
+  config.json
+  up2down_model \
+    up2down_model.py
+    data \
+      __init__.py
+      merge.txt.vocab.clean
+      merge_vocab.py
+```
 
-    ```
-    {
-        "t2t_usr_dir":"./up2down_model/data",
-        "problem":"translate_up2down",
-        "model_name":"up2down",
-        "server_address":"127.0.0.1:9000"
-    }
-    ```
+其中，字典文件`merge.txt.vocab.clean`和`merge_vocab.py`需拷贝到`service\up2down_model\data`目录。
 
-    * `t2t_usr_dir`：对联问题模块的定义文件及字典的存放目录
-    * `model_name`：开启`tensorflow-serving-api`时定义的模型名称
-    * `problem`：定义的问题名称
-    * `server_address`: 服务开启的地址及端口
+此外，我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载该文件后拷贝到`service\up2down_model`目录。
+
+另外，我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
+
+```
+{
+    "t2t_usr_dir":"./up2down_model/data",
+    "problem":"translate_up2down",
+    "model_name":"up2down",
+    "server_address":"127.0.0.1:9000"
+}
+```
+
+* `t2t_usr_dir`：对联问题模块的定义文件及字典的存放目录
+* `model_name`：开启`tensorflow-serving-api`时定义的模型名称
+* `problem`：定义的问题名称
+* `server_address`: 服务开启的地址及端口
 
 
-    最后，在`service`目录下新建Python文件，通过以下两行代码即可完成模型的推理并生成下联。
+最后，在`service`目录下新建Python文件，通过以下两行代码即可完成模型的推理并生成下联。
 
-    ```
-    from up2down_model.up2down_model import up2down
+```
+from up2down_model.up2down_model import up2down
 
-    up2down.get_down_couplet([upper_couplet])
-    ```
+up2down.get_down_couplet([upper_couplet])
+```
 
-    由于服务开启后无需再次加载模型和其余相关文件，因此模型推理速度非常快，适合作为应用的接口调用。
+由于服务开启后无需再次加载模型和其余相关文件，因此模型推理速度非常快，适合作为应用的接口调用。
 
 ### 搭建Flask Web应用
 

@@ -534,9 +534,17 @@ chmod +x ./inference.sh
 1. 安装`tensorflow-serving-api`
 
     ```
-    pip install tensorflow-serving-api==1.14.0
+    pip3 install tensorflow-serving-api==1.14.0
+
+    echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | sudo tee /etc/apt/sources.list.d/tensorflow-serving.list
+
+    curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | sudo apt-key add -
+
+    sudo apt-get update && sudo apt-get install tensorflow-model-server
     ```
-    注意：安装`tensorflow-serving-api`会自动安装`tensorflow`的cpu版本，会覆盖`tensorflow-gpu`版本。
+    注意：
+    1. 安装`tensorflow-serving-api`会自动安装`tensorflow`的cpu版本，会覆盖`tensorflow-gpu`版本。
+    2. 如果有依赖缺失，请查阅:[https://medium.com/@noone7791/how-to-install-tensorflow-serving-load-a-saved-tf-model-and-connect-it-to-a-rest-api-in-ubuntu-48e2a27b8c2a](https://medium.com/@noone7791/how-to-install-tensorflow-serving-load-a-saved-tf-model-and-connect-it-to-a-rest-api-in-ubuntu-48e2a27b8c2a)。
 
 
 2. 导出我们训练好的模型
@@ -560,9 +568,24 @@ chmod +x ./inference.sh
     * `--model_base_path`：导出的模型的目录
 
 
+4. 在Python中调用
+    启动模型服务后，完成以下步骤即可在Python中调用模型完成推理。
 
-    我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中。
+    首先，新建目录，并将文件按如下目录结构放置。
+    ```
+    service \
+        config.json
+        up2down_model \
+            up2down_model.py
+            data \
+                __init__.py
+                merge.txt.vocab.clean
+                merge_vocab.py
+        
+    ```
+    将字典文件`merge.txt.vocab.clean`和`merge_vocab.py`拷贝到`service\up2down_model\data`目录。
 
+    我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载后拷贝到`service\up2down_model`目录。
 
     我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
 
@@ -582,15 +605,15 @@ chmod +x ./inference.sh
 
 
 
-在启动完服务以后，通过以下两行代码即可完成模型的推理并生成下联。
+    最后，在`service`目录下新建Python文件，通过以下两行代码即可完成模型的推理并生成下联。
 
-```
-from up2down_model.up2down_model import up2down
+    ```
+    from up2down_model.up2down_model import up2down
 
-up2down.get_down_couplet([upper_couplet])
-```
+    up2down.get_down_couplet([upper_couplet])
+    ```
 
-由于服务开启后无需再次加载模型和其余相关文件，因此模型推理速度非常快，适合作为应用的接口调用。
+    由于服务开启后无需再次加载模型和其余相关文件，因此模型推理速度非常快，适合作为应用的接口调用。
 
 ### 搭建Flask Web应用
 

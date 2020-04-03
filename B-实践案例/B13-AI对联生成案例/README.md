@@ -567,9 +567,11 @@ chmod +x ./inference.sh
     * `--model_name`：模型名称，可自定义，会在后续使用到
     * `--model_base_path`：导出的模型的目录
 
+    至此，模型服务已成功启动。
 
-4. 在Python中调用
 
+### 在Python中调用
+    
     启动模型服务后，完成以下步骤即可在Python中调用模型完成推理。
 
     首先，新建目录，并将文件按如下目录结构放置。
@@ -585,7 +587,7 @@ chmod +x ./inference.sh
     ```
     其中，字典文件`merge.txt.vocab.clean`和`merge_vocab.py`需拷贝到`service\up2down_model\data`目录。
 
-    此外，我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载后拷贝到`service\up2down_model`目录。
+    此外，我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载该文件后拷贝到`service\up2down_model`目录。
 
     另外，我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
 
@@ -616,17 +618,19 @@ chmod +x ./inference.sh
 
 ### 搭建Flask Web应用
 
+利用Flask，我们可以快速地用Python搭建一个Web应用，实现对联生成。
+
 主要分为以下几个步骤：
 
 1. 安装flask
 
     ```
-    pip install flask
+    pip3 install flask
     ```
 
 2. 搭建服务
 
-    我们需要新建一个`app.py`文件，内容如下：
+    我们在`service`目录下新建一个`app.py`文件，内容如下：
     ```
     from flask import Flask
     from flask import request

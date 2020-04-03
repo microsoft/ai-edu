@@ -569,25 +569,25 @@ chmod +x ./inference.sh
 
 
 4. 在Python中调用
+
     启动模型服务后，完成以下步骤即可在Python中调用模型完成推理。
 
     首先，新建目录，并将文件按如下目录结构放置。
     ```
     service \
-        config.json
-        up2down_model \
-            up2down_model.py
-            data \
-                __init__.py
-                merge.txt.vocab.clean
-                merge_vocab.py
-        
+      config.json
+      up2down_model \
+        up2down_model.py
+        data \
+          __init__.py
+          merge.txt.vocab.clean
+          merge_vocab.py
     ```
-    将字典文件`merge.txt.vocab.clean`和`merge_vocab.py`拷贝到`service\up2down_model\data`目录。
+    其中，字典文件`merge.txt.vocab.clean`和`merge_vocab.py`需拷贝到`service\up2down_model\data`目录。
 
-    我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载后拷贝到`service\up2down_model`目录。
+    此外，我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载后拷贝到`service\up2down_model`目录。
 
-    我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
+    另外，我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
 
     ```
     {
@@ -602,7 +602,6 @@ chmod +x ./inference.sh
     * `model_name`：开启`tensorflow-serving-api`时定义的模型名称
     * `problem`：定义的问题名称
     * `server_address`: 服务开启的地址及端口
-
 
 
     最后，在`service`目录下新建Python文件，通过以下两行代码即可完成模型的推理并生成下联。

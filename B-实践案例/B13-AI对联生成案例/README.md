@@ -534,21 +534,27 @@ chmod +x ./inference.sh
 1. 安装`tensorflow-serving-api`
 
     ```
-    pip install tensorflow-serving-api==1.14.0
+    pip3 install tensorflow-serving-api==1.14.0
+
+    echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | sudo tee /etc/apt/sources.list.d/tensorflow-serving.list
+
+    curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | sudo apt-key add -
+
+    sudo apt-get update && sudo apt-get install tensorflow-model-server
     ```
-    注意：安装`tensorflow-serving-api`会自动安装`tensorflow`的cpu版本，会覆盖`tensorflow-gpu`版本。
+    注意：
+    1. 安装`tensorflow-serving-api`会自动安装`tensorflow`的cpu版本，会覆盖`tensorflow-gpu`版本。
+    2. 如果有依赖缺失，请查阅:[https://medium.com/@noone7791/how-to-install-tensorflow-serving-load-a-saved-tf-model-and-connect-it-to-a-rest-api-in-ubuntu-48e2a27b8c2a](https://medium.com/@noone7791/how-to-install-tensorflow-serving-load-a-saved-tf-model-and-connect-it-to-a-rest-api-in-ubuntu-48e2a27b8c2a)。
 
 
 2. 导出我们训练好的模型
 
     ```
-    cd up2down_model
-
     t2t-exporter --model=transformer  \
             --hparams_set=transformer_small  \
             --problem=translate_up2down  \
-            --t2t_usr_dir=./data \
-            --data_dir=./data \
+            --t2t_usr_dir=./usr_dir \
+            --data_dir=./data_dir \
             --output_dir=./output
     ```
 
@@ -561,30 +567,48 @@ chmod +x ./inference.sh
     * `--model_name`：模型名称，可自定义，会在后续使用到
     * `--model_base_path`：导出的模型的目录
 
+    至此，模型服务已成功启动。
 
 
-    我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中。
+### 在Python中调用
+
+启动模型服务后，完成以下步骤即可在Python中调用模型完成推理。
+
+首先，新建`service`目录，并将文件按如下目录结构放置。
+
+```
+service \
+  config.json
+  up2down_model \
+    up2down_model.py
+    data \
+      __init__.py
+      merge.txt.vocab.clean
+      merge_vocab.py
+```
+
+其中，字典文件`merge.txt.vocab.clean`和`merge_vocab.py`需拷贝到`service\up2down_model\data`目录。
+
+此外，我们将与模型服务通信获取下联的函数封装在了[up2down_model.py](code/service/up2down_model/up2down_model.py)中，下载该文件后拷贝到`service\up2down_model`目录。
+
+另外，我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
+
+```
+{
+    "t2t_usr_dir":"./up2down_model/data",
+    "problem":"translate_up2down",
+    "model_name":"up2down",
+    "server_address":"127.0.0.1:9000"
+}
+```
+
+* `t2t_usr_dir`：对联问题模块的定义文件及字典的存放目录
+* `model_name`：开启`tensorflow-serving-api`时定义的模型名称
+* `problem`：定义的问题名称
+* `server_address`: 服务开启的地址及端口
 
 
-    我们需要修改[config.json](./code/service/config.json)文件为对应的内容：
-
-    ```
-    {
-        "t2t_usr_dir":"./up2down_model/data",
-        "problem":"translate_up2down",
-        "model_name":"up2down",
-        "server_address":"127.0.0.1:9000"
-    }
-    ```
-
-    * `t2t_usr_dir`：对联问题模块的定义文件及字典的存放目录
-    * `model_name`：开启`tensorflow-serving-api`时定义的模型名称
-    * `problem`：定义的问题名称
-    * `server_address`: 服务开启的地址及端口
-
-
-
-在启动完服务以后，通过以下两行代码即可完成模型的推理并生成下联。
+最后，在`service`目录下新建Python文件，通过以下两行代码即可完成模型的推理并生成下联。
 
 ```
 from up2down_model.up2down_model import up2down
@@ -596,17 +620,19 @@ up2down.get_down_couplet([upper_couplet])
 
 ### 搭建Flask Web应用
 
+利用Flask，我们可以快速地用Python搭建一个Web应用，实现对联生成。
+
 主要分为以下几个步骤：
 
 1. 安装flask
 
     ```
-    pip install flask
+    pip3 install flask
     ```
 
 2. 搭建服务
 
-    我们需要新建一个`app.py`文件，内容如下：
+    我们在`service`目录下新建一个`app.py`文件，内容如下：
     ```
     from flask import Flask
     from flask import request

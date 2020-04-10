@@ -1,12 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-from matplotlib import pyplot as plt
+
 import numpy as np
-import os
-import math
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 from MiniFramework.EnumDef_6_0 import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
@@ -18,7 +15,6 @@ from ExtendedDataReader.NameDataReader import *
 import torch.nn as nn
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-import torch.functional as F
 
 
 file = "../../data/ch19.name_language.txt"
@@ -29,7 +25,12 @@ def load_data():
     dr.GenerateValidationSet(1000)
     return dr
 
-def process_data(dr):               # fixed length as max_length
+def process_data(dr):               # 统一输入单词的长度，不足补0，此方法会增加训练时间
+    """
+
+    :param dr: class data reader
+    :return: process X, Y
+    """
     new_X = []
     new_Y = []
     for i in range(len(dr.X)):
@@ -38,48 +39,49 @@ def process_data(dr):               # fixed length as max_length
     for i in range(len(dr.Y)):
         for j in range(dr.Y[i].shape[0]):
             new_Y.append(dr.Y[i][j])
-    new_Y = np.argmax(new_Y, axis=1)
+    new_Y = np.argmax(new_Y, axis=1)            # new_Y (4400,10) ----> (4400,)  ont-hot编码改成Label encoding
     return np.array(new_X), np.array(new_Y)
 
 
 class RNN(nn.Module):
     def __init__(self):
         super(RNN, self).__init__()
-
         self.rnn = nn.LSTM(
-            input_size=29,
-            hidden_size=64,
+            input_size=29,          # character num.
+            hidden_size=16,         # RNN or LSTM hidden layer, 设置的稍大一些可能效果更佳，此处仅作对比
             num_layers=1,
             batch_first=True,
         )
-        self.out = nn.Linear(64, 10)
+        self.out = nn.Linear(16, 10)
+        self.softmax = nn.Softmax()         # classification, softmax
 
     def forward(self, x):
         r_out, (h_n, h_c) = self.rnn(x, None)
         out = self.out(r_out[:, -1, :])
+        out = self.softmax(out)
         return out
 
 if __name__ == '__main__':
-    max_epoch = 200      # hyper-parameters
+    max_epoch = 100      # hyper-parameters
+    lr = 0.2
     rnn = RNN()
 
     # Data processing
     dataReader = load_data()
-    X, Y = process_data(dataReader)
-    tensor_X, tensor_Y = torch.FloatTensor(X), torch.LongTensor(Y)
+    X, Y = process_data(dataReader)         # X ---  (4400, 17, 29)
+    tensor_X, tensor_Y = torch.FloatTensor(X), torch.LongTensor(Y)      # transform numpy to tensor
     torch_dataset = TensorDataset(tensor_X, tensor_Y)
-    train_loader = DataLoader(  # data loader class
+    train_loader = DataLoader(              # data loader class
         dataset=torch_dataset,
-        batch_size=128,
+        batch_size=8,
         shuffle=True,
     )
 
-    optimizer = torch.optim.Adam(rnn.parameters(), lr=1e-3)
-    loss_func = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(rnn.parameters(), lr=lr)
+    loss_func = nn.CrossEntropyLoss()       # classification  --- CrossEntropyLoss
 
-    plot_x = 0
-    plot_y_l = []               # loss track
-    plot_y_a = []               # accuracy track
+    plot_y_l = []               # record loss
+    plot_y_a = []               # record accuracy
     for epoch in range(max_epoch):
         for i, (batch_X, batch_Y) in enumerate(train_loader):
             optimizer.zero_grad()
@@ -107,4 +109,3 @@ if __name__ == '__main__':
     plt.xlabel('Epoch')
     plt.plot([i for i in range(max_epoch)], plot_y_a)
     plt.show()
-    # print(rnn(tensor_X).data.numpy().shape)

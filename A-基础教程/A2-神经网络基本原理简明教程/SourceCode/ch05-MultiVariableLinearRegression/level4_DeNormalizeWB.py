@@ -22,7 +22,7 @@ if __name__ == '__main__':
     reader.ReadData()
     reader.NormalizeX()
     # net
-    hp = HyperParameters_1_0(2, 1, eta=0.01, max_epoch=50, batch_size=10, eps = 1e-5)
+    hp = HyperParameters_1_0(2, 1, eta=0.01, max_epoch=500, batch_size=10, eps = 1e-5)
     net = NeuralNet_1_1(hp)
     net.train(reader, checkpoint=0.1)
     # inference

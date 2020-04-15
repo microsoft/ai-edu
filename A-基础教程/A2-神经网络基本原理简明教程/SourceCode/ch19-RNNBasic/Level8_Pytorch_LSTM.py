@@ -48,9 +48,10 @@ class RNN(nn.Module):
         super(RNN, self).__init__()
         self.rnn = nn.LSTM(
             input_size=29,          # character num.
-            hidden_size=16,         # RNN or LSTM hidden layer, 设置的稍大一些可能效果更佳，此处仅作对比
+            hidden_size=8,         # RNN or LSTM hidden layer, 设置的稍大一些可能效果更佳，此处仅作对比
             num_layers=1,
             batch_first=True,
+            bidirectional=True      # 双向LSTM, 若设置为False,对应hidden_size增大两倍
         )
         self.out = nn.Linear(16, 10)
         self.softmax = nn.Softmax()         # classification, softmax

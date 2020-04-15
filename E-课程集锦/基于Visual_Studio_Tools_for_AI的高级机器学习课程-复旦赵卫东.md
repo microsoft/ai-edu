@@ -7,7 +7,7 @@
 
 [城市声音分类案例](https://github.com/kadoufall/Urban-Sound-Classification-VS)
 
-[图像超分辨率案例](https://github.com/kadoufall/Urban-Sound-Classification-VS)
+[图像超分辨率案例](https://github.com/kadoufall/Image-Super-Resolution-VS)
 
 # 课程对象
 本课程适合高等院校本科生、研究生选修，也可作为对机器学习感兴趣的研究人员和工程技术人员参考学习。

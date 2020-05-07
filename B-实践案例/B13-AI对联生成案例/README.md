@@ -22,8 +22,8 @@ Copyright © Microsoft Corporation. All rights reserved.
 * [推荐学习时长](#推荐学习时长)
 * [案例详解](#案例详解)
   * [程序结构](#程序结构)
-  * [工具包的选择](#工具包的选择)
   * [数据收集](#数据收集)
+  * [工具包的选择](#工具包的选择)
   * [数据预处理](#数据预处理)
   * [模型训练](#模型训练)
   * [模型推理](#模型推理)
@@ -175,21 +175,6 @@ pip3 install -r train_requirements.txt
 
 由于在该结构中，NLP的核心内容在于上联生成下联，因此我们将会在案例中关注此部分的实现，并搭建一个简单的web应用将模型封装成api。
 
-## 工具包的选择
-
-想要完成一个自动生成对联的小程序，想法十分美好，但想要达到这个目标，光拍拍脑袋想想是不够的，需要训练出一个能完成对联生成的自然语言理解模型。于是乎，就有两个选择：
-
-1. 自己写一套完成对联生成工作的深度学习模型。这个工作量相当之大，可能需要一个NLP专业团队来进行开发，调优。
-2. 应用已有的深度学习模型，直接应用。这个选择比较符合客观需要。我们找到了两个工具包：
-
-    + Tensor2Tensor 工具包：Tensor2Tensor（以下简称T2T）是由 Google Brain 团队使用和维护的开源深度学习模型库，支持多种数据集和模型。T2T 在 github 上有完整的介绍和用法，可以访问[这里](https://github.com/tensorflow/tensor2tensor)了解详细信息。
-
-    + Fairseq 工具包：[Fairseq](https://github.com/pytorch/fairseq) 是 Facebook 推出的一个序列建模工具包，这个工具包允许研究和开发人员自定义训练翻译、摘要、语言模型等文本生成任务。这里是它的 PyTorch 实现。
-
-    本案例中，我们使用 T2T 工具包进行模型训练。
-
-
-
 ## 数据收集
 
 有了模型，还需要数据。巧妇难为无米之炊，没有数据，什么都是浮云。数据从哪里来呢？GitHub 上有很多开源贡献者收集和整理了对联数据，可以进行下载使用。
@@ -198,6 +183,24 @@ pip3 install -r train_requirements.txt
 1. Github网站上的开源对联数据： https://github.com/wb14123/couplet-dataset/releases
 2. Github网站上的开源古诗数据： https://github.com/chinese-poetry/chinese-poetry
 3. 微软亚洲研究院提供的10万条对联数据（非公开数据）。
+
+
+## 工具包的选择
+
+想要完成一个自动生成对联的小程序，想法十分美好，但想要达到这个目标，光拍拍脑袋想想是不够的，需要训练出一个能完成对联生成的自然语言理解模型。于是乎，就有两个选择：
+
+1. 自己写一套完成对联生成工作的深度学习模型。这个工作量相当之大，可能需要一个NLP专业团队来进行开发，调优。
+2. 应用已有的深度学习模型，直接应用。这个选择比较符合客观需要。我们找到了两个工具包：Tensor2Tensor和Fairseq。
+
+### Tensor2Tensor
+Tensor2Tensor（以下简称T2T）是由 Google Brain 团队使用和维护的开源深度学习模型库，支持多种数据集和模型。T2T 在 github 上有完整的介绍和用法，可以访问[这里](https://github.com/tensorflow/tensor2tensor)了解详细信息。
+
+在本案例中，我们将演示如何使用T2T工具包进行模型训练。
+
+### Fairseq
+[Fairseq](https://github.com/pytorch/fairseq) 是 Facebook 推出的一个序列建模工具包，这个工具包允许研究和开发人员自定义训练翻译、摘要、语言模型等文本生成任务。这里是它的 PyTorch 实现。
+
+除了下面的使用T2T训练的版本外，我们也提供了[使用fairseq训练模型](./docs/fairseq.md)的教程。
 
 
 ## 数据预处理

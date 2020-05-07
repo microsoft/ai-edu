@@ -111,6 +111,62 @@ fairseq-interactive ${PREPROCESSED_DATA_DIR} --path ${MODEL_SAVE_DIR}/checkpoint
     print(down) # 天 涯 若 比 邻
     ```
 
+## 搭建Flask Web应用
+1. 安装flask
+    ```
+    pip3 install flask
+    ```
+
+2. 搭建服务
+
+    这一步我们将使用Python加载模型后，利用flask开启web服务。
+
+    ```
+    from flask import Flask
+    from flask import request
+    from fairseq.models.lstm import LSTMModel # 引入模型
+
+    model = LSTMModel.from_pretrained('./checkpoints',\
+        checkpoint_file='checkpoint_best.pt',\
+        data_name_or_path="DICT_PATH") # 读入模型
+
+    app = Flask(__name__)
+
+    @app.route('/',methods=['GET'])
+    def get_couplet_down():
+        couplet_up = request.args.get('upper','')
+
+        couplet_down = model.translate(' '.join(list(couplet_up))) # 模型推理
+
+        couplet_down = couplet_down.replace(' ','')
+
+        return couplet_up + "," + couplet_down
+
+    ```
+3. 启动服务
+
+    在测试环境中，我们使用flask自带的web服务即可（注：生产环境应使用uwsgi+nginx部署，有兴趣的同学可以自行查阅资料）。
+
+    使用以下两条命令：
+
+    在Ubuntu下，
+    ```
+    export FLASK_APP=app.py
+    python -m flask run
+    ```
+    在Windows下，
+    ```
+    set FLASK_APP=app.py
+    python -m flask run
+    ```
+    此时，服务就启动啦。
+
+    我们仅需向后端 http://127.0.0.1:5000/ 发起get请求，并带上上联参数upper，即可返回生成的对联到前端。
+
+    请求示例: ```http://127.0.0.1:5000/?upper=海内存知己```
+
+    返回结果: ```海内存知己，天涯若比邻```
+
 ## 模型对比
 
 除了LSTM外，我们还使用了fairseq中内置的几组模型进行训练对比，包括CNN、transformer。具体可用模型可以参考[fairseq Models](https://fairseq.readthedocs.io/en/latest/models.html)。

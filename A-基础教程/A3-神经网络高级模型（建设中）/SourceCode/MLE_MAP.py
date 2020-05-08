@@ -32,15 +32,15 @@ def BernoulliDist():
     plt.xlabel("x")
     plt.ylabel("probability")
     plt.title("Bernoulli Distribution")
+    plt.grid()
     plt.show()
 
-def Likelihood_bernoulli():
+def Likelihood_bernoulli(N,X,title="Bernoulli Likelihood"):
     checker = CheckMaximumL()
     L = []
     P = np.linspace(0,1,num=101)
-    N = 10
     for p in P:
-        l = math.pow(p,7) * math.pow(1-p,N-7)
+        l = math.pow(p,X) * math.pow(1-p,N-X)
         L.append(l)
         checker.set(p, l)
     #endfor
@@ -50,7 +50,8 @@ def Likelihood_bernoulli():
     plt.text(x,y,strf(r'$\theta$', x))
     plt.xlabel(r'$\theta$')
     plt.ylabel("likelihood")
-    plt.title("Bernoulli Distribution")
+    plt.title(title)
+    plt.grid()
     plt.show()
 
 
@@ -91,6 +92,7 @@ def likelihood_exps():
         print(np.mean(X))
         ll = likelihood_exp(X, styles[i])
     plt.title("Exponential Distribution")
+    plt.grid()
     plt.show()
 
 def likelihood_norm_mu(style):
@@ -140,16 +142,70 @@ def likelihood_norms():
     for i in range(2):
         likelihood_norm_mu(styles[i])
     plt.title("Normal Distribution")
+    plt.grid()
     plt.show()
 
     styles = ['-', '--','-.',':']
     for i in range(2):
         likelihood_norm_sigma(styles[i])
     plt.title("Normal Distribution")
+    plt.grid()
+    plt.show()
+
+def BetaDist(a, b, style):
+    c = math.factorial(a+b-1)/(math.factorial(a-1)*math.factorial(b-1))
+    F = []
+    X = np.linspace(0,1,num=101)
+    for x in X:
+        f = c * math.pow(x, a-1) * math.pow(1-x, b-1)
+        F.append(f)
+    #endfor
+    l = str.format(r"$\alpha={0}, \beta={1}$", a, b)
+    #print(l)
+    plt.plot(X,F,label=l,linestyle=style)
+
+def likelihood_Beta(alpha, beta, a, b):
+    checker = CheckMaximumL()
+    c = math.factorial(alpha+beta-1)/(math.factorial(alpha-1)*math.factorial(beta-1))
+    F = []
+    X = np.linspace(0,1,num=101)
+    for x in X:
+        f = c * math.pow(x, a) * math.pow(1-x, b)
+        F.append(f)
+        checker.set(x, f)
+    #endfor
+    x,y = checker.get()
+    plt.plot(x,y,'x')
+    plt.text(x,y,strf(r'$\theta$', x))
+    plt.plot(X,F)
+    plt.grid()
+    plt.title("Beta Distribution")
+    plt.show()
+
+def BetaDists():
+    BetaDist(3,3,'-')
+    BetaDist(5,1,'-.')
+    BetaDist(2,2,'--')
+    BetaDist(1,3,':')
+    plt.grid()
+    plt.ylim(ymax=2.5)
+    plt.xlabel("x")
+    plt.ylabel("PDF")
+    plt.title("Beta Distribution")
+    plt.legend()
     plt.show()
 
 if __name__ == "__main__":
+    
     BernoulliDist()
-    Likelihood_bernoulli()
+    Likelihood_bernoulli(N=10,X=7)
     likelihood_exps()
     likelihood_norms()
+    
+    BetaDists()
+    
+    
+    likelihood_Beta(3, 3, 9, 5)
+
+
+

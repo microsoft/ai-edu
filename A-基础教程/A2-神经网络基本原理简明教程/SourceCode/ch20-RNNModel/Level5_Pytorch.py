@@ -66,11 +66,11 @@ class GRU(nn.Module):
     def __init__(self):
         super(GRU, self).__init__()
         self.rnn = nn.LSTM(
-            input_size=2,          # character num.
-            hidden_size=4,         # RNN or LSTM hidden layer, 设置的稍大一些可能效果更佳，此处仅作对比
+            input_size=2,
+            hidden_size=4,
             num_layers=1,
             batch_first=True,
-            bidirectional=True,      # 双向LSTM, 若设置为False,对应hidden_size增大两倍
+            bidirectional=True,      # 双向GRU, 若设置为False,对应hidden_size增大两倍
 
         )
         self.softmax = nn.Softmax()         # classification, softmax

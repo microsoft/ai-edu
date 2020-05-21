@@ -5,24 +5,71 @@
 pip install fairseq
 ```
 
-## 数据预处理
+## 训练数据下载
+我们可以在这个链接下载开源的对联数据： https://github.com/wb14123/couplet-dataset/releases
 
-开始预处理之前，我们先统一文件路径。
+下载后，我们可以得到上联文件`in.txt`和下联文件`out.txt`。
+
+如果您打算使用自己的数据集，请确保对联的数据分为上联和下联两个文件，用换行符`\n`分隔每条上联或下联数据，每个字以空格隔开。
+
+## 划分数据集
+在开始训练之前，我们需要将收集的训练数据分为训练集、验证集、测试集三部分。
+
+我们可以用以下脚本完成数据集的划分。
+
+```
+from sklearn.model_selection import train_test_split
+import sys
+
+x_file = sys.argv[1]
+y_file = sys.argv[2]
+
+with open(x_file,'r') as f:
+    X = f.read().splitlines()
+
+with open(y_file,'r') as f:
+    y = f.read().splitlines()
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.02, random_state=1)
+
+X_test, X_val, y_test, y_val = train_test_split(X_test, y_test, test_size=0.5, random_state=1)
+
+def save(name,data):
+    with open(name,'w') as f:
+        for l in data:
+            f.write(l+'\n')
+
+save('./train.up',X_train)
+save('./train.down',y_train)
+save('./test.up',X_test)
+save('./test.down',y_test)
+save('./valid.up',X_val)
+save('./valid.down',y_val)
+```
+
+首先，将以上脚本保存为`split.py`，并与下载的对联数据`in.txt`和`out.txt`放置于同一目录下。然后，执行命令：
+
+```
+python split.py in.txt out.txt
+```
+
+由于训练数据比较大，我们这里使用98:1:1的比例划分训练集、验证集、测试集，并将上联文件分别命名为`train.up`、`valid.up`、`test.up`，下联文件命名为`train.down`、`valid.down`、`test.down`。
+
+
+## 数据预处理
+在训练模型之前，我们需要将数据预处理成模型可以读取的二进制文件，并生成字典文件。
+
+开始前，我们先统一文件路径。
 ```
 HOME_DIR=$(cd `dirname $0`; pwd)
 RAW_DATA_DIR=${HOME_DIR}/fairseq-data
 PREPROCESSED_DATA_DIR=${HOME_DIR}/data-bin/couplet
 MODEL_SAVE_DIR=${HOME_DIR}/output/couplet
 ```
-* `RAW_DATA_DIR`为上述的所有训练数据的存放目录
+
+* `RAW_DATA_DIR`为上述的所有训练数据的存放目录。上述步骤划分数据集后得到的所有文件均存放于此目录
 * `PREPROCESSED_DATA_DIR`是预处理文件的输出目录
 * `MODEL_SAVE_DIR`为训练模型结果的保存目录
-
-此后，我们需要将收集的训练数据分为训练集、验证集、测试集三部分。请确保对联的数据分为上联和下联两个文件，用换行符`\n`分隔每条上联或下联数据，每个字以空格隔开。
-
-由于训练数据比较大，我们建议可以使用98:1:1的比例划分训练集、验证集、测试集，并将上联文件分别命名为`train.up`、`valid.up`、`test.up`，下联文件命名为`train.down`、`valid.down`、`test.down`。
-
-完成划分后，将所有文件存放至`RAW_DATA_DIR`目录。
 
 接着执行以下脚本开始预处理数据。
 

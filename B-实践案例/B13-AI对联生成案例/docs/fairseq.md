@@ -93,7 +93,7 @@ python split.py in.txt out.txt
     mv xaa train.up
     ```
 
-3. 执行以下命令继续划分上联的验证集和数据集。
+3. 执行以下命令继续划分上联的验证集和数据集。（如果出现overwrite error，可以重命名`xab`后重新执行）
     ```
     split -l 7745 xab
     ```

@@ -8,15 +8,27 @@ pip install fairseq
 ## 训练数据下载
 我们可以在这个链接下载开源的对联数据： https://github.com/wb14123/couplet-dataset/releases
 
-下载后，我们可以得到上联文件`in.txt`和下联文件`out.txt`。
+下载后，我们可以分别得到`train`和`test`目录下的上联文件`in.txt`和下联文件`out.txt`。
+
+为了便于后续重新划分数据，我们先使用如下命令合并`train`和`test`目录下的数据：
+```
+cat test/in.txt train/in.txt > in.txt
+cat test/out.txt train/out.txt > out.txt
+```
+
 
 如果您打算使用自己的数据集，请确保对联的数据分为上联和下联两个文件，用换行符`\n`分隔每条上联或下联数据，每个字以空格隔开。
 
 ## 划分数据集
 在开始训练之前，我们需要将收集的训练数据分为训练集、验证集、测试集三部分。
 
-我们可以用以下脚本完成数据集的划分。
+由于训练数据比较大，我们这里使用98:1:1的比例划分训练集、验证集、测试集，并将上联文件分别命名为`train.up`、`valid.up`、`test.up`，下联文件命名为`train.down`、`valid.down`、`test.down`。
 
+以下提供了两种划分数据集的方式供参考。
+### Python脚本划分数据集
+该方法需要确保已安装sklearn，如未安装可以执行命令```pip3 install -U scikit-learn```安装。
+
+首先，将以下脚本保存为`split.py`，并与对联数据`in.txt`和`out.txt`放置于同一目录下。
 ```
 from sklearn.model_selection import train_test_split
 import sys
@@ -47,14 +59,60 @@ save('./valid.up',X_val)
 save('./valid.down',y_val)
 ```
 
-首先，将以上脚本保存为`split.py`，并与下载的对联数据`in.txt`和`out.txt`放置于同一目录下。然后，执行命令：
+然后，执行命令：
 
 ```
 python split.py in.txt out.txt
 ```
 
-由于训练数据比较大，我们这里使用98:1:1的比例划分训练集、验证集、测试集，并将上联文件分别命名为`train.up`、`valid.up`、`test.up`，下联文件命名为`train.down`、`valid.down`、`test.down`。
+脚本将使用98:1:1的比例划分训练集、验证集、测试集，自动生成对应的文件。
 
+### Bash脚本划分
+该方法利用Linux系统中的`wc`和`split`命令按照行数手动划分数据集，与上一种方法相比，该方法没有打乱数据集后进行划分。
+
+具体步骤如下：
+
+1. 执行以下命令统计数据集行数。
+    ```
+    wc -l in.txt
+    ```
+    得到以下输出：
+    ```
+    774491 in.txt
+    ```
+    由于数据集共计774491行，按照98：1：1的比例划分数据集，因此我们需要把数据分按759001、7745、7745行进行划分。
+
+2. 执行以下命令划分出上联的训练集。
+    ```
+    split -l 759001 in.txt
+    ```
+    完成后数据会被划分为`xaa`和`xab`两个文件。`xaa`包含了759001行数据，`xab`包含了剩余的数据。
+
+    执行以下命令将`xaa`重命名为`train.up`即可。
+    ```
+    mv xaa train.up
+    ```
+
+3. 执行以下命令继续划分上联的验证集和数据集。
+    ```
+    split -l 7745 xab
+    ```
+    划分完成后，将`xaa`命名为`test.up`，将`xab`命名为`valid.up`即可。命令如下:
+    ```
+    mv xaa test.up
+    mv xab valid.up
+    ```
+
+4. 重复上述过程划分下联。注意划分顺序必须与上述过程保持一致，否则，将导致上联与下联数据不匹配。
+    
+    执行以下命令即可完成下联的划分。
+    ```
+    split -l 759001 out.txt
+    mv xaa train.down
+    split -l 7745 xab
+    mv xaa test.down
+    mv xab valid.down
+    ```
 
 ## 数据预处理
 在训练模型之前，我们需要将数据预处理成模型可以读取的二进制文件，并生成字典文件。

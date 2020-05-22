@@ -14,7 +14,7 @@ def ShowProcess2D(net, dataReader, epoch):
     # show a1
     ShowDataHelper(net.A1[:,0], net.A1[:,1], dataReader.YTest[:,0], "net.A1, epoch="+str(epoch), "A1[0]", "A1[1]", show=True)
     # show sigmoid
-    ShowDataHelper(net.Z2, net.A2, dataReader.YTrain[:,0], "Z2->A2, epoch="+str(epoch), "Z2", "A2", show=False)
+    ShowDataHelper(net.Z2, net.A2, dataReader.YTest[:,0], "Z2->A2, epoch="+str(epoch), "Z2", "A2", show=False)
     x = np.linspace(-6,6)
     a = Sigmoid().forward(x)
     plt.plot(x,a)

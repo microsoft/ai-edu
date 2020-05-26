@@ -207,7 +207,7 @@ fairseq-interactive ${PREPROCESSED_DATA_DIR} --path ${MODEL_SAVE_DIR}/checkpoint
     data_name_or_path="./dict")
     ```
 
-    第一个参数为checkpoints所在目录，`checkpoint_file`为需要读入的checkpoint的文件名，`data_name_or_path`为字典文件所在的目录。需要注意的是，字典文件目录将以第一个参数为根目录，若路径有误会出现报错信息：`AttributeError: 'NoneType' object has no attribute 'split'`。
+    第一个参数为checkpoint文件所在目录，`checkpoint_file`为需要读入的checkpoint的文件名，`data_name_or_path`为字典文件所在的目录。需要注意的是，字典文件目录将以第一个参数为根目录，若路径有误会出现报错信息：`AttributeError: 'NoneType' object has no attribute 'split'`。
 
 3. 推理
 

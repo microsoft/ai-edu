@@ -199,13 +199,15 @@ fairseq-interactive ${PREPROCESSED_DATA_DIR} --path ${MODEL_SAVE_DIR}/checkpoint
     ```
 
 2. 读入模型文件
-
-    第一个参数为checkpoints所在目录，`checkpoint_file`为需要读入的checkpoint的文件名，`data_name_or_path`为字典文件所在的目录。
+    
+    我们将模型生成的checkpoint文件拷贝到`./checkpoints`目录下，将预处理阶段生成的两份字典文件（`dict.up.txt`和`dict.down.txt`）拷贝到`./checkpoints/dict`目录下。按如下代码即可读入文件：
     ```
     model = LSTMModel.from_pretrained('./checkpoints',\
     checkpoint_file='checkpoint_best.pt',\
-    data_name_or_path="DICT_PATH")
+    data_name_or_path="./dict")
     ```
+
+    第一个参数为checkpoint文件所在目录，`checkpoint_file`为需要读入的checkpoint的文件名，`data_name_or_path`为字典文件所在的目录。需要注意的是，字典文件目录将以第一个参数为根目录，若路径有误会出现报错信息：`AttributeError: 'NoneType' object has no attribute 'split'`。
 
 3. 推理
 
@@ -233,7 +235,7 @@ fairseq-interactive ${PREPROCESSED_DATA_DIR} --path ${MODEL_SAVE_DIR}/checkpoint
 
     model = LSTMModel.from_pretrained('./checkpoints',\
         checkpoint_file='checkpoint_best.pt',\
-        data_name_or_path="DICT_PATH") # 读入模型
+        data_name_or_path="./dict") # 读入模型
 
     app = Flask(__name__)
 

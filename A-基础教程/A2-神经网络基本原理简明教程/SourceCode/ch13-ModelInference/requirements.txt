@@ -1,0 +1,6 @@
+matplotlib
+numpy
+onnx==1.3.0
+onnxruntime
+pillow
+tensorflow

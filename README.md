@@ -1,113 +1,77 @@
-# <font size=5>微软人工智能教育与学习共建社区</font> 
+# <font size=5>微软人工智能教育与学习共建社区</font>
 本社区是微软亚洲研究院（Microsoft Research Asia，简称MSRA）人工智能教育团队创立的人工智能教育与学习共建社区.
 
 在教育部指导下，依托于新一代人工智能开放科研教育平台，微软亚洲研究院研发团队和学术合作部将为本社区提供全面支持。我们将在此提供人工智能应用开发的真实案例，以及配套的教程、工具等学习资源，人工智能领域的一线教师及学习者也将分享他们的资源与经验。
 
-正如微软的使命“予力全球每一人、每一组织，成就不凡”所指出的，期待借由本社区的建立，能以开源的方式，与广大师生、开发者一起学习、一起贡献，共同丰富、完善本社区，既而为中国人工智能的发展添砖加瓦。  
+正如微软的使命“予力全球每一人、每一组织，成就不凡”所指出的，期待借由本社区的建立，能以开源的方式，与广大师生、开发者一起学习、一起贡献，共同丰富、完善本社区，既而为中国人工智能的发展添砖加瓦。
 
 
 本社区注明版权出处的内容适用于[License](./LICENSE.md)版权许可。
 
-联系信息：<msraeduhub@microsoft.com>
+# <font size=5>新闻</font>
+**<font size=3>2020-03-25:</font>**
+
+社区结构更新啦！模块调整并重新命名，结构更清晰！
+
+将[神经网络基本原理简明教程](https://aka.ms/beginnerAI) 移入 [A-基础教程](https://github.com/microsoft/ai-edu/tree/master/A-基础教程) 模块。该模块下还有 [数学基础](https://github.com/microsoft/ai-edu/tree/master/A-基础教程/A1-PythonBasic/math_intro) 和 [Python语言导论](https://github.com/microsoft/ai-edu/tree/master/A-基础教程/A1-PythonBasic/py_intro)。教程更集中，学习更方便！
+
+实践案例全部汇集在 [B-实践案例](https://github.com/microsoft/ai-edu/tree/master/B-实践案例) 模块，并配上案例概览帮助文档，更有针对性学习案例！
+
+[E-课程集锦](https://github.com/microsoft/ai-edu/tree/master/E-课程集锦/) 模块汇集了微软及多所高校开源人工智能教学大纲及课件。欢迎感兴趣的朋友前往查看！
+
+**<font size=3>2019-11-20:</font>**
+
+首页改版啦！新版本的首页，将社区资源进一步系统化，按认识AI（初级），理解AI（中级）,研究AI（高级）的结构分级编写了学习路径，并给出学习时长参考，先修知识资源参考，循序渐进，旨在帮助广大学习者更最高效地学习AI，赶快学起来吧！
+
+**<font size=3>2019-11-19:</font>**
+
+更新[智能对联](./B-实践案例/B13-AI对联生成案例)案例，案例更加简洁、清晰，方便上手！
+
+**<font size=3>2019-11-15:</font>**
+
+[神经网络基本原理简明教程](https://aka.ms/beginnerAI)暨**9步学习神经网络**全部内容完成！
+
+# <font size=5>学习资源介绍</font>
+介绍：
+
+本社区的学习资源优质且免费，绝大部分为原创内容，核心学习资源包括**实战篇**和**理论篇**两大部分，辅以参考学习路径和先修知识参考资源，让广大学习者可以清晰地选择适合自己的学习路径，高效地学习。
+
+**1. 实战篇**
+
+以“做中学“的理念为核心，从人工智能真实的应用场景与案例出发，先讲生动的案例，配合详实的实际操作说明，然后在动手实现场景的基础上，逐步引入人工智能学习中的相关理论知识，以递进学习的新颖方式层层剖析人工智能开发的主流场景，让大家在不需要大量时间学习庞大的理论基础的情况下，也可以真正动手开始进行人工智能应用的开发，提高实际动手的能力.
+
+[点此进入详细内容](https://github.com/microsoft/ai-edu/tree/master/B-实践案例)
 
 
+**2. 理论篇**
 
-# <font size=5>使用说明</font> 
-本共建资源分为若干模块。每个模块都支持开发者向其共建新内容。请参照 [CONTRIBUTING.md](./CONTRIBUTING.md) 了解如何共建内容。
+理论篇的内容又称作“[9步学习神经网络](https://aka.ms/beginnerAI )”,为微软亚洲研究院研发团队原创内容，着重讲述偏理论的知识，同样以“做中学”为核心概念，但是独特地以化繁为简，深入浅出为特点，提供通俗易懂的理论讲解，清晰工整的代码，准确无误的内容，完整的作业体系，不但有理论，还有大量实践动手环节，帮助读者不但迅速掌握“深度学习”的基础知识，更好地理解并使用现有框架，而且可以助力读者快速学习最新出现的各种神经网络的扩展或者变型，跟上快速发展的AI浪潮,使学习者从新的角度快速上手神经网络的学习，做到真正的从入门到精通。该部分内容在针对合作伙伴线下的培训中，受到广大学习者的广泛好评。
 
-各模块内容和适用人群概述如下：
-
-<font size=3>[A:教学课程](./A-教学课程/README.md) </font>
-- 内容：包含微软及多个高校开源分享的人工智能教学大纲，课件。
-- 适用人群：
-  - 有意开设高校人工智能课程的老师。
-  - 希望系统化了解高校人工智能学习大纲的学习者。
-
-<font size=3>[B:教学案例与实践](./B-教学案例与实践/README.md)</font>
-- 内容：包含微软及共建者开源分享的人工智能案例资源，包含案例、源代码、文档、教学视频等。
-- 适用人群：
-   - 有意开设人工智能课程的教师。
-   - 有意进行人工智能应用开发的学习者
+[点此进入详细内容](https://github.com/microsoft/ai-edu/tree/master/A-基础教程)
 
 
-<font size=3>[C:开发工具与环境](./C-开发工具与环境/README.md) </font>
-- 内容：人工智能学习中需要用到的开发工具与环境搭建教程。
-- 适用人群：有意进行人工智能应用开发的学习者和有意开设人工智能课程的教师。
-  
-<font size=3>[D:答疑与交流](./D-答疑与交流/README.md) </font>
-- 内容：人工智能学习中的常见问题及微软团队或者共建者的回答。
-- 适用人群：一线教学教师及有意进行人工智能应用开发的学习者。
+# <font size=5>AI 前沿精选</font>
+[大规模利用单语数据提升神经机器翻译](https://www.msra.cn/zh-cn/news/features/emnlp-2019-exploiting-monolingual-data-at-scale-for-nmt)
 
-<font size=3>[E:等你来战](./E-Challenge/README.md) </font>
-- 内容：人工智能相关课程的作业以及人工智能应用开发中需要共建者贡献代码解决的问题与挑战。
-- 适用人群：
-  - 发布者：人工智能教学者，可发布作业及习题；人工智能应用开发者、学习者，可发布需要应战者贡献代码解决的问题。
-  - 应战者：具有一定人工智能应用开发、数据模型训练基础，希望展现身手的朋友。
+[基于层次化注意力图网络和多视角学习的商品推荐](https://www.msra.cn/zh-cn/news/features/emnlp-2019-rmg)
+
+[AI换脸鉴别率超99.6%，微软用技术应对虚假信息](https://www.msra.cn/zh-cn/news/features/ai-detect-fake-face)
+
+[微软亚洲研究院精选论文解读](https://www.msra.cn/zh-cn/news/features/emnlp-2019)
+
+[查看更多...](https://www.msra.cn/zh-cn/news?wd&content-type=posts)
 
 
+# <font size=5>等你来战</font>
+  - [挑战黄金点](./C-挑战项目/GoldenNumberGame)
+  - [北京航空航天大学2019春季](./C-挑战项目/BeihangUniversity2019Spring)
+  - [山东大学2019春季](./C-挑战项目/ShandongUniversity2019Spring)
+  - [Code Search](./C-挑战项目/CodeSearch)
+  - [2019实践空间站](./C-挑战项目/2019studentclub)
 
-# <font size=5>目录结构</font> 
 
-- [A:教学课程](./A-教学课程) 
-  - [神经网络基本原理简明教程-微软亚洲研究院  System Research 团队](https://github.com/Microsoft/ai-edu/tree/master/B-%E6%95%99%E5%AD%A6%E6%A1%88%E4%BE%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/B6-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B)
-  - [人工智能实践课程大纲-微软亚洲研究院  System Research 团队](./A-教学课程/人工智能实践课程大纲-微软亚洲研究院SystemResearch团队.md)
-  - [微软专业学位MPP（Microsoft Professional Program）人工智能课](./A-教学课程/MPP.md)
-  - [微软人工智能公开课](./A-教学课程/微软人工智能公开课.md)
-  - [微软人工智能系列前沿课程](./A-教学课程/人工智能系列前沿课程.md)
-  - [北京大学微软亚洲研究院人工智能与信息社会大纲（MOOC）-北大陈斌](./A-教学课程/北京大学微软亚洲研究院人工智能与信息社会大纲（MOOC）-北大陈斌.md)
-  - [工业数据挖掘与分析-清华大学徐华](./A-教学课程/工业数据挖掘与分析-清华大学徐华.md)
-  - [基于Visual_Studio_Tools_for_AI的高级机器学习课程-复旦大学赵卫东](./A-教学课程/基于Visual_Studio_Tools_for_AI的高级机器学习课程-复旦赵卫东.md)
-  - [机器学习课程-北京大学蒋严冰](./A-教学课程/机器学习课程-北京大学蒋严冰.md)
-  - [人工智能课程大纲(网络专业)-集美大学张敏](./A-教学课程/人工智能课程大纲(网络专业)-集美大学张敏.md)
-  - [人工智能技术及应用（选修）-河北大学袁方](./A-教学课程/人工智能技术及应用（选修）-河北大学袁方.md)
-  - [车载智能信息处理-湖北汽院龚家元](./A-教学课程/车载智能信息处理-湖北汽院龚家元.md)
-  - [面向AI实践的软件工程基础课程-北京航空航天大学罗杰](https://github.com/Microsoft/ai-edu/blob/master/A-教学课程/面向AI实践的软件工程基础课程-北京航空航天大学罗杰.md)
-  
+----
 
-- [B:教学案例与实践](./B-教学案例与实践)
-  - [预构建－OCR应用案例－漫画翻译](./B-教学案例与实践/B1-预构建－OCR应用案例－漫画翻译/README.md) 
-  - [定制化－文字理解应用案例-问答系统和对话机器人服务](./B-教学案例与实践/B2-定制化－文字理解应用案例-问答系统和对话机器人服务/README.md) 
-  - [定制化－图像识别应用案例－看图识熊](./B-教学案例与实践/B3-定制化－图像识别应用案例－看图识熊/README.md) 
-  - [定制化－语言理解应用案例－智能家居](./B-教学案例与实践/B4-定制化－语言理解应用案例－智能家居/README.md) 
-  - [扩展阅读-搭建中间服务层](./B-教学案例与实践/B5-扩展阅读-搭建中间服务层/README.md) 
-  - [神经网络基本原理简明教程](./B-教学案例与实践/B6-神经网络基本原理简明教程/README.md) 
-  - [自构建－图像识别应用案例-手写数字识别](./B-教学案例与实践/B7-自构建－图像识别应用案例-手写数字识别/README.md) 
-  - [自构建－AI游戏开发案例－黄金点游戏](./B-教学案例与实践/B8-自构建－AI游戏开发案例－黄金点游戏/README.md) 
-  - [自构建－图像识别应用案例-手写算式计算器](./B-教学案例与实践/B9-自构建－图像识别应用案例-手写算式计算器/README.md)
-  - [扩展阅读－机器学习平台建设](./B-教学案例与实践/B10-扩展阅读－机器学习平台建设/readme.md) 
-  - [清华大学网络产品案例分析与设计展示](https://github.com/Microsoft/ai-edu/tree/master/B-教学案例与实践/清华大学网络产品案例分析与设计展示) 
-  - [复旦大学城市声音分类及图像超分辨率案例](./B-教学案例与实践/复旦大学城市声音分类-图像超分辨率/README.md) 
-  - [东北大学视频见解应用案例之视频标签提取](./B-教学案例与实践/东北大学视频见解应用案例之视频标签提取/README.md) 
-  - [大连理工网络安全案例教程](./B-教学案例与实践/大连理工基础案例教程/README.md)
-    - [基础案例教程](./B-教学案例与实践/大连理工基础案例教程/README.md)
-      - [Visual Studio Tools for AI安装教程](https://github.com/linlinyaoyao/TensorFlowPro/blob/master/%E5%9F%BA%E7%A1%80%E6%A1%88%E4%BE%8B%E6%95%99%E7%A8%8B/1.Visual%20Studio%20Tools%20for%20AI%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B.md)
-      - [基于Visual Studio Tools for AI的TensorFlow编程实现CNN卷积神经网络](https://github.com/linlinyaoyao/TensorFlowPro/blob/master/基础案例教程/2.基于Visual%20Studio%20Tools%20for%20AI的TensorFlow编程实现CNN卷积神经网络.md)
-      - [基于Visual Studio Tools for AI的TensorFlow编程实现DNN深度神经网络](https://github.com/linlinyaoyao/TensorFlowPro/blob/master/基础案例教程/3.基于Visual%20Studio%20Tools%20for%20AI的TensorFlow编程实现DNN深度神经网络.md)
-      - [基于Visual Studio Tools for AI的TensorFlow编程实现LSTM循环神经网络](https://github.com/linlinyaoyao/TensorFlowPro/blob/master/%E5%9F%BA%E7%A1%80%E6%A1%88%E4%BE%8B%E6%95%99%E7%A8%8B/4.%E5%9F%BA%E4%BA%8EVisual%20Studio%20Tools%20for%20AI%E7%9A%84TensorFlow%E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0LSTM%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
-      - [基于Visual Studio Tools for AI的TensorFlow编程实现ResNet深度残差网络](https://github.com/linlinyaoyao/TensorFlowPro/blob/master/%E5%9F%BA%E7%A1%80%E6%A1%88%E4%BE%8B%E6%95%99%E7%A8%8B/5.%E5%9F%BA%E4%BA%8EVisual%20Studio%20Tools%20for%20AI%E7%9A%84TensorFlow%E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0ResNet%E6%B7%B1%E5%BA%A6%E6%AE%8B%E5%B7%AE%E7%BD%91%E7%BB%9C.md)
-      - [基于Visual Studio Tools for AI的TensorFlow编程实现Bi-RNN双向循环神经网络](https://github.com/linlinyaoyao/TensorFlowPro/blob/master/%E5%9F%BA%E7%A1%80%E6%A1%88%E4%BE%8B%E6%95%99%E7%A8%8B/6.%E5%9F%BA%E4%BA%8EVisual%20Studio%20Tools%20for%20AI%E7%9A%84TensorFlow%E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0Bi-RNN%E5%8F%8C%E5%90%91%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
-      - [基于Visual Studio Tools for AI的TensorFlow编程实现RCNN区域卷积神经网络](https://github.com/linlinyaoyao/TensorFlowPro/blob/master/%E5%9F%BA%E7%A1%80%E6%A1%88%E4%BE%8B%E6%95%99%E7%A8%8B/7.%E5%9F%BA%E4%BA%8EVisual%20Studio%20Tools%20for%20AI%E7%9A%84TensorFlow%E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0RCNN%E5%8C%BA%E5%9F%9F%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.md)
-    - [内容中心网络CCN缓存污染攻击防御](https://github.com/linlinyaoyao/TensorFlowPro/tree/master/%E5%86%85%E5%AE%B9%E4%B8%AD%E5%BF%83%E7%BD%91%E7%BB%9CCCN%E7%BC%93%E5%AD%98%E6%B1%A1%E6%9F%93%E6%94%BB%E5%87%BB%E9%98%B2%E5%BE%A1)
-    - [基于监督学习的恶意攻击特征识别](https://github.com/linlinyaoyao/TensorFlowPro/tree/master/基于监督学习的恶意攻击特征识别)
-    - [无监督学习的网络用户行为分析](https://github.com/linlinyaoyao/TensorFlowPro/tree/master/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E7%9A%84%E7%BD%91%E7%BB%9C%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90)
-  
-- [C:开发工具与环境](./C-开发工具与环境/README.md)
-   - [微软开源自动机器学习工具NNI](./C-开发工具与环境/README.md) 
-     - [微软开源自动机器学习工具NNI简介](https://www.cnblogs.com/ms-uap/p/9719071.html) 
-     - [微软开源自动机器学习工具NNI GitHub Repo](https://github.com/Microsoft/nni)
-   - [微软OpenPAI 开放人工智能平台](./C-开发工具与环境/README.md) 
-     - [微软OpenPAI 开放人工智能平台简介](https://www.cnblogs.com/ms-uap/p/openpai_or_pai.html) 
-     - [微软OpenPAI 开放人工智能平台 GitHub Repo](https://github.com/Microsoft/pai)
-   - [微软LightGBM（Light Gradient Boosting Machine）GitHub Repo](https://github.com/Microsoft/LightGBM)
-   - [微软Graph Engine GitHub Repo](https://github.com/Microsoft/GraphEngine)
-   - [微软Distributed Machine Learning Toolkit GitHub Repo](https://github.com/Microsoft/DMTK)
-   - [微软NLP深度学习工具包 NeuronBlocks GitHub Repo](https://github.com/Microsoft/NeuronBlocks)
-   - [北航VisualPytorch工具(通过拖拽组件来生成Pytorch代码)](https://github.com/Microsoft/ai-edu/tree/master/C-开发工具与环境/北航19软件工程VisualPytorch)
-  
-- [D:答疑与交流](./D-答疑与交流)
-  
-- [E:等你来战](./E-Challenge)
-  - [挑战黄金点](./E-Challenge/GoldenNumberGame)
-  - [北京航空航天大学2019春季](./E-Challenge/BeihangUniversity2019Spring)
-  - [山东大学2019春季](./E-Challenge/ShandongUniversity2019Spring)
+<font size=2>[访问旧版主页 (Version 1.0)](./README_1.0.md)</font>
 
+<font size=2>[访问旧版主页 (Version 2.0)](./README_2.0.md)</font>

@@ -143,7 +143,8 @@ class DataReader_2_0(object):
     # if use tanh function, need to set negative_value = -1
     def __ToZeroOne(Y, positive_label=1, negative_label=0, positiva_value=1, negative_value=0):
         temp_Y = np.zeros_like(Y)
-        for i in range():
+        count = Y.shape[0]
+        for i in range(count):
             if Y[i,0] == negative_label:     # 负类的标签设为0
                 temp_Y[i,0] = negative_value
             elif Y[i,0] == positive_label:   # 正类的标签设为1

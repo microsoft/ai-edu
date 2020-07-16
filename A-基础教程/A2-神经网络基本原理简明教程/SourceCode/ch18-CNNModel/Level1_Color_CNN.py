@@ -7,8 +7,13 @@ import matplotlib.pyplot as plt
 from MiniFramework.NeuralNet_4_2 import *
 from ExtendedDataReader.GeometryDataReader import *
 
-train_data_name = "../../data/ch17.train_color.npz"
-test_data_name = "../../data/ch17.test_color.npz"
+"""
+    因为训练数据尺寸太大，不适合于放在github中，所以在运行本程序之前，
+    先用SourceCode/Data/ch18_color.py来生成训练数据集
+"""
+
+train_data_name = "../../data/ch18.train_color.npz"
+test_data_name = "../../data/ch18.test_color.npz"
 
 name = ["red","green","blue","yellow","cyan","pink"]
 
@@ -41,17 +46,18 @@ def cnn_model():
     net.add_layer(r1, "relu1")
     p1 = PoolingLayer(c1.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p1, "p1") 
-
+    """
     c2 = ConvLayer(p1.output_shape, (3,3,3), (1,0), params)
     net.add_layer(c2, "c2")
     r2 = ActivationLayer(Relu())
     net.add_layer(r2, "relu2")
     p2 = PoolingLayer(c2.output_shape, (2,2), 2, PoolingTypes.MAX)
     net.add_layer(p2, "p2") 
-
+    """
     params.learning_rate = 0.1
 
-    f3 = FcLayer_2_0(p2.output_size, 32, params)
+    #f3 = FcLayer_2_0(p2.output_size, 32, params)
+    f3 = FcLayer_2_0(p1.output_size, 32, params)
     net.add_layer(f3, "f3")
     bn3 = BnLayer(f3.output_size)
     net.add_layer(bn3, "bn3")

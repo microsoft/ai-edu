@@ -42,9 +42,9 @@
     <Compile Include="ch11.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ch17_shape_color.py" />
-    <Compile Include="ch17_shape.py" />
-    <Compile Include="ch17_color.py">
+    <Compile Include="ch18_shape_color.py" />
+    <Compile Include="ch18_shape.py" />
+    <Compile Include="ch18_color.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ch19_BinaryMnius.py" />

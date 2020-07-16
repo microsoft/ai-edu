@@ -7,8 +7,13 @@ import matplotlib.pyplot as plt
 from MiniFramework.NeuralNet_4_2 import *
 from ExtendedDataReader.GeometryDataReader import *
 
-train_data_name = "../../data/ch17.train_shape.npz"
-test_data_name = "../../data/ch17.test_shape.npz"
+"""
+    因为训练数据尺寸太大，不适合于放在github中，所以在运行本程序之前，
+    先用SourceCode/Data/ch18_shape.py来生成训练数据集
+"""
+
+train_data_name = "../../data/ch18.train_shape.npz"
+test_data_name = "../../data/ch18.test_shape.npz"
 
 name = ["circle","rectangle","triangle","diamond","line"]
 

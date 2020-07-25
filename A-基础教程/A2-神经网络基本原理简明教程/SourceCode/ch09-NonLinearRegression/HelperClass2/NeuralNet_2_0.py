@@ -147,7 +147,7 @@ class NeuralNet_2_0(object):
         x,y = dataReader.GetTestSet()
         self.forward(x)
         correct = self.__CalAccuracy(self.output, y)
-        print(correct)
+        return correct
 
     def __CalAccuracy(self, a, y):
         assert(a.shape == y.shape)

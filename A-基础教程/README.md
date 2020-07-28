@@ -4,7 +4,15 @@
 
 ## 0. 环境准备
 
-Windows 10系统。
+### 操作系统
+
+Windows 10。
+
+### 应用软件
+
+1.[Git](https://git-scm.com/) client，用于clone代码，，进入链接后选择相应版本下载即可。
+2.[Python](https://www.python.org/downloads/) 3.6+ without conda，进入链接后选择相应版本下载即可。
+3.[VS Code](https://code.visualstudio.com/)，进入链接后选择相应版本下载即可。下载后要安装Markdown all in one插件，方法是打开VS Code，选择左边栏“扩展”或按快捷键Ctrl+Shift+X，并搜索Markdown all in one插件，下载安装即可。
 
 本模块包含下列课程：
 

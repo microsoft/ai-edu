@@ -112,7 +112,7 @@ TTS的常见模型通常将文本转语音任务分解成两个部分：**文本
 
 ## 申请TTS-api
 
-Azure提供了30天的免费使用版，如果需要注册免费试用，请转到[试用认知服务](https://azure.microsoft.com/zh-cn/try/cognitive-services/)或参考 **B4-定制化－语言理解应用案例－智能家居** 中的[申请试用语音转文本](../../B4-定制化－语言理解应用案例－智能家居/微软-方案1/README.md#申请试用)。
+Azure提供了30天的免费使用版，如果需要注册免费试用，请转到[试用认知服务](https://azure.microsoft.com/zh-cn/try/cognitive-services/)或参考 **B04-定制化－语言理解应用案例－智能家居** 中的[申请试用语音转文本](../../B04-定制化－语言理解应用案例－智能家居/微软-方案1/README.md#申请试用)。
 
 
 1. 完成注册或登录Azure账户之后，请按照[在Azure中创建语音资源](https://docs.microsoft.com/zh-cn/azure/cognitive-services/speech-service/get-started#create-a-speech-resource-in-azure)的指引申请TTS-api。

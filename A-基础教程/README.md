@@ -2,6 +2,20 @@
 
 此模块是人工智能学习的理论教程集合，包括课程详解和代码示例，帮助学习者从入门到精通神经网络的原理，并通过一系列代码实践讲原理应用于实际问题的解决。
 
+## 0. 环境准备
+
+### 操作系统
+
+Windows 10。
+
+### 应用软件
+
+1.[Git](https://git-scm.com/) client，用于clone代码，进入链接后点击右侧下载即可。
+
+2.[Python](https://www.python.org/downloads/) 3.6+ without conda，进入链接后选择相应版本下载即可，记得在安装时将Python加入环境变量。
+
+3.[VS Code](https://code.visualstudio.com/)，进入链接后选择相应版本下载即可。下载后需安装Markdown all in one插件，方法是打开VS Code，选择左边栏“扩展”或按快捷键Ctrl+Shift+X，并搜索Markdown all in one插件，下载安装即可。
+
 本模块包含下列课程：
 
 ## 1. PythonBasic（Python基础)

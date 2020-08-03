@@ -54,6 +54,7 @@ class NeuralNet_2_0(object):
             self.A2 = self.Z2
         #end if
         self.output = self.A2
+        return self.output
 
     def backward(self, batch_x, batch_y, batch_a):
         # 批量下降，需要除以样本数量，否则会造成梯度爆炸
@@ -147,7 +148,7 @@ class NeuralNet_2_0(object):
         x,y = dataReader.GetTestSet()
         self.forward(x)
         correct = self.__CalAccuracy(self.output, y)
-        print(correct)
+        return correct
 
     def __CalAccuracy(self, a, y):
         assert(a.shape == y.shape)

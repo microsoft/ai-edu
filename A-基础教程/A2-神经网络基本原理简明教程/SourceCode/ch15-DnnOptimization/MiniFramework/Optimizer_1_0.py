@@ -106,8 +106,8 @@ class Adam(Optimizer):
         self.p2 = 0.999
         self.eps = 1e-8
         self.t = 0
-        self.m = np.empty((1,1))
-        self.v = np.empty((1,1))
+        self.m = np.zeros((1,1))
+        self.v = np.zeros((1,1))
 
     def update(self, theta, grad):
         self.t = self.t + 1

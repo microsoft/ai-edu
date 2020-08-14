@@ -17,8 +17,8 @@ namespace TTS_Demo
         string voiceName = "Microsoft Server Speech Text to Speech Voice (zh-CN, HuihuiRUS)";
       
         string accessToken;
-        Authentication auth = new Authentication("https://westus.api.cognitive.microsoft.com/sts/v1.0/issuetoken", "5f7e7c7254ef4415bd14950350ebc0c5");
-        string host = "https://westus.tts.speech.microsoft.com/cognitiveservices/v1";
+        Authentication auth = new Authentication("https://<REGION_IDENTIFIER>.api.cognitive.microsoft.com/sts/v1.0/issuetoken", "REPLACE_WITH_YOUR_KEY");
+        string host = "https://<REGION_IDENTIFIER>.tts.speech.microsoft.com/cognitiveservices/v1";
 
 
         //转换文本并保存

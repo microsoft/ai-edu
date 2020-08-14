@@ -425,3 +425,4 @@ Azure提供了30天的免费使用版，如果需要注册免费试用，请转�
 # 参考阅读
 
 1. [《Text-to-Speech Synthesis》](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.118.5905&rep=rep1&type=pdf), Paul Taylor, University of Cambridge
+2. [Text-to-speech quickstart: Get started with speech synthesis (C#)](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started-text-to-speech?tabs=script%2Cwindowsinstall&pivots=programming-language-csharp)

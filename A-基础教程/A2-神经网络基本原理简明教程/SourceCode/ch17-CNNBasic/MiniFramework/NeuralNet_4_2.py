@@ -149,7 +149,6 @@ class NeuralNet_4_2(object):
                         break                
                 #end if
             # end for
-            self.save_parameters()
             if need_stop:
                 break
             # end if
@@ -157,7 +156,7 @@ class NeuralNet_4_2(object):
 
         t1 = time.time()
         print("time used:", t1 - t0)
-
+        self.save_parameters()
         if need_test:
             print("testing...")
             self.accuracy = self.Test(dataReader)

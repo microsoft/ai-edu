@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A06392D5-4596-4AB3-84AB-86CFBCD13DD5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>GenerationClientCode</RootNamespace>
+    <AssemblyName>GenerationClientCode</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotLiquid, Version=2.0.254.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.2.0.254\lib\net45\DotLiquid.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NJsonSchema, Version=9.13.22.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\packages\NJsonSchema.9.13.22\lib\net45\NJsonSchema.dll</HintPath>
+    </Reference>
+    <Reference Include="NJsonSchema.CodeGeneration, Version=9.13.22.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\packages\NJsonSchema.CodeGeneration.9.13.22\lib\net451\NJsonSchema.CodeGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="NJsonSchema.CodeGeneration.CSharp, Version=9.13.22.0, Culture=neutral, PublicKeyToken=c2f9c3bdfae56102, processorArchitecture=MSIL">
+      <HintPath>..\packages\NJsonSchema.CodeGeneration.CSharp.9.13.22\lib\net451\NJsonSchema.CodeGeneration.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="NSwag.CodeGeneration, Version=12.0.15.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSwag.CodeGeneration.12.0.15\lib\net451\NSwag.CodeGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="NSwag.CodeGeneration.CSharp, Version=12.0.15.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSwag.CodeGeneration.CSharp.12.0.15\lib\net451\NSwag.CodeGeneration.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="NSwag.Core, Version=12.0.15.0, Culture=neutral, PublicKeyToken=c2d88086e098d109, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSwag.Core.12.0.15\lib\net45\NSwag.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

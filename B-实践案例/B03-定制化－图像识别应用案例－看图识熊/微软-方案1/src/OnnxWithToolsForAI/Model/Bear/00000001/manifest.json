@@ -1,0 +1,37 @@
+{
+  "dependencies": [],
+  "description": "",
+  "location": "",
+  "name": "Bear",
+  "params": {
+    "model": {
+      "frameworkVersion": "OnnxMLTools1.2.2.0129",
+      "graphVersion": 0,
+      "interfaces": [
+        {
+          "inputs": [
+            {
+              "description": "",
+              "internalName": "data",
+              "name": "data",
+              "shape": "[None, 3, 227, 227]",
+              "type": "DATA_TYPE_FLOAT"
+            }
+          ],
+          "name": "Infer",
+          "outputs": [
+            {
+              "description": "",
+              "internalName": "classLabel",
+              "name": "classLabel",
+              "shape": "[None, 1]",
+              "type": "DATA_TYPE_STRING"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "typeName": "OnnxModel",
+  "version": 1
+}

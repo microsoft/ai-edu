@@ -85,8 +85,8 @@ class net(object):
         self.t1 = timestep_1()
         self.t2 = timestep_2()
 
-    def check_loss(self,dr):
-        X,Y = dr.GetValidationSet()
+    def check_loss(self):
+        X,Y = self.dr.GetValidationSet()
         self.t1.forward(X[:,0],self.U,self.V,self.W,self.bh)
         self.t2.forward(X[:,1],self.U,self.V,self.W,self.bh,self.bz,self.t1.s)
         loss2,acc2 = self.loss_fun.CheckLoss(self.t2.z,Y[:,1:2])
@@ -103,7 +103,7 @@ class net(object):
         self.V = np.random.normal(size=(num_hidden,num_output))
         self.bh = np.zeros((1,num_hidden))
         self.bz = np.zeros((1,num_output))
-        max_iteration = dr.num_train
+        max_iteration = self.dr.num_train
         for epoch in range(max_epoch):
             for iteration in range(max_iteration):
                 # get data
@@ -116,7 +116,7 @@ class net(object):
                 self.t1.forward(xt1,self.U,self.V,self.W,self.bh)
                 self.t2.forward(xt2,self.U,self.V,self.W,self.bh,self.bz,self.t1.s)
                 # backward
-                self.t2.backward(yt2, self.t1.h)
+                self.t2.backward(yt2, self.t1.s)
                 self.t1.backward(yt1, self.t2.dh)
                 # update
                 self.U = self.U - (self.t1.dU + self.t2.dU)*eta
@@ -128,7 +128,7 @@ class net(object):
             total_iteration = epoch * max_iteration + iteration
             if (epoch % 1 == 0):
                 #loss_train,acc_train = self.loss_fun.CheckLoss(self.t2.z,batch_y[:,1:2])
-                loss_vld,acc_vld = self.check_loss(dr)
+                loss_vld,acc_vld = self.check_loss()
                 self.loss_trace.Add(epoch, total_iteration, None, None, loss_vld, acc_vld, None)
                 print(epoch)
                 #print(str.format("train:      loss={0:6f}, acc={1:6f}", loss_train, acc_train))
@@ -143,7 +143,7 @@ class net(object):
 
     def test(self):
         print("testing...")
-        X,Y = dr.GetTestSet()
+        X,Y = self.dr.GetTestSet()
         count = X.shape[0]
         self.t1.forward(X[:,0],self.U,self.V,self.W,self.bh)
         self.t2.forward(X[:,1],self.U,self.V,self.W,self.bh,self.bz,self.t1.s)

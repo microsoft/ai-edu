@@ -26,7 +26,7 @@ class OptimizerFactory(object):
         return optimizer
 
 class Optimizer(object):
-    def __init__(self):
+    def __init__(self, lr):
         pass
 
     def pre_update(self, theta):

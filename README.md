@@ -70,6 +70,9 @@
   - [2019实践空间站](./C-挑战项目/2019studentclub)
 
 
+# <font size=5>如何贡献</font>
+我们非常欢迎您参与到社区共建中来，贡献高质量的内容，丰富社区资源并帮助更多学习者。在您准备贡献之前，请仔细阅读[共建指南](./CONTRIBUTING.md)， 并遵守其中的规范，并确保您所贡献的内容符合我们的[License](./LICENSE.md)。如需了解贡献的步骤和具体技巧，请参阅[如何高效贡献](./contribute_efficiently.md)。
+
 ----
 
 <font size=2>[访问旧版主页 (Version 1.0)](./README_1.0.md)</font>

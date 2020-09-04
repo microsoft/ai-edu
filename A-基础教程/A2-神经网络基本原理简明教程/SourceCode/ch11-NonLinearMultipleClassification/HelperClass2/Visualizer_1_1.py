@@ -13,7 +13,7 @@ def DrawTwoCategoryPoints(X1, X2, Y, xlabel="x1", ylabel="x2", title=None, show=
     assert(X1.shape[0] == X2.shape[0] == Y.shape[0])
     count = X1.shape[0]
     for i in range(count):
-        j = (int)(round(Y[i]))
+        j = (int)(round(Y[i,0]))
         if j < 0:
             j = 0
         if isPredicate:

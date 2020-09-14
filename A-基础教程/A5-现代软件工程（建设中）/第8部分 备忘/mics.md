@@ -10,3 +10,10 @@
 面试题
 
 难度，答题时间
+
+commnunication skill
+coding skill
+problem skill
+systematic thinking
+
+用自然界的现象来隐喻工程设计（仿真设计）

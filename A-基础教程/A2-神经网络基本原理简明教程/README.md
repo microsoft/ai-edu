@@ -13,6 +13,8 @@
 
 2. 也可以clone全部内容到本地，然后用VSCode浏览，但VSCode中需要安装能读取Markdown格式的扩展，比如Markdown AllInOne插件。
 
+3. 本教程提供数据包：在"SourceCode"文件夹中下载"DataDownload.py"并运行，输入本地目录后即可开始下载数据包，并自动解压至当地。
+
 ## 写在前面，为什么要出这个系列的教程呢？
 
 总的说来，我们现在有了很多非常厉害的深度学习框架，比如Tensorflow，CNTK，PaddlePaddle，Caffe2等等。然而，我们用这些框架在搭建我们自己的深度学习模型的时候，到底做了一些什么样的操作呢？我们试图去阅读框架的源码来理解框架到底帮助我们做了些什么，但是……很难！很难！很难！因为深度学习是需要加速啦，分布式计算啦，框架做了很多很多的优化，也让像我们这样的小白难以理解这些框架的源码。
@@ -48,22 +50,22 @@
 
 |网络结构名称|网络结构图|应用领域|
 |---|----|----|
-|单入<br>单出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/4/Setup.png"/>|一元线性回归|
-|多入<br>单出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/5/setup.png"/>|多元线性回归|
-|多入<br>单出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/6/BinaryClassifierNN.png"/>|线性二分类<br>|
-|多入<br>多出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/7/MultipleClassifierNN.png"/>|线性多分类<br>|
-|单入<br>单出<br>两层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/9/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|
-|多入<br>单出<br>两层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/10/xor_nn.png"/>|非线性二分类|
-|多入<br>多出<br>两层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/11/nn.png"/>|非线性多分类|
-|多入<br>多出<br>三层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/12/nn3.png"/>|非线性多分类|
-|多层全连接网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/14/mnist_net.png"/>|非线性多分类|
-|带批归一化层的多层全连接网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/15/bn_mnist.png"/>|非线性多分类|
-|带丢弃层的多层全连接网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/16/dropout_net.png"/>|非线性多分类|
-|简单的卷积神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/17/conv_net.png"/>|非线性多分类|
-|复杂的卷积神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/18/mnist_net.png"/>|非线性多分类|
-|单向循环神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/19/bptt_simple.png"/>|非线性多分类|
-|双向循环神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/19/bi_rnn_net_right.png"/>|非线性多分类|
-|深度循环神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-imagesImages/19/deep_rnn_net.png"/>|非线性多分类|
+|单入<br>单出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/4/Setup.png"/>|一元线性回归|
+|多入<br>单出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/5/setup.png"/>|多元线性回归|
+|多入<br>单出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/6/BinaryClassifierNN.png"/>|线性二分类<br>|
+|多入<br>多出<br>一层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/7/MultipleClassifierNN.png"/>|线性多分类<br>|
+|单入<br>单出<br>两层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/9/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|
+|多入<br>单出<br>两层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/10/xor_nn.png"/>|非线性二分类|
+|多入<br>多出<br>两层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/11/nn.png"/>|非线性多分类|
+|多入<br>多出<br>三层|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/12/nn3.png"/>|非线性多分类|
+|多层全连接网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/14/mnist_net.png"/>|非线性多分类|
+|带批归一化层的多层全连接网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/15/bn_mnist.png"/>|非线性多分类|
+|带丢弃层的多层全连接网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/16/dropout_net.png"/>|非线性多分类|
+|简单的卷积神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/17/conv_net.png"/>|非线性多分类|
+|复杂的卷积神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/18/mnist_net.png"/>|非线性多分类|
+|单向循环神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/19/bptt_simple.png"/>|非线性多分类|
+|双向循环神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/19/bi_rnn_net_right.png"/>|非线性多分类|
+|深度循环神经网络|<img src="https://aiedugithub4a2.blob.core.windows.net/a2-images/Images/19/deep_rnn_net.png"/>|非线性多分类|
 
 ## 写在后面
 

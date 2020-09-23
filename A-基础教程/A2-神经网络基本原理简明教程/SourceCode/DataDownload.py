@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 from urllib.request import urlretrieve
 import time
 import tarfile
@@ -33,4 +27,3 @@ except:
     
 print("Exit in 3 seconds...")
 time.sleep(3)
-

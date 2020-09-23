@@ -13,7 +13,7 @@
 
 2. 也可以clone全部内容到本地，然后用VSCode浏览，但VSCode中需要安装能读取Markdown格式的扩展，比如Markdown AllInOne插件。
 
-3. 本教程提供数据包：在"../SourceCode"中下载"DataDownload.py"并运行，输入本地目录后即可开始下载数据包，并自动解压至当地。
+3. 本教程提供数据包：在"SourceCode"文件夹中下载"DataDownload.py"并运行，输入本地目录后即可开始下载数据包，并自动解压至当地。
 
 ## 写在前面，为什么要出这个系列的教程呢？
 

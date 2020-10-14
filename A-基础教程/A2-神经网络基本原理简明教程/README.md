@@ -9,7 +9,7 @@
 
 ## 如何浏览本系列教程
 
-1. 如果使用浏览器在线观看的话，可以使用Chrome浏览器，[加这个Math展示控件](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
+1. 如果使用浏览器在线观看的话，可以使用 Edge 或 Chrome 浏览器，[加这个Math展示控件](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima)
 
 2. 也可以clone全部内容到本地，然后用VSCode浏览，但VSCode中需要安装能读取Markdown格式的扩展，比如Markdown AllInOne插件。
 

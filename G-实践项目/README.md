@@ -6,12 +6,12 @@
 
 ### 实践空间站
 
-- NNI Student Program 2020
+- [NNI Student Program 2020](./NNI-Student-Program-2020)
 
 
 
 ### 精品课实践
 
-
+- 高级软件工程（ASE）项目实践
 
 ### 领学计划

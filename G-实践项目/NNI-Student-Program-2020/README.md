@@ -8,7 +8,7 @@
 
 ## 2. 必备技能
 ### A. 学习 Git/Github 基本操作
-本项目要求同学们创建自己的 Git 仓库，通过 Git/Github 托管自己的代码和文档，并在 ai-edu 的 Issue 里提交你的 repo 地址。因此，同学们需掌握基本的 Git/Github 操作。
+本项目要求同学们创建自己的 Git 仓库，通过 Git / Github 托管自己的代码和文档，并在 ai-edu 的 Issue 里提交你的 repo 地址。因此，同学们需掌握基本的 Git / Github 操作。
 
 ### B. 使用 Markdown 编写文档
 每个任务要求提交一份使用 Markdown 编写的文档，其中包括环境配置、必要的代码和说明、实验结果及分析等。因此，同学们需掌握必要的 Markdown 语法。正如你所见，此文档就是使用 Markdown 编写。
@@ -35,20 +35,20 @@
 ## 4. 提交方式
 
 1. 每个队伍需要在 [Github](https://github.com/) 中创建自己的 repo，并按照 [Team-Submission](./Team-Submission) 中的参考格式管理自己的文档和代码。
-2. 每个队伍在完成某个任务后，首先 commit 本地的修改，并通过 `git push` 上传至自己的 repo ，之后再向 [本Issue]() 提交相关信息，格式如下：
+2. 每个队伍在完成某个任务后，首先 commit 本地的修改，并通过 `git push` 上传至自己的 repo ，之后再向 [本Issue](https://github.com/microsoft/ai-edu/issues/582) 提交相关信息，格式如下：
 
 ```
 1. 团队名：
 2. 团队人员：
 3. 团队学校：
 4. 任务完成情况：
-5. Github repo地址：
+5. Github Repo地址：
 6. 补充信息（若有）：比如，您可以在这部分简要说明您对 NNI 的 contribution
 ```
 
 我们会选择优秀的项目合并到官方 repo 中。
 
-注：在您提交时， repo 需要按照下面的形式组织文件。 
+注：在您提交时，需要按照下面的形式组织文件。 
 
 ```
 .

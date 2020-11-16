@@ -20,7 +20,7 @@
 
  ### **任务 2.2 描述**
 
-- 访问 Task 2.2 的[中文教程](./Task2_Tutorial_Chinese.md)或[英文教程](./Task2_Tutorial_English.md)
+- 访问 Task 2.2 的[中文教程](./Task2_Tutorial_Chinese.md)
 
 ### **任务 2.2 说明**
 

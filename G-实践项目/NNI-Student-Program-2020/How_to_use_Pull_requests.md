@@ -1,6 +1,6 @@
 # 如何使用 Pull Request 进行团队协作
 
-github 提供了 Pull Request 功能，通过该功能，团队成员之间可以方便地进行协作，进行 Code Review 来保证代码的稳定性和健壮性。
+Github 提供了 Pull Request 功能，通过该功能，团队成员之间可以方便地进行协作，进行 Code Review 来保证代码的稳定性和健壮性。以 ai-edu 为例，本文介绍如何使用Pull Request 进行团队协作。
 
 术语：
 
@@ -16,19 +16,21 @@ github 提供了 Pull Request 功能，通过该功能，团队成员之间可�
 
 ## 将自己 Fork 的仓库 Clone 到本地
 
-使用 Git Bash 或其他类似软件将自己账号下的远程仓库 clone 到本地。以我的账号为例：
+使用 Git Bash 或其他类似软件将自己账号下的远程仓库 clone 到本地。以用户名为 example 的账号为例：
 
 ```bash
-git clone https://github.com/kvartet/ai-edu.git
+git clone https://github.com/example/ai-edu.git
 ```
 
 之后在进行开发时，我们的工作流程为：
 
 1. 本地新建针对某一功能的分支，并编写内容
 2. 将该分支的修改 commit 到本地仓库
-3. 将本地完成编码的分支 push 到自己fork的远程仓库
+3. 将本地完成编码的分支 push 到自己 fork 的远程仓库
 4. 在自己的远程仓库的此分支下向主仓库的某一分支提起 Pull Request，若有冲突则需要解决冲突
-5. 团队成员负责 review 相关代码，若没有问题，则可以 approve 该修改，至少2位成员批准后即可将该 Pull Request 合并到主仓库。如发现问题（如 BUG，代码风格等），则可以在对应的代码进行评论，并与作者进行交流。PR 发起者可以根据意见在本地仓库进行修改，并再次 push 到自己 Fork 的远程仓库的对应分支，github 检测到这一修改后会自动同步 PR 内的修改，刷新页面即可看到更新。
+5. 团队成员负责 review 相关代码，若没有问题，则可以 approve 该修改，成员批准后即可将该 Pull Request 合并到主仓库。如发现问题（如 BUG，代码风格等），则可以在对应的代码进行评论，并与作者进行交流。PR 发起者可以根据意见在本地仓库进行修改，并再次 push 到自己 Fork 的远程仓库的对应分支，github 检测到这一修改后会自动同步 PR 内的修改，刷新页面即可看到更新。
+6. 项目管理者应当负责在 PR 通过 Code Review 之后将其 merge 到主仓库中
+7. 删除无用分支
 
 
 ## 完整的 Pull Request 过程
@@ -77,7 +79,7 @@ git add .
 这条命令代表将当前目录所有未追踪的文件加入暂存区，你当然也可以指定某个文件，例如：
 
 ```bash
-git add How_To_Cooperate_with_Pull_Request.md
+git add How_To_use_Pull_requests.md
 ```
 
 再次执行 git status，会发现文件名已经变成了绿色，提示这是一个 new file，下一步应该将这个修改进行 commit
@@ -96,6 +98,8 @@ git commit -m 'add doc about how to create PR'
 ```
 
 其中 `-m` 参数后面接对这个 Pull Request 的注释，这部分应尽量表现出这个 commit 所完成的功能。如果你是第一次在本地进行 commit，可能需要设置 git 的用户和 email，根据提示进行设置并再次 commit 即可。
+
+### 3. push 到自己 fork 的远程仓库
 
 下一步，将该分支 push 到你 Fork 的仓库，如果你在本地新建了分支，而远端仓库此时没有这个分支，则可能提交失败。例如使用
 
@@ -118,7 +122,7 @@ To push the current branch and set the remote as upstream, use
 git push --set-upstream origin doc-how-to-use-pr
 ```
 
-该命令会在自己 Fork 的远程仓库新建一个和本地分支同名的分支，并将本地分支 push 到该分支。注意，在进行 push 时，尽量指定对应的主机名和分支名，例如如果之后还要对该分支进行修改，使用
+该命令会在自己 Fork 的远程仓库新建一个和本地分支同名的分支，并将本地分支 push 到该分支。注意，在进行 push 时，尽量指定对应的主机名和分支名，如果之后还要对该分支进行修改，使用
 
 ```bash
 git push origin doc-how-to-use-pr
@@ -132,19 +136,25 @@ git push
 
 其中 origin 代表主机名（即远程仓库），`doc-how-to-use-pr` 是远程仓库的分支名。尽管二者的效果相同，但 push 时尽量指定主机名和分支名以避免可能的问题。
 
-### 3. 发起 Pull Request
+### 4. 发起 Pull Request
 
 在将自己的修改 push 到远程仓库后，即可向主仓库发起 Pull Request
 
 首先进入自己 Fork 的仓库，左上角的分支选择自己刚刚通过 push 进行修改过的分支，然后点击右方的 Pull Request 按键即可向主仓库发起 Pull Request。注意要指定自己仓库的分支以及主仓库的对应分支。Pull Request 的标题和描述应当反映该 PR 所做的工作或者作出的修改，尽量提供更多信息来帮助 reviewer 作出判断。
 
-### 4. Code Review
+### 5. Code Review
 
-在 PR 提出后，应当指定 reviewer 对这部分修改进行代码审查，以保证最终 merge 到主仓库的代码没有大的问题。reviewer 在代码审查完成之后若没有问题即可批注这些修改，反之应当要求作者修改代码。在指定数量的 reviewer 均批准修改后即可将这个 PR 合并到主仓库中。若作者在提交 PR 之后发现代码中有问题，也可将 PR 的状态改为 Draft，在修改完成后重新设置为 Ready for review 的状态。
+在 PR 提出后，应当指定 reviewer 对这部分修改进行代码审查，以保证最终 merge 到主仓库的代码没有问题。reviewer 在代码审查完成之后若没有问题即可批注这些修改，反之应当要求作者修改代码。在指定数量的 reviewer 均批准修改后即可将这个 PR 合并到主仓库中。若作者在提交 PR 之后发现代码中有问题，也可将 PR 的状态改为 Draft，在修改完成后重新设置为 Ready for review 的状态。
 
-### 5. Merge
+### 6. Merge
 
-项目管理者应当负责在 PR 通过 Code Review 之后将其 merge 到主仓库中
+项目管理者应当负责在 PR 通过 Code Review 之后将其 merge 到主仓库中。
+
+### 7. 删除无用分支
+
+当实现了某个功能并 merge 到主仓库之后，我们为这个功能新建的分支便没有用处了，可以将其删除。
+
+下次开发时重复以上的流程。
 
 ## 本地仓库/自己的远程仓库与主仓库的同步
 

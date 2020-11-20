@@ -1,6 +1,6 @@
 # 如何使用 Pull Request 进行团队协作
 
-Github 提供了 Pull Request 功能，通过该功能，团队成员之间可以方便地进行协作，进行 Code Review 来保证代码的稳定性和健壮性。以 ai-edu 为例，本文介绍如何使用Pull Request 进行团队协作。
+Github 提供了 Pull Request 功能，通过该功能，团队成员之间可以方便地进行协作，进行 Code Review 来保证代码的稳定性和健壮性。以 ai-edu 为例，本文介绍如何使用 Pull Request 进行团队协作。
 
 术语：
 
@@ -79,7 +79,7 @@ git add .
 这条命令代表将当前目录所有未追踪的文件加入暂存区，你当然也可以指定某个文件，例如：
 
 ```bash
-git add How_To_use_Pull_requests.md
+git add How_to_use_Pull_requests.md
 ```
 
 再次执行 git status，会发现文件名已经变成了绿色，提示这是一个 new file，下一步应该将这个修改进行 commit

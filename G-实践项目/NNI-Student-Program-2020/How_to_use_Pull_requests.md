@@ -26,9 +26,9 @@ git clone https://github.com/example/ai-edu.git
 
 1. 本地新建针对某一功能的分支，并编写内容
 2. 将该分支的修改 commit 到本地仓库
-3. 将本地完成编码的分支 push 到自己 fork 的远程仓库
-4. 在自己的远程仓库的此分支下向主仓库的某一分支提起 Pull Request，若有冲突则需要解决冲突
-5. 团队成员负责 review 相关代码，若没有问题，则可以 approve 该修改，成员批准后即可将该 Pull Request 合并到主仓库。如发现问题（如 BUG，代码风格等），则可以在对应的代码进行评论，并与作者进行交流。PR 发起者可以根据意见在本地仓库进行修改，并再次 push 到自己 Fork 的远程仓库的对应分支，github 检测到这一修改后会自动同步 PR 内的修改，刷新页面即可看到更新。
+3. 将本地完成编码的分支 push 到自己 fork 的远程仓库（2、3步可重复多次）
+4. 当完成功能开发的时候，需要先将自己远程仓库的分支与主仓库的某一分支同步，若有冲突则要解决冲突，之后可以向主仓库的特定分支提起 Pull Request
+5. 团队成员负责 review 相关代码，若没有问题，则可以 approve 该修改，特定数目的成员批准后即可将该 Pull Request 合并到主仓库。若发现问题（如 BUG，代码风格等），则可以在对应的代码进行评论，并与作者进行交流。PR 发起者可以根据意见在本地仓库进行修改，并再次 push 到自己 Fork 的远程仓库的对应分支，github 检测到这一修改后会自动同步 PR 内的修改，刷新页面即可看到更新，不需要重新提交 PR 。
 6. 项目管理者应当负责在 PR 通过 Code Review 之后将其 merge 到主仓库中
 7. 删除无用分支
 
@@ -39,7 +39,7 @@ git clone https://github.com/example/ai-edu.git
 
 ### 1. 新建本地分支
 
-我们通常希望自己的本地仓库的 master 分支尽量与主仓库的 master 分支保持同步，因此，我们不应直接在 master 分支上进行开发。如果准备开发某个功能，请先新建一个分支并在该分支进行开发。
+在开发之前，我们通常希望自己的本地仓库的 master 分支尽量与主仓库的 master 分支保持同步（同步流程可参考[这里](#本地仓库/自己的远程仓库与主仓库的同步)），因此，我们不应直接在 master 分支上进行开发。如果准备开发某个功能，请先新建一个分支并在该分支进行开发。
 
 新建一个分支并切换到该分支
 
@@ -136,11 +136,11 @@ git push
 
 其中 origin 代表主机名（即远程仓库），`doc-how-to-use-pr` 是远程仓库的分支名。尽管二者的效果相同，但 push 时尽量指定主机名和分支名以避免可能的问题。
 
-### 4. 发起 Pull Request
+### 4. 与主仓库同步后发起 Pull Request
 
-在将自己的修改 push 到远程仓库后，即可向主仓库发起 Pull Request
+完成某一个功能开发的时候，需要先将自己远程仓库的分支与主仓库的某一分支同步（具体流程可见[这里](#本地仓库/自己的远程仓库与主仓库的同步)），若有冲突则要解决冲突。
 
-首先进入自己 Fork 的仓库，左上角的分支选择自己刚刚通过 push 进行修改过的分支，然后点击右方的 Pull Request 按键即可向主仓库发起 Pull Request。注意要指定自己仓库的分支以及主仓库的对应分支。Pull Request 的标题和描述应当反映该 PR 所做的工作或者作出的修改，尽量提供更多信息来帮助 reviewer 作出判断。
+同步后即可向主仓库发起 Pull Request：首先进入自己 Fork 的仓库，左上角的分支选择自己刚刚通过 push 进行修改过的分支，然后点击右方的 Pull Request 按键即可向主仓库发起 Pull Request。注意要指定自己仓库的分支以及主仓库的对应分支。Pull Request 的标题和描述应当反映该 PR 所做的工作或者作出的修改，尽量提供更多信息来帮助 reviewer 作出判断。
 
 ### 5. Code Review
 
@@ -168,12 +168,12 @@ git remote add upstream https://github.com/microsoft/ai-edu.git
 
 这条命令为本地仓库增加了除 origin 之外追踪的另一个名为 upstream 的远程仓库，指向的是主仓库。
 
-之后拉取主仓库的代码合并到本地仓库。多数情况下我们只需要保证 master 分支与主仓库同步即可，因此执行以下命令
+之后拉取主仓库的代码合并到本地仓库。以本地仓库的 master 与主仓库的 master 分支同步为例，执行以下命令：
 
 ```bash
-git checkout master # 切换到master
+git checkout master # 本地分支切换到master
 git fetch upstream master # 拉取主仓库的 master 分支的代码
-git merge upstream/master # 将拉取下来的主仓库的 master 分支合并到本地仓库的 master 分支
+git merge upstream/master # 将拉取下来的主仓库的 master 分支合并到本地仓库的分支
 git push origin master # 将合并后的 master 分支 push 到自己 Fork 的仓库以实现同步
 ```
 

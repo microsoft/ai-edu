@@ -2,7 +2,7 @@
 ## 1. 项目介绍
 本项目以开源自动机器学习工具 NNI 为基础，立足 NNI 的丰富工具用例与可扩展性，希望能够帮助同学们加强对机器学习的了解与认识，服务于同学们的科研项目与实践，在帮助同学们取得优秀科研成果的同时，进一步提高 NNI 的实用性和丰富性。​
 
-项目导师：Scarlett Li，微软亚洲研究院 Principal Research PM Manager
+项目导师：Scarlett Li、Tingting Qin、Hui Xue、Quanlu Zhang
 
 <br>
 

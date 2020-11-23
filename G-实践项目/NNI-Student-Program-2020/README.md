@@ -54,7 +54,7 @@
 
 ## 4. 提交方式
 
-1. 每个队伍需要在 [Github](https://github.com/) 中创建自己的 repo，并按照 [Team-Submission](./Team-Submission) 中的参考格式管理自己的文档和代码。
+1. 每个队伍需要在 [Github](https://github.com/) 中创建自己的 public repo，并按照 [Team-Submission](./Team-Submission) 中的参考格式管理自己的文档和代码。
 2. 每个队伍在完成某个任务后，首先 commit 本地的修改，并通过 `git push` 上传至自己的 repo ，之后再向 [本Issue](https://github.com/microsoft/ai-edu/issues/582) 提交相关信息（可编辑提交信息来更改任务完成情况），格式如下：
 
 ```
@@ -89,7 +89,15 @@
 
 <br>
 
-## 5. 参考资料
+## 5. 项目答疑
+
+如果您在实验过程中遇到一些问题，您可以先阅读 [NNI官方文档](https://nni.readthedocs.io/en/latest/index.html) 或者 [NNI FAQ](https://nni.readthedocs.io/en/latest/Tutorial/FAQ.html)。
+
+如果您的问题还是没有得到解决，请到 NNI官方 [Github issues](https://github.com/microsoft/nni/issues) 中提出您的问题。
+
+<br>
+
+## 6. 参考资料
 
 [NNI 官方文档](https://nni.readthedocs.io/en/latest/index.html)与[Github 仓库](https://github.com/microsoft/nni)
 

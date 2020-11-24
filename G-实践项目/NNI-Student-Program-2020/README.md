@@ -93,7 +93,7 @@
 
 如果您在实验过程中遇到一些问题，您可以先在官方微信群里与其他的小伙伴们交流，或者阅读 [NNI官方文档](https://nni.readthedocs.io/en/latest/index.html) 与 [NNI FAQ](https://nni.readthedocs.io/en/latest/Tutorial/FAQ.html)。
 
-如果您的问题还是没有得到解决，请到 NNI官方 [Github issues](https://github.com/microsoft/nni/issues) 中提出您的问题。
+如果您的问题还是没有得到解决，请到 NNI官方 [Github issues](https://github.com/microsoft/nni/issues/new/choose) 中选择“Question for NNI Student Program China / NNI 学生项目问题表单”提出您的问题。
 
 <br>
 

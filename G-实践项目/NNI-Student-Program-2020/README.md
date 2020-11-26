@@ -32,7 +32,7 @@
 
 <br>
 
-## 时间安排
+## 4. 时间安排
 
 + 项目直播：2020.11.27 3:30 - 4:30
 + 报名截止日期：2020.12.7
@@ -52,7 +52,7 @@
 
 <br>
 
-## 4. 提交方式
+## 5. 提交方式
 
 1. 每个队伍需要在 [Github](https://github.com/) 中创建自己的 public repo，并按照 [Team-Submission](./Team-Submission) 中的参考格式管理自己的文档和代码。
 2. 每个队伍在完成某个任务后，首先 commit 本地的修改，并通过 `git push` 上传至自己的 repo ，之后再向 [本Issue](https://github.com/microsoft/ai-edu/issues/582) 提交相关信息（可编辑提交信息来更改任务完成情况），格式如下：
@@ -89,7 +89,7 @@
 
 <br>
 
-## 5. 项目答疑
+## 6. 项目答疑
 
 如果您在实验过程中遇到一些问题，您可以先在官方微信群里与其他的小伙伴们交流，或者阅读 [NNI官方文档](https://nni.readthedocs.io/en/latest/index.html) 与 [NNI FAQ](https://nni.readthedocs.io/en/latest/Tutorial/FAQ.html)。
 
@@ -97,7 +97,7 @@
 
 <br>
 
-## 6. 参考资料
+## 7. 参考资料
 
 [NNI 官方文档](https://nni.readthedocs.io/en/latest/index.html)与[Github 仓库](https://github.com/microsoft/nni)
 

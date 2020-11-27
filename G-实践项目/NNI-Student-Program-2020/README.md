@@ -2,7 +2,7 @@
 ## 1. 项目介绍
 本项目以开源自动机器学习工具 NNI 为基础，立足 NNI 的丰富工具用例与可扩展性，希望能够帮助同学们加强对机器学习的了解与认识，服务于同学们的科研项目与实践，在帮助同学们取得优秀科研成果的同时，进一步提高 NNI 的实用性和丰富性。​
 
-项目导师：Scarlett Li，微软亚洲研究院 Principal Research PM Manager
+项目导师：Scarlett Li、Tingting Qin、Hui Xue、Quanlu Zhang
 
 <br>
 
@@ -32,10 +32,30 @@
 
 <br>
 
-## 4. 提交方式
+## 4. 时间安排
 
-1. 每个队伍需要在 [Github](https://github.com/) 中创建自己的 repo，并按照 [Team-Submission](./Team-Submission) 中的参考格式管理自己的文档和代码。
-2. 每个队伍在完成某个任务后，首先 commit 本地的修改，并通过 `git push` 上传至自己的 repo ，之后再向 [本Issue](https://github.com/microsoft/ai-edu/issues/582) 提交相关信息，格式如下：
++ 项目直播：2020.11.27 3:30 - 4:30
++ 报名截止日期：2020.12.7
++ Task1 截止日期
+  + 2021.1.4
++ Task2 截止日期
+  + Task 2.1：2021.1.4
+  + Task 2.2：2021.2.5
++ Task3 截止日期
+  + Task 3.1：2021.1.4
+  + Task 3.2：2021.2.5
++ Task4 截止日期
+  + 项目启动报告：2021.1.4
+  + 项目中期报告：2021.2.5（鼓励提交、不强制）
+  + 项目结项报告：2021.3.15
++ 全部任务截止日期：2021.3.15
+
+<br>
+
+## 5. 提交方式
+
+1. 每个队伍需要在 [Github](https://github.com/) 中创建自己的 public repo，并按照 [Team-Submission](./Team-Submission) 中的参考格式管理自己的文档和代码。
+2. 每个队伍在完成某个任务后，首先 commit 本地的修改，并通过 `git push` 上传至自己的 repo ，之后再向 [本Issue](https://github.com/microsoft/ai-edu/issues/582) 提交相关信息（可编辑提交信息来更改任务完成情况），格式如下：
 
 ```
 1. 团队名：
@@ -69,7 +89,15 @@
 
 <br>
 
-## 5. 参考资料
+## 6. 项目答疑
+
+如果您在实验过程中遇到一些问题，您可以先在官方微信群里与其他的小伙伴们交流，或者阅读 [NNI官方文档](https://nni.readthedocs.io/en/latest/index.html) 与 [NNI FAQ](https://nni.readthedocs.io/en/latest/Tutorial/FAQ.html)。
+
+如果您的问题还是没有得到解决，请到 NNI官方 [Github issues](https://github.com/microsoft/nni/issues/new/choose) 中选择“Question for NNI Student Program China / NNI 学生项目问题表单”提出您的问题。
+
+<br>
+
+## 7. 参考资料
 
 [NNI 官方文档](https://nni.readthedocs.io/en/latest/index.html)与[Github 仓库](https://github.com/microsoft/nni)
 

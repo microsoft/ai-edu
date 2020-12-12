@@ -1,0 +1,4 @@
+delta = -1
+
+while arr[m + delta] == tn:
+    m = m + delta

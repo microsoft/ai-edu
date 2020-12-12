@@ -1,0 +1,6 @@
+print('Tom asked: "Where is my ball?"')
+print("Jack's brother hided a ball behind Jack's body.")
+print("Jack told his brother: \"Bob, don't do that. You should return the ball to Tom.\"")
+print('Bob cried. Tom\'s sister tried to console him, but didn\'t succeed.')
+print('Tom shouted loudly: "Return my ball! Otherwise, I will call you \'The Thief\'all the time!"')
+print("Tom's sister said: \"No, he is a little boy, not a thief. Let's play together with the ball.\"")

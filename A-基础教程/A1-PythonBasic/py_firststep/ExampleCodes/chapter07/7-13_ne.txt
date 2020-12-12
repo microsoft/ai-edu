@@ -1,0 +1,2 @@
+if space > 30:
+    print("What a big room!")

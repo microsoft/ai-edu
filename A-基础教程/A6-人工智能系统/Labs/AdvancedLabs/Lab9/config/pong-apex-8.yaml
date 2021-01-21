@@ -1,0 +1,12 @@
+pong-apex:
+    env: PongNoFrameskip-v4
+    run: APEX
+    config:
+        # Works for both torch and tf.
+        framework: tf
+        target_network_update_freq: 20000
+        num_workers: 8
+        num_envs_per_worker: 1
+        lr: .00005
+        train_batch_size: 64
+        gamma: 0.99

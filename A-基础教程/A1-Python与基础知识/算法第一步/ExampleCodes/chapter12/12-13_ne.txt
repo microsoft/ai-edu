@@ -1,0 +1,1 @@
+result = quick_repeating_sequence_binary_search(arr, tn, 1)

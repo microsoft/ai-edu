@@ -1,0 +1,16 @@
+pendulum-apex-ddpg:
+    env: Pendulum-v0
+    run: APEX_DDPG
+    stop:
+        episode_reward_mean: -160
+    config:
+        # Works for both torch and tf.
+        framework: tf
+        use_huber: True
+        clip_rewards: False
+        num_workers: 4
+        n_step: 1
+        target_network_update_freq: 50000
+        tau: 1.0
+        evaluation_interval: 5
+        evaluation_num_episodes: 10

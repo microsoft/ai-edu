@@ -1,0 +1,6 @@
+if space > 30:
+    print("This is a big room.")
+elif space > 10:
+    print("This is a normal room.")
+else:
+    print("This is a small room.")

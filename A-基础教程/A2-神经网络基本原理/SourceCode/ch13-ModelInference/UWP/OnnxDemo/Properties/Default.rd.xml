@@ -1,0 +1,31 @@
+<!--
+    此文件包含 .NET Native 使用的运行时指令。此处的默认值适合大多数
+    开发人员。但可通过修改这些参数来修改 .NET Native
+    优化程序的行为。
+
+    运行时指令记录在 https://go.microsoft.com/fwlink/?LinkID=391919
+
+    完全启用对 App1.MyClass 及其所有公共/私有成员的反射
+    <Type Name="App1.MyClass" Dynamic="Required All"/>
+
+    通过 System.Int32 启用 AppClass<T> 的特定实例的动态创建
+    <TypeInstantiation Name="App1.AppClass" Arguments="System.Int32" Activate="Required Public" />
+
+    使用 Namespace 指令将反射策略应用于特定命名空间中的所有类型
+    <Namespace Name="DataClasses.ViewModels" Serialize="All" />
+-->
+
+<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+  <Application>
+    <!--
+      Name="*Application*" 的程序集元素将应用到应用程序包中的
+ 所有程序集。星号不是通配符。
+-->
+    <Assembly Name="*Application*" Dynamic="Required All" />
+    
+    
+    <!-- 在此处添加应用程序特定的运行时指令。-->
+
+
+  </Application>
+</Directives>

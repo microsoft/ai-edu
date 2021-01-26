@@ -1,0 +1,33 @@
+protocolVersion: 2
+name: job-config-6
+type: job
+prerequisites:
+  - protocolVersion: 2
+    name: pytorch_example
+    type: dockerimage
+    uri: openpai/pai.example.pytorch
+taskRoles:
+  train:
+    instances: 2
+    completion:
+      minFailedInstances: 1
+      minSucceededInstances: 1
+    dockerImage: pytorch_example
+    resourcePerInstance:
+      cpu: 2
+      memoryMB: 4096
+      gpu: 1
+    commands:
+    - >
+      python3 examples/mnist/main.py
+      --epochs 1
+      --lr 0.01
+      --batch-size 64
+
+defaults:
+  virtualCluster: default
+
+extras:
+  gangAllocation: true
+  hivedScheduler:
+    jobPriorityClass: prod

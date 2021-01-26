@@ -1,0 +1,35 @@
+{
+    "initial_lr": {
+        "_type": "loguniform",
+        "_value": [1e-4, 0.1]
+    },
+    "weight_decay": {
+        "_type": "loguniform",
+        "_value": [1e-6, 1e-3]
+    },
+    "cutout": {
+        "_type": "choice",
+        "_value": [0, 8, 16]
+    },
+    "batch_size": {
+        "_type": "choice",
+        "_value": [64, 128, 256]
+    },
+    "epochs": {
+        "_type": "choice",
+        "_value": [100, 300, 600]
+    },
+    "optimizer": {
+        "_type": "choice",
+        "_value": ["adam", "rmsprop", "sgd"]
+    },
+    "model": {
+        "_type": "choice",
+        "_value": ["resnet18", "resnet50", "vgg16", "vgg16_bn", "densenet121", "squeezenet1_1",
+                   "shufflenet_v2_x1_0", "mobilenet_v2", "resnext50_32x4d", "mnasnet1_0"]
+    },
+    "grad_clip": {
+        "_type": "loguniform",
+        "_value": [0.0, 5.0]
+    }
+}

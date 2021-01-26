@@ -8,7 +8,10 @@
 
 本社区注明版权出处的内容适用于[License](./LICENSE.md)版权许可。
 
+[English Version](./0-EnglishVersion/README.md)
+
 # <font size=5>新闻</font>
+
 **<font size=3>2020-03-25:</font>**
 
 社区结构更新啦！模块调整并重新命名，结构更清晰！

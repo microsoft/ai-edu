@@ -12,11 +12,28 @@
 
 # <font size=5>新闻</font>
 
+**<font size=3>2021-03-07:</font>**
+
+A7-强化学习，准备中。
+
+**<font size=3>2021-02-07:</font>**
+
+新书出版！
+
+<img src="./A-基础教程/A2-神经网络基本原理/Images/cover.png" width=300/>
+
+目前在各大网店都可以买到。全书400多页，全彩印刷，由高等教育出版社出版，是下面所述的“神经网络基本原理教程”的印刷版。
+
+**<font size=3>2021-01-07:</font>**
+
+A5-现代软件工程，开始编写。
+
+
 **<font size=3>2020-03-25:</font>**
 
 社区结构更新啦！模块调整并重新命名，结构更清晰！
 
-将[神经网络基本原理简明教程](https://aka.ms/beginnerAI) 移入 [A-基础教程](https://github.com/microsoft/ai-edu/tree/master/A-基础教程) 模块。该模块下还有 [数学基础](https://github.com/microsoft/ai-edu/tree/master/A-基础教程/A1-PythonBasic/math_intro) 和 [Python语言导论](https://github.com/microsoft/ai-edu/tree/master/A-基础教程/A1-PythonBasic/py_intro)。教程更集中，学习更方便！
+将[神经网络基本原理教程](https://aka.ms/beginnerAI) 移入 [A-基础教程](https://github.com/microsoft/ai-edu/tree/master/A-基础教程) 模块。该模块下还有 [数学基础](https://github.com/microsoft/ai-edu/tree/master/A-基础教程/A1-PythonBasic/math_intro) 和 [Python语言导论](https://github.com/microsoft/ai-edu/tree/master/A-基础教程/A1-PythonBasic/py_intro)。教程更集中，学习更方便！
 
 实践案例全部汇集在 [B-实践案例](https://github.com/microsoft/ai-edu/tree/master/B-实践案例) 模块，并配上案例概览帮助文档，更有针对性学习案例！
 

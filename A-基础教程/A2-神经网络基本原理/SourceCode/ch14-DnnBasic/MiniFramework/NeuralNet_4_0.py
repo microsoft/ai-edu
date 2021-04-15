@@ -177,10 +177,6 @@ class NeuralNet_4_0(object):
             correct = r.sum()
             return correct/m
 
-    def inference(self, X):
-        self.__forward(X, train=False)
-        return self.output
-
     # save weights value when got low loss than before
     def save_parameters(self):
         print("save parameters")

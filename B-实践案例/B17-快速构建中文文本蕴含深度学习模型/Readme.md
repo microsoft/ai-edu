@@ -472,7 +472,7 @@ NeuronBlocks支持英文和中文
 #### 配置文件检查
 模型配置文件的定义可以参考[Neuronblocks官方教程](https://github.com/microsoft/NeuronBlocks/blob/master/Tutorial_zh_CN.md#define-conf)  
 已配置好的文件可以参考
-[conf_chinese_nli_bigru_biAttnflow.json](./conf_chinese_nli_bigru_biAttnflow.json)
+[conf_chinese_nli_bigru_biAttnflow.json](./resources/conf_chinese_nli_bigru_biAttnflow.json)
 
 ### 代码修改
 Pytorch 1.7对一些旧特性不再支持，我们需要对源代码做一些调整  

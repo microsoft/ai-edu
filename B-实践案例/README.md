@@ -49,7 +49,7 @@
 6|[计算机视觉中级案例-图像超分辨率](https://github.com/microsoft/ai-edu/tree/master/B-实践案例/复旦大学城市声音分类-图像超分辨率)|数据预处理；使用GAN、CNN和ResNet的组合构建超分辨率模型|必选
 7|[中级案例-智慧城市之声音分类](https://github.com/microsoft/ai-edu/tree/master/B-实践案例/复旦大学城市声音分类-图像超分辨率)|数据分析；特征工程；TensorFlow 框架下构建多种深度学习模型（多层感知机、LSTM、GRU 和 CNN 等） |必选
 8|[扩展阅读-机器学习平台建设](./B10-扩展阅读－机器学习平台建设/readme.md)|机器学习平台的架构；机器学习平台的功能；微软开源机器学习平台OpenPAI |可选
-9| [自然语言理解中级案例-中文文本蕴含深度学习模型](./B17-快速构建中文文本蕴含深度学习模型/Readme.md) | 数据预处理； 微软开源NLP深度学习建模工具包Neuronblocks | 可选
+
 
 本部分内容也可以结合 **[神经网络进阶](https://github.com/microsoft/ai-edu/tree/master/A-基础教程#2-神经网络简明原理)** 以及 **[深度网络基础](https://github.com/microsoft/ai-edu/tree/master/A-基础教程#2-神经网络简明原理)** 的理论知识完成理论加实践的AI进阶学习
 
@@ -67,3 +67,4 @@
 3|[高级实战项目-Open Platform for AI (OpenPAI)](https://github.com/Microsoft/pai)|微软开源GPU管理利器
 4|[高级实战项目-LightGBM](https://github.com/Microsoft/LightGBM)|boosting框架
 5|[高级实战项目-基于近邻图的向量搜索案例](./B16-基于近邻图的向量搜索案例/README.md)|在大规模向量中快速搜索最近邻
+6| [高级实战案例-中文文本蕴含深度学习模型](./B17-快速构建中文文本蕴含深度学习模型/Readme.md) | 数据预处理； 微软开源NLP深度学习建模工具包Neuronblocks | 可选

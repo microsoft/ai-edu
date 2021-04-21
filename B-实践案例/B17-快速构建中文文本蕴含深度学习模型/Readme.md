@@ -109,11 +109,10 @@
 需要的软件环境如下：
 - Python 3.7  
   
-如果您有Nvidia的显卡，可以根据Nvidia显卡算力表选择GPU_A流程或GPU_B流程。根据您显卡算力的不同，模型训练时间可以加快50-100倍。
+如果您有Nvidia的显卡，可以根据以下的Nvidia显卡算力表来查询您显卡的算力    
 Nvidia显卡算力表： [CUDA GPU](https://developer.nvidia.com/zh-cn/cuda-gpus)
-显卡算力大于3.5： [GPU_A流程](./Tutorial_GPU_A.md)
-显卡算力小于等于3.5： [GPU_B流程](./Tutorial_GPU_B.md)
 
+根据您显卡算力的不同，模型训练时间可以加快50-100倍。在后续的流程中，显卡流程将被折叠起来，请您根据折叠部分的提示，打开对应的折叠内容。
 
 ## 实现流程
 
@@ -131,6 +130,8 @@ Nvidia显卡算力表： [CUDA GPU](https://developer.nvidia.com/zh-cn/cuda-gpus
     git clone https://github.com/microsoft/NeuronBlocks.git
     cd NeuronBlocks
     ```
+<details open>
+<summary>如果您有Nvidia的显卡，请点击此处折叠CPU流程</summary>
 
 3. 创建虚拟环境(可选)，安装Python依赖包
     ```bash
@@ -166,6 +167,88 @@ Nvidia显卡算力表： [CUDA GPU](https://developer.nvidia.com/zh-cn/cuda-gpus
     torch==1.8.0+cpu
     torchvision==0.9.0+cpu
     ```
+</details>
+
+<details>
+<summary>如果您有Nvidia显卡，且算力大于3.5，请打开此折叠部分</summary>
+
+3. 创建虚拟环境(可选)，安装Python依赖包
+    ```bash
+    # 可以选择你喜欢的虚拟环境管理方式
+
+    # pipenv
+    > pipenv shell --python 3.7
+    > pip install nltk==3.5 gensim==3.8.3 tqdm==4.59.0 numpy==1.20.1 scikit-learn==0.24.1 ftfy==5.9 jieba==0.42.1
+    > pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+    # conda (Windows)
+    > conda create -n YOUR_ENV_NAME python=3.7
+    > activate YOUR_ENV_NAME
+    > pip install nltk==3.5 gensim==3.8.3 tqdm==4.59.0 numpy==1.20.1 scikit-learn==0.24.1 ftfy==5.9 jieba==0.42.1
+    > pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+
+    # pip (无虚拟环境)
+    > pip install nltk==3.5 gensim==3.8.3 tqdm==4.59.0 numpy==1.20.1 scikit-learn==0.24.1 ftfy==5.9 jieba==0.42.1
+    > pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 -f https://download.pytorch.org/whl/torch_stable.html
+    ```
+
+4. 在安装后，我们的环境应该如下
+    ```bash
+    >pip list
+    
+    nltk==3.5
+    gensim==3.8.3
+    tqdm==4.59.0
+    numpy==1.20.1
+    scikit-learn==0.24.1
+    ftfy==5.9
+    jieba==0.42.1
+    torch==1.8.0+cu111
+    torchvision==0.9.0+cu111
+    ```
+
+</details>
+
+<details>
+<summary>如果您有Nvidia显卡，且算力小于等于3.5，请打开此折叠部分</summary>
+
+3. 创建虚拟环境(可选)，安装Python依赖包
+    ```bash
+    # 可以选择你喜欢的虚拟环境管理方式
+
+    # pipenv
+    > pipenv install --python 3.7
+    > pip install torch==1.2.0 torchvision==0.4.0 -f https://download.pytorch.org/whl/torch_stable.html
+
+    # conda (Windows)
+    > conda create -n YOUR_ENV_NAME python=3.7
+    > activate YOUR_ENV_NAME
+    > pip install -r requirements.txt
+    > pip install torch==1.2.0 torchvision==0.4.0 -f https://download.pytorch.org/whl/torch_stable.html
+
+    # pip (无虚拟环境)
+    > pip install -r requirements.txt
+    > pip install torch==1.2.0 torchvision==0.4.0 -f https://download.pytorch.org/whl/torch_stable.html
+    ```
+
+4. 在安装后，我们的环境应该如下
+    ```bash
+    >pip list
+    
+    nltk==3.4.1
+    gensim==3.7.2
+    tqdm==4.31.1
+    numpy==1.16.3
+    scikit-learn==0.20.3
+    ftfy==5.5.1
+    jieba==0.39
+    torch==1.2.0
+    torchvision==0.4.0
+    ```
+
+</details>
+
+---
 
 ### 数据获取
 我们利用的是开源的[中文文本蕴含数据集](https://github.com/liuhuanyong/ChineseTextualInference),数据集**train.txt**主要包含三种文本蕴含关系：**entailment、contradiction、 neutral**, 数据示例如下所示，第一个文本句子为为前提（premise），第二个文本句子为假设（hypothesis），其次是前提和假设的蕴含关系，每一行代表一个样本，以\t分隔。数据量级在42万左右，类别比例**entailment：contradiction：neutral = 1：1：1**，不存在数据类别不平衡问题。
@@ -173,9 +256,9 @@ Nvidia显卡算力表： [CUDA GPU](https://developer.nvidia.com/zh-cn/cuda-gpus
 | - | - | - |
 | 一个年轻人在呼啦圈。 | 这位老人正在呼啦圈。 | contradiction |
 | 两个人正在大教堂或清真寺里交谈。 | 两个人在谈话 | entailment |
-| 穿着黑色外套的妇女边看报纸边等着洗衣服。 | 个女人在洗衣店。 | neutral |
-  
-</p>
+| 穿着黑色外套的妇女边看报纸边等着洗衣服。 | 一个女人在洗衣店。 | neutral |
+
+<p/>
 
 #### 数据下载并处理
 首先我们先将数据集克隆到本地并启动python
@@ -474,8 +557,24 @@ NeuronBlocks支持英文和中文
 已配置好的文件可以参考
 [conf_chinese_nli_bigru_biAttnflow.json](./resources/conf_chinese_nli_bigru_biAttnflow.json)
 
+<details>
+<summary>如果您有Nvidia的显卡，请打开该折叠部分，并完成</summary>
+
+将配置文件中的`use_gpu`从`false`修改为`true`
+```bash
+#第66行
+
+#修改前
+"use_gpu": false,
+
+#修改后
+"use_gpu": true,
+```
+
+</details>
+
 ### 代码修改
-Pytorch 1.7对一些旧特性不再支持，我们需要对源代码做一些调整  
+Pytorch 1.8对一些旧特性不再支持，我们需要对源代码做一些调整  
 [pytorch/pytorch#43227](https://github.com/pytorch/pytorch/issues/43227)
 ```python3
 # ./block_zoo/BiGRU.py 第85行
@@ -502,19 +601,29 @@ self.W = nn.Linear(layer_conf.input_dims[0][-1]*3, 1)
 *提示: 在下文中, **PROJECTROOT**表示本项目的根目录。*
 
 1. 数据准备： 
-    - 划分后的训练集、验证集、测试集放置在指定的 PROJECTROOT/dataset/chinese_nli/ 目录下
-    - 预训练词向量放在 PROJECTROOT/dataset/sogou_embed/ 目录
+    - 划分后的训练集、验证集、测试集放置在指定的 `PROJECTROOT/dataset/chinese_nli/` 目录下
+    - 预训练词向量放在 `PROJECTROOT/dataset/sogou_embed/` 目录
  
  
-2. Json文件准备：Json模型配置文件放在 PROJECTROOT/model_zoo/nlp_tasks/chinese_nli/
+2. Json文件准备：Json模型配置文件放在 `PROJECTROOT/model_zoo/nlp_tasks/chinese_nli/`
 
 
 3. 训练中文文本蕴含任务模型：
-    - 进入**PROJECTROOT**目录下
-    - 命令行运行命令：python train.py --conf_path=model_zoo/nlp_tasks/chinese_nli/conf_chinese_nli_bigru_biAttnflow.json 
+    - 进入`PROJECTROOT`目录下
+    - 命令行运行命令：
+    ```bash
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_nli/conf_chinese_nli_bigru_biAttnflow.json
+
+    #------------------------------------------------------#
+    # 如果你有多张显卡，你可以用以下方法指定运行的显卡
+    CUDA_VISIBLE_DEVICES=1 
+
+    python train.py --conf_path=model_zoo/nlp_tasks/chinese_nli/conf_chinese_nli_bigru_biAttnflow.json
+    #------------------------------------------------------#
+    ```
 
 4. 训练模型日志部分展示：
-```
+```log
 2021-02-07 22:35:03,630 INFO LearningMachine.py train 314: Epoch 1 batch idx: 1900; lr: 0.200000; since last log, loss=0.875404; accuracy: 0.589375
 2021-02-07 22:35:18,388 INFO LearningMachine.py train 322: Valid & Test : Epoch 1
 2021-02-07 22:35:18,391 INFO LearningMachine.py evaluate 408: Starting valid ...
@@ -524,15 +633,21 @@ self.W = nn.Linear(layer_conf.input_dims[0][-1]*3, 1)
 ```
 
 ### 模型测试
-1. 进入**PROJECTROOT**目录下
-2. 运行命令：python test.py --conf_path=model_zoo/nlp_tasks/chinese_nli/conf_chinese_nli_bigru_biAttnflow.json 
+1. 进入`PROJECTROOT`目录下
+2. 运行命令：
+    ```bash
+    python test.py --conf_path=model_zoo/nlp_tasks/chinese_nli/conf_chinese_nli_bigru_biAttnflow.json
+    ```
 
 ### 模型推理
-1. 进入**PROJECTROOT**目录下
-2. 运行命令：python predict.py --conf_path=model_zoo/nlp_tasks/chinese_nli/conf_chinese_nli_bigru_biAttnflow.json --predict_mode='interactive'
+1. 进入`PROJECTROOT`目录下
+2. 运行命令：
+    ```bash
+    python predict.py --conf_path=model_zoo/nlp_tasks/chinese_nli/conf_chinese_nli_bigru_biAttnflow.json --predict_mode='interactive'
+    ```
 3. 分别输入两个文本，程序将会判断两个文本之间的关系。
-4. 结果展示
-![推理结果](./images/predict_result.png)
+4. 结果展示  
+    ![推理结果](./images/predict_result.png)
 
 
 # 作业和挑战

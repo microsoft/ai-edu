@@ -1,6 +1,6 @@
 # <font size=5>Microsoft AI Education Community</font>
 
-This community is an AI education and learning community created by the AI-Edu team of Microsoft Research Asia (MSRA). We provide a series of AI tutorials, study cases, tools and other resources. Welcome to enjoy your AI trip in this community!
+This community is an AI education and learning community created by the AI-Edu team of Microsoft Research Asia (MSRA). We provide a series of AI tutorials, case studies, tools, and other resources.
 
 We are currently translating the content of *A2-Neural Network Basic* under **A-Basic Course** module into English. More content will be added to the English version later. Stay tuned.
 
@@ -15,7 +15,7 @@ This module is a collection of theoretical tutorials for artificial intelligence
 
 Windows 10
 
-### Application Softwares
+### Application Software
 
 1.[Git](https://git-scm.com/) client
 
@@ -23,7 +23,7 @@ Windows 10
 
 3.[VS Code](https://code.visualstudio.com/)
 
-*Note*: Please install "Markdown all in one" Extension after installed VS Code. Open VS Code, select "Extensions" in the left column or press the shortcut key Ctrl+Shift+X, and search for the "Markdown all in one" plugin, download and install it.
+*Note*: Please install "Markdown all in one" Extension after installed VS Code. Open VS Code, select "Extensions" in the left column or press the shortcut key Ctrl+Shift+X, and search for the "Markdown all in one" plugin. Download and install it.
 
 ## Courses
 
@@ -46,11 +46,11 @@ Windows 10
 
 1. Feedback
    
-    If you have any feedback of the courses, please create an issue and write your feedback in the GitHub [Issues](https://github.com/microsoft/ai-edu/issues) module. We will try our best to make the course better.
+    If you have any feedback for the courses, please create an issue and write your feedback in the GitHub [Issues](https://github.com/microsoft/ai-edu/issues) module. We will try our best to make the course better.
 
 
 2. Contribution
 
-    If you want to provide any valuable tutorial content to this module, please fork this repository to your own account, edit the content and submit a Pull Request, we will review and process it in time.
+    If you want to provide any valuable tutorial content to this module, please fork this repository to your own account, edit the content and submit a Pull Request. We will review and process it in time.
 
-    Welcome to contribute valuable content to this module.
+    You are welcome to contribute valuable content to this module.

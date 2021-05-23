@@ -17,40 +17,40 @@ There is a proverb: Teach him how to fish and you feed him for his life time. Af
 
 The author, who has summarized their learning experience has also summarized the introductory knowledge of deep learning into 9 steps. These steps are referred to as the 9-step learning method:
 
-1. 基本概念
-2. 线性回归
-3. 线性分类
-4. 非线性回归
-5. 非线性分类
-6. 模型的推理与部署
-7. 深度神经网络
-8. 卷积神经网络
-9. 循环神经网络
+1. Basic concepts
+2. Linear regression
+3. Linear classification
+4. Nonlinear regression
+5. Non-linear classification
+6. Model inference and deployment
+7. Deep neural networks
+8. Convolutional neural networks
+9. Recurrent neural networks
 
-笔者看到过的很多书籍是直接从第7步起步的，其基本假设是读者已经掌握了前面的知识。但是对于从零开始的初学者们，这种假设并不正确。
+Many books I have seen start directly from Step 7. Their assumption is that the reader has mastered previous knowledge. However, for beginners starting from scratch, this assumption is not correct.
 
-在后面的讲解中，我们一般会使用如下方式进行：
+In the following explanations, we will generally use the following methods:
 
-1. 提出问题：先提出一个与现实相关的假想问题，为了由浅入深，这些问题并不复杂，是实际的工程问题的简化版本。
-2. 解决方案：用神经网络的知识解决这些问题，从最简单的模型开始，一步步到复杂的模型。
-3. 原理分析：使用基本的物理学概念或者数学工具，理解神经网络的工作方式。
-4. 可视化理解：可视化是学习新知识的重要手段，由于我们使用了简单案例，因此可以很方便地可视化。
+1. Ask the question: First ask a hypothetical question related to reality. In order to move from simple stuff to deeper stuff, these questions should not complicated. They are simplified versions of actual engineering problems.
+2. Solution: Use the knowledge of neural networks to solve these problems. Start from simple and basic models and build step by step to achieve a complex model.
+3. Principle analysis: Use basic physics concepts or mathematical tools to understand how neural networks work.
+4. Visual understanding: Visualization is an important aspect of learning new knowledge. As we use simple examples, they can easily be visualized.
 
-原理分析和可视化理解也是本书的一个特点，试图让神经网络是可以解释的，而不是盲目地使用。
+Principle analysis and visual understanding are also features of this book - trying to make neural networks interpretable instead of blindly using them.
 
-还有一个非常重要的地方，我们还有配套的Python代码，除了一些必要的科学计算库和绘图库，如NumPy和Matplotlib等，我们没有使用任何已有的深度学习框架，而是带领大家从零开始搭建自己的知识体系，从简单到复杂，一步步理解深度学习中的众多知识点。
+This is also a very important point. We have supporting Python code. In addition to some necessary scientific computing libraries and plotting libraries, such as NumPy and Matplotlib, we did not use any existing deep learning frameworks, but led everyone from scratch. Start to build your own simple knowledge system to understand the many knowledge points in deep learning, and slowly scale to more complex ones.
 
-对于没有Python经验的朋友来说，通过阅读示例代码，也可以起到帮助大家学习Python的作用，一举两得。随着问题的难度加深，代码也会增多，但是前后都有继承关系的，最后的代码会形成一个小的框架，笔者称之为Mini-Framework，可以用搭积木的方式调用其中的函数来搭建深度学习的组件。
+For our friends who have no experience in Python, reading the sample code can also help you learn Python, which can kill two birds with one stone. As the difficulty of a problem deepens, the code will grow as well. The before and after have a connection much like inheritance. The final code will form a small framework, which I call a Mini-Framework. They can be created by calling building block functions to build deep learning components.
 
-这些代码都是由笔者亲自编写调试的，每章节都可以独立运行，得到相关章节内所描述的结果，包括打印输出和图形输出。
+The code has been written and debugged by the author himself. Each chapter can run independently, and the results described in the relevant chapters can be obtained, including printouts and graphical output.
 
-另外，为了便于理解，笔者绘制了大量的示意图，数量是同类书籍的10倍以上。一图顶万字，相信大家会通过这些示意图快速而深刻地理解笔者想要分享的知识点，使大家能够从真正的“零”开始，对神经网络、深度学习有基本的了解，并能动手实践。
+In addition, for ease of understanding, the author draws a large number of schematic diagrams. The number totals to more than 10 times the amount of similar books. A picture is worth a thousand words. I believe that everyone will quickly and completely understand the knowledge points I want to share through these diagrams. This way, everyone can start from the real "zero", have a basic understanding of neural networks and deep learning, and be able to practice.
 
-对于读者的要求：
+Requirements for readers:
 
-1. 学过高等数学中的线性代数与微分
-2. 有编程基础，可以不会Python语言，因为可以从示例代码中学得
-3. 思考 + 动手的学习模式
+1. Have learned linear algebra and differentiation in advanced mathematics
+2. Have programming fundamentals. You don't need to know Python because you can learn it from the sample code
+3. Thinking + hands-on learning mentality
 
 可以帮助读者达到的水平：
 

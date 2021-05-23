@@ -52,43 +52,43 @@ Requirements for readers:
 2. Have programming fundamentals. You don't need to know Python because you can learn it from the sample code
 3. Thinking + hands-on learning mentality
 
-可以帮助读者达到的水平：
+To help the reader achieve a level of greatness:
 
-1. 可以判断哪些任务是机器学习可以实现的，哪些是科学幻想，不说外行话
-2. 深刻了解神经网络和深度学习的基本理论
-3. 培养举一反三的解决实际问题的能力
-4. 得到自学更复杂模型和更高级内容的能力
-5. 对于天资好的读者，可以培养研发新模型的能力
+1. Judge which tasks are achievable by machine learning and which are science fiction. Don’t stay an amateur
+2. Thoroughly understand the basic theories of neural networks and deep learning
+3. Cultivate the ability to solve practical problems by analogies
+4. Have the ability to learn more complex models and advanced content alone
+5. For the more experienced readers, they can cultivate the ability to develop new models
 
-## 符号约定
+## Notation and Convention
 
-|符号|含义|
+|Symbol|Meaning|
 |---|---|
-|$x$|训练用样本值|
-|$x_1$|第一个样本或样本的第一个特征值，在上下文中会有说明|
-|$x_{12},x_{1,2}$|第1个样本的第2个特征值|
-|$X$|训练用多样本矩阵|
-|$y$|训练用样本标签值|
-|$y_1$|第一个样本的标签值|
-|$Y$|训练用多样本标签矩阵|
-|$z$|线性运算的结果值|
-|$Z$|线性运算的结果矩阵|
-|$Z1$|第一层网络的线性运算结果矩阵|
-|$\sigma$|激活函数|
-|$a$|激活函数结果值|
-|$A$|激活函数结果矩阵|
-|$A1$|第一层网络的激活函数结果矩阵|
-|$w$|权重参数值|
-|$w_{12},w_{1,2}$|权重参数矩阵中的第1行第2列的权重值|
-|$w1_{12},w1_{1,2}$|第一层网络的权重参数矩阵中的第1行第2列的权重值|
-|$W$|权重参数矩阵|
-|$W1$|第一层网络的权重参数矩阵|
-|$b$|偏移参数值|
-|$b_1$|偏移参数矩阵中的第1个偏移值|
-|$b2_1$|第二层网络的偏移参数矩阵中的第1个偏移值|
-|$B$|偏移参数矩阵（向量）|
-|$B1$|第一层网络的偏移参数矩阵（向量）|
-|$X^T$|X的转置矩阵|
-|$X^{-1}$|X的逆矩阵|
-|$loss,loss(w,b)$|单样本误差函数|
-|$J, J(w,b)$|多样本损失函数|
+|$x$|Sample training value|
+|$x_1$|The first sample/characteristic value of the sample which will be explained under the context|
+|$x_{12},x_{1,2}$|The second eigenvalue of the first sample|
+|$X$|Multi-sample training matrix|
+|$y$|Sample label value for training|
+|$y_1$|Label value of the first sample|
+|$Y$|Multi-sample label matrix for training|
+|$z$|Linear operation's resulting value|
+|$Z$|Linear operation's resulting matrix|
+|$Z1$|Linear operation's resulting matrix of the first layer network|
+|$\sigma$|Activation function|
+|$a$|Activation function's resulting value|
+|$A$|Activation function's resulting matrix|
+|$A1$|Activation function's resulting matrix of the first layer network|
+|$w$|Parameter weight value|
+|$w_{12},w_{1,2}$|The weight value at the first row and second column in the parameter weight matrix|
+|$w1_{12},w1_{1,2}$|The weight value of the first row and second column in the parameter weight matrix of the first layer network|
+|$W$|Parameter weight matrix|
+|$W1$|The weight parameter matrix of the first layer network|
+|$b$|Offset parameter value|
+|$b_1$|The irst offset value in the parameter offset matrix|
+|$b2_1$|The first offset value in the parameter offset matrix of the second layer network|
+|$B$|Offset parameter matrix (vector)|
+|$B1$|Offset parameter matrix of the first layer network (vector)|
+|$X^T$|X's transpose matrix|
+|$X^{-1}$|X's inverse matrix|
+|$loss,loss(w,b)$|One-sample error function|
+|$J, J(w,b)$|Multi-sample loss function|

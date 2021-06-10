@@ -81,4 +81,6 @@
 
 更多关于GBDT算法的细节可以参考《The Elements of Statistical Learning》的第10章，以及XGBoost的论文。
 
-XGBoost 、LightGBM 、CatBoost等高效GBDT实现的出现，带动了近几年GBDT的广泛应用。这些工具各有特色，其中XGBoost开源最早，功能最为齐全。随后开源的是，而LightGBM着重于效率的优化，训练速度最快，内存耗费最低。CatBoost开源最晚，着重在类别特征处理和GBDT算法的改进的改进。本案例只介绍LightGBM的使用，关于这三种工具的更多信息可以参考推荐阅读中列出的它们的文档。
+XGBoost 、LightGBM 、CatBoost等高效GBDT实现的出现，带动了近几年GBDT的广泛应用。这些工具各有特色，其中XGBoost开源最早，功能最为齐全。随后开源的是，而LightGBM着重于效率的优化，训练速度最快，内存耗费最低。CatBoost开源最晚，着重在类别特征处理和GBDT算法的改进的改进。关于这三种工具的更多信息可以参考原文中[推荐阅读](./Readme.md#推荐阅读)中列出的它们的文档。
+
+[返回原文](./Readme.md)

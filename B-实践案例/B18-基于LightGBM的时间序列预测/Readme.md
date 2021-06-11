@@ -92,7 +92,8 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 M5的赛题目标是预测沃尔玛各种商品在未来28天的销量。数据里包含了美国加州、德州和威斯康星州3个州的10个沃尔玛商店的各种商品的销售数据。每个商店都给了3049个商品的销量，分属3个大类和7个小类。所以，一共有30490条时间序列。商品的分层信息如下图所示。
 
-![image](./img/data_hierarchy.png)
+![商品分层信息](./img/data_hierarchy.png)
+图源[kaggle讨论区](https://www.kaggle.com/c/m5-forecasting-accuracy/discussion/141656)
 
 训练数据提供了从2011年1月29日至2016年5月22日，共计1941天的销量。需要预测接下来28天，也就是2016年5月23日到2016年6月19日的每天的销量。除了这些历史的销量，比赛还额外提供了下面两个信息：
 

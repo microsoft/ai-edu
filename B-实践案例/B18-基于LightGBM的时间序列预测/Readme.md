@@ -11,8 +11,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 - [目录](#目录)
 - [案例介绍](#案例介绍)
 - [案例价值](#案例价值)
-- [先修知识](#先修知识)
-  - [LightGBM及其特性](#lightgbm及其特性)
+- [决策树和梯度提升树简介](#决策树和梯度提升树简介)
 - [案例大纲与核心知识点](#案例大纲与核心知识点)
 - [推荐学习时长](#推荐学习时长)
 - [案例详解](#案例详解)
@@ -41,37 +40,34 @@ Copyright © Microsoft Corporation. All rights reserved.
 # 案例价值
 本案例通过一个时间序列预测任务，介绍使用LightGBM进行表格数据学习的整个过程，包括通过特征工程将时间预测任务转化为表格数据学习、模型调参、训练以及模型解释。一方面帮助读者掌握LightGBM的基本使用。另一方面，也帮助读者熟悉表格数据特征工程中的部分技巧。
 
-# 先修知识
+# 决策树和梯度提升树简介
 
 - Pandas库的基本使用
 
 - 有监督学习的基本概念，如训练、预测、过拟合等等
 
-- 决策树与梯度相关树
+- 决策树与梯度提升树  
+  详细介绍见[决策树与梯度提升树](./Reference.md)
 
-建议读者在开始运行案例之前，阅读以下决策树以及梯度提升树的相关材料
+- LightGBM及其特性  
 
-[决策树与梯度相关树的相关材料](./Reference.md)
+  近年来GBDT在表格数据机器学习任务中的广泛使用，很大程度上得益于XGBoost、LightGBM和CatBoost等开源的GBDT工具。这些工具在性能（准确率）和效率方面都进行了细致的优化。三个工具各有特点，其中XGBoost开源得最早，接口、功能都较为齐全。而LightGBM最注重效率方面的优化，训练速度在三者中是最快的。CatBoost则注重对类别特征的处理，以及对梯度提升过程本身进行改进。本案例重点介绍LightGBM的使用，对XGBoost和CatBoost感兴趣的读者可以在推荐阅读中找到它们的项目链接。
 
-## LightGBM及其特性
+  这一部分简要从性能和效率两个方面介绍LightGBM的特性。在案例代码中将对这些特性进行尝试，并观察其效果。
 
-近年来GBDT在表格数据机器学习任务中的广泛使用，很大程度上得益于XGBoost、LightGBM和CatBoost等开源的GBDT工具。这些工具在性能（准确率）和效率方面都进行了细致的优化。三个工具各有特点，其中XGBoost开源得最早，接口、功能都较为齐全。而LightGBM最注重效率方面的优化，训练速度在三者中是最快的。CatBoost则注重对类别特征的处理，以及对梯度提升过程本身进行改进。本案例重点介绍LightGBM的使用，对XGBoost和CatBoost感兴趣的读者可以在推荐阅读中找到它们的项目链接。
-
-这一部分简要从性能和效率两个方面介绍LightGBM的特性。在案例代码中将对这些特性进行尝试，并观察其效果。
-
-在性能方面，LightGBM的特点主要包括：
-1. 率先支持了按叶子分割的决策树训练方式。在更早的GBDT开源实现中，均采用按层分割的决策树训练。正如上文介绍决策树训练的部分提到的，按叶子分割的方式更加灵活。使用相同叶子数量的情况下，按叶子分割可以更加充分地拟合训练数据。
-2. 对类别特征的直接支持。在决策树的基本结构中，提到了决策树基于类别特征进行的分割，是选出类别特征所有取值中的一个子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />作为判断条件。若一个样本的该类别特征值在<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />中，则将被划分到左边的子节点，否则划分到右边的子节点。然而，要遍历所有这样的<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />并选出最优的一个，代价十分巨大。假设一个类别特征共有<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />种不同的取值，则需要考虑的子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />的数量为<img src="https://latex.codecogs.com/svg.latex?\inline&space;2^{K-1}-1" title="2^{K-1}-1" />。在实际的数据中，很容易出现<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />达到上万甚至几十万的情况。因此，穷举所有的子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />的代价是不可接受的。因此，在GBDT中对类别特征常见的处理方式，是将它们通过编码转换成数值特征。LightGBM提供了一种高效地寻找最优子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />的方法，因此用户无需对类别特征进行额外的预处理。具体来说，在查找类别特征在某片叶子上的最优分割条件时，LightGBM首先将类别特征值按照某个统计量进行排序，然后按照这个顺序从左往右遍历不同的取值，并依次考虑将左边的全部取值作为子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />。关于排序使用的统计量这里不展开介绍，但是使用这个统计量，就可以保证选取出来的<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />一定是最优的。不过，由于选取的子集是<img src="https://latex.codecogs.com/svg.latex?\inline&space;2^{K-1}-1" title="2^{K-1}-1" />个中最优的，因此这个方法很容易过拟合数据，尤其是在拥有每种类别特征值的训练样本数量较少的情况下。故LightGBM引入了三个对类别特征分割进行正则化的超参数，分别是:
+  在性能方面，LightGBM的特点主要包括：
+  1. 率先支持了按叶子分割的决策树训练方式。在更早的GBDT开源实现中，均采用按层分割的决策树训练。正如上文介绍决策树训练的部分提到的，按叶子分割的方式更加灵活。使用相同叶子数量的情况下，按叶子分割可以更加充分地拟合训练数据。
+  2. 对类别特征的直接支持。在决策树的基本结构中，提到了决策树基于类别特征进行的分割，是选出类别特征所有取值中的一个子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />作为判断条件。若一个样本的该类别特征值在<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />中，则将被划分到左边的子节点，否则划分到右边的子节点。然而，要遍历所有这样的<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />并选出最优的一个，代价十分巨大。假设一个类别特征共有<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />种不同的取值，则需要考虑的子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />的数量为<img src="https://latex.codecogs.com/svg.latex?\inline&space;2^{K-1}-1" title="2^{K-1}-1" />。在实际的数据中，很容易出现<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />达到上万甚至几十万的情况。因此，穷举所有的子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />的代价是不可接受的。因此，在GBDT中对类别特征常见的处理方式，是将它们通过编码转换成数值特征。LightGBM提供了一种高效地寻找最优子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />的方法，因此用户无需对类别特征进行额外的预处理。具体来说，在查找类别特征在某片叶子上的最优分割条件时，LightGBM首先将类别特征值按照某个统计量进行排序，然后按照这个顺序从左往右遍历不同的取值，并依次考虑将左边的全部取值作为子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />。关于排序使用的统计量这里不展开介绍，但是使用这个统计量，就可以保证选取出来的<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />一定是最优的。不过，由于选取的子集是<img src="https://latex.codecogs.com/svg.latex?\inline&space;2^{K-1}-1" title="2^{K-1}-1" />个中最优的，因此这个方法很容易过拟合数据，尤其是在拥有每种类别特征值的训练样本数量较少的情况下。故LightGBM引入了三个对类别特征分割进行正则化的超参数，分别是:
     - **max_cat_threshold**，该参数限制子集<img src="https://latex.codecogs.com/svg.latex?\inline&space;\mathcal{C}" title="\mathcal{C}" />的最大允许规模。
     - **cat_smooth**，该参数用于对排序使用的统计量进行平滑操作。
     - **cat_l2**，该参数用于增加使用类别特征时的L2正则权重。
-要让LightGBM对类别特征的直接支持达到比较好的效果，必须很仔细地调整好这三个参数，缓解过拟合。
+  要让LightGBM对类别特征的直接支持达到比较好的效果，必须很仔细地调整好这三个参数，缓解过拟合。
 
-在效率方面，LightGBM的特性主要包括：
-1. 率先使用特征直方图来加速最优分割条件的查找。所谓的直方图优化，就是对每个特征构建一个直方图，在直方图中的每个区间中，累积了计算分割增益所需要的统计量。在查找一个特征的最优分割点，只考虑从直方图的区间边界中进行选取。通常直方图的区间数量不需要太多，几十个到两百多个就可以取得很好的结果。减少候选分割点的数量还可以起到一定的正则化作用。此外，LightGBM还采用了直方图做差的技巧。具体来说，由于直方图每个区间中累积的统计量是按数据进行累加得到的，因此一个特征在父节点中的直方图就等于在两个子节点中的直方图之和。故对属于同一个父节点的两个子节点，我们只需要对其中一个数据量较少的节点构建直方图，而另一个节点的直方图可以从父节点的直方图中减去其兄弟节点的直方图来得到。使用直方图做差可以让直方图的构建加速至少两倍。
-2. 基于梯度的单边样本采样(Gradient-based One-side Sampling，简称GOSS)。与随机森林类似，GBDT每一轮迭代可以只选取一部分数据进行训练。这样做一方面可以降低每轮迭代的训练开销，另一方面也可以提高模型的泛化性能。一般的样本采样方法是随机采样。但是在GBDT的训练中，样本的重要性是有区别的。由于每轮的决策树拟合的标签是当前每个样本的负梯度，故需要根据当前轮次的梯度进行分割增益的计算，因此梯度绝对值的大小很大程度上决定了样本对计算分割增益的贡献。因此，LightGBM提出了一种基于梯度的采样方法GOSS。假设训练数据总量为<img src="https://latex.codecogs.com/svg.latex?\inline&space;N" title="N" />，在训练每个决策树之前，GOSS首先选出梯度绝对值最大的<img src="https://latex.codecogs.com/svg.latex?\inline&space;a\times&space;N" title="a\times N" />样本，然后从剩下的样本中，再随机选取<img src="https://latex.codecogs.com/svg.latex?\inline&space;b\times&space;N" title="b\times N" />个样本，并将随机选取的这<img src="https://latex.codecogs.com/svg.latex?\inline&space;b\times&space;N" title="b\times N" />个样本的梯度值乘上<img src="https://latex.codecogs.com/svg.latex?\inline&space;\frac{1-a}{b}" title="\frac{1-a}{b}" />，从而保证采样后的样本梯度和是采样前的一个无偏估计（这样做是因为叶子上的分割增益的计算与梯度之和有关）。使用GOSS，可以在相同的采样率下，取得比随机采样更好的训练结果。
-3. 互斥特征捆绑(Exclusive Feature Bundling，简称EFB)。在表格数据中，常常会遇到一些特征，它们只在很少的一部分训练数据上有取值，而在大部分训练数据上都是缺失的。这样的特征称为稀疏特征。EFB将稀疏特征分组，并将每个分组合并为一个稠密特征，从而减少了训练中的实际特征数量，优化了存储空间并提高最有分割条件的查找速度。合并的原则，是尽可能地减少同组内不同稀疏特征之间的冲突（当两个稀疏特征在同一个数据点都有取值时，我们称之为一个冲突）。
-4. 基于投票的分布式训练算法。GBDT的分布式训练主要有两种模式，一种是数据分布式（data-distributed），即将训练数据按行划分到不同的机器上；另一种是特征分布式(feature-distributed)，即将数据按照特征（列）划分到不同的机器上。在数据分布式中，每台机器只能使用本地的数据构造直方图，这些直方图并不完整。因此需要所有特征的直方图进行全局的合并，再利用直方图进行最优切分点的查找。在数据分布式中，合并的通信代价与特征数量成正比。在特征分布式中，每台机器只拥有一部分的特征，因此只能构造本地特征的直方图，但这些本地特征的直方图都是完整的。因此可以利用这些直方图找出本地特征的最优分割条件，然后通过机器间的通信，比较之后获得全局最优的分割条件。但是在使用最优分割条件进行叶子节点上的数据划分时，由于仅有一台机器包含了这个最优分割条件所使用的特征值，其他机器无从知道哪些数据要被划分到左边的子结点，哪些划分到右边的子结点。因此，拥有最有分割条件特征的机器需要将数据的划分方式广播到其他所有的机器上，这一过程的通信量与数据量成正比。综上，数据分布式在特征数量多时通信开销较大，而特征分布式在数据量多时通信开销较大。LightGBM设计了一种改进的数据分布式方案，称为投票分布式(parallel voting trees)。与数据分布式一样，投票分布式将数据按行分配到不同的机器上，并使用本地数据构造不完整的直方图。但是构造完直方图之后，投票分布式只会选取一小部分特征，通过与其他机器的通信得到这些特征的全局直方图，这样就。这些特征的选取方式如下：首先每台机器使用本地不完整的直方图，计算出每个特征的最优分割增益，并选出增益最大的<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />个特征。记这台机器给这<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />个特征各投了一票。最后统计每个特征在所有机器中所得的票数，选出的票最高的<img src="https://latex.codecogs.com/svg.latex?\inline&space;2K" title="2K" />个特征，只通信获得这<img src="https://latex.codecogs.com/svg.latex?\inline&space;2K" title="2K" />个特征的全局直方图。实验表明投票分布式可以在不降低准确率的前提下减少通信时间，从而提高分布式训练的效率。
+  在效率方面，LightGBM的特性主要包括：
+  1. 率先使用特征直方图来加速最优分割条件的查找。所谓的直方图优化，就是对每个特征构建一个直方图，在直方图中的每个区间中，累积了计算分割增益所需要的统计量。在查找一个特征的最优分割点，只考虑从直方图的区间边界中进行选取。通常直方图的区间数量不需要太多，几十个到两百多个就可以取得很好的结果。减少候选分割点的数量还可以起到一定的正则化作用。此外，LightGBM还采用了直方图做差的技巧。具体来说，由于直方图每个区间中累积的统计量是按数据进行累加得到的，因此一个特征在父节点中的直方图就等于在两个子节点中的直方图之和。故对属于同一个父节点的两个子节点，我们只需要对其中一个数据量较少的节点构建直方图，而另一个节点的直方图可以从父节点的直方图中减去其兄弟节点的直方图来得到。使用直方图做差可以让直方图的构建加速至少两倍。
+  2. 基于梯度的单边样本采样(Gradient-based One-side Sampling，简称GOSS)。与随机森林类似，GBDT每一轮迭代可以只选取一部分数据进行训练。这样做一方面可以降低每轮迭代的训练开销，另一方面也可以提高模型的泛化性能。一般的样本采样方法是随机采样。但是在GBDT的训练中，样本的重要性是有区别的。由于每轮的决策树拟合的标签是当前每个样本的负梯度，故需要根据当前轮次的梯度进行分割增益的计算，因此梯度绝对值的大小很大程度上决定了样本对计算分割增益的贡献。因此，LightGBM提出了一种基于梯度的采样方法GOSS。假设训练数据总量为<img src="https://latex.codecogs.com/svg.latex?\inline&space;N" title="N" />，在训练每个决策树之前，GOSS首先选出梯度绝对值最大的<img src="https://latex.codecogs.com/svg.latex?\inline&space;a\times&space;N" title="a\times N" />样本，然后从剩下的样本中，再随机选取<img src="https://latex.codecogs.com/svg.latex?\inline&space;b\times&space;N" title="b\times N" />个样本，并将随机选取的这<img src="https://latex.codecogs.com/svg.latex?\inline&space;b\times&space;N" title="b\times N" />个样本的梯度值乘上<img src="https://latex.codecogs.com/svg.latex?\inline&space;\frac{1-a}{b}" title="\frac{1-a}{b}" />，从而保证采样后的样本梯度和是采样前的一个无偏估计（这样做是因为叶子上的分割增益的计算与梯度之和有关）。使用GOSS，可以在相同的采样率下，取得比随机采样更好的训练结果。
+  3. 互斥特征捆绑(Exclusive Feature Bundling，简称EFB)。在表格数据中，常常会遇到一些特征，它们只在很少的一部分训练数据上有取值，而在大部分训练数据上都是缺失的。这样的特征称为稀疏特征。EFB将稀疏特征分组，并将每个分组合并为一个稠密特征，从而减少了训练中的实际特征数量，优化了存储空间并提高最有分割条件的查找速度。合并的原则，是尽可能地减少同组内不同稀疏特征之间的冲突（当两个稀疏特征在同一个数据点都有取值时，我们称之为一个冲突）。
+  4. 基于投票的分布式训练算法。GBDT的分布式训练主要有两种模式，一种是数据分布式（data-distributed），即将训练数据按行划分到不同的机器上；另一种是特征分布式(feature-distributed)，即将数据按照特征（列）划分到不同的机器上。在数据分布式中，每台机器只能使用本地的数据构造直方图，这些直方图并不完整。因此需要所有特征的直方图进行全局的合并，再利用直方图进行最优切分点的查找。在数据分布式中，合并的通信代价与特征数量成正比。在特征分布式中，每台机器只拥有一部分的特征，因此只能构造本地特征的直方图，但这些本地特征的直方图都是完整的。因此可以利用这些直方图找出本地特征的最优分割条件，然后通过机器间的通信，比较之后获得全局最优的分割条件。但是在使用最优分割条件进行叶子节点上的数据划分时，由于仅有一台机器包含了这个最优分割条件所使用的特征值，其他机器无从知道哪些数据要被划分到左边的子结点，哪些划分到右边的子结点。因此，拥有最有分割条件特征的机器需要将数据的划分方式广播到其他所有的机器上，这一过程的通信量与数据量成正比。综上，数据分布式在特征数量多时通信开销较大，而特征分布式在数据量多时通信开销较大。LightGBM设计了一种改进的数据分布式方案，称为投票分布式(parallel voting trees)。与数据分布式一样，投票分布式将数据按行分配到不同的机器上，并使用本地数据构造不完整的直方图。但是构造完直方图之后，投票分布式只会选取一小部分特征，通过与其他机器的通信得到这些特征的全局直方图，这样就。这些特征的选取方式如下：首先每台机器使用本地不完整的直方图，计算出每个特征的最优分割增益，并选出增益最大的<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />个特征。记这台机器给这<img src="https://latex.codecogs.com/svg.latex?\inline&space;K" title="K" />个特征各投了一票。最后统计每个特征在所有机器中所得的票数，选出的票最高的<img src="https://latex.codecogs.com/svg.latex?\inline&space;2K" title="2K" />个特征，只通信获得这<img src="https://latex.codecogs.com/svg.latex?\inline&space;2K" title="2K" />个特征的全局直方图。实验表明投票分布式可以在不降低准确率的前提下减少通信时间，从而提高分布式训练的效率。
 
 # 案例大纲与核心知识点
 
@@ -88,7 +84,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 
 # 案例详解
 
-我们的案例将围绕一个时间序列预测任务展开。该任务是Kaggle上的一个比赛，M5 Forecasting - Accuarcy（https://www.kaggle.com/c/m5-forecasting-accuracy/notebooks ）。
+我们的案例将围绕一个时间序列预测任务展开。该任务是Kaggle上的一个比赛，M5 Forecasting - Accuarcy（https://www.kaggle.com/c/m5-forecasting-accuracy/notebooks ）。M5是一个很经典的时序序列比赛，是第五次 Makridakis Competitions （M-Competitions). M-Competitions 由预测专家 Spyros Makridakis 在1982年开始举办，意在对比各种时间序列预测方法在实际问题中的效果。 M-Competitions在时间序列预测领域有深远的影响，从中产生了各种实践中行之有效的时间序列预测方法。
 
 M5的赛题目标是预测沃尔玛各种商品在未来28天的销量。数据里包含了美国加州、德州和威斯康星州3个州的10个沃尔玛商店的各种商品的销售数据。每个商店都给了3049个商品的销量，分属3个大类和7个小类。所以，一共有30490条时间序列。商品的分层信息如下图所示。
 
@@ -97,26 +93,26 @@ M5的赛题目标是预测沃尔玛各种商品在未来28天的销量。数据�
 
 训练数据提供了从2011年1月29日至2016年5月22日，共计1941天的销量。需要预测接下来28天，也就是2016年5月23日到2016年6月19日的每天的销量。除了这些历史的销量，比赛还额外提供了下面两个信息：
 
-商品价格。需要注意的是，价格是会调整的，同一个商品在不同商店，不同时间是不一样的。因此，比赛提供了每种商品在每个商店的每周价格。
-日历信息。同时标记了节假日信息及一些比较重要的事件。此外，需要注意的是，日历里还标记了每个州是不是在当天允许用SNAP(Supply Nutrition Assistance Program, 补充营养资助计划)发放的食品券消费。SNAP是美国的一项福利，会发放食品券给低收入人群或长者。因此，在SNAP食品券开放的日子，食品类别的销量一般也会高一点。
+- 商品价格。需要注意的是，价格是会调整的，同一个商品在不同商店，不同时间是不一样的。因此，比赛提供了每种商品在每个商店的每周价格。
+- 日历信息。同时标记了节假日信息及一些比较重要的事件。此外，需要注意的是，日历里还标记了每个州是不是在当天允许用SNAP(Supply Nutrition Assistance Program, 补充营养资助计划)发放的食品券消费。SNAP是美国的一项福利，会发放食品券给低收入人群或长者。因此，在SNAP食品券开放的日子，食品类别的销量一般也会高一点。
+
 最后需要注意的是，这次的时间序列数据具有层次化的结构，比如商品粒度，商店粒度等等。M5比赛不仅会评测最细的那个粒度（30490）的序列，还评测分层次聚合后的序列。具体来说，如下表所示，各种层次聚合后共有42840条序列。
 
-
-| 层次id | 聚合层次 | 序列数量 |
-| :-----| ----: | :----: |
-| 1 | 全部聚合 (1) | 1 |
-| 2 | 州 (3) | 3 |
-| 4 | 大类 (3) | 3 |
-| 5 | 小类 (7) | 7 |
-| 6 | 大类 (3)x 州 (3) | 9 |
-| 7 | 小类 (7)x 州 (3) | 21 |
-| 8 | 大类 (3)x 商店 (10) | 30 |
-| 9 | 小类 (7)x 商店 (10) | 70 |
-| 10 | 商品 (3049) | 3049 |
-| 11 | 商品 (3049)x 州 (3) | 9147 |
-| 12 | 商品 (3049)x 商店(10） | 30490 |
-| N/A | 合计 | 42840 |
-
+|层次id| 聚合层次  | 序列数量  |
+|----|---|---|
+| 1  | 全部聚合 (1)  | 1  |
+| 2  | 州 (3) | 3  |
+| 3  | 商店 (10)  | 10 |
+| 4  | 大类 (3) | 3  |
+| 5  | 小类 (7)  | 7  |
+| 6  | 大类 (3) x 州 (3)  | 9  |
+| 7  | 小类 (7) x 州 (3) | 21  |
+| 8  | 大类 (3) x 商店 (10)  | 30  |
+| 9  | 小类 (7) x 商店 (10)  | 70  |
+| 10 | 商品 (3049)  | 3049  |
+| 11 | 商品 (3049) x 州（3）| 9147  |
+| 12 | 商品（3049）x 商店 （10） | 30490  |
+|N/A |  合计 | 42840  |
 
 目前M5在Kaggle上公开出来的只有训练数据，即第1天到第1941天的数据。为了方便评测与说明，本案例使用前1913天的数据作为训练数据，来预测1914天到1941天的销量。并且，我们只对最细粒度的30490条序列进行预测。
 
@@ -169,16 +165,10 @@ data文件夹中的m5-forecasting-accuracy.zip解压后可以得到一些csv文�
 
 注意到，我们现在只用上了近期的历史数据。还有很多远期的历史数据没用上。 实际上远期的历史数据也是需要的，只不过不需要那么精细，可以做一些聚合。 例如过去两周、过去一个月的总和。
 
-假设我们将远期的历史数据以一周为聚合单位，用上56天内的历史数据，那么就构造出了12个特征la_1....la_14,la_21....la_56
+假设我们将远期的历史数据以一周为聚合单位，用上56天内的历史数据，那么就构造出了12个特征la_1, ... , la_7, la_14, la_21, la_28, la_42, la_56
+
 ```python
 used_history_distances = [1, 2, 3, 4, 5, 6, 7, 14, 21, 28, 42, 56]
-
-def get_accumulated_features(target_day, predict_distance):
-    long_term_features = pd.DataFrame()
-    for distance in used_history_distances:
-        long_term_features['la_' + str(distance)] = tx['d_' + str(target_day - distance - predict_distance + 1)].astype(float)
-    la_cols = ['la_' + str(distance) for distance in used_history_distances]
-    return long_term_features[la_cols]
 ```
 
 ### 周期特征

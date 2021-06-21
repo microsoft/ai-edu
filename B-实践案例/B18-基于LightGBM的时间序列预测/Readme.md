@@ -47,7 +47,7 @@ Copyright © Microsoft Corporation. All rights reserved.
 - 有监督学习的基本概念，如训练、预测、过拟合等等
 
 - 决策树与梯度提升树  
-  详细介绍见[决策树与梯度提升树](./决策树与梯度提升树.md)
+  详细介绍见[决策树与梯度提升树](./Reference.md)
 
 - LightGBM及其特性  
 

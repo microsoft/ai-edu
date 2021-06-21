@@ -67,4 +67,5 @@
 3|[高级实战项目-Open Platform for AI (OpenPAI)](https://github.com/Microsoft/pai)|微软开源GPU管理利器
 4|[高级实战项目-LightGBM](https://github.com/Microsoft/LightGBM)|boosting框架
 5|[高级实战项目-基于近邻图的向量搜索案例](./B16-基于近邻图的向量搜索案例/README.md)|在大规模向量中快速搜索最近邻
-6| [高级实战案例-中文文本蕴含深度学习模型](./B17-快速构建中文文本蕴含深度学习模型/Readme.md) | 数据预处理； 微软开源NLP深度学习建模工具包Neuronblocks
+6| [高级实战案例-中文文本蕴含深度学习模型](./B17-快速构建中文文本蕴含深度学习模型/README.md) | 数据预处理； 微软开源NLP深度学习建模工具包Neuronblocks
+7| [高级实战案例-基于LightGBM的时间序列预测](./B18-基于LightGBM的时间序列预测/README.md)

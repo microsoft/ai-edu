@@ -1,0 +1,73 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>a7eebfef-e8b3-46a1-92cf-a0d970de4c9a</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>Level6_Mnist_BN.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>ch12</Name>
+    <RootNamespace>ch12</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ExtendedDataReader\MnistImageDataReader.py" />
+    <Compile Include="ExtendedDataReader\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level3_Optimizer_ch09.py" />
+    <Compile Include="Level1_ZeroInitialize_Sample.py" />
+    <Compile Include="Level1_InitializeWeights.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level5_BatchNormTest.py" />
+    <Compile Include="Level6_Mnist_BN.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level5_NormalDistribution.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level4_Optimizer_ch04.py" />
+    <Compile Include="Level4_Optimizer_Sample.py" />
+    <Compile Include="Level2_Optimizer_ch09.py" />
+    <Compile Include="MiniFramework\ActivationLayer.py" />
+    <Compile Include="MiniFramework\BatchNormLayer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MiniFramework\ClassificationLayer.py" />
+    <Compile Include="MiniFramework\DataReader_2_0.py" />
+    <Compile Include="MiniFramework\EnumDef_4_0.py" />
+    <Compile Include="MiniFramework\FullConnectionLayer_1_1.py" />
+    <Compile Include="MiniFramework\HyperParameters_4_1.py" />
+    <Compile Include="MiniFramework\LossFunction_1_1.py" />
+    <Compile Include="MiniFramework\NeuralNet_4_1.py" />
+    <Compile Include="MiniFramework\Optimizer_1_0.py" />
+    <Compile Include="MiniFramework\Layer.py" />
+    <Compile Include="MiniFramework\TrainingHistory_2_4.py" />
+    <Compile Include="MiniFramework\WeightsBias_2_0.py" />
+    <Compile Include="MiniFramework\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MiniFramework\" />
+    <Folder Include="ExtendedDataReader\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>

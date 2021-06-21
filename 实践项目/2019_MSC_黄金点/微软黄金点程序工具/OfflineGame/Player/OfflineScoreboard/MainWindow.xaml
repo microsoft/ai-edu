@@ -1,0 +1,100 @@
+<!-- Copyright (c) Microsoft. All rights reserved.
+     Licensed under the MIT License. See LICENSE file in the project root for full license information. -->
+<Window x:Class="OfflineScoreboard.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:OfflineScoreboard"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="Scoreboard for offline Golden Number"
+        Width="800"
+        Height="600"
+        mc:Ignorable="d">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="btvc" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="20,12,20,0">
+            <GroupBox Header="Setting">
+                <StackPanel Margin="8">
+                    <CheckBox x:Name="ExecuteShellCmdToggle"
+                              Content="Execute shell cmd"
+                              IsChecked="False"
+                              IsThreeState="False" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Visibility="{Binding IsChecked, ElementName=ExecuteShellCmdToggle, Converter={StaticResource btvc}}">Command to execute:</TextBlock>
+                        <TextBox x:Name="ShellCmdTextBox"
+                                 MinWidth="200"
+                                 Visibility="{Binding IsChecked, ElementName=ExecuteShellCmdToggle, Converter={StaticResource btvc}}">
+                            python TestScript/get_numbers.py
+                        </TextBox>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <Button x:Name="StartButton" Margin="0,24,0,0">Start!</Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Margin="20"
+                    Orientation="Vertical">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="Margin" Value="0,0,8,0" />
+                </Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Margin" Value="0,0,0,20" />
+                </Style>
+            </StackPanel.Resources>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Nearest:</TextBlock>
+                <TextBlock x:Name="NearestText" Foreground="Green" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Farthest:</TextBlock>
+                <TextBlock x:Name="FarthestText" Foreground="Red" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Score:</TextBlock>
+                <TextBlock x:Name="ScoreText" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Ranking:</TextBlock>
+                <TextBlock x:Name="RankingText" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Max and Ave. Score:</TextBlock>
+                <TextBlock x:Name="MaxAveScoreText" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Average Time:</TextBlock>
+                <TextBlock x:Name="AveTimeText" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Max Time:</TextBlock>
+                <TextBlock x:Name="MaxTimeText" />
+            </StackPanel>
+
+        </StackPanel>
+
+        <TextBox x:Name="Log"
+                 Grid.Row="2"
+                 AcceptsReturn="True"
+                 IsReadOnly="True"
+                 Text="Log from execution of shell command&#x0a;"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Visible"
+                 Visibility="{Binding IsChecked, ElementName=ExecuteShellCmdToggle, Converter={StaticResource btvc}}" />
+    </Grid>
+</Window>

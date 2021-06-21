@@ -1,2 +1,0 @@
-while arr[m - 1] == tn:
-    m = m - 1

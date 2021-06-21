@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalManager", "LocalManager\LocalManager.csproj", "{EB63E471-D3F4-4DDE-A156-C9C3FE7849E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotRun", "BotRun\BotRun.csproj", "{94086414-A8F7-4670-B3F5-F99AAEEC1C9F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB63E471-D3F4-4DDE-A156-C9C3FE7849E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB63E471-D3F4-4DDE-A156-C9C3FE7849E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB63E471-D3F4-4DDE-A156-C9C3FE7849E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB63E471-D3F4-4DDE-A156-C9C3FE7849E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94086414-A8F7-4670-B3F5-F99AAEEC1C9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94086414-A8F7-4670-B3F5-F99AAEEC1C9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94086414-A8F7-4670-B3F5-F99AAEEC1C9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94086414-A8F7-4670-B3F5-F99AAEEC1C9F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48E6AC08-0F1E-4160-8887-3550E64196F7}
+	EndGlobalSection
+EndGlobal

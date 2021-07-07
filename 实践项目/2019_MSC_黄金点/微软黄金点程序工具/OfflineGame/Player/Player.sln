@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfflineScoreboard", "OfflineScoreboard\OfflineScoreboard.csproj", "{3F317BFA-42C9-48AE-929F-794AACB6148A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bot", "Bot\Bot.csproj", "{80152300-1FC2-4599-950F-68A3373AE777}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F317BFA-42C9-48AE-929F-794AACB6148A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F317BFA-42C9-48AE-929F-794AACB6148A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F317BFA-42C9-48AE-929F-794AACB6148A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F317BFA-42C9-48AE-929F-794AACB6148A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80152300-1FC2-4599-950F-68A3373AE777}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80152300-1FC2-4599-950F-68A3373AE777}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80152300-1FC2-4599-950F-68A3373AE777}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80152300-1FC2-4599-950F-68A3373AE777}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F430770-7010-4124-8C18-175BBAF5868D}
+	EndGlobalSection
+EndGlobal

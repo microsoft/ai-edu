@@ -1,0 +1,2 @@
+while 0 <= m + delta < len(arr) and arr[m + delta] == tn:
+    m += delta

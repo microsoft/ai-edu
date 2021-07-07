@@ -1,4 +1,0 @@
-numpy
-pyswagger
-pandas
-requests

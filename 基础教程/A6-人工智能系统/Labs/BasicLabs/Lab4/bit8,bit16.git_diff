@@ -1,0 +1,187 @@
+diff --git a/horovod/torch/compression.py b/horovod/torch/compression.py
+index 75ce91e..63574ba 100644
+--- a/horovod/torch/compression.py
++++ b/horovod/torch/compression.py
+@@ -15,6 +15,8 @@
+ """Gradient compression algorithms."""
+ 
+ import torch
++import numpy as np
++import os
+ 
+ 
+ class Compressor(object):
+@@ -63,6 +65,131 @@ class FP16Compressor(Compressor):
+             tensor_decompressed = tensor.type(dtype)
+         return tensor_decompressed
+ 
++frac_len_fp32 = 23
++exp_len_fp32 = 8
++len_fp32 = 32
++frac_len_fp8 = 3
++exp_len_fp8 = 4
++len_fp8 = 8
++# frac_len_fp8 = 5
++# exp_len_fp8 = 2
++# len_fp8 = 8
++OMPI_COMM_WORLD_SIZE = int(os.getenv("OMPI_COMM_WORLD_SIZE", "1"))
++
++def fp32_conv_fp8(tensor_np):
++    tensor_np = tensor_np.view(np.int32)
++
++    tensor_frac_mask = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_mask8 = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_mask8nosign = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_mask32 = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_offset32 = np.empty(tensor_np.shape, dtype=np.int32)
++
++    tensor_frac_mask.fill(2**frac_len_fp8-1)
++    tensor_exp_mask8.fill(2**exp_len_fp8 -1)
++    tensor_exp_mask8nosign.fill(2 ** (exp_len_fp8-1) - 1)
++    tensor_exp_mask32.fill(2 ** exp_len_fp32 - 1)
++    tensor_exp_offset32.fill(2 ** (exp_len_fp32 - 1) - 1)
++
++    output_frac = np.right_shift(tensor_np, frac_len_fp32 - frac_len_fp8) & tensor_frac_mask
++    output_exp = np.left_shift(((np.right_shift(tensor_np, frac_len_fp32) & tensor_exp_mask32) - tensor_exp_offset32) & tensor_exp_mask8nosign, frac_len_fp8)
++    output_sign = np.left_shift(np.right_shift(tensor_np, len_fp32 - 2), len_fp8 - 2)
++
++    output_fp8 = output_frac | output_exp | output_sign
++    tensor_result_int8 = output_fp8.astype(np.int8)
++
++    return tensor_result_int8
++
++
++def fp8_conv_fp32(tensor_np):
++    tensor_np = tensor_np.astype(np.int32)
++
++    tensor_frac_mask = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_mask8 = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_mask8nosign = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_mask32 = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_mask32nosign = np.empty(tensor_np.shape, dtype=np.int32)
++    tensor_exp_offset32 = np.empty(tensor_np.shape, dtype=np.int32)
++
++    tensor_frac_mask.fill(2**frac_len_fp8-1)
++    tensor_exp_mask8.fill(2**exp_len_fp8-1)
++    tensor_exp_mask8nosign.fill(2 ** (exp_len_fp8 - 1) - 1)
++    tensor_exp_mask32.fill(2 ** exp_len_fp32 - 1)
++    tensor_exp_mask32nosign.fill(2 ** (exp_len_fp32 - 1) - 1)
++    tensor_exp_offset32.fill(2 ** (exp_len_fp32 - 1) - 1)
++
++    output_frac = np.left_shift((tensor_np & tensor_frac_mask), frac_len_fp32 - frac_len_fp8)
++    output_exp = np.left_shift((np.right_shift(tensor_np, frac_len_fp8) + tensor_exp_offset32 & tensor_exp_mask32nosign), frac_len_fp32)
++    output_sign = np.left_shift(np.right_shift(tensor_np, len_fp8 - 2), len_fp32 - 2)
++
++    output_fp32 = output_frac | output_exp | output_sign
++    tensor_result_fp32 = output_fp32.view(np.float32)
++
++    return tensor_result_fp32
++
++class BIT8Compressor(Compressor):
++    """Compress all floating point gradients to 8-bit."""
++    @staticmethod
++    def compress(tensor):
++        """Downcasts the tensor to 8-bit."""
++        # print("### compress::tensor = " + str(tensor))
++        if tensor.dtype != torch.float32:
++            print("WARNING: BIT8Compressor taking non-float32")
++            # Only allow compression from other floating point types
++            tensor = tensor.type(torch.float32)
++        
++        tensor_np = tensor.numpy()
++        tensor_np_fp8 = fp32_conv_fp8(tensor_np)
++
++        tensor_compressed = torch.tensor(tensor_np_fp8, dtype=torch.int8)
++        # print("### compress::tensor_compressed = " + str(tensor_compressed))
++
++
++        return tensor_compressed, tensor.dtype
++
++    @staticmethod
++    def decompress(tensor, ctx):
++        """Upcasts the tensor to the initialization dtype."""
++        tensor_decompressed = tensor
++        dtype = ctx
++
++        tensor_np = tensor.numpy()
++        tensor_decompressed_np = fp8_conv_fp32(tensor_np)
++        tensor_decompressed = torch.tensor(tensor_decompressed_np, dtype=dtype)
++
++        size = OMPI_COMM_WORLD_SIZE
++        new_shape = torch.Size([size, int(tensor_decompressed.shape[0] / size)]) + tensor_decompressed.shape[1:]
++        tensor_decompressed = tensor_decompressed.reshape(new_shape)
++        tensor_decompressed = torch.sum(tensor_decompressed, 0)
++        tensor_decompressed = torch.div(tensor_decompressed, size)
++        # print("### decompress::tensor_decompressed(div) = " + str(tensor_decompressed))
++        return tensor_decompressed
++
++class BIT16Compressor(Compressor):
++    """Compress all floating point gradients to 8-bit."""
++    @staticmethod
++    def compress(tensor):
++        """Downcasts the tensor to 16-bit."""
++        # print("### compress::tensor = " + str(tensor))
++        if tensor.dtype != torch.float32:
++            print("WARNING: BIT8Compressor taking non-float32")
++            # Only allow compression from other floating point types
++            tensor = tensor.type(torch.float32)
++        
++        tensor_compressed = torch.tensor(tensor, dtype=torch.float16)
++        return tensor_compressed, tensor.dtype
++
++    @staticmethod
++    def decompress(tensor, ctx):
++        """Upcasts the tensor to the initialization dtype."""
++        dtype = ctx
++
++        size = OMPI_COMM_WORLD_SIZE
++        new_shape = torch.Size([size, int(tensor.shape[0] / size)]) + tensor.shape[1:]
++        tensor_decompressed = tensor.reshape(new_shape).type(dtype)
++        tensor_decompressed = torch.sum(tensor_decompressed, 0)
++        tensor_decompressed = torch.div(tensor_decompressed, size)
++        return tensor_decompressed
+ 
+ class Compression(object):
+     """Optional gradient compression algorithm used during allreduce."""
+@@ -72,3 +199,8 @@ class Compression(object):
+ 
+     """Compress all floating point gradients to 16-bit."""
+     fp16 = FP16Compressor
++
++    """Compress all floating point gradients to 8-bit."""
++    bit8 = BIT8Compressor
++
++    bit16 = BIT16Compressor
+\ No newline at end of file
+diff --git a/horovod/torch/mpi_ops.py b/horovod/torch/mpi_ops.py
+index a5ad933..4a32ff0 100644
+--- a/horovod/torch/mpi_ops.py
++++ b/horovod/torch/mpi_ops.py
+@@ -122,9 +122,14 @@ def _allreduce_async(tensor, output, name, op):
+     # Averaging happens in framework code, so translate that to Sum for the actual call
+     true_op = Sum if op == Average else op
+ 
+-    function = _check_function(_allreduce_function_factory, tensor)
+-    handle = getattr(mpi_lib, function)(tensor, output, divisor,
+-                                        name.encode() if name is not None else _NULL, true_op)
++    if tensor.dtype == torch.int8 or tensor.dtype == torch.float16:
++        function = _check_function(_allgather_function_factory, tensor)
++        handle = getattr(mpi_lib, function)(
++            tensor, output, name.encode() if name is not None else _NULL)
++    else:
++        function = _check_function(_allreduce_function_factory, tensor)
++        handle = getattr(mpi_lib, function)(tensor, output, divisor,
++                                            name.encode() if name is not None else _NULL, true_op)
+     _handle_map[handle] = (tensor, output)
+     return handle
+ 
+@@ -237,7 +242,8 @@ def allreduce_async_(tensor, average=None, name=None, op=None):
+         `synchronize()`.
+     """
+     op = handle_average_backwards_compatibility(op, average)
+-    return _allreduce_async(tensor, tensor, name, op)
++    ret = _allreduce_async(tensor, tensor.new(), name, op) if tensor.dtype == torch.int8 or tensor.dtype == torch.float16 else _allreduce_async(tensor, tensor, name, op)
++    return ret
+ 
+ 
+ def allreduce_(tensor, average=None, name=None, op=None):

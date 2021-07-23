@@ -1,5 +1,5 @@
 Copyright © Microsoft Corporation. All rights reserved.  
-适用于[License](https://github.com/microsoft/ai-edu/tree/master/Doc/LICENSE.md)版权许可
+  适用于[License](https://github.com/microsoft/ai-edu/blob/master/LICENSE.md)版权许可
 
 # 案例名称
 
@@ -19,6 +19,8 @@ Copyright © Microsoft Corporation. All rights reserved.
 - [推荐学习时长](#推荐学习时长)
 - [案例详解](#案例详解)
   - [环境与工具](#环境与工具)
+    - [软件环境](#软件环境)
+    - [硬件环境](#硬件环境)
   - [实现流程](#实现流程)
 - [作业和挑战](#作业和挑战)
 - [总结](#总结)

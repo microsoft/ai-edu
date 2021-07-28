@@ -6,7 +6,7 @@
 
 ### 操作系统
 
-[Windows 10] (https://docs.microsoft.com/en-us/windows/release-health/)。
+[Windows 10](https://docs.microsoft.com/en-us/windows/release-health/)。
 
 ### 应用软件
 

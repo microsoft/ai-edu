@@ -4,15 +4,25 @@
 
 您可以任选一个算法，提交您的PR。
 
+使用sckiti learn or Azure ML
+
+https://docs.microsoft.com/zh-cn/azure/machine-learning/algorithm-cheat-sheet?WT.mc_id=academic-15963-cxa
+
 
 - Regression
 - KNN
 - SVM
+  - linear SVM
+  - RBF SVM
 - Decision Tree
 - Navie Bayes
 - Boosting
 - Clustering
 - PCA
+- Gaussian Process
+- Random Forest
+- AdaBoost
+- QDA (Quadratic Discrination Analysis)
 
 常见的机器学习算法：
 

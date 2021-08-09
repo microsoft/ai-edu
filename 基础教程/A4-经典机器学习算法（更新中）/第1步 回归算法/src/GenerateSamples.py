@@ -26,11 +26,22 @@ def generate_samples_2(a, b, m):
         Y[i,0] = a * X[i,0] + b + epsilon
     return X,Y
 
-if __name__ == '__main__':
+def generate_file_path(file_name):
     curr_path = sys.argv[0]
     curr_dir = os.path.dirname(curr_path)
-    file_name = "01-linear.csv"
     file_path = os.path.join(curr_dir, file_name)
+    return file_path
+
+def show_sample(X,Y):
+    plt.scatter(X,Y,s=10)
+    plt.title("Air Conditioner Power")
+    plt.xlabel("Number of Servers(K)")
+    plt.ylabel("Power of Air Conditioner(KW)")
+    plt.show()
+
+if __name__ == '__main__':
+    file_name = "01-linear.csv"
+    file_path = generate_file_path(file_name)
     file = Path(file_path)
     if file.exists():
         samples = np.loadtxt(file, delimiter=',')
@@ -44,8 +55,5 @@ if __name__ == '__main__':
         samples = np.hstack((X,Y))
         np.savetxt(file_path, samples, fmt='%f, %f', delimiter=',', header='x, y')
     #endif
-    plt.scatter(X,Y,s=10)
-    plt.title("Air Conditioner Power")
-    plt.xlabel("Number of Servers(K)")
-    plt.ylabel("Power of Air Conditioner(KW)")
-    plt.show()
+    show_sample(X,Y)
+    

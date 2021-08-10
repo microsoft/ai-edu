@@ -17,12 +17,19 @@ def S(x):
     mu = mean(x)
     return np.sum((x-mu)*(x-mu))/(x.shape[0]-1)
 
-def D(x,p):
+def Var(x,p):
     expect = E(x,p)
     a = (x - expect) * (x - expect)
     print(E(a,p))
 
     print(E(x*x,p) - E(x,p)*E(x,p))
+
+def Bias():
+    x = np.array([37.45,37.20,37.50,37.30,37.25])
+    mu = np.mean(x)
+    Bias = x-mu
+    bias = np.sum(np.abs(Bias)) / x.shape[0]
+    print(mu, Bias, bias)
 
 
 if __name__ == '__main__':
@@ -30,5 +37,6 @@ if __name__ == '__main__':
     print("ex=", E(x,p))
     print("var=", var(x))
     print("S2=", S(x))
-    print("D=", D(x,p))
+    Var(x,p)
+    Bias()
     

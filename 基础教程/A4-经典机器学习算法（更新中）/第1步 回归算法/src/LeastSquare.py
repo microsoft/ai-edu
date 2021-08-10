@@ -3,7 +3,7 @@ import sys
 import os
 from pathlib import Path
 import matplotlib.pyplot as plt
-import matplotlib.pyplot as mpl
+import matplotlib as mpl
 
 # 根据公式1.8
 def calculate_a(X,Y):

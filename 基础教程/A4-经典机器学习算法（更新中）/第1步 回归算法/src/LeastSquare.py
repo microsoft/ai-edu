@@ -5,19 +5,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-# 根据公式1.8
-def calculate_a(X,Y):
-    n = X.shape[0]
-    numerator = n * np.sum(X*Y) - np.sum(X) * np.sum(Y)
-    denominator = n * np.sum(X*X) - np.sum(X) * np.sum(X)
-    a = numerator / denominator
-    return a
-
-# 根据公式1.7
-def calculate_b(a,X,Y):
-    n = X.shape[0]
-    b = (np.sum(Y - a * X))/n
-    return b
 
 def generate_file_path(file_name):
     curr_path = sys.argv[0]
@@ -25,10 +12,37 @@ def generate_file_path(file_name):
     file_path = os.path.join(curr_dir, file_name)
     return file_path
 
-def least_square(X,Y):
-    a_hat = calculate_a(X,Y)
-    b_hat = calculate_b(a_hat,X,Y)
-    print(str.format("a_hat={0}, b_hat={1}",a_hat,b_hat))
+# 公式 1.2.5
+def least_square_1(X,Y):
+    n = X.shape[0]
+    # a_hat
+    numerator = n * np.sum(X*Y) - np.sum(X) * np.sum(Y)
+    denominator = n * np.sum(X*X) - np.sum(X) * np.sum(X)
+    a_hat = numerator / denominator
+    # b_hat
+    b_hat = (np.sum(Y - a_hat * X))/n
+    return a_hat, b_hat
+
+# 公式 1.4.2
+def least_square_2(X,Y):
+    n = X.shape[0]
+    # a_hat
+    numerator = np.cov(X, Y, rowvar=False, bias=False)[0,1]
+    denominator = np.var(X)
+    a_hat = numerator / denominator
+    # b_hat
+    b_hat = (np.sum(Y - a_hat * X))/n
+    return a_hat, b_hat
+
+# 公式1.4.3, 1.4.4
+def least_square_3(X,Y):
+    n = X.shape[0]
+    # a_hat 公式1.4.3
+    numerator = np.sum((X-np.mean(X))*(Y-np.mean(Y)))
+    denominator = np.sum((X-np.mean(X))*(X-np.mean(X)))
+    a_hat = numerator / denominator
+    # b_hat 公式1.4.4
+    b_hat = np.mean(Y) - a_hat * np.mean(X)
     return a_hat, b_hat
 
 def show_result(X,Y,a_hat,b_hat):
@@ -44,6 +58,7 @@ def show_result(X,Y,a_hat,b_hat):
     plt.plot(x,y)
     plt.show()
 
+
 if __name__ == '__main__':
     file_name = "01-linear.csv"
     file_path = generate_file_path(file_name)
@@ -52,7 +67,13 @@ if __name__ == '__main__':
         samples = np.loadtxt(file, delimiter=',')
         X = samples[:, 0]
         Y = samples[:, 1]
-        a_hat, b_hat = least_square(X,Y)
+        a_hat, b_hat = least_square_1(X,Y)
+        print(str.format("a_hat={0:.4f}, b_hat={1:.4f}",a_hat,b_hat))
+        a_hat, b_hat = least_square_2(X,Y)
+        print(str.format("a_hat={0:.4f}, b_hat={1:.4f}",a_hat,b_hat))
+        a_hat, b_hat = least_square_3(X,Y)
+        print(str.format("a_hat={0:.4f}, b_hat={1:.4f}",a_hat,b_hat))
+
         show_result(X,Y,a_hat,b_hat)
     else:
         print("cannot find file " + file_name)

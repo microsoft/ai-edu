@@ -18,12 +18,12 @@ def generate_samples_1(a, b, m):
 
 def generate_samples_2(a, b, m):
     # 以0.5为中心的正态分布，表示机房内计算机数量/1000
-    X = np.random.normal(loc=0.5, scale=0.15, size=(m, 1))
+    X = np.random.normal(loc=0.5, scale=0.12, size=(m, 1))
     Y = np.zeros_like(X)
     for i in range(m):
-        # 返回均值为0，方差为0.1的误差的一个值
+        # 返回均值为0，方差为0.05的误差的一个值
         epsilon = np.random.normal(loc=0, scale=0.05, size=None)
-        # 对于每个特定的x值，都从N(0,0.1)中取出一个随机值作为噪音添加到y上
+        # 对于每个特定的x值，都从N(0,0.05)中取出一个随机值作为噪音添加到y上
         Y[i,0] = a * X[i,0] + b + epsilon
     return X,Y
 
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     else:
         a = 0.5         # 参数a
         b = 1           # 参数b
-        m = 200         # 模拟100个机房的样本
+        m = 200         # 模拟200个机房的样本
         X,Y = generate_samples_2(a, b, m)
         samples = np.hstack((X,Y))
         np.savetxt(file_path, samples, fmt='%f, %f', delimiter=',', header='x, y')

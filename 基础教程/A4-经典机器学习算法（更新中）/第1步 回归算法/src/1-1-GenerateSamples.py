@@ -56,7 +56,7 @@ def show_sample(X,Y):
     plt.show()
 
 if __name__ == '__main__':
-    file_name = "01-linear.csv"
+    file_name = "1-0-data.csv"
     file_path = generate_file_path(file_name)
     file = Path(file_path)
     if file.exists():

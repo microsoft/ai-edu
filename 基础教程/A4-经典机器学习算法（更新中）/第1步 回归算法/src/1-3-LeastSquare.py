@@ -80,7 +80,7 @@ def compare(a_hat,b_hat,a,b,X,Y):
     return mse1, mse2
 
 if __name__ == '__main__':
-    file_name = "01-linear.csv"
+    file_name = "1-0-data.csv"
     samples = load_file(file_name)
     if samples is not None:
         X = samples[:, 0].reshape(200,1)

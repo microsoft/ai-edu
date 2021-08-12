@@ -58,15 +58,33 @@ def show_result(X,Y,a_hat,b_hat):
     plt.plot(x,y)
     plt.show()
 
-
-if __name__ == '__main__':
-    file_name = "01-linear.csv"
+def load_file(file_name):
     file_path = generate_file_path(file_name)
     file = Path(file_path)
     if file.exists():
         samples = np.loadtxt(file, delimiter=',')
-        X = samples[:, 0]
-        Y = samples[:, 1]
+        return samples
+    else:
+        return None
+
+# 计算均方差
+def calculate_mse(Y, Y_hat):
+    return np.sum((Y-Y_hat)*(Y-Y_hat))/Y.shape[0]
+
+# 比较估计值和原始的均方差的大小
+def compare(a_hat,b_hat,a,b,X,Y):
+    Y_hat1 = a_hat * X + b_hat
+    mse1 = calculate_mse(Y, Y_hat1)
+    Y_hat2 = a * X + b
+    mse2 = calculate_mse(Y, Y_hat2)
+    return mse1, mse2
+
+if __name__ == '__main__':
+    file_name = "01-linear.csv"
+    samples = load_file(file_name)
+    if samples is not None:
+        X = samples[:, 0].reshape(200,1)
+        Y = samples[:, 1].reshape(200,1)
         a_hat, b_hat = least_square_1(X,Y)
         print(str.format("a_hat={0:.4f}, b_hat={1:.4f}",a_hat,b_hat))
         a_hat, b_hat = least_square_2(X,Y)
@@ -75,5 +93,10 @@ if __name__ == '__main__':
         print(str.format("a_hat={0:.4f}, b_hat={1:.4f}",a_hat,b_hat))
 
         show_result(X,Y,a_hat,b_hat)
+
+        # 比较估计值和原始的均方差的大小
+        mse1, mse2 = compare(a_hat, b_hat, 0.5, 1, X, Y)
+        print(str.format("mse1={0:.6f}, mse2={1:.6f}", mse1, mse2))
+
     else:
         print("cannot find file " + file_name)

@@ -39,7 +39,6 @@ def show_sample(X,Y):
     
     plt.figure()
 
-
     plt.subplot(212)
     plt.scatter(X,Y,s=10)
     plt.title(u"机房空调功率预测")

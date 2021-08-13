@@ -19,10 +19,10 @@ def generate_samples(a1,a2,b,m):
     
     Y = np.zeros_like(X1)
     for i in range(m):
-        # 返回均值为0，方差为0.05的误差的一个值
-        epsilon = np.random.normal(loc=50, scale=50, size=None)
+        # 返回均值为0，方差为20的误差的一个值
+        epsilon = np.random.normal(loc=0, scale=10, size=None)
         # 对于每个特定的x值，都从N(0,0.05)中取出一个随机值作为噪音添加到y上
-        Y[i,0] = a1 * X1[i,0] + a2 * X2[i,0] + b + epsilon
+        Y[i,0] = a1 * (20-X1[i,0]) + a2 * X2[i,0] + b + epsilon
 
     return X1, X2, Y
 
@@ -46,18 +46,25 @@ def show_sample(X1,X2,Y):
     mpl.rcParams['axes.unicode_minus']=False
     
     fig = plt.figure()
-    #ax1 = plt.axes(projection='3d')
+    plt.title(u"给定位置和面积的房价预测")
+    plt.axis('off')
+    # 绘制左视图
     ax = fig.add_subplot(121,projection='3d')
-    #ax = Axes3D(ax)
     ax.scatter(X1,X2,Y)
-
+    ax.set_xlabel(u"距离")
+    ax.set_ylabel(u"面积")
+    ax.set_zlabel(u"价格")
+    # 绘制右视图（然后手工把右视图的角度调整一下，与左侧对比）
     ax = fig.add_subplot(122,projection='3d')
-    #ax = Axes3D(fig)
     ax.scatter(X1,X2,Y)
+    ax.set_xlabel(u"距离")
+    ax.set_ylabel(u"面积")
+    ax.set_zlabel(u"价格")
 
     plt.show()
 
 if __name__ == '__main__':
+   
     file_name = "2-0-data.csv"
     samples = load_file(file_name)
     if (samples is not None):
@@ -66,7 +73,7 @@ if __name__ == '__main__':
         Y = samples[:, 2]        
     else:
         a1 = 2
-        a2 = 4
+        a2 = 5
         b = 10
         m = 500
         X1,X2,Y=generate_samples(a1, a2, b, m)

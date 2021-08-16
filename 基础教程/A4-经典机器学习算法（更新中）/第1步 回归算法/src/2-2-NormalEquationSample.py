@@ -28,24 +28,22 @@ def normal_equation(X,Y):
     # X^T * X
     p = np.dot(x.T, x)
     # (X^T * X)^{-1}
+    I = np.eye(p.shape[0]) * 1e-6
+    p = p + I
     q = np.linalg.inv(p)
     # (X^T * X)^{-1} * X^T
     r = np.dot(q, x.T)
     # (X^T * X)^{-1} * X^T * Y
     A = np.dot(r, Y)
     # 按顺序
-    b = A[0,0]
-    a1 = A[1,0]
-    a2 = A[2,0]
+    b = A[0]
+    a1 = A[1]
+    a2 = A[2]
     return a1, a2, b
 
 if __name__ == '__main__':
-    file_name = "2-0-data.csv"
-    samples = load_file(file_name)
-    if (samples is not None):
-        X = samples[:,0:2]
-        Y = samples[:,-1].reshape(-1,1)
-        a1, a2, b = normal_equation(X,Y)
-        print(str.format("a1={0:.4f}, a2={1:.4f}, b={2:.4f}", a1, a2, b))
-    else:
-        print("cannot find data file:" + file_name)
+    X = np.array([[1, 2, 3, 4],[1, 3, 4, 3]]).T
+    Y = np.array([3.2, 4.1, 4.8, 5.1]).T
+    #Y = np.array([3, 4, 5, 5]).T
+    a1, a2, b = normal_equation(X,Y)
+    print(str.format("a1={0:.4f}, a2={1:.4f}, b={2:.4f}", a1, a2, b))

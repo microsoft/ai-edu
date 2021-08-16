@@ -47,7 +47,7 @@ def least_square_3(X,Y):
 
 def show_result(X,Y,a_hat,b_hat):
     # 用来正常显示中文标签
-    mpl.rcParams['font.sans-serif'] = ['DengXian']  
+    mpl.rcParams['font.sans-serif'] = ['SimHei']  
     mpl.rcParams['axes.unicode_minus']=False
     plt.scatter(X,Y,s=10)
     plt.title(u"机房空调功率预测")

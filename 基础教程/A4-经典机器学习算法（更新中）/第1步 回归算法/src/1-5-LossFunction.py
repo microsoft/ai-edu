@@ -54,7 +54,7 @@ def get_min_pos_3d(X,Y,Z):
     return min_value, x, y
 
 def show_sample(A, Loss1, B, Loss2, X, Y):
-    mpl.rcParams['font.sans-serif'] = ['DengXian']  
+    mpl.rcParams['font.sans-serif'] = ['SimHei']  
     mpl.rcParams['axes.unicode_minus']=False
     
     fig = plt.figure()

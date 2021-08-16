@@ -5,20 +5,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-def load_file(file_name):
-    file_path = generate_file_path(file_name)
-    file = Path(file_path)
-    if file.exists():
-        samples = np.loadtxt(file, delimiter=',')
-        return samples
-    else:
-        return None
-
-def generate_file_path(file_name):
-    curr_path = sys.argv[0]
-    curr_dir = os.path.dirname(curr_path)
-    file_path = os.path.join(curr_dir, file_name)
-    return file_path
 
 def normal_equation(X,Y):
     num_example = X.shape[0]
@@ -28,22 +14,63 @@ def normal_equation(X,Y):
     # X^T * X
     p = np.dot(x.T, x)
     # (X^T * X)^{-1}
-    I = np.eye(p.shape[0]) * 1e-6
-    p = p + I
+    #I = np.eye(p.shape[0]) * 1e-6
+    #p = p + I
     q = np.linalg.inv(p)
     # (X^T * X)^{-1} * X^T
     r = np.dot(q, x.T)
     # (X^T * X)^{-1} * X^T * Y
     A = np.dot(r, Y)
     # 按顺序
-    b = A[0]
-    a1 = A[1]
-    a2 = A[2]
+    b = A[0,0]
+    a1 = A[1,0]
+    a2 = A[2,0]
     return a1, a2, b
 
+def show_result(X, Y, a1, a2, b):
+    mpl.rcParams['font.sans-serif'] = ['SimHei']  
+    mpl.rcParams['axes.unicode_minus']=False
+
+    fig = plt.figure()
+    plt.title(u"三维空间中最小二乘法的屏幕拟合结果")
+    plt.axis('off')
+
+    # 准备拟合平面数据
+    axis_x = np.linspace(0,5, 11)
+    axis_y = np.linspace(0,5, 11)
+    P,Q = np.meshgrid(axis_x, axis_y)
+    R = a1 * P + a2 * Q + b
+    # 绘制拟合平面
+    ax = fig.add_subplot(121,projection='3d')
+    ax.plot_surface(P, Q, R, alpha=0.5)
+    # 绘制原始样本点
+    ax.scatter(X[:,0],X[:,1],Y, color='Red')
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+
+    # 绘制拟合平面
+    ax = fig.add_subplot(122,projection='3d')
+    ax.plot_surface(P, Q, R, alpha=0.3)
+    # 绘制原始样本点
+    ax.scatter(X[:,0],X[:,1],Y, color='black')
+    # 绘制点到屏幕的竖线
+    Y_hat = a1 * X[:,0] + a2 * X[:,1] + b
+    for i in range(X.shape[0]):
+        x = [X[i,0],X[i,0]]
+        y = [X[i,1],X[i,1]]
+        z = [Y_hat[i],Y[i,0]]
+        print(x,y,z)
+        ax.plot3D(x, y, z, color='Red')
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    
+    plt.show()
+
+
+
 if __name__ == '__main__':
-    X = np.array([[1, 2, 3, 4],[1, 3, 4, 3]]).T
-    Y = np.array([3.2, 4.1, 4.8, 5.1]).T
-    #Y = np.array([3, 4, 5, 5]).T
+    X = np.array([[1,1],[2,3],[3,4],[4,3]])
+    Y = np.array([5, 3, 4, 2]).reshape(4,1)
     a1, a2, b = normal_equation(X,Y)
     print(str.format("a1={0:.4f}, a2={1:.4f}, b={2:.4f}", a1, a2, b))
+    show_result(X, Y, a1, a2, b)

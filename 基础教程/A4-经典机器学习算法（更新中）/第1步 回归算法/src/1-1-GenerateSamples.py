@@ -34,7 +34,7 @@ def generate_file_path(file_name):
     return file_path
 
 def show_sample(X,Y):
-    mpl.rcParams['font.sans-serif'] = ['DengXian']  
+    mpl.rcParams['font.sans-serif'] = ['SimHei']  
     mpl.rcParams['axes.unicode_minus']=False
     
     plt.figure()

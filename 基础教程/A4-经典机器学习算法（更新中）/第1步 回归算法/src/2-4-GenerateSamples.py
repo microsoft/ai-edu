@@ -81,8 +81,8 @@ if __name__ == '__main__':
         samples = np.hstack((X1,X2,Y))
         np.savetxt(file_path, samples, fmt='%f, %f, %f', delimiter=',', header='x1, x2, y')
     #endif
-    print(str.format("距离：最小值={0}，最大值={1}，均值={2}", X1.min(), X1.max(), X1.mean()))
-    print(str.format("面积：最小值={0}，最大值={1}，均值={2}", X2.min(), X2.max(), X2.mean()))
+    print(str.format("距离：最小值={0:.2f}，最大值={1:.2f}，均值={2:.2f}", X1.min(), X1.max(), X1.mean()))
+    print(str.format("面积：最小值={0:.2f}，最大值={1:.2f}，均值={2:.2f}", X2.min(), X2.max(), X2.mean()))
     show_sample(X1,X2,Y)
 
     

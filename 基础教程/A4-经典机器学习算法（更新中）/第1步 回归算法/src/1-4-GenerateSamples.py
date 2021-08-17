@@ -8,6 +8,7 @@ import sys
 import os
 import matplotlib as mpl
 
+# 错误的代码
 def generate_samples_1(a, b, m):
     # m个[0,1)之间随机数，表示机房内计算机数量/1000
     X = np.random.random(size=(m, 1))
@@ -16,6 +17,7 @@ def generate_samples_1(a, b, m):
     Y = a * X + b + Epsilon
     return X,Y
 
+# 正确的代码
 def generate_samples_2(a, b, m):
     # 以0.5为中心的正态分布，表示机房内计算机数量/1000
     X = np.random.normal(loc=0.5, scale=0.12, size=(m, 1))

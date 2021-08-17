@@ -12,7 +12,7 @@ def generate_file_path(file_name):
     file_path = os.path.join(curr_dir, file_name)
     return file_path
 
-# 公式 1.2.5
+# 公式 1.3.8
 def least_square_1(X,Y):
     n = X.shape[0]
     # a_hat

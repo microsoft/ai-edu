@@ -66,11 +66,9 @@ def show_result(X, Y, a1, a2, b):
     
     plt.show()
 
-
-
 if __name__ == '__main__':
     X = np.array([[1,1],[2,3],[3,4],[4,3]])
     Y = np.array([5, 3, 4, 2]).reshape(4,1)
-    a1, a2, b = normal_equation(X,Y)
-    print(str.format("a1={0:.4f}, a2={1:.4f}, b={2:.4f}", a1, a2, b))
+    a1, a2, b = -0.89, 0.13, 5.37
+    print(str.format("a1={0:.2f}, a2={1:.2f}, b={2:.2f}", a1, a2, b))
     show_result(X, Y, a1, a2, b)

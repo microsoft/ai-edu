@@ -44,3 +44,19 @@ https://docs.microsoft.com/zh-cn/azure/machine-learning/algorithm-cheat-sheet?WT
 
 9）集成算法：集成算法用一些相对较弱的学习模型独立地就同样的样本进行训练，然后把结果整合起来进行整体预测。集成算法的主要难点在于究竟集成哪些独立的较弱的学习模型以及如何把学习结果整合起来。这是一类非常强大的算法，同时也非常流行。常见的算法包括：Boosting，Bootstrapped Aggregation（Bagging），AdaBoost，堆叠泛化（Stacked Generalization，Blending），梯度推进机（Gradient Boosting Machine, GBM），随机森林（Random Forest）。
 
+
+
+
+
+逻辑回归在什么地方写？是单独一章？属于二分类问题
+
+方差偏差单独写？
+https://blog.csdn.net/cprimesplus/article/details/97178227
+
+安斯库姆四重奏
+https://www.zhihu.com/question/67493742
+
+
+线性回归是统计学中最基础的数学模型，几乎各个学科的研究中都能看到线性回归的影子，比如量化金融、计量经济学等；当前炙手可热的深度学习也一定程度构建在线性回归基础上。因此，每个人都有必要了解线性回归的原理。
+
+线性回归的一种最直观解法是最小二乘法，其损失函数是误差的平方，具有最小值点，可以通过解矩阵方程求得这个最小值。尽管推导过程有大量数学符号，线性回归从数学上来讲并不复杂，有微积分和线性代数基础的朋友都可以弄清其原理。

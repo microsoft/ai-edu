@@ -21,17 +21,21 @@ def generate_file_path(file_name):
     file_path = os.path.join(curr_dir, file_name)
     return file_path
 
-def normal_equation(X,Y):
-    num_example = X.shape[0]
-    # 在原始的X矩阵最左侧加一列1
+# 在原始的X矩阵最左侧加一列1
+def add_ones_at_left(X0):
+    num_example = X0.shape[0]
     ones = np.ones((num_example,1))
-    x = np.column_stack((ones, X))    
+    X = np.column_stack((ones, X0))    
+    return X
+
+def normal_equation(X0,Y):
+    X = add_ones_at_left(X0)
     # X^T * X
-    p = np.dot(x.T, x)
+    p = np.dot(X.T, X)
     # (X^T * X)^{-1}
     q = np.linalg.inv(p)
     # (X^T * X)^{-1} * X^T
-    r = np.dot(q, x.T)
+    r = np.dot(q, X.T)
     # (X^T * X)^{-1} * X^T * Y
     A = np.dot(r, Y)
     # 按顺序

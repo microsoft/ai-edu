@@ -79,8 +79,8 @@ def CalAccuracy(y_hat, y):
 
 
 if __name__ == '__main__':
-    X1, Y1, X2, Y2 = CreateSampleData(1000, 500)
-    X = make_x(X1, 9)
+    X1, Y1, X2, Y2 = CreateSampleData(100, 50)
+    X = make_x(X1, 30)
     A = normal_equation(X,Y1)
     print(A)
     show_result(X,Y1,A)

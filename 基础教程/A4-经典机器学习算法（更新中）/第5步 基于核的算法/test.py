@@ -45,8 +45,8 @@ def test2():
     plt.show()
 
 def test3():
-    x = np.linspace(-3,3,500)
-    y = np.linspace(-3,3,500)
+    x = np.linspace(-3,3,1000)
+    y = np.linspace(-3,3,1000)
 
     P,Q = np.meshgrid(x, y)
     R = P*P + Q*Q
@@ -63,39 +63,49 @@ def test3():
     ax.set_xlabel("x")
     ax.set_ylabel("y")
 
-    R2 = P+1.5*Q+3
+    R2 = P+Q+2
     ax.plot_surface(P, Q, R2, alpha=0.5)
-
+    
     x = []
     y = []
     r = []
+    min_r = 10
+    min_i = 0
+    min_j=0
     for i in range(R.shape[0]):
         for j in range(R.shape[1]):
             if (abs(R[i,j]-R2[i,j]) <= 0.1):
                 r.append(R[i,j])
                 x.append(i)
                 y.append(j)
+                if (R[i,j] < min_r):
+                    min_r = R[i,j]
+                    min_i = i
+                    min_j = j
+
+    print(min_r, min_i, min_j)
 
     x = np.array(x)
-    x = (x-250)*6/500
+    x = (x-500)*6/1000
     y = np.array(y)
-    y = (y-250)*6/500
-    ax.scatter(y,x,r,s=1,color='b')
+    y = (y-500)*6/1000
+    ax.scatter(x,y,r,s=1,color='b')
 
-    print(min(r))
+    print("min r = ",min(r))
     idx = argmin(r)
+    print("idx=", idx)
     print(x[idx], y[idx])
-    ax.scatter(y[idx],x[idx],min(r),s=10,color='r')
+    ax.scatter(x[idx],y[idx],min(r),s=10,color='r')
 
 
-    x = -12/13
-    y = -18/13
-    z = x + 1.5*y + 3
+    x = -1
+    y = -1
+    z = x + y + 2
     z2 = x*x+y*y
     print(x,y,z,z2)
     ax.scatter(x,y,z, color='r')
     ax.scatter(x,y,z2, color='r')
-
+    
     """
     x = 1.366
     y = 1.366

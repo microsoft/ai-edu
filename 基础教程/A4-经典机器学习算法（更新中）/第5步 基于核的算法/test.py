@@ -50,12 +50,6 @@ def test3():
 
     P,Q = np.meshgrid(x, y)
     R = P*P + Q*Q
-    """
-    z = np.min(R)
-    idx = np.argmin(R)
-    y = a1[idx // 1000]
-    x = a2[idx % 1000]
-    """
     fig = plt.figure()
     ax = fig.add_subplot(111,projection='3d')
 
@@ -63,9 +57,25 @@ def test3():
     ax.set_xlabel("x")
     ax.set_ylabel("y")
 
-    R2 = P+Q+2
+    """
+    P,Q = np.meshgrid(x, y)
+    R2 = np.zeros_like(P)
+    for i in range(P.shape[0]*P.shape[1]):
+        for j in range(Q.shape[0]*Q.shape[1]):
+            if (P[i]+Q[j]+2==0):
+                R2[i,j]=1
     ax.plot_surface(P, Q, R2, alpha=0.5)
+    """
     
+    #for z in np.linspace(0,20,100):
+    #    ax.plot([-3,1],[1,-3],z)
+    
+    x = -1
+    y = -1
+    z = 2
+    ax.scatter(x,y,z,c='r')
+
+    """
     x = []
     y = []
     r = []
@@ -98,23 +108,8 @@ def test3():
     ax.scatter(x[idx],y[idx],min(r),s=10,color='r')
 
 
-    x = -1
-    y = -1
-    z = x + y + 2
-    z2 = x*x+y*y
-    print(x,y,z,z2)
-    ax.scatter(x,y,z, color='r')
-    ax.scatter(x,y,z2, color='r')
-    
     """
-    x = 1.366
-    y = 1.366
-    z1 = x*x + y*y
-    z2 = x + y + 1
-    ax.scatter(x,y,z1)
-    ax.scatter(x,y,z2)
-    print(z1,z2)
-    """
+  
     plt.show()
 
 

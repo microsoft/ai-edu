@@ -223,18 +223,20 @@ Ax_1+Bx_2+C=
     \\\\
     x_2
 \end{pmatrix}
-+C=\boldsymbol{w} \boldsymbol{x}+C=0
++C=\boldsymbol{w} \boldsymbol{x}+b=0
 \tag{11}
 $$
 
-其中：$\boldsymbol{w} = (A \quad B)，\boldsymbol{x} = (x_1 \quad x_2)^T$，则公式 5、6 可以写成：
+其中：$\boldsymbol{w} = (A \quad B)，\boldsymbol{x} = (x_1 \quad x_2)^T，b=C$，则公式 5、6 可以写成：
 
 $$
-\boldsymbol{w} \boldsymbol{x}+C=+1 \tag{12}
+\boldsymbol{w} \boldsymbol{x}+b=+1 \tag{12}
 $$
 $$
-\boldsymbol{w}\boldsymbol{x}+C=-1 \tag{13}
+\boldsymbol{w}\boldsymbol{x}+b=-1 \tag{13}
 $$
+
+把 $C$ 重新命名为 $b$ 在各种文献里比较通用，被称作截距。
 
 而公式 10 可以改成：
 
@@ -275,9 +277,9 @@ $$
 
 $$
 \begin{cases}
-\boldsymbol{w}\boldsymbol{x_i}+C \ge +1, \quad y_i=+1（正类样本）
+\boldsymbol{w}\boldsymbol{x_i}+b \ge +1, \quad y_i=+1（正类样本）
 \\\\
-\boldsymbol{w}\boldsymbol{x_i}+C \le -1, \quad  y_i=-1（负类样本）
+\boldsymbol{w}\boldsymbol{x_i}+b \le -1, \quad  y_i=-1（负类样本）
 \end{cases}
 \tag{15}
 $$
@@ -285,13 +287,13 @@ $$
 公式 15 的几何意义很明确，即所有正类样本都在分类间隔的上边界之上，而所有负类样本都在分类间隔的下边界之下。
 
 进一步，公式 15 的两边都乘以 $y_i$：
-- 当 $y_i=+1$ 时，不等式符号不变，依旧是 $y_i(\boldsymbol{w}\boldsymbol{x_i}+C) \ge 1$； 
-- 当 $y_i=-1$ 时，不等式符号改变方向，$y_i(\boldsymbol{w}\boldsymbol{x_i}+C) \ge 1$
+- 当 $y_i=+1$ 时，不等式符号不变，依旧是 $y_i(\boldsymbol{w}\boldsymbol{x_i}+b) \ge 1$； 
+- 当 $y_i=-1$ 时，不等式符号改变方向，$y_i(\boldsymbol{w}\boldsymbol{x_i}+b) \ge 1$
 
 所以，公式 15 最后可以合并成公式 16：
 
 $$
-1 - y_i(\boldsymbol{w}\boldsymbol{x_i}+C) \le 0 \tag{16}
+1 - y_i(\boldsymbol{w}\boldsymbol{x_i}+b) \le 0 \tag{16}
 $$
 
 即把不等式右侧的 1 挪到左侧来，再两边乘以 -1，改变不等式符号方向。这样做是为了后面确定优化条件时方便。
@@ -318,9 +320,9 @@ $$
 
 $$
 \begin{aligned}
-    &\min \frac{1}{||w||^2}
+    &\underset{w,b}{\min} \frac{1}{2}||w||^2
     \\\\
-    s.t. \quad & 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+C) \le 0
+    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0, \quad i=1,2,...,n
 \end{aligned}
 \tag{19}
 $$

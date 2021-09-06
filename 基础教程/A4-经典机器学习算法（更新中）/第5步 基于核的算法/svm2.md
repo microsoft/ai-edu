@@ -163,6 +163,55 @@ L(w,b,\alpha)&=\frac{1}{2}||w||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \b
 \tag{20}
 $$
 
+### 拉格朗日对偶问题
+
+- 原始问题
+  
+原始问题如公式 20 所示。如何求解呢？需要用到拉格朗日对偶性。
+
+$$
+\theta_P(x) = \underset{\alpha_i}{\max} L(w,b,\alpha)
+$$
+
+$$
+p^*=\underset{w,b}{\min} \theta_P(x) =\underset{w,b}{\min}  \underset{\alpha_i}{\max} L(w,b,\alpha)
+$$
+
+广义拉格朗日函数的**极小极大**问题。
+
+- 对偶问题
+
+$$
+\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha)
+$$
+
+$$
+d^*=\underset{\alpha}{\max} \theta_D(\alpha) =\underset{\alpha}{\max} \underset{w,b}{\min} L(w,b,\alpha)
+$$
+
+广义拉格朗日函数的**极大极小**问题。
+
+- 二者关系
+
+$$
+\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=\theta_P(x)
+$$
+
+$$
+\theta_D(\alpha) \le \theta_P(x)
+$$
+
+$$
+\underset{\alpha}{\max} \theta_D(\alpha) \le \underset{w,b}{\min} \theta_P(x)
+$$
+
+
+
+$$
+d^*=\underset{\alpha}{\max} \quad \underset{w,b}{\min} L(w,b,\alpha) \le \underset{w,b}{\min} \quad \underset{\alpha}{\max} L(w,b,\alpha)=p^*
+$$
+
+
 现在求 $L$ 的最小值，对公式 20 中的 $w、b$ 求偏导（相当于对公式 6 的 $x、y$ 求偏导）：
 
 $$
@@ -275,7 +324,7 @@ $$
 \end{cases}
 $$
 
-其中，$a_3=-1$ 违反了公式 8 的约定。我们看一下公式 24 的形态：
+其中，$a_3=-1$ 违反了公式 8 的约定。我们看一下公式 24 的形态，运行 test.py 以得到图 10。
 
 
 <img src="./images/10.png" />

@@ -5,31 +5,38 @@ https://zhuanlan.zhihu.com/p/154517678
 
 ### 无约束优化问题
 
-对于函数 $f(x,y)=x^2+y^2$，如果求其最小值，我们知道分别对 $x、y$ 求偏导，并令结果为 0，即可以得到结果为 $(0,0)$ 点。
+对于函数 $f(x,y)=x^2+y^2$，如果求其最小值，我们知道分别对 $x、y$ 求偏导，并令结果为 0，即可以得到极值点结果为 $(0,0)$ 点。
 
 ### 等式约束优化问题
 
-如果加一个限制条件，求函数 $f(x,y)$ 在约束条件 $g(x,y)=x+y+2=0$ 时的最小值。
+如果加一个限制条件，求函数 $f(x,y)$ 在约束条件 $x+y+2=0$ 时的最小值，记作：
+
+$$
+\underset{x,y}{\min} f(x,y)=x^2+y^2
+\\\\
+s.t.\quad x+y+2=0
+\tag{1}
+$$
 
 - 用解方程组的方法
 
 $$
-\begin{dcases}
+\begin{cases}
     z = x^2+y^2
     \\\\
     x+y+2=0
-\end{dcases}
-\tag{1}
+\end{cases}
+\tag{2}
 $$
 下面的公式变形为 $y=-x-2$ 带入上面的式子，得到：
 $$
-z=2x^2+4x+4 \tag{2}
+z=2x^2+4x+4 \tag{3}
 $$
 
 对$z$求$x$的导数，并令结果为 0：
 
 $$
-\nabla_x z = 4x+4 = 0 \tag{3}
+\nabla_x z = 4x+4 = 0 \tag{4}
 $$
 
 得到：当 $x=-1，y=-1$时，$z=2$ 为最小值。
@@ -38,70 +45,122 @@ $$
 
 <center>图 8 相交线及其极值点</center>
 
-结果如图 8，红色曲线为函数 $f(x,y)$ 与约束平面 $g(x,y)=0$ 的相交线，红色圆点为极值点。此处可以运行 LagrangeF1.py 来观察实际效果。
+结果如图 8，红色曲线为函数 $f(x,y)$ 与约束平面 $g(x,y)=x+y+2=0$ 的相交线，红色圆点为极值点。此处可以运行 LagrangeF1.py 来观察实际效果。
+
+注意，$g(x,y)$ 约束条件其实只是 $x/y$ 平面上的一条直线，我们把它“提升”成为一个平面，这样就和 $f(x,y)$ 形成相交，便于读者理解。
+
+还有一种错误的理解是把 $g(x,y)=x+y+2=0$ 看成 $g(x,y)=x+y+2$，相当于 $z=x+y+2$，这就变成了一个三维空间中的斜面，与 $f(x,y)$ 的底部相交形成一个倾斜的椭圆，也可以求极值点。但是和原来的约束条件完全是两个不同的问题。
 
 - 拉格朗日乘子法
 
 当约束条件比较复杂时，不能直接解出方程组来，就可以用拉格朗日乘子法。
 
+一个长方体的长宽高分别是 $x,y,z$，表面积是 $s^2$。问当长宽高具体为多少时，体积最大？
+
+如果用解方程组的方法，可以得到：
+
+$$
+V = \frac{xy(s^2-2xy)}{2(x+y)}
+$$
+
+下一步求极值时，就非常麻烦了。如果参数更多的话，会更麻烦。
+
+下面尝试用拉格朗日乘子法解决，先转化为约束条件：
+
 $$
 \begin{aligned}
-    & \underset{x,y}{\min} \quad f(x,y) = x^2+y^2
+    & V(x,y,z) = xyz
     \\\\
-    & s.t. \quad g(x,y)=x+y+2=0
+    & s.t. \quad 2xy+2xz+2yz-s^2=0
 \end{aligned}
-\tag{4}
+\tag{5}
 $$
 
 构造拉格朗日函数：
 
 $$
-F(x,y,\alpha)=f(x,y)+\alpha g(x,y)=x^2+y^2+\alpha(x+y+2) \tag{5}
+F(x,y,z,\alpha)=V(x,y,z)+\alpha g(x,y,z)=xyz+\alpha(2xy+2xz+2yz-s^2) \tag{6}
 $$
 
 $$
 \begin{cases}
-    \nabla_x F(x,y,\alpha) =2x+\alpha=0
+    \nabla_x F(x,y,z,\alpha)=yz+2\alpha(y+z)=0
     \\\\
-    \nabla_y F(x,y,\alpha) =2y+\alpha=0
+    \nabla_y F(x,y,z,\alpha)=xz+2\alpha(x+z)=0
     \\\\
-    \nabla_{\alpha} F(x,y,\alpha) =x+y+2=0
+    \nabla_z F(x,y,z,\alpha)=xy+2\alpha(x+y)=0
+    \\\\
+    \nabla_{\alpha} F(x,y,z,\alpha)=2xy+2xz+2yz-s^2=0
 \end{cases}
-\tag{6}
+\tag{7}
 $$
 
-解方程组 6 得：$\alpha=2，x=-1，y=-1$。结果与方程组方法一致。
+解方程组 7 得：
+
+$$x=y=z=\frac{6}{\sqrt{z}}，V_{max}=\frac{\sqrt{6}}{36}s^3$$
 
 
 
 
 ### 不等式约束优化问题
 
+问题一：
+
+$$
+\underset{x,y}{\min} f(x,y)=x^2+y^2
+\\\\
+s.t.\quad x+y-1 \le 0
+\tag{8}
+$$
+
+问题二：
+
+$$
+\underset{x,y}{\min} f(x,y)=x^2+y^2
+\\\\
+s.t.\quad x+y+2 \le 0
+\tag{9}
+$$
 
 
 <img src="./images/9.png" />
 
 <center>图 9 不等式约束优化</center>
 
-图 9 展示了两种情况的不等式，左子图是三维图形，包含原函数 $f(x,y)$ 的曲面图和两个约束不等式的立面图，右子图是左图在底面上的投影。
-
-- 原函数仍旧是 $f(x,y)=x^2+y^2$
-- 约束函数 1 是 $g_1(x,y)=x+y-1 \le 0$
-- 约束函数 2 是 $g_2(x,y)=x+y+2 \le 0$
+图 9 展示了两种情况的不等式，左子图是三维图形，包含原函数 $f(x,y)$ 的曲面图和两个约束不等式的立面图，右子图是左图在 $x/y$ 平面上的投影。
 
 两个约束不等式形成了两种情况：
 
-- 情况一：最优点在不等式的约束允许的区域内，但没有受到约束的影响
+- 问题一：最优点在不等式的约束允许的区域内，但没有受到约束的影响
 
 约束不等式 1：$g_1(x,y)=x+y-1 \le 0$，从右子图看，既要求右上方的虚线的左下方的区域为约束允许的区域。
 
-由于原函数 $f(x,y)$ 的最优解 $p_0(x=0,y=0,z=0)$ 在不等式的约束范围内，所以极值点还是 $x_0$ 点，相当于没有约束。约束边界上的 $p_1(x=0.5,y=0.5,z=0.5)$ 点的 $z$ 值大于 $p_0$ 点的 $z$ 值，所以不是最优解。
+由于原函数 $f(x,y)$ 的最优解 $p_0(x=0,y=0,z=0)$ 在不等式的约束区域允许范围内，所以极值点还是 $p_0$ 点，相当于没有约束。约束边界上的 $p_1(x=0.5,y=0.5,z=0.5)$ 点的 $z$ 值大于 $p_0$ 点的 $z$ 值，所以不是最优解。
 
-- 情况二：最优点在不等式的边界上，改变了原函数的最优解
+- 问题二：最优点在不等式的边界上，改变了原函数的最优解
 
 约束不等式 2：$g_2(x,y)=x+y+2 \le 0$，从右子图看，既要求点划线的左下方的区域为约束允许的区域。
 
-这种情况下，由于原函数是个凸函数，既越靠近原点越优，所以最优解应该在约束的边界上，这就相当于等式约束，那么就可以依然用上面的拉格朗日乘子法来求解，求得最优解为 $p_2(x=-1,y=-1,z=2)$。
+这种情况下，由于原函数是个凸函数，越靠近原点越优，所以最优解应该在约束的边界上，而不是远离约束边界的允许区域内。这就相当于等式约束，那么就依然可以用上面的拉格朗日乘子法来求解，求得最优解为 $p_2(x=-1,y=-1,z=2)$。
+
+### 同时含有等式和不等式的优化问题
+
+$$
+\underset{x,y}{\min} f(x,y)=x^2+y^2
+\\\\
+s.t. \qquad x-y-2 \le 0
+\\\\
+\qquad x^2y-3 = 0
+\tag{10}
+$$
+
+此时构造拉格朗日函数如：
+
+$$
+F(x,y,\alpha,\beta)=f(x,y)+\alpha g(x,y)+\beta h(x,y)
+$$
+
+然后分别求 $x、y、\alpha、\beta$ 的偏导数，并令其为 0，连立 4 项等式方程组即可。
 
 ### KKT（Karush-Kuhn-Tucker）条件
 
@@ -126,11 +185,109 @@ $$
 \begin{cases}
     \nabla_{x,y} L = \nabla_{x,y} f(x,y)+\nabla_{x,y}  \alpha g(x,y)=0
     \\\\
-    \alpha \ge 0 \quad （公式8）
+    \alpha \ge 0 \quad （从公式8得到）
     \\\\
-    \alpha g(x,y)=0 \quad (公式7)
+    \alpha g(x,y)=0 \quad (从公式7得到)
 \end{cases}
 $$
+
+
+
+### 拉格朗日对偶问题
+
+- 原始问题
+  
+$$
+\begin{aligned}
+    &\underset{w,b}{\min} f(w,b)=\frac{1}{2}||w||^2
+    \\\\
+    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0 \quad \rightarrow g(x_i)
+\end{aligned}
+\tag{9}
+$$
+
+原始问题如公式 9 所示。按照前面的拉格朗日乘子法，先构造拉格朗日函数：
+
+$$
+L(w,b,\alpha) = f(w,b) + \sum_{i=1}^n \alpha_i g(x_i) \tag{10}
+$$
+
+
+需要用到拉格朗日对偶性，所以先求式 10 的最大值：
+
+$$
+\theta_P(w,b) = \underset{\alpha_i}{\max} L(w,b,\alpha) \tag{11}
+$$
+
+因为 $a_ig(x_i)=0$，所以求 $L(w,b,\alpha)$ 的最大值就等于 $f(w,b)$。接下来求 $\theta_p$ 的最小值：
+
+$$
+p^*=\underset{w,b}{\min} \theta_P(x) =\underset{w,b}{\min}  \underset{\alpha_i}{\max} L(w,b,\alpha) \tag{12}
+$$
+
+式 12 是我们要求的 SVM 问题的解，也被称为广义拉格朗日函数的**极小极大**问题。为什么要这么做呢？因为我们想用拉格朗日乘子法来解决问题。
+
+- 对偶问题
+
+与式 12 相反，先对 $L(w,b,\alpha)$ 求最小，再求最大，得式 13、14：
+
+$$
+\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha) \tag{13}
+$$
+
+$$
+d^*=\underset{\alpha}{\max} \theta_D(\alpha) =\underset{\alpha}{\max} \underset{w,b}{\min} L(w,b,\alpha) \tag{14}
+$$
+
+称为广义拉格朗日函数的**极大极小**问题。
+
+- 二者关系
+
+$$
+\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=\theta_P(x)
+$$
+
+$$
+\theta_D(\alpha) \le \theta_P(x)
+$$
+
+$$
+\underset{\alpha}{\max} \theta_D(\alpha) \le \underset{w,b}{\min} \theta_P(x)
+$$
+
+
+
+$$
+d^*=\underset{\alpha}{\max} \underset{w,b}{\min} L(w,b,\alpha) \le \underset{w,b}{\min} \underset{\alpha}{\max} L(w,b,\alpha)=p^*
+$$
+
+
+现在求 $L$ 的最小值，对公式 20 中的 $w、b$ 求偏导（相当于对公式 6 的 $x、y$ 求偏导）：
+
+$$
+\nabla_w L(w,b,a)=w - \sum a_iy_iw_i=0 \rightarrow w=\sum a_iy_ix_i \tag{21}
+$$
+
+$$
+\nabla_b L(w,b,a)= -\sum a_iy_i=0 \rightarrow \sum a_iy_i=0 \tag{22}
+$$
+
+请注意，此时的 $x_i、y_i$ 不是变量，是样本值，可以看成是固定变量。
+
+公式 21、22 代回公式 20：
+
+$$
+L_{min(w,b)} = \underset{w,b}{\min} L(w,b,a)=-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 + \sum_{i=1}^n a_i \tag{23}
+$$
+
+接下来求公式 23 的极大值 $\underset{a}{max} L_{min(w,b)}$，两边都乘以-1，就把求极大值问题变为求极小值问题：
+
+$$
+L_{max(a)}=\underset{a}{\max} L_{min(w,b)} = - \underset{a}{\min} L_{min(w,b)} =\sum_{i=1}^n a_i-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 \tag{24}
+$$
+
+
+再对式 24 中的 $\alpha_i$ 求偏导，即可求得 $\alpha_i$ 的值。
 
 
 ### SVM
@@ -162,82 +319,6 @@ L(w,b,\alpha)&=\frac{1}{2}||w||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \b
 \end{aligned}
 \tag{20}
 $$
-
-### 拉格朗日对偶问题
-
-- 原始问题
-  
-原始问题如公式 20 所示。如何求解呢？需要用到拉格朗日对偶性。
-
-$$
-\theta_P(x) = \underset{\alpha_i}{\max} L(w,b,\alpha)
-$$
-
-$$
-p^*=\underset{w,b}{\min} \theta_P(x) =\underset{w,b}{\min}  \underset{\alpha_i}{\max} L(w,b,\alpha)
-$$
-
-广义拉格朗日函数的**极小极大**问题。
-
-- 对偶问题
-
-$$
-\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha)
-$$
-
-$$
-d^*=\underset{\alpha}{\max} \theta_D(\alpha) =\underset{\alpha}{\max} \underset{w,b}{\min} L(w,b,\alpha)
-$$
-
-广义拉格朗日函数的**极大极小**问题。
-
-- 二者关系
-
-$$
-\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=\theta_P(x)
-$$
-
-$$
-\theta_D(\alpha) \le \theta_P(x)
-$$
-
-$$
-\underset{\alpha}{\max} \theta_D(\alpha) \le \underset{w,b}{\min} \theta_P(x)
-$$
-
-
-
-$$
-d^*=\underset{\alpha}{\max} \quad \underset{w,b}{\min} L(w,b,\alpha) \le \underset{w,b}{\min} \quad \underset{\alpha}{\max} L(w,b,\alpha)=p^*
-$$
-
-
-现在求 $L$ 的最小值，对公式 20 中的 $w、b$ 求偏导（相当于对公式 6 的 $x、y$ 求偏导）：
-
-$$
-\nabla_w L(w,b,a)=w - \sum a_iy_iw_i=0 \rightarrow w=\sum a_iy_ix_i \tag{21}
-$$
-
-$$
-\nabla_b L(w,b,a)= -\sum a_iy_i=0 \rightarrow \sum a_iy_i=0 \tag{22}
-$$
-
-请注意，此时的 $x_i、y_i$ 不是变量，是样本值，可以看成是固定变量。
-
-公式 21、22 代回公式 20：
-
-$$
-L_{min(w,b)} = \underset{w,b}{\min} L(w,b,a)=-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 + \sum_{i=1}^n a_i \tag{23}
-$$
-
-接下来求公式 23 的极大值 $\underset{a}{max} L_{min(w,b)}$，两边都乘以-1，就把求极大值问题变为求极小值问题：
-
-$$
-L_{max(a)}=\underset{a}{\max} L_{min(w,b)} = - \underset{a}{\min} L_{min(w,b)} =\sum_{i=1}^n a_i-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 \tag{24}
-$$
-
-
-再对式 24 中的 $\alpha_i$ 求偏导，即可求得 $\alpha_i$ 的值。
 
 下面我们举例说明，见图 7。
 
@@ -324,14 +405,20 @@ $$
 \end{cases}
 $$
 
-其中，$a_3=-1$ 违反了公式 8 的约定。我们看一下公式 24 的形态，运行 test.py 以得到图 10。
+其中，$a_3=-1$ 违反了公式 8 的约定。我们看一下公式 24 的形态，运行 test.py 以得到图 10，同时输出打印信息如下：
 
+```
+左：a2=1.50, a3=-1.00, z=-0.50
+右：a2=0.25, a3=0.00, z=-0.25
+```
 
 <img src="./images/10.png" />
 
 <center>图 10 </center>
 
-图 10 的左子图，为 $a_2、a_3$ 在自由取值空间内的函数形态，极小值确实在 $(a_2=1.5,a_3=-1)$ 上。由于公式 8 的约定，我们把 $a_2、a_3$ 的取值限制在 $(0,+\infin)$上，得到右子图的形态，可以看到极值点在$(a_2=0.25,a_3=0)$ 上。
+
+
+图 10 的左子图，为 $a_2、a_3$ 在自由取值空间内的函数形态，极小值确实在 $(a_2=1.5,a_3=-1,z=-0.5)$ 上。由于公式 8 的约定，我们把 $a_2、a_3$ 的取值限制在 $(0,+\infin)$上，得到右子图的形态，可以看到极值点在$(a_2=0.25,a_3=0,z=-0.25)$ 上。
 
 我们也可以分别令 $a_2=0$ 和 $a_3=0$，来得到公式 24 的解：
 
@@ -344,3 +431,9 @@ $$
 $a_2=\frac{1}{4}，a_3=0，a_1=a_2+a_3=\frac{1}{4}$，极值为$-\frac{1}{4}$。
 
 继续解出$w$和$b$。
+
+
+### 思考与练习
+
+1. 用拉格朗日乘子法解决公式 1 提出的问题。
+2. 

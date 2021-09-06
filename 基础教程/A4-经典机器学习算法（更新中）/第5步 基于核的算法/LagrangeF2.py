@@ -27,7 +27,7 @@ def draw_x_y_1(ax):
     x = 0.5
     y = 0.5
     z = 0.5
-    ax.scatter(x, y, z, c='r', marker='*', s=50, label='(0.5,0.5,0,5)')
+    ax.scatter(x, y, z, c='r', marker='*', s=50, label='$p_1(0.5,0.5,0,5)$')
 
 def draw_x_y_2(ax):
     # 绘制x+y+2=0平面，垂直于x-y 平面
@@ -48,7 +48,7 @@ def draw_x_y_2(ax):
     x = -1
     y = -1
     z = 2
-    ax.scatter(x, y, z, c='r', marker='^', s=50, label='(-1,-1,2)')
+    ax.scatter(x, y, z, c='r', marker='^', s=50, label='$p_2(-1,-1,2)$')
    
 
 def draw_x2_y2(ax):
@@ -63,19 +63,8 @@ def draw_x2_y2(ax):
     x = 0
     y = 0
     z = 0
-    ax.scatter(x, y, z, c='r', marker='o', s=50, label='(0,0,0)')
+    ax.scatter(x, y, z, c='r', marker='o', s=50, label='$p_0(0,0,0)$')
     return P,Q,R
-
-def draw_x2_y2_xy2(ax):
-    # 绘制 x^2+y^2+2(x+y+2) 曲面
-    x = np.linspace(-3, 3, 100)
-    y = np.linspace(-3, 3, 100)
-    P, Q = np.meshgrid(x, y)
-    R = P * P + Q * Q + 2*(P+Q+2)
-    ax.plot_surface(P, Q, R, alpha=0.1)
-    R = P * P + Q * Q + (-1)*(P+Q-1)
-    ax.plot_surface(P, Q, R, alpha=0.1)
-
 
 def draw_2D(ax2,P,Q,R):
     c = ax2.contour(P,Q,R, levels=np.linspace(-10, 10, 11))
@@ -89,9 +78,9 @@ def draw_2D(ax2,P,Q,R):
     y = -x+1
     ax2.plot(x,y,label='x+y-1=0',linestyle='--')
     ax2.legend()
-    ax2.scatter(0, 0, marker='o',s=50, label='(0,0,0)')
-    ax2.scatter(0.5, 0.5, marker='*',s=50, label='(0.5,0.5,0.5)')
-    ax2.scatter(-1, -1, marker='^',s=50, label='(-1,-1,2)')
+    ax2.scatter(0, 0, marker='o',s=50, label='$p_0(0,0,0)$')
+    ax2.scatter(0.5, 0.5, marker='*',s=50, label='$p_1(0.5,0.5,0.5)$')
+    ax2.scatter(-1, -1, marker='^',s=50, label='$p_2(-1,-1,2)$')
 
 def draw_x2y2_xy12():
     mpl.rcParams['font.sans-serif'] = ['SimHei']  
@@ -105,7 +94,6 @@ def draw_x2y2_xy12():
     P,Q,R = draw_x2_y2(ax)
     draw_x_y_2(ax)
     draw_x_y_1(ax)
-    draw_x2_y2_xy2(ax)
     ax.legend()
 
     ax2 = fig.add_subplot(122)

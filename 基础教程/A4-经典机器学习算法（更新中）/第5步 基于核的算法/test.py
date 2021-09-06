@@ -15,7 +15,7 @@ def draw_surface(ax, a2, a3):
     y = a2[idx // 1000]
     x = a3[idx % 1000]
     ax.scatter(x,y,z)
-    print(x,y,z)
+    print(str.format("a2={0:.2f}, a3={1:.2f}, z={2:.2f}", x,y,z))
     ax.plot_surface(P, Q, R, alpha=0.5)
 
 # 统计学习方法中的例子图示

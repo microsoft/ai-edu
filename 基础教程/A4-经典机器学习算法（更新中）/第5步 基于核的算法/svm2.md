@@ -45,11 +45,11 @@ $$
 
 <center>图 8 相交线及其极值点</center>
 
-结果如图 8，红色曲线为函数 $f(x,y)$ 与约束平面 $g(x,y)=x+y+2=0$ 的相交线，红色圆点为极值点。此处可以运行 LagrangeF1.py 来观察实际效果。
+结果如图 8，红色曲线为函数 $f(x,y)$ 与约束平面 $h(x,y)=x+y+2=0$ 的相交线，红色圆点为极值点。此处可以运行 LagrangeF1.py 来观察实际效果。
 
 注意，$g(x,y)$ 约束条件其实只是 $x/y$ 平面上的一条直线，我们把它“提升”成为一个平面，这样就和 $f(x,y)$ 形成相交，便于读者理解。
 
-还有一种错误的理解是把 $g(x,y)=x+y+2=0$ 看成 $g(x,y)=x+y+2$，相当于 $z=x+y+2$，这就变成了一个三维空间中的斜面，与 $f(x,y)$ 的底部相交形成一个倾斜的椭圆，也可以求极值点。但是和原来的约束条件完全是两个不同的问题。
+还有一种错误的理解是把 $h(x,y)=x+y+2=0$ 看成 $h(x,y)=x+y+2$，相当于 $z=x+y+2$，这就变成了一个三维空间中的斜面，与 $f(x,y)$ 的底部相交形成一个倾斜的椭圆，也可以求极值点。但是和原来的约束条件完全是两个不同的问题。
 
 - 拉格朗日乘子法
 
@@ -79,7 +79,7 @@ $$
 构造拉格朗日函数：
 
 $$
-F(x,y,z,\alpha)=V(x,y,z)+\alpha g(x,y,z)=xyz+\alpha(2xy+2xz+2yz-s^2) \tag{6}
+F(x,y,z,\alpha)=V(x,y,z)+\alpha h(x,y,z)=xyz+\alpha(2xy+2xz+2yz-s^2) \tag{6}
 $$
 
 $$
@@ -97,9 +97,7 @@ $$
 
 解方程组 7 得：
 
-$$x=y=z=\frac{6}{\sqrt{z}}，V_{max}=\frac{\sqrt{6}}{36}s^3$$
-
-
+$$x=y=z=\frac{6}{\sqrt{z}}，V_{max}=\frac{s^3}{6\sqrt{6}}$$
 
 
 ### 不等式约束优化问题
@@ -107,18 +105,22 @@ $$x=y=z=\frac{6}{\sqrt{z}}，V_{max}=\frac{\sqrt{6}}{36}s^3$$
 问题一：
 
 $$
-\underset{x,y}{\min} f(x,y)=x^2+y^2
+\begin{aligned}
+&\underset{x,y}{\min} f(x,y)=x^2+y^2
 \\\\
-s.t.\quad x+y-1 \le 0
+&s.t.\quad x+y-1 \le 0 \quad \rightarrow g(x,y)
+\end{aligned}
 \tag{8}
 $$
 
 问题二：
 
 $$
-\underset{x,y}{\min} f(x,y)=x^2+y^2
+\begin{aligned}
+&\underset{x,y}{\min} f(x,y)=x^2+y^2
 \\\\
-s.t.\quad x+y+2 \le 0
+&s.t.\quad x+y+2 \le 0 \quad \rightarrow g(x,y)
+\end{aligned}
 \tag{9}
 $$
 
@@ -135,23 +137,39 @@ $$
 
 约束不等式 1：$g_1(x,y)=x+y-1 \le 0$，从右子图看，既要求右上方的虚线的左下方的区域为约束允许的区域。
 
+可以使用**广义拉格朗日函数**求解不等式约束问题：
+
+$$
+F(x,y,\alpha)=f(x,y)+\alpha g_1(x,y) \tag{9}
+$$
+
+求 $x,y,\alpha$ 的偏导并令其为 0，解出：$\alpha=-1,x=0.5,y=0.5,f(0.5,0.5)=0.5$。
+
 由于原函数 $f(x,y)$ 的最优解 $p_0(x=0,y=0,z=0)$ 在不等式的约束区域允许范围内，所以极值点还是 $p_0$ 点，相当于没有约束。约束边界上的 $p_1(x=0.5,y=0.5,z=0.5)$ 点的 $z$ 值大于 $p_0$ 点的 $z$ 值，所以不是最优解。
 
 - 问题二：最优点在不等式的边界上，改变了原函数的最优解
 
 约束不等式 2：$g_2(x,y)=x+y+2 \le 0$，从右子图看，既要求点划线的左下方的区域为约束允许的区域。
 
-这种情况下，由于原函数是个凸函数，越靠近原点越优，所以最优解应该在约束的边界上，而不是远离约束边界的允许区域内。这就相当于等式约束，那么就依然可以用上面的拉格朗日乘子法来求解，求得最优解为 $p_2(x=-1,y=-1,z=2)$。
+这种情况下，由于原函数是个凸函数，越靠近原点越优，所以最优解应该在约束的边界上，而不是远离约束边界的允许区域内。这就相当于等式约束，那么就依然可以用上面的拉格朗日乘子法来求解：
+
+$$
+F(x,y,\alpha)=f(x,y)+\alpha g_2(x,y) \tag{10}
+$$
+
+求 $x,y,\alpha$ 的偏导并令其为 0，解出：$\alpha=2,x=-1,y=-1,f(-1,-1)=2$。
 
 ### 同时含有等式和不等式的优化问题
 
 $$
-\underset{x,y}{\min} f(x,y)=x^2+y^2
+\begin{aligned}
+&\underset{x,y}{\min} f(x,y)=x^2+y^2
 \\\\
-s.t. \qquad x-y-2 \le 0
+&s.t. \quad x-y-2 \le 0 \quad \rightarrow g(x,y)
 \\\\
-\qquad x^2y-3 = 0
-\tag{10}
+&s.t. \quad x^2y-3 = 0 \quad \rightarrow h(x,y)
+\end{aligned}
+\tag{11}
 $$
 
 此时构造拉格朗日函数如：
@@ -160,23 +178,29 @@ $$
 F(x,y,\alpha,\beta)=f(x,y)+\alpha g(x,y)+\beta h(x,y)
 $$
 
-然后分别求 $x、y、\alpha、\beta$ 的偏导数，并令其为 0，连立 4 项等式方程组即可。
+然后分别求 $x、y、\alpha、\beta$ 的偏导数并令其为 0，联立 4 项等式方程组即可。
+
+$$
+\begin{cases}
+    \nabla_xF=2x
+\end{cases}
+$$
 
 ### KKT（Karush-Kuhn-Tucker）条件
 
-综合上面两种情况考虑：
-- 第一种情况相当于在公式 5 中的 $\alpha=0$，即没有约束，此时 $\alpha g(x,y)=0$ 项没有影响，直接求原函数的最优解即可。
+综合不等式优化中的两个问题的两种情况考虑：
+- 第一种情况相当于在公式 9 中的 $\alpha=0$，即没有约束，此时 $\alpha g(x,y)=0$ 项没有影响，直接求原函数的最优解即可。
 
 - 第二种情况虽然是不等式，但是最优解在边界上，所以相当于等式约束，即 $g(x,y)=0$，而非 $g(x,y) \le 0$。此时无论 $\alpha$ 为何值，都有 $\alpha g(x,y)=0$。
 
 所以两种情况都满足：
 $$
-\alpha g(x,y)=0 \tag{7}
+\alpha g(x,y)=0 \tag{12}
 $$
 
 由于 $g(x,y) \le 0$，如果 $\alpha<0$ 的话，则相当于 $\alpha g(x,y) \ge 0$，改变了不等号的方向，不满足拉格朗日乘子法的规则。所以要求：
 $$
-\alpha \ge 0 \tag{8}
+\alpha \ge 0 \tag{13}
 $$
 
 所以，所谓的 KTT 条件就是可以求解出最优解的必要条件是：
@@ -189,6 +213,7 @@ $$
     \\\\
     \alpha g(x,y)=0 \quad (从公式7得到)
 \end{cases}
+\tag{14}
 $$
 
 
@@ -201,19 +226,30 @@ $$
 \begin{aligned}
     &\underset{w,b}{\min} f(w,b)=\frac{1}{2}||w||^2
     \\\\
-    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0 \quad \rightarrow g(x_i)
+    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0 \quad \rightarrow g(x_i), i=1,...,n
 \end{aligned}
-\tag{9}
+\tag{15}
 $$
 
-原始问题如公式 9 所示。按照前面的拉格朗日乘子法，先构造拉格朗日函数：
+原始问题如公式 15 所示。按照前面的拉格朗日乘子法，先构造拉格朗日函数。但是式 15 中的约束条件与前面的例子不同，是与样本相关的，所以我们必须针对每个样本定义一个 $\alpha$ 来构造拉格朗日函数：
 
 $$
-L(w,b,\alpha) = f(w,b) + \sum_{i=1}^n \alpha_i g(x_i) \tag{10}
+\begin{aligned}
+L &= f(x) + \alpha_1 g(x_1) + \alpha_2 g(x_2) + \cdots + \alpha_n g(x_n)
+\\\\
+&=f(x) + \sum_{i=1}^{n} \alpha_i g(x_i)
+\end{aligned}
+\tag{16}
+$$
+
+具体到式 15 的问题上：
+
+$$
+L(w,b,\alpha) = f(w,b) + \sum_{i=1}^n \alpha_i g(x_i) \tag{17}
 $$
 
 
-需要用到拉格朗日对偶性，所以先求式 10 的最大值：
+需要用到拉格朗日对偶性，所以先求式 17 的最大值：
 
 $$
 \theta_P(w,b) = \underset{\alpha_i}{\max} L(w,b,\alpha) \tag{11}
@@ -222,7 +258,7 @@ $$
 因为 $a_ig(x_i)=0$，所以求 $L(w,b,\alpha)$ 的最大值就等于 $f(w,b)$。接下来求 $\theta_p$ 的最小值：
 
 $$
-p^*=\underset{w,b}{\min} \theta_P(x) =\underset{w,b}{\min}  \underset{\alpha_i}{\max} L(w,b,\alpha) \tag{12}
+p^*=\underset{w,b}{\min} \theta_P(w,b) =\underset{w,b}{\min}  \underset{\alpha_i}{\max} L(w,b,\alpha) \tag{12}
 $$
 
 式 12 是我们要求的 SVM 问题的解，也被称为广义拉格朗日函数的**极小极大**问题。为什么要这么做呢？因为我们想用拉格朗日乘子法来解决问题。

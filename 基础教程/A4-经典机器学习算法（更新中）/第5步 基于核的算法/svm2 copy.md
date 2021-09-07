@@ -217,13 +217,140 @@ $$
 $$
 
 
+
+### 拉格朗日对偶问题
+
+- 原始问题
+  
+$$
+\begin{aligned}
+    &\underset{w,b}{\min} f(w,b)=\frac{1}{2}||w||^2
+    \\\\
+    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0 \quad \rightarrow g(x_i), i=1,...,n
+\end{aligned}
+\tag{15}
+$$
+
+原始问题如公式 15 所示。按照前面的拉格朗日乘子法，先构造拉格朗日函数。但是式 15 中的约束条件与前面的例子不同，是与样本相关的，所以我们必须针对每个样本定义一个 $\alpha$ 来构造拉格朗日函数：
+
+$$
+\begin{aligned}
+L(w,b,\alpha) &= f(w,b) + \alpha_1 g(x_1) + \alpha_2 g(x_2) + \cdots + \alpha_n g(x_n)
+\\\\
+&=f(w,b) + \sum_{i=1}^{n} \alpha_i g(x_i), \quad \alpha_i \ge 0
+\end{aligned}
+\tag{16}
+$$
+
+式 15 等价于：
+
+$$
+\begin{aligned}
+&\underset{w,b}{\min}\ \underset{\alpha}{\max}\ L(w,b,\alpha)
+\\\\
+&=\underset{w,b}{\min}\ \underset{\alpha}{\max} \left(f(w,b)+\sum_{i=1}^{n} \alpha_i g(x_i)\right)
+\\\\
+&=\underset{w,b}{\min} \left(f(w,b)+\underset{\alpha}{\max}\sum_{i=1}^{n} \alpha_i g(x_i)\right)
+\\\\
+&=\underset{w,b}{\min}\ \left(f(w,b) + \begin{cases}
+    0,\ \alpha_i \in 可行区域
+    \\
+    +\infty,\ \alpha_i \in 不可行区域
+\end{cases}\right)
+\\\\
+&=\underset{w,b}{\min}\ f(w,b)
+\end{aligned}
+$$
+
+
+
+
+需要用到拉格朗日对偶性，所以先求式 17 的最大值：
+
+$$
+\theta_P(w,b) = \underset{\alpha}{\max} L(w,b,\alpha)=\underset{\alpha}{\max} [f(w,b)+\alpha g(x)] \tag{11}
+$$
+
+即，固定 $w,b$ 的情况下，尝试不同的 $\alpha$ 值使得 $L$ 最大。
+
+因为 $a_ig(x_i)=0$，所以求 $L(w,b,\alpha)$ 的最大值就等于 $f(w,b)$。接下来求 $\theta_p$ 的最小值：
+
+$$
+p^*=\underset{w,b}{\min} \theta_P(w,b) =\underset{w,b}{\min}  \underset{\alpha_i}{\max} L(w,b,\alpha) \tag{12}
+$$
+
+式 12 是我们要求的 SVM 问题的解，也被称为广义拉格朗日函数的**极小极大**问题。为什么要这么做呢？因为我们想用拉格朗日乘子法来解决问题。
+
+- 对偶问题
+
+与式 12 相反，先对 $L(w,b,\alpha)$ 求最小，再求最大，得式 13、14：
+
+$$
+\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha) \tag{13}
+$$
+
+$$
+d^*=\underset{\alpha}{\max} \theta_D(\alpha) =\underset{\alpha}{\max} \underset{w,b}{\min} L(w,b,\alpha) \tag{14}
+$$
+
+称为广义拉格朗日函数的**极大极小**问题。
+
+- 二者关系
+
+$$
+\theta_D(\alpha) = \underset{w,b}{\min} L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=\theta_P(x)
+$$
+
+$$
+\theta_D(\alpha) \le \theta_P(x)
+$$
+
+$$
+\underset{\alpha}{\max} \theta_D(\alpha) \le \underset{w,b}{\min} \theta_P(x)
+$$
+
+
+
+$$
+d^*=\underset{\alpha}{\max} \underset{w,b}{\min} L(w,b,\alpha) \le \underset{w,b}{\min} \underset{\alpha}{\max} L(w,b,\alpha)=p^*
+$$
+
+
+现在求 $L$ 的最小值，对公式 20 中的 $w、b$ 求偏导（相当于对公式 6 的 $x、y$ 求偏导）：
+
+$$
+\nabla_w L(w,b,a)=w - \sum a_iy_iw_i=0 \rightarrow w=\sum a_iy_ix_i \tag{21}
+$$
+
+$$
+\nabla_b L(w,b,a)= -\sum a_iy_i=0 \rightarrow \sum a_iy_i=0 \tag{22}
+$$
+
+请注意，此时的 $x_i、y_i$ 不是变量，是样本值，可以看成是固定变量。
+
+公式 21、22 代回公式 20：
+
+$$
+L_{min(w,b)} = \underset{w,b}{\min} L(w,b,a)=-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 + \sum_{i=1}^n a_i \tag{23}
+$$
+
+接下来求公式 23 的极大值 $\underset{a}{max} L_{min(w,b)}$，两边都乘以-1，就把求极大值问题变为求极小值问题：
+
+$$
+L_{max(a)}=\underset{a}{\max} L_{min(w,b)} = - \underset{a}{\min} L_{min(w,b)} =\sum_{i=1}^n a_i-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 \tag{24}
+$$
+
+
+再对式 24 中的 $\alpha_i$ 求偏导，即可求得 $\alpha_i$ 的值。
+
+
 ### SVM
 
 针对 SVM 的优化问题：
 
 $$
 \begin{aligned}
-    &\min \ f(w,b)=\frac{1}{2}||w||^2
+    &\min \frac{1}{2}||w||^2
     \\\\
     & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0
 \end{aligned}
@@ -240,32 +367,11 @@ $$
 
 $$
 \begin{aligned}
-L(w,b,\alpha)&=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \boldsymbol{x_i} + b))
+L(w,b,\alpha)&=\frac{1}{2}||w||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \boldsymbol{x_i} + b))
 \\\\
 &=\frac{1}{2}||w||^2+\sum_{i=1}^n{(\alpha_i}-a_iy_i\boldsymbol{w} \boldsymbol{x_i} - a_iy_ib)
 \end{aligned}
 \tag{20}
-$$
-
-求 $w,b,\alpha_i$ 的偏导
-
-$$
-\nabla_w L=\boldsymbol{w}-\sum_{i=1}^na_iy_ix_i=0 \rightarrow \boldsymbol{w}=\sum_{i=1}^na_iy_ix_i \tag{21}
-$$
-$$
-\nabla_bL=-\sum_{i=1}^na_iy_i=0 \rightarrow \sum_{i=1}^na_iy_i=0 \tag{22}
-$$
-
-将式 21、22 代回式 20
-
-$$
-\begin{aligned}
-L(w,b,\alpha)&=\frac{1}{2}\boldsymbol{w}^T \boldsymbol{w}+\sum_{i=1}^na_i-\boldsymbol{w}^T \sum_{i=1}^na_iy_ix_i
-\\\\
-&=\frac{1}{2}(\sum_{i=1}^na_iy_ix_i)^2+\sum_{i=1}^na_i-\sum_{i=1}^na_iy_ix_i(\sum_{i=1}^na_iy_ix_i)
-\\\\
-&=\sum_{i=1}^na_i-\frac{1}{2}(\sum_{i=1}^na_iy_ix_i)^2
-\end{aligned}
 $$
 
 下面我们举例说明，见图 7。

@@ -133,7 +133,7 @@ $$
 
 两个约束不等式形成了两种情况：
 
-- 问题一：最优点在不等式的约束允许的区域内，但没有受到约束的影响
+- 问题一：原函数的最优解在不等式的约束允许的区域内，所以没有受到约束的影响
 
 约束不等式 1：$g_1(x,y)=x+y-1 \le 0$，从右子图看，既要求右上方的虚线的左下方的区域为约束允许的区域。
 
@@ -182,8 +182,15 @@ $$
 
 $$
 \begin{cases}
-    \nabla_xF=2x
+    \nabla_xF=2x+\alpha+2\beta xy=0
+    \\
+    \nabla_yF=2y-\alpha+\beta x^2
+    \\
+    \nabla_{\alpha}F=x-y-2=0
+    \\
+    \nabla_{\beta}F=x^2y-3=0
 \end{cases}
+\tag{12}
 $$
 
 ### KKT（Karush-Kuhn-Tucker）条件
@@ -195,12 +202,12 @@ $$
 
 所以两种情况都满足：
 $$
-\alpha g(x,y)=0 \tag{12}
+\alpha g(x,y)=0 \tag{13}
 $$
 
 由于 $g(x,y) \le 0$，如果 $\alpha<0$ 的话，则相当于 $\alpha g(x,y) \ge 0$，改变了不等号的方向，不满足拉格朗日乘子法的规则。所以要求：
 $$
-\alpha \ge 0 \tag{13}
+\alpha \ge 0 \tag{14}
 $$
 
 所以，所谓的 KTT 条件就是可以求解出最优解的必要条件是：
@@ -213,183 +220,11 @@ $$
     \\\\
     \alpha g(x,y)=0 \quad (从公式7得到)
 \end{cases}
-\tag{14}
+\tag{15}
 $$
-
-
-### SVM
-
-针对 SVM 的优化问题：
-
-$$
-\begin{aligned}
-    &\min \ f(w,b)=\frac{1}{2}||w||^2
-    \\\\
-    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0
-\end{aligned}
-\tag{19}
-$$
-
-我们使用拉格朗日乘子法解决。约束条件中有很多样本，而不是单一变量，此时可以对每个样本都看作是一个独立的不等式约束条件，所以需要在每个样本上都附加一个$\alpha_i$，则构造出的拉格朗日公式的原型为：
-
-$$
-L = f(x) + \alpha_1 g(x_1) + \alpha_2 g(x_2) + \cdots + \alpha_n g(x_n)=f(x) + \sum_{i=1}^{n} \alpha_i g(x_i)
-$$
-
-应用于 SVM 上：
-
-$$
-\begin{aligned}
-L(w,b,\alpha)&=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \boldsymbol{x_i} + b))
-\\\\
-&=\frac{1}{2}||w||^2+\sum_{i=1}^n{(\alpha_i}-a_iy_i\boldsymbol{w} \boldsymbol{x_i} - a_iy_ib)
-\end{aligned}
-\tag{20}
-$$
-
-求 $w,b,\alpha_i$ 的偏导
-
-$$
-\nabla_w L=\boldsymbol{w}-\sum_{i=1}^na_iy_ix_i=0 \rightarrow \boldsymbol{w}=\sum_{i=1}^na_iy_ix_i \tag{21}
-$$
-$$
-\nabla_bL=-\sum_{i=1}^na_iy_i=0 \rightarrow \sum_{i=1}^na_iy_i=0 \tag{22}
-$$
-
-将式 21、22 代回式 20
-
-$$
-\begin{aligned}
-L(w,b,\alpha)&=\frac{1}{2}\boldsymbol{w}^T \boldsymbol{w}+\sum_{i=1}^na_i-\boldsymbol{w}^T \sum_{i=1}^na_iy_ix_i
-\\\\
-&=\frac{1}{2}(\sum_{i=1}^na_iy_ix_i)^2+\sum_{i=1}^na_i-\sum_{i=1}^na_iy_ix_i(\sum_{i=1}^na_iy_ix_i)
-\\\\
-&=\sum_{i=1}^na_i-\frac{1}{2}(\sum_{i=1}^na_iy_ix_i)^2
-\end{aligned}
-$$
-
-下面我们举例说明，见图 7。
-
-<img src="./images/7.png" />
-
-<center>图 7 举例</center>
-
-样本
-
-|序号|$x_1$|$x_2$|标签 $y$|
-|--|--|--|--|
-|$p_1$|1|1|-1|
-|$p_2$|3|3|+1|
-|$p_3$|4|3|+1|
-
-优化目标为：
-
-$$
-\begin{aligned}
-    &\underset{w,b}{\min} f(w,b)=\frac{1}{2}||w||^2
-    \\\\
-    & s.t. \quad 1-(-1)(w_1+w_2+b) \le 0
-    \\\\
-    & \qquad \quad 1-(+1)(3w_1+3w_2+b) \le 0
-    \\\\
-    & \qquad \quad 1-(+1)(4w_1+3w_2+b) \le 0
-
-\end{aligned}
-\tag{20}
-$$
-
-还有一个附加条件，由公式 22 得知：
-
-$$
-\sum_{i=1}^n a_iy_i=a_1 \cdot (-1) + a_2 \cdot 1 + a_3 \cdot  1=0，即：a_1=a_2+a_3
-$$
-
-
-
-
-
-|内积计算|$x_1$|$x_2$|$x_3$|
-|--|--|--|--|
-|$x_1$|$(1 \quad 1) \cdot (1 \quad 1)^T=2$|$(1 \quad 1) \cdot (3 \quad 3)^T=6$|$(1 \quad 1) \cdot (4 \quad 3)^T=7$|
-|$x_2$|$(3 \quad 3) \cdot (1 \quad 1)^T=6$|$(3 \quad 3) \cdot (3 \quad 3)^T=18$|$(3 \quad 3) \cdot (4 \quad 3)^T=21$|
-|$x_3$|$(4 \quad 3) \cdot (1 \quad 1)^T=7$|$(4 \quad 3) \cdot (3 \quad 3)^T=21$|$(4 \quad 3) \cdot (4 \quad 3)^T=25$|
-
-
-$$
-\begin{aligned}
-L_{max(a)}&=\sum_{i=1}^n a_i-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 
-\\\\
-&=(a_1+a_2+a_3)-\frac{1}{2}(a_1y_1x_1+a_2y_2x_2+a_3y_3x_3)^2 \quad(带入y_i)
-\\\\ 
-&=(a_1+a_2+a_3)-\frac{1}{2}(-a_1x_1+a_2x_2+a_3x_3)^2
-\\\\
-&=(a_1+a_2+a_3)-\frac{1}{2}[a_1^2(x_1 \cdot x_1)+a_2^2(x_2 \cdot x_2)+a_3^2(x_3 \cdot x_3)
-\\\\
-&-2a_1a_2(x_1 \cdot x_2)-2a_1a_3(x_1 \cdot x_3)+2a_2a_3(x_2 \cdot x_3)]
-\\\\
-&=(a_1+a_2+a_3)-\frac{1}{2}(2a_1^2+18a_2^2+25a_3^2-12a_1a_2-14a_1a_3+42a_2a_3)
-\end{aligned}
-\tag{23}
-$$
-
-现在将 $a_1=a_2+a_3$ 带入式 23：
-
-$$
-L_{max(a)}=4a_2^2+6.5a_3^2+10a_2a_3-2a_2-2a_3 \tag{24}
-$$
-
-对式 24 分别求 $a_2、a_3$ 的偏导，并令结果等于 0：
-
-$$
-\begin{cases}
-\nabla_{a_2} L_{max(a)}=8a_2+10a_3-2=0
-\\\\
-\nabla_{a_3} L_{max(a)}=13a_3+10a_2-2=0
-\end{cases}
-\tag{25}
-$$
-
-解得：
-
-$$
-\begin{cases}
-    a_1=0.5
-    \\\\
-    a_2=1.5
-    \\\\
-    a_3=-1
-\end{cases}
-$$
-
-其中，$a_3=-1$ 违反了公式 8 的约定。我们看一下公式 24 的形态，运行 test.py 以得到图 10，同时输出打印信息如下：
-
-```
-左：a2=1.50, a3=-1.00, z=-0.50
-右：a2=0.25, a3=0.00, z=-0.25
-```
-
-<img src="./images/10.png" />
-
-<center>图 10 </center>
-
-
-
-图 10 的左子图，为 $a_2、a_3$ 在自由取值空间内的函数形态，极小值确实在 $(a_2=1.5,a_3=-1,z=-0.5)$ 上。由于公式 8 的约定，我们把 $a_2、a_3$ 的取值限制在 $(0,+\infin)$上，得到右子图的形态，可以看到极值点在$(a_2=0.25,a_3=0,z=-0.25)$ 上。
-
-我们也可以分别令 $a_2=0$ 和 $a_3=0$，来得到公式 24 的解：
-
-令 $a_2=0$，则 $L_{max(a)}=6.5a_3^2-2a_3，\nabla_{a_3} L_{max(a)}=13a_3-2=0，a_3=\frac{2}{13}，L_{max(a)}=-\frac{2}{13}$。
-
-令 $a_3=0$，则 $L_{max(a)}=4a_2^2-2a_2，\nabla_{a_2} L_{max(a)}=8a_2-2=0，a_2=\frac{1}{4}，L_{max(a)}=-\frac{1}{4}$。
-
-由于 $-\frac{1}{4} < -\frac{2}{13}$，为极小值，所以我们最终得到：
-
-$a_2=\frac{1}{4}，a_3=0，a_1=a_2+a_3=\frac{1}{4}$，极值为$-\frac{1}{4}$。
-
-继续解出$w$和$b$。
 
 
 ### 思考与练习
 
 1. 用拉格朗日乘子法解决公式 1 提出的问题。
-2. 
+2. 自己动手得出式 12 的解。

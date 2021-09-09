@@ -1,8 +1,8 @@
 https://zhuanlan.zhihu.com/p/154517678
 
-### SVM-4 对偶问题
+## SVM-4 对偶问题
 
-- 原始问题
+### 原始问题
   
 $$
 \begin{aligned}
@@ -12,6 +12,8 @@ $$
 \end{aligned}
 \tag{15}
 $$
+
+### 构造拉格朗日函数
 
 原始问题如公式 15 所示。按照前面的拉格朗日乘子法，先构造拉格朗日函数。但是式 15 中的约束条件与前面的例子不同，是与样本相关的，所以我们必须针对每个样本定义一个 $\alpha$ 来构造拉格朗日函数：
 
@@ -23,6 +25,10 @@ L(w,b,\alpha) &= f(w,b) + \alpha_1 g(x_1) + \alpha_2 g(x_2) + \cdots + \alpha_n 
 \end{aligned}
 \tag{16}
 $$
+
+假设如果有1000个样本的话，即 n=1000，我们就会有 $\alpha_1$ 到 $\alpha_{1000}$ 个乘子。
+
+### 极小极大问题
 
 取 $L(w,b,\alpha)$ 关于 $\alpha$ 的最大值，并记为 $P(w,b)$：
 
@@ -36,9 +42,10 @@ P(w,b)=\underset{\alpha}{\max} \ L(w,b,\alpha)=
 \tag{17}
 $$
 
-当样本点 $x_i,y_i$ 满足 $g(x_i)$ 的要求时，$P(w,b)$ 的值等于原函数 $f(w,b)$；当样本点不满足 $g(x_i)$ 的要求时，$P(w,b)$ 的值可以趋近于无穷大，没有限制。
+- 当样本点 $x_i,y_i$ 满足 $g(x_i)$ 的要求时，$P(w,b)$ 的值等于原函数 $f(w,b)$，因为 $P(w,b)$ 的值再怎么大也不可能超过原函数，所以取值范围应该和原函数一摸一样。
+- 当样本点不满足 $g(x_i)$ 的要求时，可以把乘子 $\alpha_i$ 设置为无穷的，这样$P(w,b)$ 的值可以趋近于无穷大，没有限制。
 
-进而对 $P(w,b)$ 取关于 $w,b$ 最小值，结果记为 $p^*$：
+现在确定了 $\alpha$ 的值，需要解决 $w,b$ 的问题了，对 $P(w,b)$ 取关于 $w,b$ 最小值，结果记为 $p^*$：
 
 $$
 p^* = \underset{w,b}{\min} \ P(w,b)=  \underset{w,b}{\min} \ [\underset{\alpha}{\max} \ L(w,b,\alpha)] = \underset{w,b}{\min} \ f(w,b)
@@ -46,6 +53,8 @@ p^* = \underset{w,b}{\min} \ P(w,b)=  \underset{w,b}{\min} \ [\underset{\alpha}{
 $$
 
 式 18 是我们要求的 SVM 问题的解，也被称为广义拉格朗日函数的**极小极大**问题。为什么要这么做呢？因为我们想用拉格朗日乘子法来解决问题。
+
+到此为止，$p^*$ 就是原始问题式 15 的解，但是式 18 不容易求解，因为在不加入 $\alpha$ 的约束的前提下求解 $w,b$ 的最小值，这个问题不容易做，所以我们接下来用对偶问题来彻底解决。
 
 ### 对偶问题
 
@@ -66,13 +75,19 @@ $$
 
 ### 二者关系
 
+很直接地，如图 xx 所示，在函数 $L(w,b,\alpha)$ 内部，关于一部分参数的最小值，一定处于该函数解空间内的底部区域；相反，关于另一部分参数的最大值，一定处于该函数解空间内的顶部区域。所以有：
+
 $$
-D(\alpha) = \underset{w,b}{\min} \ L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=P(w,b)
+D(\alpha) = \underset{w,b}{\min} \ L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=P(w,b) \tag{21}
 $$
+
+即：
 
 $$
 D(\alpha) \le P(x)
 $$
+
+如图 xx，在最小值区域里面的最大值，肯定要小于在最大值区域里面的最小值：
 
 $$
 \underset{\alpha}{\max}\ D(\alpha) \le \underset{w,b}{\min} \ P(w,b)

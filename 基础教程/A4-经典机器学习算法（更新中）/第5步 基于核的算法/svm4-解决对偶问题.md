@@ -2,6 +2,123 @@ https://zhuanlan.zhihu.com/p/154517678
 
 ### SVM-4 对偶问题
 
+- 原始问题
+  
+$$
+\begin{aligned}
+    &\underset{w,b}{\min} f(w,b)=\frac{1}{2}||w||^2
+    \\\\
+    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0 \quad \rightarrow g(x_i), i=1,...,n
+\end{aligned}
+\tag{15}
+$$
+
+原始问题如公式 15 所示。按照前面的拉格朗日乘子法，先构造拉格朗日函数。但是式 15 中的约束条件与前面的例子不同，是与样本相关的，所以我们必须针对每个样本定义一个 $\alpha$ 来构造拉格朗日函数：
+
+$$
+\begin{aligned}
+L(w,b,\alpha) &= f(w,b) + \alpha_1 g(x_1) + \alpha_2 g(x_2) + \cdots + \alpha_n g(x_n)
+\\\\
+&=f(w,b) + \sum_{i=1}^{n} \alpha_i g(x_i), \quad \alpha_i \ge 0
+\end{aligned}
+\tag{16}
+$$
+
+取 $L(w,b,\alpha)$ 关于 $\alpha$ 的最大值，并记为 $P(w,b)$：
+
+$$
+P(w,b)=\underset{\alpha}{\max} \ L(w,b,\alpha)=
+\begin{cases}
+    f(w,b), \qquad x \in 可行解区域内
+    \\
+    +\infin, \qquad x \in 可行解区域外
+\end{cases}
+\tag{17}
+$$
+
+当样本点 $x_i,y_i$ 满足 $g(x_i)$ 的要求时，$P(w,b)$ 的值等于原函数 $f(w,b)$；当样本点不满足 $g(x_i)$ 的要求时，$P(w,b)$ 的值可以趋近于无穷大，没有限制。
+
+进而对 $P(w,b)$ 取关于 $w,b$ 最小值，结果记为 $p^*$：
+
+$$
+p^* = \underset{w,b}{\min} \ P(w,b)=  \underset{w,b}{\min} \ [\underset{\alpha}{\max} \ L(w,b,\alpha)] = \underset{w,b}{\min} \ f(w,b)
+\tag{18}
+$$
+
+式 18 是我们要求的 SVM 问题的解，也被称为广义拉格朗日函数的**极小极大**问题。为什么要这么做呢？因为我们想用拉格朗日乘子法来解决问题。
+
+### 对偶问题
+
+令 $D(\alpha)$ 为 $L(w,b,\alpha)$ 关于 $w,b$ 的最小值：
+
+$$
+D(\alpha)= \underset{w,b}{\min} \ L(w,b,\alpha) \tag{19}
+$$
+
+再求 $D(\alpha)$ 关于 $\alpha$ 的最大值，并记为 $d^*$：
+
+$$
+d^*=\underset{\alpha}{\max} \ D(\alpha)= \underset{\alpha}{\max} \ [\underset{w,b}{\min} \ L(w,b,\alpha)] \tag{20}
+$$
+
+称为广义拉格朗日函数的**极大极小**问题。
+
+
+### 二者关系
+
+$$
+D(\alpha) = \underset{w,b}{\min} \ L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=P(w,b)
+$$
+
+$$
+D(\alpha) \le P(x)
+$$
+
+$$
+\underset{\alpha}{\max}\ D(\alpha) \le \underset{w,b}{\min} \ P(w,b)
+$$
+
+即：
+
+$$
+d^*=\underset{\alpha}{\max}[\underset{w,b}{\min} \ L(w,b,\alpha)] \le \underset{w,b}{\min}[\underset{\alpha}{\max} \ L(w,b,\alpha)]=p^*
+$$
+
+
+### 继续求解 SVM 问题
+
+现在求 $L$ 的最小值，对公式 20 中的 $w、b$ 求偏导（相当于对公式 6 的 $x、y$ 求偏导）：
+
+$$
+\nabla_w L(w,b,a)=w - \sum a_iy_iw_i=0 \rightarrow w=\sum a_iy_ix_i \tag{21}
+$$
+
+$$
+\nabla_b L(w,b,a)= -\sum a_iy_i=0 \rightarrow \sum a_iy_i=0 \tag{22}
+$$
+
+请注意，此时的 $x_i、y_i$ 不是变量，是样本值，可以看成是固定变量。
+
+公式 21、22 代回公式 20：
+
+$$
+L_{min(w,b)} = \underset{w,b}{\min} L(w,b,a)=-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 + \sum_{i=1}^n a_i \tag{23}
+$$
+
+接下来求公式 23 的极大值 $\underset{a}{max} L_{min(w,b)}$，两边都乘以-1，就把求极大值问题变为求极小值问题：
+
+$$
+L_{max(a)}=\underset{a}{\max} L_{min(w,b)} = - \underset{a}{\min} L_{min(w,b)} =\sum_{i=1}^n a_i-\frac{1}{2} (\sum_{i=1}^n a_iy_ix_i)^2 \tag{24}
+$$
+
+
+再对式 24 中的 $\alpha_i$ 求偏导，即可求得 $\alpha_i$ 的值。
+
+
+
+
+
+
 
 对式 24 分别求 $\alpha_2、\alpha_3$ 的偏导，并令结果等于 0：
 

@@ -1,6 +1,78 @@
 
 ## 解决分类间隔和支持向量问题
 
+
+### 继续求解 SVM 问题
+
+有了式 5.4.6，解题思路就清晰了。在 5.3 小节中，我们已经通过求 $w,b$ 的偏导，顺利地得到了 $D(\alpha)=\underset{w,b}{\min} L(w,b,a)$ 的部分，得到式 5.3.9。按照式 5.4.5 的定义，重新命名为：
+
+$$
+D(\alpha)=2\alpha_2 + 2\alpha_3 -(4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3) \tag{5.4.11}
+$$
+
+接下来求公式 5.4.6 的极大值 $d^*=\underset{\alpha}{\max} D(\alpha)$。求 $D(\alpha)$ 这个凹函数的极大值，等价于求 $-D(\alpha)$ 这个凸函数的极小值，所以对 $D(\alpha)$ 取负号得到：
+
+$$
+L_{min(\alpha)} = \underset{\alpha}{\max} \ D(\alpha) =\underset{\alpha}{\min} \ [-D(\alpha)]=4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3-2\alpha_2 - 2\alpha_3 \tag{5.4.12}
+$$
+
+求极小值的方法，我们前面实践过很多次了：对表达式式中的变量求偏导，再令结果为 0 即可。对式 5.4.12 分别求 $\alpha_2、\alpha_3$ 的偏导，并令结果等于 0：
+
+$$
+\begin{cases}
+\nabla_{\alpha_2} L_{min(\alpha)}=8\alpha_2+10\alpha_3-2=0
+\\\\
+\nabla_{\alpha_3} L_{min(\alpha)}=13\alpha_3+10\alpha_2-2=0
+\end{cases}
+\tag{5.4.13}
+$$
+
+解得：
+
+$$
+\begin{cases}
+    \alpha_1=\alpha_2 + \alpha_3=0.5 \quad (式 5.3.8)
+    \\\\
+    \alpha_2=1.5
+    \\\\
+    \alpha_3=-1
+\end{cases}
+$$
+
+其中，$\alpha_3=-1$ 违反了公式 5.4.2 关于 $\alpha_i \ge 0$ 的约定，这是为什么呢？因为从图 5.3.1 来看，样本 $p_3$ 好像不是关键点（支持向量），它不参与计算，所以 $\alpha_3$ 的值应该为 0。
+
+我们看一下公式 5.4.12 在三维空间中的形态来具体理解。运行 4-Lmin.py 以得到图 5.4.2，同时输出打印信息如下：
+
+```
+左：a2=1.50, a3=-1.00, z=-0.50
+右：a2=0.25, a3=0.00, z=-0.25
+```
+
+<img src="./images/5.4.2.png" />
+<center>图 5.4.2 </center>
+
+图 5.4.2 的左子图，为 $\alpha_2、\alpha_3$ 在自由取值空间内（用 [-2,2] 近似表示）的函数形态，极小值确实在 $(\alpha_2$=1.5, $\alpha_3$=-1, $z$=-0.5) 上。
+
+由于公式 5.4.2 的约定，我们把 $\alpha_2、\alpha_3$ 的取值限制在 $(0,+\infin)$上（用 [0,0.3] 近似表示），得到右子图的形态，右子图是左子图的一部分。可以看到极值点在 $(\alpha_2$=0.25, $\alpha_3$=0, $z$=-0.25) 上。
+
+我们也可以分别令 $\alpha_2=0$ 和 $\alpha_3=0$，来得到公式 5.4.12 的解：
+
+- 令 $\alpha_2=0$
+  
+  则 $L_{min(\alpha)}=6.5\alpha_3^2-2\alpha_3$，求导：$\nabla_{\alpha_3} L_{min(\alpha)}=13\alpha_3-2=0，\alpha_3=\frac{2}{13}，L_{min(\alpha)}=-\frac{2}{13}$。
+
+  注意，这里不要错误地令 $L_{min(\alpha)}=6.5\alpha_3^2-2\alpha_3=0$ 来求一元二次方程的解，因为我们是求函数极值，而不是求方程的解。
+
+- 令 $\alpha_3=0$
+
+    则 $L_{min(\alpha)}=4\alpha_2^2-2\alpha_2，\nabla_{\alpha_2} L_{min(\alpha)}=8\alpha_2-2=0，\alpha_2=\frac{1}{4}，L_{min(\alpha)}=-\frac{1}{4}$。
+
+由于 $-\frac{1}{4} < -\frac{2}{13}$，为极小值，所以我们最终得到：
+
+$\alpha_2=\frac{1}{4}，\alpha_3=0，\alpha_1=\alpha_2+\alpha_3=\frac{1}{4}$，极值为$-\frac{1}{4}$。
+
+
+
 ### 为什么有些 $\alpha$ 的值为 0 ?
 
 得到 $\alpha_i$ 值后，还没有结束，我们的最终目标是得到分界线和分类间隔的表达式，即求得 $w$ 和 $b$。但是在那之前，我们先看看为什么 $a_3=0$ ？

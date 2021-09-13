@@ -1,7 +1,6 @@
 
 ## 解决分类间隔和支持向量问题
 
-
 ### 继续求解 SVM 问题
 
 有了式 5.4.6，解题思路就清晰了。在 5.3 小节中，我们已经通过求 $w,b$ 的偏导，顺利地得到了 $D(\alpha)=\underset{w,b}{\min} L(w,b,a)$ 的部分，得到式 5.3.9。按照式 5.4.5 的定义，重新命名为：
@@ -10,7 +9,7 @@ $$
 D(\alpha)=2\alpha_2 + 2\alpha_3 -(4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3) \tag{5.4.11}
 $$
 
-接下来求公式 5.4.6 的极大值 $d^*=\underset{\alpha}{\max} D(\alpha)$。求 $D(\alpha)$ 这个凹函数的极大值，等价于求 $-D(\alpha)$ 这个凸函数的极小值，所以对 $D(\alpha)$ 取负号得到：
+接下来求公式 5.4.8 的极大值 $d^*=\underset{\alpha}{\max} D(\alpha)$。求 $D(\alpha)$ 这个凹函数的极大值，等价于求 $-D(\alpha)$ 这个凸函数的极小值，所以对 $D(\alpha)$ 取负号得到：
 
 $$
 L_{min(\alpha)} = \underset{\alpha}{\max} \ D(\alpha) =\underset{\alpha}{\min} \ [-D(\alpha)]=4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3-2\alpha_2 - 2\alpha_3 \tag{5.4.12}

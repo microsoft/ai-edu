@@ -64,9 +64,5 @@ def dual_max_min():
 
     plt.show()
 
-
-
-
-
 if __name__=="__main__":
     dual_max_min()

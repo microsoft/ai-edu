@@ -34,7 +34,7 @@ $$
 
 ### 为什么要学习对偶问题
 
-在很多情况下，我们会遇到很复杂的问题，求 $\underset{x}{\min}\ f(x)$ 不能不能象上面那样直接得到解，而是要通过得到对偶问题再来求解，而对偶问题的解与原始问题的解相同（或者非常接近）。
+在很多情况下，我们会遇到很复杂的问题，求 $\underset{x}{\min}\ f(x)$ 不能象上面那样直接得到解，而是要通过得到对偶问题再来求解，而对偶问题的解与原始问题的解相同（或者非常接近）。
 
 一般的步骤为：
 
@@ -42,19 +42,29 @@ $$
 2. 设定 $P(x)=\underset{\alpha;\alpha \ge 0}{\max} \ L(x,\alpha)$；
 3. 设定 $p^*=\underset{x}{\min}\ P(x)=\underset{x}{\min} [\underset{\alpha;\alpha \ge 0}{\max}\ L(x,\alpha)]$，此时 $p^*$ 是原始问题的解，但是不容易得到；
 4. 求 $D(\alpha) = \underset{x}{\min}\ L(x,\alpha)$；
-5. 求 $d^*=\underset{\alpha;\alpha \ge 0}{\max}\ D(\alpha)=\underset{\alpha;\alpha \ge 0}{\max} [\underset{x}{\min}\ L(x,\alpha)]$，此时 $d^*$ 是对偶问题的解，并且 $d^* \le p^*$。
+5. 求 $d^*=\underset{\alpha;\alpha \ge 0}{\max}\ D(\alpha)=\underset{\alpha;\alpha \ge 0}{\max} [\underset{x}{\min}\ L(x,\alpha)]$，此时 $d^*$ 是对偶问题的解且较容易得到，并且 $d^* \le p^*$。
 
-由于前者 $p^*$ 是通过极小极大得到的，而后者 $d^*$ 是通过极大极小得到的，成为镜像，所以叫做对偶问题。
+由于原始问题的 $p^*$ 是通过极小极大得到的，而后者 $d^*$ 是通过极大极小得到的，成为镜像，所以叫做对偶问题。
 
 为什么要指定 $\alpha \ge 0$ 呢？因为这是要简化问题，本来 $g(x) \le 0$，如果 $\alpha$ 可正可负的话，问题就会变得比较复杂。
 
-下面我们会用实例证明一下为什么 $d^* \le p^*$。
+下面我们会用实例说明一下原始问题和对偶问题的关系，以及为什么 $d^* \le p^*$。
 
 ### 求原始问题的极小极大值
 
-首先要证明 $p^*$ 是原始问题的解，即结果同 5.4.3。
+令 $P(x)$ 为 $L(x,\alpha)$ 关于 $\alpha$ 的极大值：
 
-先看看 $P(x)$ 是怎么得到的：固定一个 $x$ 值（假设为-1），用一系列的 $\alpha$ 值来计算 $L(-1,\alpha)$，就得到 $P(-1)$；然后再固定 $x$=-0.5，再用一系列的 $\alpha$ 值来计算 $L(-0.5,\alpha)$，就得到 $P(-0.5)$；...... 最后把这些 $P(-1)$,$P(-0.5)$,$P(0)$,$P(0.5)$......拼起来就是 $P(x)$。
+$$
+P(x)=\underset{\alpha;\alpha \ge 0}{\max} \ L(x,\alpha) \tag{5.4.4}
+$$
+
+式 5.4.4 的含义是，虽然 $L$ 有两个参数 $x, \alpha$，但是我们先在指定的若干 $x$ 上遍历 $\alpha$，确定当 $\alpha$ 为何值时 $L$ 的值最大。
+
+得到 $P(x)$ 的具体步骤：
+1. 固定一个 $x$ 值（假设为-1），用一系列的 $\alpha$ 值来计算 $L(-1,\alpha)$，就得到 $P(-1)$；
+2. 然后再固定 $x$=-0.5，再用一系列的 $\alpha$ 值来计算 $L(-0.5,\alpha)$，就得到 $P(-0.5)$；
+3. 在一定范围内重复以上过程...... 
+4. 最后把这些 $P(-1)$,$P(-0.5)$,$P(0)$,$P(0.5)$......拼成一条曲线就是 $P(x)$，曲线的横坐标是 $x$，纵坐标是 $L$ 的最大值。
 
 代码如下：
 
@@ -74,28 +84,33 @@ def draw_left_X_L(ax):
         l_xa = x*x - 2*x + 1 + A*(x-0.5)
         # 横坐标是 x, 纵坐标是函数值 L(x,a)，一条竖线
         line1, = ax.plot([x]*5, l_xa, color='y', marker='.')
+        # 保存所有竖线的坐标点到一个列表
         L.append(l_xa)
 
     # 绘制原函数 f(x)
     Y = X**2 - 2*X + 1
     line2, = ax.plot(X, Y, color='r')
     ax.legend(handles=[line1, line2], labels=[u'在给定的x上尝试不同的a', '原函数 f(x)'])
+
+    # 列表转换成矩阵，便于后面计算极小极大值
     L = np.array(L)
     return L, X
 ```
 为了简单起见，由于我们事先知道 $x=0.5,\alpha=1$ 是该问题的解，所以指定 $x$ 的遍历范围是 [-1,3]，$\alpha$ 的遍历范围是 [0,2]。
 
-这段代码绘制出图 5.4.1 中的左子图，横坐标是 $x$，纵坐标是函数 $L(x,\alpha)$，每一条竖线都表示一个指定的 $x$ 上 尝试的 5 个 $\alpha$ 值对应的 $L(x,\alpha)$ 值，这里 $x$ 是常数，$\alpha$ 是变量。红色曲线是原函数 $f(x)$。
+这段代码绘制出图 5.4.1 中的左子图，横坐标是 $x$，纵坐标是函数 $L(x,\alpha)$，**每一条竖线**都表示在一个指定的 $x$ 上尝试的 5 个 $\alpha$ 值对应的 $L(x,\alpha)$ 值，此时 $x$ 是常数，$\alpha$ 是变量。
+
+红色曲线是原函数 $f(x)$。
 
 <img src="./images/5-4-1.png" />
 
 <center>图 5.4.1 原始问题的极小极大值</center>
 
-下面要获得 $P(x)=\underset{\alpha}{\max} \ L(x,\alpha)$，观察左子图，就是要在 5 个不同的 $L$ 的数值中取最大的那个值。当然还可以取更多或更密集的 $\alpha$ 值来做试验。
+下面要获得 $P(x)$，观察左子图，就是要在每条竖线上的 5 个不同 $\alpha$ 的点中取最大的那个值，就是 $\underset{\alpha}{\max} L$。当然还可以取更多或更密集的 $\alpha$ 值来做试验。
 
-取最大值用矩阵计算比较方便，所以我们把上面代码中的 L 显示在表 5.4.1 中（选取了其中的 9 行数据），并在最后一列得到当前行中的最大值。
+取最大值用矩阵计算比较方便，所以我们把上面代码中的 L 显示在表 5.4.1 中（选取了其中的 9 行数据），并在最后一列得到当前行中的最大值。用黑体显示了当前行中的最大值，斜体表示取出来的结果（最后一列）。
 
-表 5.4.1 
+表 5.4.1 不同的 $\alpha$ 在给定的 $x$ 上的 $L$ 值
 
 ||$\alpha$=0|$\alpha$=0.5|$\alpha$=1|$\alpha$=1.5|$\alpha$=2|$P(x)=\underset{\alpha}{\max} \ L(x,\alpha)$|
 |--|--|--|--|--|--|--|
@@ -115,9 +130,15 @@ def draw_left_X_L(ax):
 # P(x) = max_a L(x,a)
 max_a = np.max(L, axis=1)
 ```
-在表 5.4.1 中，用黑体显示了当前行中的最大值，斜体表示取出来的结果（最后一列）。
 
-再看图 5.4.1 中的右侧子图：
+我们把得到的 max_a 值（一个列表）用下面的代码绘制在图 5.4.1 中的右侧子图中，因为 x 取值范围是 start=-1，stop=3，step=41，所以序号 15 正好在 x=0.5 的点上：
+
+```Python
+# x <= 0.5
+ax.plot(X[0:15], max_a[0:15], color='r', marker='o', label='$P(x)=max_a \ L(x,a), x <= 0.5$')
+# x > 0.5
+ax.plot(X[15:], max_a[15:], color='r', linestyle=':', label='$P(x)=max_a \ L(x,a), x > 0.5$')
+```
 
 - 其中的红色带圆点的曲线，就是表 5.4.1 中的最大值，可以看到它完全与原函数重合，但是它位于 $x \le 0.5$的区域。
 - 红色虚线的曲线，也是由表 5.4.1 中的最大值所构成，但是它位于 $x \gt 0.5$ 的区域。它超过了原函数的值域，随着 $\alpha$ 值的增加，会越来越大。
@@ -131,16 +152,16 @@ P(x)=\underset{\alpha}{\max} \ L(x,\alpha)=\underset{\alpha}{\max} [f(x)+\alpha 
     \\\\
     +\infin, \quad x \in 限定区域外
 \end{cases}
-\tag{5.4.4}
+\tag{5.4.5}
 $$
 
-- 当样本点 $x$ 满足 $g(x)$ 的要求时，因为 $g(x) \le 0, \alpha \le 0$，所以 $\alpha g(x) \le 0$，则 $L(x,\alpha) \le f(x)+\alpha g(x)$。所以$P(x)$ 的值不可能超过原函数，最大值等于原函数 $f(x)$。
+- 当样本点 $x$ 满足 $g(x)$ 的要求时，因为 $g(x) \le 0, \alpha \le 0$，所以 $\alpha g(x) \le 0$，则 $L(x,\alpha) \le f(x)+\alpha g(x)$。所以$L(x,\alpha)$ 的值不可能超过原函数，最大值等于原函数 $f(x)$。
 - 当样本点不满足 $g(x)$ 的要求时，随着乘子 $\alpha$ 的值增加，$L(x,\alpha)$ 可以越来越大，这样$P(x)$ 的值可以趋近于无穷大，没有限制。
 
 现在确定了 $P(x)$ 的函数形态，对 $P(x)$ 取关于 $x$ 的极小值，结果记为 $p^*$：
 
 $$
-p^* = \underset{x}{\min} \ P(x)=  \underset{x}{\min} \ [\underset{\alpha}{\max} \ L(x,\alpha)] = \underset{x}{\min} \ f(x)
+p^* = \underset{x}{\min} \ P(x)
 \tag{5.4.6}
 $$
 
@@ -158,6 +179,14 @@ p* = min_x P(x) = 0.25
 x = 0.5
 ```
 
+可以看到 $p^*$ 的结果和式 5.4.3 的结果一致，所以有一般性推论：
+
+
+$$
+p^* = \underset{x}{\min} \ P(x)=  \underset{x}{\min} \ [\underset{\alpha}{\max} \ L(x,\alpha)] = \underset{x}{\min} \ f(x)
+\tag{5.4.7}
+$$
+
 这种针对不同参数先求最大再求最小的方法，也被称为广义拉格朗日函数的**极小极大**问题。
 
 
@@ -168,10 +197,10 @@ x = 0.5
 令 $D(\alpha)$ 为 $L(x,\alpha)$ 关于 $x$ 的最小值：
 
 $$
-D(\alpha)= \underset{x}{\min} \ L(x,\alpha) \tag{5.4.7}
+D(\alpha)= \underset{x}{\min} \ L(x,\alpha) \tag{5.4.8}
 $$
 
-为了求得式 5.4.7 中的值，我们先给出一个固定的 $\alpha$ 值，在上面计算所有可能的 $x$ 值，并绘制出来。
+为了求得式 5.4.8 中的值，我们先给出一个固定的 $\alpha$ 值，在上面计算所有可能的 $x$ 值，并绘制出图形来帮助理解：
 
 ``` Python
 def draw_left_A_L(ax):
@@ -189,6 +218,7 @@ def draw_left_A_L(ax):
         l_xa = X*X - 2*X + 1 + a*(X-0.5)
         # 横坐标是 a, 纵坐标是函数值 L(x,a)，一条竖线
         line1, = ax.plot([a]*num_x, l_xa, marker='.', color='y')
+        # 保存竖线坐标值到列表
         L.append(l_xa)
 
     ax.legend(handles=[line1], labels=[u'在给定的a上尝试不同的x'])
@@ -199,11 +229,11 @@ def draw_left_A_L(ax):
 
 <img src="./images/5-4-2.png" />
 
-<center>图 5.4.2 对偶问题</center>
+<center>图 5.4.2 对偶问题的极大极小值</center>
 
-与左子图对应的数据见表 5.4.2，为了节省篇幅，表中只保留了关键数据，不影响准确性。
+与左子图对应的数据见表 5.4.2，为了节省篇幅，表中只保留了关键数据，不影响准确性。请注意，由于是对偶问题，先后顺序不同，所以表 5.4.2 中的行列定义与表 5.4.1 正好相反。
 
-表 5.4.2
+表 5.4.2 不同的 $x$ 在给定的 $\alpha$ 上的 $L$ 值
 
 ||x=0|x=0.25|x=0.5|x=0.75|x=1|x=1.25|x=1.5|x=1.75|x=2|$D(\alpha)= \underset{x}{\min} \ L(x,\alpha)$|
 |-------|----|--------|------|--------|------|--------|------|------|---|--|
@@ -213,15 +243,32 @@ def draw_left_A_L(ax):
 |$\alpha$=2.0|**0**|0.0625|0.25|0.5625|1| 1.5625 | 2.25 |3.0625|4|*0*|
 |$\alpha$=3.0|**-0.5**|-0.1875|0.25|0.8125|1.5|2.3125|3.25|4.3125|5.5|*-0.5*|
 
-然后获得每条竖线上（$\alpha$）的 $L$ 的最小值，可以用 min_x=np.min(L, axis=1) 获得，得到的结果放在表 5.4.2 的最后一列。
+然后获得每条竖线上（$\alpha$）的 $L$ 的最小值，代码如下：
 
-再求 $D(\alpha)$ 关于 $\alpha$ 的最大值，并记为 $d^*$：
+``` Python
+# D(a) = min_x L(x,a)
+min_x=np.min(L, axis=1)
+```
+得到的结果放在表 5.4.2 的最后一列，并在图 5.4.2 的右子图中用红色线绘出：
+
+```Python
+# draw D(a)
+ax.plot(A, min_x, label='$D(a) = min_x \ L(x,a)$', color='r', marker='o')
+```
+
+下一步求 $D(\alpha)$ 关于 $\alpha$ 的最大值，并记为 $d^*$：
 
 $$
-d^*=\underset{\alpha}{\max} \ D(\alpha)= \underset{\alpha}{\max} \ [\underset{x}{\min} \ L(x,\alpha)] \tag{5.4.8}
+d^*=\underset{\alpha}{\max} \ D(\alpha) \tag{5.4.9}
 $$
 
-用代码 max_a = np.max(min_x) 即可获得。最后的打印输出是：
+用下面的代码即可获得：
+
+```Python
+max_a = np.max(min_x)
+``` 
+
+最后的打印输出是：
 
 ```
 D(a) = min_x L(x,a) = [-0.75 -0.3125 0 0.1875 0.25 0.1875 0 -0.25 -0.5]
@@ -229,52 +276,47 @@ d* = max_a D(a) = 0.25
 a = 1.0
 ```
 
-
 式 5.4.8 称为广义拉格朗日函数的**极大极小**问题。
 
-
-
-
-
-
-
-
+到此为止，我们得到了以下值：$\alpha=1, p^*=d^*=0.25, x=0.5$，与式 5.4.3 的结果完全相同。
 
 
 ### 原始问题和对偶问题的关系
 
-<img src="./images/5.4.1.png" />
+<img src="./images/5-4-3.png" />
 
 <center>图 5.4.1 对偶问题</center>
 
-很直接地，如图 5.4.1 的左子图所示：
-- 在函数 $L(w,b,\alpha)$ 内部，关于一部分参数的最小值 $D(\alpha)$（式 5.4.5），一定处于该函数解空间内的底部区域；
-- 相反，关于另一部分参数的最大值 $P(w,b)$（式 5.4.3），一定处于该函数解空间内的顶部区域。
+很直接地，如图 5.4.3 的左子图所示：
+- 在函数 $L(x,\alpha)$ 内部，关于一部分参数的最小值 $D(\alpha)$（式 5.4.8），一定处于该函数解空间内的底部区域；
+- 相反，关于另一部分参数的最大值 $P(x)$（式 5.4.4），一定处于该函数解空间内的顶部区域。
 
-为什么 $D(\alpha)$ 是一个区域而不是一个点呢？因为 $D(\alpha)= \underset{w,b}{\min} \ L(w,b,\alpha)$ 只确定了 $w,b$，而没有确定 $\alpha$，即 $\alpha$ 是个变量，$\alpha$ 取不同的值，$D(\alpha)$ 也会跟着变化。所以 $D(\alpha)$ 是一个区域。同理可知 $P(w,b)$ 也是一个区域。图中用虚线圆形来表示，只是个示意图。
+为什么 $D(\alpha)$ 是一个区域而不是一个点呢？因为 $D(\alpha)= \underset{x}{\min} \ L(x,\alpha)$ 只确定了 $x$，而没有确定 $\alpha$，即 $\alpha$ 是个变量，$\alpha$ 取不同的值，$D(\alpha)$ 也会跟着变化，所以 $D(\alpha)$ 是一个区域。具体见图 5.4.2 的右子图（此例中是一条曲线）。
+
+同理可知 $P(x)$ 也是一个区域，具体见图 5.4.1 的右子图（此例中是一条曲线）。
 
 所以有：
 
 $$
-D(\alpha) = \underset{w,b}{\min} \ L(w,b,\alpha) \le L(w,b,\alpha) \le \underset{\alpha}{\max} L(w,b,\alpha)=P(w,b) \tag{5.4.7}
+D(\alpha) = \underset{x}{\min} \ L(x,\alpha) \le L(x,\alpha) \le \underset{\alpha}{\max} L(x,\alpha)=P(x) \tag{5.4.10}
 $$
 
 即：
 
 $$
-D(\alpha) \le P(w,b)  \tag{5.4.8}
+D(\alpha) \le P(w,b)  \tag{5.4.11}
 $$
 
 进一步可以推断，在最小值区域里面的最大值，肯定要小于在最大值区域里面的最小值：
 
 $$
-d^*=\underset{\alpha}{\max}\ D(\alpha) \le \underset{w,b}{\min} \ P(w,b)=p^* \tag{5.4.9}
+d^*=\underset{\alpha}{\max}\ D(\alpha) \le \underset{w,b}{\min} \ P(w,b)=p^* \tag{5.4.12}
 $$
 
 即：
 
 $$
-d^*=\underset{\alpha}{\max}[\underset{w,b}{\min} \ L(w,b,\alpha)] \le \underset{w,b}{\min}[\underset{\alpha}{\max} \ L(w,b,\alpha)]=p^*  \tag{5.4.10}
+d^* \le p^*  \tag{5.4.10}
 $$
 
 所以，我们求得了对偶问题的解 $d^*$，就相当于求得了原问题的解 $p^*$，而且前者比后者要更容易得到。
@@ -283,3 +325,4 @@ $$
 
 ### 思考与练习
 
+当然还可以取更多或更密集的 \alphaα 值来做试验。

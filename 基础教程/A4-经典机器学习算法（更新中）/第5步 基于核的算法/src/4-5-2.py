@@ -17,7 +17,7 @@ def draw_left_A_L(ax):
     for a in A:
         l_xa = X*X - 2*X + 1 + a*(X-0.5)
         # 横坐标是 a, 纵坐标是函数值 L(x,a)，一条竖线
-        line1, = ax.plot([a]*num_x, l_xa, marker='.', color='y')
+        line1, = ax.plot([a]*num_x, l_xa, marker='.', color='y', linestyle=':')
         L.append(l_xa)
 
     ax.legend(handles=[line1], labels=[u'在给定的a上尝试不同的x'])

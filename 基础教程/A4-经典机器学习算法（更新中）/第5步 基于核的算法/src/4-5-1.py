@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-def draw_left_X_L(ax):
+def draw_left_X_L(ax, flag='left'):
     num_alpha = 5
     num_x = 41
     L = []
@@ -17,18 +17,20 @@ def draw_left_X_L(ax):
     for x in X:
         l_xa = x*x - 2*x + 1 + A*(x-0.5)
         # 横坐标是 x, 纵坐标是函数值 L(x,a)，一条竖线
-        line1, = ax.plot([x]*5, l_xa, color='y', marker='.')
+        line1, = ax.plot([x]*5, l_xa, color='y', marker='.', linestyle=':')
         L.append(l_xa)
 
-    # 绘制原函数 f(x)
-    Y = X**2 - 2*X + 1
-    line2, = ax.plot(X, Y, color='r')
-    ax.legend(handles=[line1, line2], labels=[u'在给定的x上尝试不同的a', '原函数 f(x)'])
+    if (flag == 'left'):
+        # 绘制原函数 f(x)
+        Y = X**2 - 2*X + 1
+        line2, = ax.plot(X, Y, color='r')
+        ax.legend(handles=[line1, line2], labels=[u'在给定的x上尝试不同的a', '原函数 f(x)'])
+
     L = np.array(L)
     return L, X
 
 def draw_right_X_L(ax):
-    L, X = draw_left_X_L(ax)
+    L, X = draw_left_X_L(ax, 'right')
 
     print(L)
     # P(x) = max_a L(x,a)
@@ -40,7 +42,9 @@ def draw_right_X_L(ax):
     
     idx = np.argmin(max_a)
     print("x =",X[idx])
+    # x <= 0.5
     ax.plot(X[0:15], max_a[0:15], color='r', marker='o', label='$P(x)=max_a \ L(x,a), x <= 0.5$')
+    # x > 0.5
     ax.plot(X[15:], max_a[15:], color='r', linestyle=':', label='$P(x)=max_a \ L(x,a), x > 0.5$')
     ax.scatter(X[idx], min_x, s=50, color='r')
     ax.text(X[idx], min_x + 0.2, 'p*', fontsize=16)

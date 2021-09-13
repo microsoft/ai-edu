@@ -83,7 +83,7 @@ def draw_left_X_L(ax):
     for x in X:
         l_xa = x*x - 2*x + 1 + A*(x-0.5)
         # 横坐标是 x, 纵坐标是函数值 L(x,a)，一条竖线
-        line1, = ax.plot([x]*5, l_xa, color='y', marker='.')
+        line1, = ax.plot([x]*num_alpha, l_xa, color='y', marker='.')
         # 保存所有竖线的坐标点到一个列表
         L.append(l_xa)
 
@@ -129,6 +129,8 @@ def draw_left_X_L(ax):
 ```
 # P(x) = max_a L(x,a)
 max_a = np.max(L, axis=1)
+[out] 
+P(x) = max_a L(x,a) = [4. 2.25 1. 0.25 1. 2.25 4. 6.25 9.]
 ```
 
 我们把得到的 max_a 值（一个列表）用下面的代码绘制在图 5.4.1 中的右侧子图中，因为 x 取值范围是 start=-1，stop=3，step=41，所以序号 15 正好在 x=0.5 的点上：
@@ -325,4 +327,5 @@ $$
 
 ### 思考与练习
 
-当然还可以取更多或更密集的 \alphaα 值来做试验。
+1. 在图 5.4.1 中，$\alpha$ 的取值范围为 [0,2]。如果改为 [-1,2] 的话，会是什么效果？$P(x)$ 曲线还是当前这样的吗？
+2. 表 5.4.1 和表 5.4.2 的行列定义为什么相反？

@@ -14,7 +14,7 @@ https://zhuanlan.zhihu.com/p/154517678
 $$
 \underset{x,y}{\min} f(x,y)=x^2+y^2
 \\\\
-s.t.\quad x+y+2=0
+s.t.\quad x+y+2=0 \qquad \rightarrow h(x,y)
 \tag{5.2.1}
 $$
 
@@ -47,9 +47,9 @@ $$
 
 结果如图 5.2.1，红色曲线为函数 $f(x,y)$ 与约束平面 $h(x,y)=x+y+2=0$ 的相交线，红色圆点为极值点。此处可以运行 LagrangeF1.py 来观察实际效果。
 
-注意，$g(x,y)$ 约束条件其实只是 $x/y$ 平面上的一条直线，我们把它“提升”成为一个平面，这样就和 $f(x,y)$ 形成相交，便于读者理解。
+注意，$h(x,y)$ 约束条件其实只是 $x/y$ 平面上的一条直线，我们把它“提升”成为一个立平面，这样就和 $f(x,y)$ 形成相交，便于读者理解。
 
-还有一种错误的理解是把 $h(x,y)=x+y+2=0$ 看成 $h(x,y)=x+y+2$，相当于 $z=x+y+2$，这就变成了一个三维空间中的斜面，与 $f(x,y)$ 的底部相交形成一个倾斜的椭圆，也可以求极值点。但是和原来的约束条件完全是两个不同的问题。
+有一种错误的理解是把 $h(x,y)=x+y+2=0$ 看成 $z=x+y+2$，这就变成了一个三维空间中的斜面，与 $f(x,y)$ 的底部相交形成一个倾斜的椭圆，也可以求极值点。但是和原来的约束条件完全是两个不同的问题。
 
 - 拉格朗日乘子法
 
@@ -69,7 +69,7 @@ $$
 
 $$
 \begin{aligned}
-    & V(x,y,z) = xyz
+    & f(x,y,z) = xyz
     \\\\
     & s.t. \quad 2xy+2xz+2yz-s^2=0
 \end{aligned}
@@ -79,18 +79,18 @@ $$
 构造拉格朗日函数：
 
 $$
-F(x,y,z,\alpha)=V(x,y,z)+\alpha h(x,y,z)=xyz+\alpha(2xy+2xz+2yz-s^2) \tag{5.2.6}
+L(x,y,z,\alpha)=f(x,y,z)+\alpha h(x,y,z)=xyz+\alpha(2xy+2xz+2yz-s^2) \tag{5.2.6}
 $$
 
 $$
 \begin{cases}
-    \nabla_x F(x,y,z,\alpha)=yz+2\alpha(y+z)=0
+    \nabla_x L(x,y,z,\alpha)=yz+2\alpha(y+z)=0
     \\\\
-    \nabla_y F(x,y,z,\alpha)=xz+2\alpha(x+z)=0
+    \nabla_y L(x,y,z,\alpha)=xz+2\alpha(x+z)=0
     \\\\
-    \nabla_z F(x,y,z,\alpha)=xy+2\alpha(x+y)=0
+    \nabla_z L(x,y,z,\alpha)=xy+2\alpha(x+y)=0
     \\\\
-    \nabla_{\alpha} F(x,y,z,\alpha)=2xy+2xz+2yz-s^2=0
+    \nabla_{\alpha} L(x,y,z,\alpha)=2xy+2xz+2yz-s^2=0
 \end{cases}
 \tag{5.2.7}
 $$
@@ -108,7 +108,7 @@ $$
 \begin{aligned}
 &\underset{x,y}{\min} f(x,y)=x^2+y^2
 \\\\
-&s.t.\quad x+y-1 \le 0 \quad \rightarrow g(x,y)
+&s.t.\quad x+y-1 \le 0 \quad \rightarrow g_1(x,y)
 \end{aligned}
 \tag{5.2.8}
 $$
@@ -119,7 +119,7 @@ $$
 \begin{aligned}
 &\underset{x,y}{\min} f(x,y)=x^2+y^2
 \\\\
-&s.t.\quad x+y+2 \le 0 \quad \rightarrow g(x,y)
+&s.t.\quad x+y+2 \le 0 \quad \rightarrow g_2(x,y)
 \end{aligned}
 \tag{5.2.9}
 $$
@@ -140,7 +140,7 @@ $$
 可以使用**广义拉格朗日函数**求解不等式约束问题：
 
 $$
-F(x,y,\alpha)=f(x,y)+\alpha g_1(x,y) \tag{5.2.10}
+L(x,y,\alpha)=f(x,y)+\alpha g_1(x,y) \tag{5.2.10}
 $$
 
 求 $x,y,\alpha$ 的偏导并令其为 0，解出：$\alpha=-1,x=0.5,y=0.5,f(0.5,0.5)=0.5$。
@@ -154,7 +154,7 @@ $$
 这种情况下，由于原函数是个凸函数，越靠近原点越优，所以最优解应该在约束的边界上，而不是远离约束边界的允许区域内。这就相当于等式约束，那么就依然可以用上面的拉格朗日乘子法来求解：
 
 $$
-F(x,y,\alpha)=f(x,y)+\alpha g_2(x,y) \tag{5.2.11}
+L(x,y,\alpha)=f(x,y)+\alpha g_2(x,y) \tag{5.2.11}
 $$
 
 求 $x,y,\alpha$ 的偏导并令其为 0，解出：$\alpha=2,x=-1,y=-1,f(-1,-1)=2$。
@@ -175,28 +175,28 @@ $$
 此时构造拉格朗日函数如：
 
 $$
-F(x,y,\alpha,\beta)=f(x,y)+\alpha g(x,y)+\beta h(x,y) \tag{5.2.13}
+L(x,y,\alpha,\beta)=f(x,y)+\alpha g(x,y)+\beta h(x,y) \tag{5.2.13}
 $$
 
 然后分别求 $x、y、\alpha、\beta$ 的偏导数并令其为 0，联立 4 项等式方程组即可。
 
 $$
 \begin{cases}
-    \nabla_xF=2x+\alpha+2\beta xy=0
+    \nabla_x L=2x+\alpha+2\beta xy=0
     \\
-    \nabla_yF=2y-\alpha+\beta x^2
+    \nabla_y L=2y-\alpha+\beta x^2
     \\
-    \nabla_{\alpha}F=x-y-2=0
+    \nabla_{\alpha} L=x-y-2=0
     \\
-    \nabla_{\beta}F=x^2y-3=0
+    \nabla_{\beta} L=x^2y-3=0
 \end{cases}
 \tag{5.2.14}
 $$
 
 ### KKT（Karush-Kuhn-Tucker）条件
 
-综合不等式优化中的两个问题的两种情况考虑：
-- 第一种情况相当于在公式 9 中的 $\alpha=0$，即没有约束，此时 $\alpha g(x,y)=0$ 项没有影响，直接求原函数的最优解即可。
+综合不等式优化中的两种情况考虑：
+- 第一种情况相当于在公式 5.2.10 中的 $\alpha=0$，即没有约束，此时 $\alpha g(x,y)=0$ 项没有影响，直接求原函数的最优解即可。
 
 - 第二种情况虽然是不等式，但是最优解在边界上，所以相当于等式约束，即 $g(x,y)=0$，而非 $g(x,y) \le 0$。此时无论 $\alpha$ 为何值，都有 $\alpha g(x,y)=0$。
 

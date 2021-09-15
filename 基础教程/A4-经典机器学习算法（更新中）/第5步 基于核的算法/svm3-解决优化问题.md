@@ -51,86 +51,111 @@ $$
 约束条件中有很多样本，而不是单一变量，此时可以对每个样本都看作是一个独立的不等式约束条件，所以需要在每个样本上都附加一个 $\alpha_i$，则构造出的拉格朗日公式的原型为：
 
 $$
-L = f(x) + \alpha_1 g(x_1) + \alpha_2 g(x_2) + \cdots + \alpha_n g(x_n)=f(x) + \sum_{i=1}^{n} \alpha_i g(x_i)
+L = f(x) + \alpha_1 g(x_1) + \alpha_2 g(x_2) + \cdots + \alpha_n g(x_n)=f(x) + \sum_{i=1}^{n} \alpha_i g(x_i), \quad a_i \ge 0
 $$
 
 所以式 5.3.2 可以写成：
 
 $$
-\begin{aligned}
-L(w,b,\alpha)&=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \boldsymbol{x_i} + b))
-\\\\
-&=\frac{1}{2}||w||^2+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w}\sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i
-\end{aligned}
+L(w,b,\alpha)=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \boldsymbol{x_i} + b)), \quad a_i \ge 0
 \tag{5.3.3}
 $$
 
-### 求最小值
-
-按照拉格朗日函数的一般解法，求原始变量对函数的偏导数，并令其结果为 0。在本例中，原始变量是 $w,b$，所以我们求 $L$ 对 $w,b$ 的偏导：
+下面用式 5.3.2 的具体数值对式 5.3.3 进行实例化：
 
 $$
-\nabla_w L=\boldsymbol{w}-\sum_{i=1}^n\alpha_iy_ix_i=0 \rightarrow \boldsymbol{w}=\sum_{i=1}^n\alpha_iy_ix_i \tag{5.3.4}
-$$
-$$
-\nabla_bL=-\sum_{i=1}^n\alpha_iy_i=0 \rightarrow \sum_{i=1}^n\alpha_iy_i=0 \tag{5.3.5}
+L(w,b,\alpha)=\frac{1}{2}(w_1^2+w_2^2)+\alpha_1(1+w_1+w_2+b)+\alpha_2(1-3w_1-3w_2-b)+\alpha_3(1-4w_1-3w_2-b) \tag{5.3.4}
 $$
 
-将式 5.3.4、5.3.5 代回式 5.3.3，把第 1、3 项的 $\boldsymbol{w}$ 替换，消掉第 4 项（值为 0），即得到 $L$ 关于 $w,b$ 的最小值表达式：
+按照拉格朗日函数的标准解法，分别求式 5.3.4 对 $w_1,w_2,b,\alpha_1,\alpha_2,\alpha_3$ 的偏导，得到联立方程组 5.3.5：
 
 $$
-\begin{aligned}
-\underset{w,b}{\min} \ L(w,b,\alpha)&=\frac{1}{2} \left(\sum_{i=1}^n\alpha_iy_ix_i \right)^2+\sum_{i=1}^n\alpha_i- \left(\sum_{i=1}^n\alpha_iy_ix_i \right) \left(\sum_{i=1}^n\alpha_iy_ix_i \right)
+\begin{cases}
+\nabla_{w_1} L=w_1+\alpha_1-3\alpha_2-4\alpha_3=0
 \\\\
-&=\sum_{i=1}^n\alpha_i-\frac{1}{2}(\sum_{i=1}^n\alpha_iy_ix_i)^2
-\end{aligned}
+\nabla_{w_2} L=w_2+\alpha_1-3\alpha_2-3\alpha_3=0
+\\\\
+\nabla_{b} L=\alpha_1-\alpha_2-\alpha_3=0
+\\\\
+\nabla_{\alpha_1} L=1+w_1+w_2+b=0
+\\\\
+\nabla_{\alpha_2} L=1-3w_1-3w_2-b=0
+\\\\
+\nabla_{\alpha_3} L=1-4w_1-3w_2-b=0
+\end{cases}
+\tag{5.3.5}
+$$
+
+解方程组（过程请读者自己推导以获得真实感受），得到：
+
+
+$$
+\begin{cases}
+    \alpha_1=0.5, \alpha_2=1.5, \alpha_3=-1
+    \\\\
+    w_1=0, w_2=1, b=-2
+\end{cases}
 \tag{5.3.6}
 $$
 
-到这里，式 5.3.6 中已经没有 $w,b$ 了，注意 $x_i,y_i$ 是样本数据，不是变量，所以只需要面对 $\alpha_i$。
+根据式 5.3.6 的结果，再根据式 5.1.11 的定义，得到分界线的直线方程是：$x_2-2=0$。绘制在图 5.3.2 中。
 
-### 实例推导
+<img src="./images/5-3-2.png" />
+<center>图 5.3.2 分类结果</center>
 
-我们把样本实例表 5.3.1 中的数据代入式 5.3.6：
+与图 5.3.1 中的最优解比较，分类间隔要小很多，并非我们想要的结果。错在哪里呢？
+
+仔细看计算结果中，有 $\alpha_3=-1$，不满足是 5.3.3 中关于 $\alpha_i \ge 0$ 的要求。如果$\alpha_3=0$ 的话，则点 $p_3$ 将不会参与到分类间隔的计算中，那么式 5.3.2 将会简化为：
 
 $$
 \begin{aligned}
-\underset{w,b}{\min} \ L(w,b,\alpha)&=\sum_{i=1}^n \alpha_i-\frac{1}{2} (\sum_{i=1}^n \alpha_iy_ix_i)^2 
-\\\\
-&=(\alpha_1+\alpha_2+\alpha_3)-\frac{1}{2}(\alpha_1y_1x_1+\alpha_2y_2x_2+\alpha_3y_3x_3)^2 \quad(带入y_i的值)
-\\\\ 
-&=(\alpha_1+\alpha_2+\alpha_3)-\frac{1}{2}(-\alpha_1x_1+\alpha_2x_2+\alpha_3x_3)^2 \quad(展开平方项)
-\\\\
-&=(\alpha_1+\alpha_2+\alpha_3)-\frac{1}{2} [ \alpha_1^2(x_1 \cdot x_1)+\alpha_2^2(x_2 \cdot x_2)+\alpha_3^2(x_3 \cdot x_3)
-\\\\
-& \quad -2\alpha_1\alpha_2(x_1 \cdot x_2)-2\alpha_1\alpha_3(x_1 \cdot x_3)+2\alpha_2\alpha_3(x_2 \cdot x_3) ] \quad(代入x的内积计算结果)
-\\\\
-&=(\alpha_1+\alpha_2+\alpha_3)-\frac{1}{2}(2\alpha_1^2+18\alpha_2^2+25\alpha_3^2-12\alpha_1\alpha_2-14\alpha_1\alpha_3+42\alpha_2\alpha_3)
+    &\underset{w,b}{\min} \ f(w,b)=\frac{1}{2}||w||^2
+    \\\\
+    & s.t. \quad 1-(-1)(w_1+w_2+b) \le 0
+    \\\\
+    & \qquad \ 1-(+1)(3w_1+3w_2+b) \le 0
 \end{aligned}
 \tag{5.3.7}
 $$
 
-其中，($x_i \cdot x_j$) 的内积计算结果如表 5.3.2 所示。
-
-表 5.3.2 内积计算结果
-
-|内积计算|$x_1$|$x_2$|$x_3$|
-|--|--|--|--|
-|$x_1$|$(1 \ 1) \cdot (1 \ 1)^T=2$|$(1 \ 1) \cdot (3 \ 3)^T=6$|$(1 \ 1) \cdot (4 \ 3)^T=7$|
-|$x_2$|$(3 \ 3) \cdot (1 \ 1)^T=6$|$(3 \ 3) \cdot (3 \ 3)^T=18$|$(3 \ 3) \cdot (4 \ 3)^T=21$|
-|$x_3$|$(4 \ 3) \cdot (1 \ 1)^T=7$|$(4 \ 3) \cdot (3 \ 3)^T=21$|$(4 \ 3) \cdot (4 \ 3)^T=25$|
-
-
-还有一个附加条件，由式 5.3.5 得知：
+进一步，式 5.3.4 将简化为：
 
 $$
-\sum_{i=1}^n \alpha_iy_i=\alpha_1 \cdot (-1) + \alpha_2 \cdot 1 + \alpha_3 \cdot 1=0，即：\alpha_1=\alpha_2+\alpha_3 \tag{5.3.8}
+L(w,b,\alpha)=\frac{1}{2}(w_1^2+w_2^2)+\alpha_1(1+w_1+w_2+b)+\alpha_2(1-3w_1-3w_2-b) \tag{5.3.8}
 $$
 
-带入式 5.3.7，消掉 $\alpha_1$：
+求各因子的偏导：
 
 $$
-\underset{w,b}{\min} \ L(w,b,\alpha)=2\alpha_2 + 2\alpha_3 -(4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3) \tag{5.3.9}
+\begin{cases}
+\nabla_{w_1} L=w_1+\alpha_1-3\alpha_2=0
+\\\\
+\nabla_{w_2} L=w_2+\alpha_1-3\alpha_2=0
+\\\\
+\nabla_{b} L=\alpha_1-\alpha_2=0
+\\\\
+\nabla_{\alpha_1} L=1+w_1+w_2+b=0
+\\\\
+\nabla_{\alpha_2} L=1-3w_1-3w_2-b=0
+\end{cases}
+\tag{5.3.9}
 $$
 
-得到式 5.3.9 后，我们暂时失去了求解目标，因为不知道下面要做什么了。 $\alpha_2,\alpha_3$ 如何求解呢？这就需要用到拉格朗日对偶问题了，我们在下一小节中学习。
+最后解得：
+
+$$
+\begin{cases}
+    \alpha_1=0.25, \alpha_2=0.25, \alpha_3=0
+    \\\\
+    w_1=0.5, w_2=0.5, b=-2
+\end{cases}
+\tag{5.3.10}
+$$
+
+这与图 5.3.1 中的理想情况一摸一样。
+
+根据这个实际例子，我们可以得到一些初步的经验：
+
+1. 拉格朗日乘子法确实可以解决这种优化问题。
+2. 不是所有的样本都参与到分类间隔计算中，只有那些关键样本点才参与计算，这些样本点就叫做支持向量。不参与计算的样本点的 $\alpha_i=0$。
+3. 所有负类样本点的 $\alpha_i$ 值之和，等于所有正类样本点的 $\alpha_i$ 值之和，即 $\alpha_1=\alpha_2+\alpha_3$。

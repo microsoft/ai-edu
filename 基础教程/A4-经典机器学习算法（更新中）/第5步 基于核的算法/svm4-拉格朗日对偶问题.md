@@ -38,15 +38,13 @@ $$
 
 一般的步骤为：
 
-1. 给原始的约束问题 $f(x)$ 构造拉格朗日函数 $L(x,\alpha)$；
-2. 设 $P(x)=\underset{\alpha;\alpha \ge 0}{\max} \ L(x,\alpha)$；
-3. 设 $p^*=\underset{x}{\min}\ P(x)=\underset{x}{\min} [\underset{\alpha;\alpha \ge 0}{\max}\ L(x,\alpha)]$，此时 $p^*$ 是原始问题的解，但是不容易得到；
-4. 求 $D(\alpha) = \underset{x}{\min}\ L(x,\alpha)$；
-5. 求 $d^*=\underset{\alpha;\alpha \ge 0}{\max}\ D(\alpha)=\underset{\alpha;\alpha \ge 0}{\max} [\underset{x}{\min}\ L(x,\alpha)]$，此时 $d^*$ 是对偶问题的解且较容易得到，并且 $d^* \le p^*$。
+1. 给原始的约束问题 $f(x), g(x)$ 构造拉格朗日函数 $L(x,\alpha)=f(x)+\alpha g(x)$；
+2. 设 $P(x)=\underset{\alpha;\alpha \ge 0}{\max} \ L(x,\alpha)$，但并不求解；
+3. 设 $p^*=\underset{x}{\min}\ P(x)=\underset{x}{\min} [\underset{\alpha;\alpha \ge 0}{\max}\ L(x,\alpha)]$，此时 $p^*$ 是原始问题的解，但是不容易得到，所以并不求解；
+4. 设 $D(\alpha) = \underset{x}{\min}\ L(x,\alpha)$，并求解；
+5. 设 $d^*=\underset{\alpha;\alpha \ge 0}{\max}\ D(\alpha)=\underset{\alpha;\alpha \ge 0}{\max} [\underset{x}{\min}\ L(x,\alpha)]$，并求解。此时 $d^*$ 是对偶问题的解且较容易得到，并且 $d^* \le p^*$。
 
-由于原始问题的 $p^*$ 是通过极小极大得到的，而后者 $d^*$ 是通过极大极小得到的，成为镜像，所以叫做对偶问题。
-
-为什么要指定 $\alpha \ge 0$ 呢？因为这是要简化问题，本来 $g(x) \le 0$，如果 $\alpha$ 可正可负的话，问题就会变得比较复杂。
+由于原始问题的 $p^*$ 是通过先求极大值再求极小值得到的，而后者 $d^*$ 是通过先求极小值再求极大值得到的，两者成为镜像，所以叫做对偶问题。
 
 下面我们会用实例说明一下原始问题和对偶问题的关系，以及为什么 $d^* \le p^*$。
 
@@ -161,7 +159,7 @@ P(x)=\underset{\alpha;\alpha \ge 0}{\max} \ L(x,\alpha)=\underset{\alpha;\alpha 
 \tag{5.4.5}
 $$
 
-- 当样本点 $x$ 满足 $g(x)$ 的要求时，因为 $g(x) \le 0, \alpha \le 0$，所以 $\alpha g(x) \le 0$，则 $L(x,\alpha) \le f(x)+\alpha g(x)$。所以$L(x,\alpha)$ 的值不可能超过原函数，最大值等于原函数 $f(x)$。
+- 当样本点 $x$ 满足 $g(x)$ 的要求时，因为 $g(x) \le 0, \alpha \ge 0$，所以 $\alpha g(x) \le 0$，则 $L(x,\alpha) \le f(x)+\alpha g(x)$。所以$L(x,\alpha)$ 的值不可能超过原函数，最大值等于原函数 $f(x)$。这也是要求 $\alpha \ge 0$ 的原因。
 - 当样本点不满足 $g(x)$ 的要求时，随着乘子 $\alpha$ 的值增加，$L(x,\alpha)$ 可以越来越大，这样$P(x)$ 的值可以趋近于无穷大，没有限制。
 
 现在确定了 $P(x)$ 的函数形态，对 $P(x)$ 取关于 $x$ 的极小值，结果记为 $p^*$：
@@ -336,7 +334,7 @@ $$
 d^* \le p^*  \tag{5.4.10}
 $$
 
-所以，我们求得了对偶问题的解 $d^*$，就相当于求得了原问题的解 $p^*$，而且前者比后者要更容易得到。
+所以，我们求得了对偶问题的解 $d^*$，就相当于求得了原问题的解 $p^*$。
 
 图 5.4.1 的左子图叫做弱对偶，强对偶的情况如右子图所示，即 $d^*=p^*$。这里的符号 $d、p$ 也用得很有讲究，因为 $d$ 颠倒过来就是 $p$，但对偶问题更像是水中的倒影（镜像）问题。$d$ 向上，表示最后要求极大值；$p$ 向下，表示最后要求极小值。
 

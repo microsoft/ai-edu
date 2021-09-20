@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 def draw_left_A_L(ax):
-    num_alpha = 9
-    num_x = 9
+    num_alpha = 17
+    num_x = 17
     L = []
     # X 共 9 个等间距 x
     X = np.linspace(0,2,num_x)

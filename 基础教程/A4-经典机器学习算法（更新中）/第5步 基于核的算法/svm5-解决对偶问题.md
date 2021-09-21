@@ -1,6 +1,6 @@
 https://zhuanlan.zhihu.com/p/154517678
 
-##  解决对偶问题
+## 解决对偶问题
 
 ### 原始问题
 
@@ -35,24 +35,66 @@ $$
 按照拉格朗日函数的一般解法，求原始变量对函数的偏导数，并令其结果为 0。在本例中，原始变量是 $w,b$，所以我们求 $L$ 对 $w,b$ 的偏导：
 
 $$
-\nabla_w L=\boldsymbol{w}-\sum_{i=1}^n\alpha_iy_ix_i=0 \rightarrow \boldsymbol{w}=\sum_{i=1}^n\alpha_iy_ix_i \tag{5.5.4}
-$$
-$$
-\nabla_bL=-\sum_{i=1}^n\alpha_iy_i=0 \rightarrow \sum_{i=1}^n\alpha_iy_i=0 \tag{5.5.5}
+\begin{aligned}
+\nabla_w L&=\nabla_w(\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w}\sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i)
+\\\\
+&=\boldsymbol{w}+0-\sum_{i=1}^n\alpha_iy_ix_i-0 
+\\\\
+&=\boldsymbol{w}-\sum_{i=1}^n\alpha_iy_ix_i
+\end{aligned}
+\tag{5.5.4}
 $$
 
-将式 5.5.4、5.5.5 代回式 5.5.2，把第 1、3 项的 $w$ 替换，消掉第 4 项（值为 0），即得到 $L$ 关于 $w,b$ 的最小值表达式：
+令式 5.5.4 的结果为 0，可得：
+
+$$
+\boldsymbol{w}-\sum_{i=1}^n\alpha_iy_ix_i=0 \rightarrow \boldsymbol{w}=\sum_{i=1}^n\alpha_iy_ix_i 
+\tag{5.5.5}
+$$
+
+计算 $L$ 对 $b$ 的偏导数：
 
 $$
 \begin{aligned}
-D(\alpha) = \underset{w,b}{\min} \ L(w,b,\alpha)&=\frac{1}{2} \left(\sum_{i=1}^n\alpha_iy_ix_i \right)^2+\sum_{i=1}^n\alpha_i- \left(\sum_{i=1}^n\alpha_iy_ix_i \right) \left(\sum_{i=1}^n\alpha_iy_ix_i \right)
+\nabla_bL&=\nabla_b(\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w}\sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i)
 \\\\
-&=\sum_{i=1}^n\alpha_i-\frac{1}{2}(\sum_{i=1}^n\alpha_iy_ix_i)^2
+&=0+0-0-\sum_{i=1}^n\alpha_iy_i
+\\\\
+&=-\sum_{i=1}^n\alpha_iy_i
 \end{aligned}
 \tag{5.5.6}
 $$
 
-到这里，式 5.5.6 中已经没有 $w,b$ 了。注意 $x_i,y_i$ 是样本数据，不是变量，所以后面只需要面对 $\alpha_i$ 求解了。
+令式 5.5.6 的结果为 0，可得：
+
+$$
+\sum_{i=1}^n\alpha_iy_i=0 \tag{5.5.7}
+$$
+
+将式 5.5.5、5.5.7 代回式 5.5.2，把第 1、3 项的 $w$ 替换，消掉第 4 项（值为 0），即得到 $L$ 无关于 $w,b$ 的表达式。此时，由于已经把偏导为 0 的结果代入了，所以不再是原始的 $L(w,b,\alpha)$ 的表达式，而是最小值表达式，定义为 $D(\alpha)$：
+
+$$
+\begin{aligned}
+D(\alpha)&=\underset{w,b}{\min}\ L(w,b,\alpha)
+\\\\
+&=\frac{1}{2} \left(\sum_{i=1}^n\alpha_iy_ix_i \right)^2+\sum_{i=1}^n\alpha_i- \left(\sum_{i=1}^n\alpha_iy_ix_i \right) \left(\sum_{i=1}^n\alpha_iy_ix_i \right)
+\\\\
+&=\sum_{i=1}^n\alpha_i-\frac{1}{2}(\sum_{i=1}^n\alpha_iy_ix_i)^2
+\\\\
+&=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i \alpha_j y_i y_j (x_i \cdot x_j)
+\end{aligned}
+\tag{5.5.8}
+$$
+
+到这里，式 5.5.8 中已经没有 $w,b$ 了。注意 $x_i,y_i$ 是样本数据，不是变量，所以后面只需要面对 $\alpha_i$ 求解了。
+
+从式 5.5.8 的第 3 行到第 4 行推导看不懂的读者，可以用实例化推导的方法帮助理解，即简单地令 n=2，展开第 3 行，然后再展开第 4 行，可以得到同样的表达式如下：
+
+$$
+\alpha_1+\alpha_2-\frac{1}{2}[\alpha_1 \alpha_1 y_1 y_1 (x_1 \cdot x_1) + \alpha_2 \alpha_2 y_2 y_2 (x_2 \cdot x_2) + 2 \alpha_1 \alpha_2 y_1 y_2 (x_1 \cdot x_2)]
+$$
+
+由于 $x_i$ 是一个矢量，所以两个 $x$ 相乘时，应该是第一个 $x$ 乘以第二个 $x$ 的转置，$x_i x_j^T$，即内积计算 $(x_i \cdot x_j)$。
 
 ### 实例推导
 
@@ -72,7 +114,7 @@ D(\alpha) &=\sum_{i=1}^n \alpha_i-\frac{1}{2} (\sum_{i=1}^n \alpha_iy_ix_i)^2
 \\\\
 &=(\alpha_1+\alpha_2+\alpha_3)-\frac{1}{2}(2\alpha_1^2+18\alpha_2^2+25\alpha_3^2-12\alpha_1\alpha_2-14\alpha_1\alpha_3+42\alpha_2\alpha_3)
 \end{aligned}
-\tag{5.5.7}
+\tag{5.5.9}
 $$
 
 其中，($x_i \cdot x_j$) 的内积计算结果如表 5.5.2 所示。
@@ -81,39 +123,42 @@ $$
 
 |内积|$x_1$|$x_2$|$x_3$|
 |--|--|--|--|
-|$x_1$|$(1 \ 1) \cdot (1 \ 1)^T=2$|$(1 \ 1) \cdot (3 \ 3)^T=6$|$(1 \ 1) \cdot (4 \ 3)^T=7$|
-|$x_2$|$(3 \ 3) \cdot (1 \ 1)^T=6$|$(3 \ 3) \cdot (3 \ 3)^T=18$|$(3 \ 3) \cdot (4 \ 3)^T=21$|
-|$x_3$|$(4 \ 3) \cdot (1 \ 1)^T=7$|$(4 \ 3) \cdot (3 \ 3)^T=21$|$(4 \ 3) \cdot (4 \ 3)^T=25$|
+|$x_1$|$(1,1) \cdot (1,1)^T=2$|$(1,1) \cdot (3,3)^T=6$|$(1,1) \cdot (4,3)^T=7$|
+|$x_2$|$(3,3) \cdot (1,1)^T=6$|$(3,3) \cdot (3,3)^T=18$|$(3,3) \cdot (4,3)^T=21$|
+|$x_3$|$(4,3) \cdot (1,1)^T=7$|$(4,3) \cdot (3,3)^T=21$|$(4,3) \cdot (4,3)^T=25$|
 
 
-还有一个附加条件，由式 5.5.5 得知：
+还有一个附加条件，由式 5.5.7 得知：
 
 $$
-\sum_{i=1}^n \alpha_iy_i=\alpha_1 \cdot (-1) + \alpha_2 \cdot 1 + \alpha_3 \cdot 1=0，即：\alpha_1=\alpha_2+\alpha_3 \tag{5.5.8}
+\sum_{i=1}^n \alpha_iy_i=\alpha_1 \cdot (-1) + \alpha_2 \cdot 1 + \alpha_3 \cdot 1=0，即：\alpha_1=\alpha_2+\alpha_3 \tag{5.5.10}
 $$
 
 带入式 5.5.7，消掉 $\alpha_1$：
 
 $$
-D(\alpha)=2\alpha_2 + 2\alpha_3 -(4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3) \tag{5.5.9}
+D(\alpha)=2\alpha_2 + 2\alpha_3 -(4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3) \tag{5.5.11}
 $$
+
+到目前为止，$D(\alpha)$ 就是对偶问题的内层最小值表达式了，从形式上看，它是一个凹函数。
 
 ### 求对偶问题的外层极大值
 
 接下来求极大值：
 $$
-d^*=\underset{\alpha;\alpha \ge 0}{\max} D(\alpha)
+d^*=\underset{\alpha;\alpha \ge 0}{\max} D(\alpha) 
+\tag{5.5.12}
 $$
 
 求 $D(\alpha)$ 这个凹函数的极大值，等价于求 $[-D(\alpha)]$ 这个凸函数的极小值，所以对 $D(\alpha)$ 取负号得到：
 
 $$
--D(\alpha)=4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3-2\alpha_2 - 2\alpha_3 \tag{5.5.10}
+-D(\alpha)=4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3-2\alpha_2 - 2\alpha_3 \tag{5.5.13}
 $$
 
 求极小值的方法，我们前面实践过很多次了：对表达式式中的变量求偏导，再令结果为 0 即可。
 
-对式 5.5.10 分别求 $\alpha_2、\alpha_3$ 的偏导，并令结果等于 0：
+对式 5.5.13 分别求 $\alpha_2、\alpha_3$ 的偏导，并令结果等于 0：
 
 $$
 \begin{cases}
@@ -121,38 +166,38 @@ $$
 \\\\
 \nabla_{\alpha_3} [-D(\alpha)]=13\alpha_3+10\alpha_2-2=0
 \end{cases}
-\tag{5.5.11}
+\tag{5.5.14}
 $$
 
 解得：
 
 $$
 \begin{cases}
-    \alpha_1=\alpha_2 + \alpha_3=0.5 \quad (式 5.5.8)
-    \\\\
     \alpha_2=1.5
     \\\\
     \alpha_3=-1
+    \\\\
+    \alpha_1=\alpha_2 + \alpha_3=0.5 \quad (根据式 5.5.10)
 \end{cases}
 $$
 
 其中，$\alpha_3=-1$ 违反了公式 5.4.5 关于 $\alpha_i \ge 0$ 的约定，这是为什么呢？因为从图 5.3.1 来看，样本 $p_3$ 不是关键点（支持向量），它不参与计算，所以 $\alpha_3$ 的值应该为 0。
 
-我们看一下公式 5.5.10 在三维空间中的形态来具体理解。运行 4-Lmin.py 以得到图 5.5.2，同时输出打印信息如下：
+我们看一下公式 5.5.13 在三维空间中的形态来具体理解。运行 5-5-1.py 以得到图 5.5.2，同时输出打印信息如下：
 
 ```
-左：a2=1.50, a3=-1.00, z=-0.50
-右：a2=0.25, a3=0.00, z=-0.25
+left: a2=1.50, a3=-1.00, d*=-0.50
+right: a2=0.25, a3=0.00, d*=-0.25
 ```
 
 <img src="./images/5.4.2.png" />
 <center>图 5.5.2 </center>
 
-图 5.5.2 的左子图，为 $\alpha_2、\alpha_3$ 在自由取值空间内（用 $[-2,2]$ 近似表示）的函数形态，极小值确实在 $(\alpha_2=1.5, \alpha_3=-1, z=-0.5)$ 上。
+图 5.5.2 的左子图，为 $\alpha_2、\alpha_3$ 在自由取值空间内（用 $[-2,2]$ 近似表示）的函数形态，极小值确实在 $(\alpha_2=1.5, \alpha_3=-1, d^*=-0.5)$ 上。
 
-由于公式 5.4.5 的约定，我们把 $\alpha_2、\alpha_3$ 的取值限制在 $(0,+\infin)$上（用 $[0,0.3]$ 近似表示），得到右子图的形态。右子图是左子图的一部分，可以看到极值点在 $(\alpha_2=0.25, \alpha_3=0, z=-0.25)$ 上。
+由于公式 5.4.5 的约定，我们把 $\alpha_2、\alpha_3$ 的取值限制在 $(0,+\infin)$上（用 $[0,0.3]$ 近似表示），得到右子图的形态。右子图是左子图的一部分，可以看到极值点在 $(\alpha_2=0.25, \alpha_3=0, d^*=-0.25)$ 上。
 
-我们也可以分别令 $\alpha_2=0$ 和 $\alpha_3=0$，来得到公式 5.5.10 的解：
+我们也可以分别令 $\alpha_2=0$ 和 $\alpha_3=0$，来得到公式 5.5.12 的解：
 
 - 令 $\alpha_2=0$
   
@@ -173,7 +218,7 @@ $\alpha_2=\frac{1}{4}，\alpha_3=0，\alpha_1=\alpha_2+\alpha_3=\frac{1}{4}$，$
 
 接下来求 $\boldsymbol{w}$ 的值。
 
-根据式 5.5.4，有：$\boldsymbol{w}=\sum_{i=1}^n\alpha_iy_i \boldsymbol{x}_i$。注意，由于 $\boldsymbol{x}_i$ 是一个向量，所以最后的 $\boldsymbol{w}$ 也是个向量，在本例中是一个二维的向量。
+根据式 5.5.5，有：$\boldsymbol{w}=\sum_{i=1}^n\alpha_iy_i \boldsymbol{x}_i$。注意，由于 $\boldsymbol{x}_i$ 是一个向量，所以最后的 $\boldsymbol{w}$ 也是个向量，在本例中是一个二维的向量。
 
 我们先在表 5.5.3 中列出目前的中间结果。
 
@@ -191,9 +236,9 @@ $$
 \begin{aligned}
 \boldsymbol{w} &= a_1 y_1 \boldsymbol{x}_1 + a_2 y_2 \boldsymbol{x}_2 + a_3 y_3 \boldsymbol{x}_3
 \\\\
-&=0.25*(-1)*(1 \ 1)+0.25*1*(3 \ 3)+0*1*(4 \ 3)
+&=0.25*(-1)*(1,1)+0.25*1*(3,3)+0*1*(4,3)
 \\\\
-&=(-0.25 \ -0.25)+(0.75 \ 0.75)=(0.5 \ 0.5)
+&=(-0.25,-0.25)+(0.75,0.75)=(0.5,0.5)
 \end{aligned}
 $$
 
@@ -231,16 +276,16 @@ $$
 
 我们分别用 $p_1$ 和 $p_2$ 两个支持向量验证：
 
-- 负类样本 $p_1$
+- 负类样本 $p_1(1,1)$
   
 $$
-b=\frac{1}{-1} - (0.5 \ 0.5)(1 \ 1)^T=(-1)-1=-2
+b=\frac{1}{-1} - (0.5,0.5)(1,1)^T=(-1)-1=-2
 $$
 
-- 正类样本 $p_2$
+- 正类样本 $p_2(3,3)$
 
 $$
-b=\frac{1}{1} - (0.5 \ 0.5)(3 \ 3)^T=1-3=-2
+b=\frac{1}{1} - (0.5,0.5)(3,3)^T=1-3=-2
 $$
 
 所以可以确定最终的 $b=-2$。
@@ -250,10 +295,10 @@ $$
 有了 $\boldsymbol{w}$ 和 $b$ 后，可以得到分界线方程为：
 
 $$
-f(\boldsymbol{x}) = \boldsymbol{w} \boldsymbol{x} + b = 0.5x_1+0.5x_2-2=0 \tag{5.5.15}
+\boldsymbol{w} \boldsymbol{x} + b = 0.5x_1+0.5x_2-2=0 \tag{5.5.15}
 $$
 
-从式 5.1.4 可知，正类样本位于分界线上方，都应该大于 0；而负类样本位于分界线下方，都应该小于 0。对应到 $f(x)$ 的值为正数或者负数。但是分类结果只有 1 和 -1，不管具体数值是多少，所以有分类决策函数为：
+从式 5.1.4 可知，正类样本位于分界线上方，$f(x)$ 都应该大于 0；而负类样本位于分界线下方，$f(x)$ 都应该小于 0。但是分类结果只有 1 和 -1，而不管具体数值是多少，所以有分类决策函数为：
 
 $$
 f(\boldsymbol{x})=sign(\boldsymbol{w} \boldsymbol{x}+b) \tag{5.5.16}

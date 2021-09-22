@@ -25,3 +25,4 @@ s.t. & \quad \sum_{i=1}^n\alpha_iy_i=0
 $$
 
 
+1998年，John Platt发布了一个称为SMO的强大算法用于训练SVM。

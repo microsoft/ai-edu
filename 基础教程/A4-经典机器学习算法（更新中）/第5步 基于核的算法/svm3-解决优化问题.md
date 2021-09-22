@@ -113,11 +113,11 @@ $$
 
 $$
 \begin{aligned}
-    &\underset{w,b}{\min} \ f(w,b)=\frac{1}{2}||w||^2
+    \underset{w,b}{\min} & \ f(w,b)=\frac{1}{2}||w||^2
     \\\\
-    & s.t. \quad 1-(-1)(w_1+w_2+b) \le 0
+    s.t. & \ 1-(-1)(w_1+w_2+b) \le 0
     \\\\
-    & \qquad \ 1-(+1)(3w_1+3w_2+b) \le 0
+    & \ 1-(+1)(3w_1+3w_2+b) \le 0
 \end{aligned}
 \tag{5.3.8}
 $$

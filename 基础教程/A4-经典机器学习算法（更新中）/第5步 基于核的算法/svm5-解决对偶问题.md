@@ -6,9 +6,9 @@ https://zhuanlan.zhihu.com/p/154517678
 
 $$
 \begin{aligned}
-    &\min \ f(w,b)=\frac{1}{2}||\boldsymbol{w}||^2
+    \underset{w,b}{\min} & \ f(w,b)=\frac{1}{2}||\boldsymbol{w}||^2
     \\\\
-    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0, \quad i=1,...,n
+    s.t. & \ 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0, \quad i=1,...,n
 \end{aligned}
 \tag{5.5.1}
 $$
@@ -98,7 +98,7 @@ $$
 
 ### 实例推导
 
-我们把样本实例表 5.3.1 中的数据代入式 5.5.6：
+我们把样本实例表 5.3.1 中的数据代入式 5.5.8：
 
 $$
 \begin{aligned}
@@ -134,7 +134,7 @@ $$
 \sum_{i=1}^n \alpha_iy_i=\alpha_1 \cdot (-1) + \alpha_2 \cdot 1 + \alpha_3 \cdot 1=0，即：\alpha_1=\alpha_2+\alpha_3 \tag{5.5.10}
 $$
 
-带入式 5.5.7，消掉 $\alpha_1$：
+带入式 5.5.9，消掉 $\alpha_1$：
 
 $$
 D(\alpha)=2\alpha_2 + 2\alpha_3 -(4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3) \tag{5.5.11}
@@ -250,20 +250,20 @@ $$
 
 $$
 \begin{cases}
-\boldsymbol{w}\boldsymbol{x_i}+b = +1, \quad y_i=+1（正类样本）
+\boldsymbol{w}\boldsymbol{x_i}+b = +1, & y_i=+1（正类样本）
 \\\\
-\boldsymbol{w}\boldsymbol{x_i}+b = -1, \quad  y_i=-1（负类样本）
+\boldsymbol{w}\boldsymbol{x_i}+b = -1, &  y_i=-1（负类样本）
 \end{cases}
 \tag{5.5.12}
 $$
 
-即样本点距离分界线的距离正好是 1 或 -1。把式 5.5.1 中的两种情况，两边都乘以对应的 $y_i$，得到：
+即样本点距离分界线的距离正好是 1 或 -1。把式 5.5.12 中的两种情况，两边都乘以对应的 $y_i$，得到：
 
 $$
 \begin{cases}
-1 \cdot (\boldsymbol{w}\boldsymbol{x_i}+b) = 1 \cdot 1, \quad y_i=+1（正类样本）
+1 \cdot (\boldsymbol{w}\boldsymbol{x_i}+b) = 1 \cdot 1, &  y_i=+1（正类样本）
 \\\\
-(-1) \cdot (\boldsymbol{w}\boldsymbol{x_i}+b) = (-1) \cdot (-1), \quad  y_i=-1（负类样本）
+(-1) \cdot (\boldsymbol{w}\boldsymbol{x_i}+b) = (-1) \cdot (-1), &  y_i=-1（负类样本）
 \end{cases}
 \tag{5.5.13}
 $$
@@ -274,6 +274,13 @@ $$
 b = \frac{1}{y_i}-\boldsymbol{w} \boldsymbol{x}_i \tag{5.5.14}
 $$
 
+如果在把式 5.5.14 中的 $i$ 重命名为 $j$（避免和 $\boldsymbol{w}$ 表达式中的 $i$ 冲突），两端都乘以 $y_j^2$(=1)，并把式 5.5.5 的 $\boldsymbol{w}$ 代入，可以得到：
+
+$$
+b=y_j - (\sum_{i=1}^n \alpha_i y_i x_i) x_j=y_j - \sum_{i=1}^n \alpha_i y_i (x_i \cdot x_j)   \tag{5.5.15}
+$$
+
+
 我们分别用 $p_1$ 和 $p_2$ 两个支持向量验证：
 
 - 负类样本 $p_1(1,1)$
@@ -281,6 +288,7 @@ $$
 $$
 b=\frac{1}{-1} - (0.5,0.5)(1,1)^T=(-1)-1=-2
 $$
+
 
 - 正类样本 $p_2(3,3)$
 
@@ -325,3 +333,4 @@ $$
 
 ### 思考与练习
 
+1. 用式 5.5.15 验算 $b$ 的值。

@@ -8,9 +8,9 @@ https://zhuanlan.zhihu.com/p/154517678
   
 $$
 \begin{aligned}
-    &\underset{x}{\min} f(x)=x^2-2x+1
+    \underset{x}{\min}\ & f(x)=x^2-2x+1
     \\\\
-    & s.t. \quad x-0.5 \le 0 \qquad \rightarrow g(x)
+    s.t. \ & x-0.5 \le 0 \qquad \rightarrow g(x)
 \end{aligned}
 \tag{5.4.1}
 $$

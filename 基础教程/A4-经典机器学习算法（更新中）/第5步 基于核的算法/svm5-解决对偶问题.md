@@ -8,7 +8,7 @@ $$
 \begin{aligned}
     \underset{w,b}{\min} & \ f(w,b)=\frac{1}{2}||\boldsymbol{w}||^2
     \\\\
-    s.t. & \ 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0, \quad i=1,...,n
+    s.t. & \ 1-y_i(\boldsymbol{w}  \cdot \boldsymbol{x_i}+b) \le 0, \quad i=1,...,n
 \end{aligned}
 \tag{5.5.1}
 $$
@@ -17,9 +17,12 @@ $$
 
 $$
 \begin{aligned}
-L(w,b,\alpha)&=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \boldsymbol{x_i} + b))
+L(w,b,\alpha)&=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w}  \cdot \boldsymbol{x_i} + b))
 \\\\
-&=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w}\sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i
+&=\frac{1}{2}\boldsymbol{w} \cdot \boldsymbol{w}+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w} \cdot \sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i
+\\\\
+&=\frac{1}{2}\boldsymbol{w} \boldsymbol{w}^T+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w} \left ( \sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} \right )^T- b\sum_{i=1}^n\alpha_iy_i
+
 \end{aligned}
 \tag{5.5.2}
 $$
@@ -36,7 +39,7 @@ $$
 
 $$
 \begin{aligned}
-\nabla_w L&=\nabla_w(\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w}\sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i)
+\nabla_w L&=\nabla_w \left [ \frac{1}{2}\boldsymbol{w} \boldsymbol{w}^T+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w} \left( \sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} \right )^T - b\sum_{i=1}^n\alpha_iy_i \right]
 \\\\
 &=\boldsymbol{w}+0-\sum_{i=1}^n\alpha_iy_ix_i-0 
 \\\\
@@ -56,7 +59,7 @@ $$
 
 $$
 \begin{aligned}
-\nabla_bL&=\nabla_b(\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w}\sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i)
+\nabla_bL&=\nabla_b \left ( \frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}-\boldsymbol{w} \cdot \sum_{i=1}^n\alpha_iy_i \boldsymbol{x_i} - b\sum_{i=1}^n\alpha_iy_i \right )
 \\\\
 &=0+0-0-\sum_{i=1}^n\alpha_iy_i
 \\\\
@@ -77,9 +80,9 @@ $$
 \begin{aligned}
 D(\alpha)&=\underset{w,b}{\min}\ L(w,b,\alpha)
 \\\\
-&=\frac{1}{2} \left(\sum_{i=1}^n\alpha_iy_ix_i \right)^2+\sum_{i=1}^n\alpha_i- \left(\sum_{i=1}^n\alpha_iy_ix_i \right) \left(\sum_{i=1}^n\alpha_iy_ix_i \right)
+&=\frac{1}{2} \left(\sum_{i=1}^n\alpha_iy_ix_i \right) \cdot \left(\sum_{i=1}^n\alpha_iy_ix_i \right)+\sum_{i=1}^n\alpha_i- \left(\sum_{i=1}^n\alpha_iy_ix_i \right) \cdot \left(\sum_{i=1}^n\alpha_iy_ix_i \right)
 \\\\
-&=\sum_{i=1}^n\alpha_i-\frac{1}{2} \left( \sum_{i=1}^n\alpha_iy_ix_i \right)^2
+&=\sum_{i=1}^n\alpha_i-\frac{1}{2} \left( \sum_{i=1}^n\alpha_iy_ix_i \right) \cdot \left(\sum_{i=1}^n\alpha_iy_ix_i \right)
 \\\\
 &=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i \alpha_j y_i y_j (x_i \cdot x_j)
 \end{aligned}

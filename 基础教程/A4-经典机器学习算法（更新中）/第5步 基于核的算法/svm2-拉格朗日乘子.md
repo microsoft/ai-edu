@@ -12,9 +12,11 @@ https://zhuanlan.zhihu.com/p/154517678
 如果加一个限制条件，求函数 $f(x,y)$ 在约束条件 $x+y+2=0$ 时的最小值，记作：
 
 $$
-\underset{x,y}{\min} f(x,y)=x^2+y^2
+\begin{aligned}
+\underset{x,y}{\min} & \ f(x,y)=x^2+y^2
 \\\\
-s.t.\quad x+y+2=0 \qquad \rightarrow h(x,y)
+s.t. & \ x+y+2=0 \qquad \rightarrow h(x,y)
+\end{aligned}
 \tag{5.2.1}
 $$
 
@@ -69,9 +71,9 @@ $$
 
 $$
 \begin{aligned}
-    & f(x,y,z) = xyz
+    \underset{x,y,z}{\max} & \ f(x,y,z) = xyz
     \\\\
-    & s.t. \quad 2xy+2xz+2yz-s^2=0
+    s.t. & \ 2xy+2xz+2yz-s^2=0
 \end{aligned}
 \tag{5.2.5}
 $$
@@ -106,9 +108,9 @@ $$x=y=z=\frac{6}{\sqrt{z}}，V_{max}=\frac{s^3}{6\sqrt{6}}$$
 
 $$
 \begin{aligned}
-&\underset{x,y}{\min} f(x,y)=x^2+y^2
+\underset{x,y}{\min} & \ f(x,y)=x^2+y^2
 \\\\
-&s.t.\quad x+y-1 \le 0 \quad \rightarrow g_1(x,y)
+s.t. & \ x+y-1 \le 0 \quad \rightarrow g_1(x,y)
 \end{aligned}
 \tag{5.2.8}
 $$
@@ -117,9 +119,9 @@ $$
 
 $$
 \begin{aligned}
-&\underset{x,y}{\min} f(x,y)=x^2+y^2
+\underset{x,y}{\min} & \ f(x,y)=x^2+y^2
 \\\\
-&s.t.\quad x+y+2 \le 0 \quad \rightarrow g_2(x,y)
+s.t. & \ x+y+2 \le 0 \quad \rightarrow g_2(x,y)
 \end{aligned}
 \tag{5.2.9}
 $$
@@ -163,11 +165,11 @@ $$
 
 $$
 \begin{aligned}
-&\underset{x,y}{\min} f(x,y)=x^2+y^2
+\underset{x,y}{\min}  & \ f(x,y)=x^2+y^2
 \\\\
-&s.t. \quad x-y-2 \le 0 \quad \rightarrow g(x,y)
+s.t. & \ x-y-2 \le 0 \quad \rightarrow g(x,y)
 \\\\
-&s.t. \quad x^2y-3 = 0 \quad \rightarrow h(x,y)
+& \ x^2y-3 = 0 \quad \rightarrow h(x,y)
 \end{aligned}
 \tag{5.2.12}
 $$

@@ -192,7 +192,7 @@ $$
 d'' = \frac{|0.5 \times 3 + 0.5 \times 3 -2|}{\sqrt{0.5^2+0.5^2}}=\frac{1}{\sqrt{0.5}}，（=\sqrt{2}）
 $$
 
-式 5.1.8 和 5.1.9 表示了同一条直线，点 $p_2$ 到其的距离 $d'、d''$ 都是 $\sqrt{2}$，但是分子 $|Ax_{1}+Bx_{2}+C|$ 的值并不相同，前者为 2，后者为 1。这就说明，无论分割线的位置如何，我们总可以改变 $A、B、C$ 的值让式 5.1.5 和 5.1.6 成立，因为分母 $\sqrt{A^2+B^2}$ 也会做相应的变化，令最终的距离值（本例中为 $\sqrt{2}$）不会变化。
+式 5.1.8 和 5.1.9 表示了同一条直线，点 $p_2$ 到其的距离 $d'、d''$ 都是 $\sqrt{2}$，但是分子 $|Ax_{1}+Bx_{2}+C|$ 的值并不相同，前者为 2，后者为 1。这就说明，无论分割线的位置如何，我们总可以改变 $A、B、C$ 的值让式 5.1.5 和 5.1.6 成立，同时保证几何距离（本例中为 $\sqrt{2}$）不会变化（因为分母 $\sqrt{A^2+B^2}$ 也会做相应的变化）。
 
 我们把正类样本点 $p_2(3,3)$ 的坐标值代入公式 5.1.9：
 
@@ -229,21 +229,19 @@ Ax_1+Bx_2+C=
     A & B
 \end{pmatrix}
 \begin{pmatrix}
-    x_1
-    \\\\
-    x_2
-\end{pmatrix}
-+C=\boldsymbol{w} \boldsymbol{x}+b=0
+    x_1 & x_2
+\end{pmatrix}^T
++C=\boldsymbol{w} \cdot \boldsymbol{x}+b=0
 \tag{5.1.11}
 $$
 
-其中：$\boldsymbol{w} = (A \quad B)，\boldsymbol{x} = (x_1 \quad x_2)^T，b=C$，则公式 5.1.5、5.1.6 可以写成：
+其中：$\boldsymbol{w} = (A \quad B)，\boldsymbol{x} = (x_1 \quad x_2)，b=C$，$\boldsymbol{w} \cdot \boldsymbol{x}$ 中间的 “$\cdot$” 表示内积计算，则公式 5.1.5、5.1.6 可以写成：
 
 $$
-\boldsymbol{w} \boldsymbol{x}+b=+1 \tag{5.1.12}
+\boldsymbol{w} \cdot \boldsymbol{x}+b=+1 \tag{5.1.12}
 $$
 $$
-\boldsymbol{w}\boldsymbol{x}+b=-1 \tag{5.1.13}
+\boldsymbol{w} \cdot \boldsymbol{x}+b=-1 \tag{5.1.13}
 $$
 
 把 $C$ 重新命名为 $b$ 在各种文献里比较通用，被称作截距。
@@ -254,7 +252,7 @@ $$
 d = \frac{2}{\sqrt{A^2+B^2}}=\frac{2}{\sqrt{w_1^2+w_2^2}} = \frac{2}{||\boldsymbol{w}||} \tag{5.1.14}
 $$
 
-其中，$||\boldsymbol{w}||$ 是 $||\boldsymbol{w}||_2^2$ 的简写形式，表示 $\boldsymbol{w}$ 的二范数 $L_2$，即 $\boldsymbol{w}$ 中的各元素的平方和，再开方。
+其中，$||\boldsymbol{w}||$ 是 $||\boldsymbol{w}||_2$ 的简写形式，表示 $\boldsymbol{w}$ 的二范数 $L_2$，即 $\boldsymbol{w}$ 中的各元素的平方和，再开方。在二维平面中，$\boldsymbol{w}$ 只包含 $w_1,w_2$；可以扩展到高维坐标系中，比如含有四维特征的 $\boldsymbol{x}$ 所对应的 $||\boldsymbol{w}||=\sqrt{w_1^2+w_2^2+w_3^2+w_4^2}$。
 
 ### 增加新的样本点
 
@@ -287,9 +285,9 @@ $$
 
 $$
 \begin{cases}
-\boldsymbol{w}\boldsymbol{x_i}+b \ge +1, \quad y_i=+1（正类样本）
+\boldsymbol{w} \cdot \boldsymbol{x_i}+b \ge +1, \quad y_i=+1（正类样本）
 \\\\
-\boldsymbol{w}\boldsymbol{x_i}+b \le -1, \quad  y_i=-1（负类样本）
+\boldsymbol{w} \cdot \boldsymbol{x_i}+b \le -1, \quad  y_i=-1（负类样本）
 \end{cases}
 \tag{5.1.15}
 $$
@@ -297,13 +295,13 @@ $$
 公式 5.1.15 的几何意义很明确，即所有正类样本都在分类间隔的上边界之上，而所有负类样本都在分类间隔的下边界之下。
 
 进一步，公式 5.1.15 的两边都乘以 $y_i$：
-- 当 $y_i=+1$ 时，不等式符号不变，依旧是 $y_i(\boldsymbol{w}\boldsymbol{x_i}+b) \ge 1$； 
-- 当 $y_i=-1$ 时，不等式符号改变方向，$y_i(\boldsymbol{w}\boldsymbol{x_i}+b) \ge 1$
+- 当 $y_i=+1$ 时，不等式符号不变，依旧是 $y_i(\boldsymbol{w} \cdot \boldsymbol{x_i}+b) \ge 1$； 
+- 当 $y_i=-1$ 时，不等式符号改变方向，$y_i(\boldsymbol{w} \cdot \boldsymbol{x_i}+b) \ge 1$
 
 所以，公式 5.1.15 最后可以合并成公式 5.1.16：
 
 $$
-1 - y_i(\boldsymbol{w}\boldsymbol{x_i}+b) \le 0 \tag{5.1.16}
+1 - y_i(\boldsymbol{w} \cdot \boldsymbol{x_i}+b) \le 0 \tag{5.1.16}
 $$
 
 即把不等式右侧的 1 挪到左侧来，再两边乘以 -1，改变不等式符号方向。这样做是为了后面确定优化条件时方便。
@@ -337,7 +335,7 @@ $$
 \begin{aligned}
     \underset{w,b}{\min} & \ f(w,b) =\frac{1}{2}||w||^2
     \\\\
-    s.t. & \ 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0, \quad i=1,2,...,n
+    s.t. & \ 1-y_i(\boldsymbol{w} \cdot \boldsymbol{x_i}+b) \le 0, \quad i=1,2,...,n
 \end{aligned}
 \tag{5.1.19}
 $$

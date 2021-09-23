@@ -8,9 +8,9 @@ https://zhuanlan.zhihu.com/p/154517678
 
 $$
 \begin{aligned}
-    &\min \ f(w,b)=\frac{1}{2}||w||^2
+    \min & \ f(w,b)=\frac{1}{2}||\boldsymbol{w}||^2
     \\\\
-    & s.t. \quad 1-y_i(\boldsymbol{w} \boldsymbol{x_i}+b) \le 0, \quad i=1,...,n
+    s.t. & \ 1-y_i(\boldsymbol{w}  \cdot \boldsymbol{x_i}+b) \le 0, \quad i=1,...,n
 \end{aligned}
 \tag{5.3.1}
 $$
@@ -35,13 +35,13 @@ $$
 
 $$
 \begin{aligned}
-    &\underset{w,b}{\min} \ f(w,b)=\frac{1}{2}||w||^2
+    \underset{w,b}{\min} & \ f(w,b)=\frac{1}{2}||\boldsymbol{w}||^2
     \\\\
-    & s.t. \quad 1-(-1)(w_1+w_2+b) \le 0
+    s.t. & \ 1-(-1)(w_1+w_2+b) \le 0
     \\\\
-    & \qquad \ 1-(+1)(3w_1+3w_2+b) \le 0
+    & \ 1-(+1)(3w_1+3w_2+b) \le 0
     \\\\
-    & \qquad \ 1-(+1)(4w_1+3w_2+b) \le 0
+    & \ 1-(+1)(4w_1+3w_2+b) \le 0
 \end{aligned}
 \tag{5.3.2}
 $$
@@ -58,7 +58,7 @@ $$
 所以优化问题 5.3.1 的拉格朗日函数可以写成：
 
 $$
-L(w,b,\alpha)=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w} \boldsymbol{x_i} + b)), \quad a_i \ge 0
+L(w,b,\alpha)=\frac{1}{2}||\boldsymbol{w}||^2+\sum_{i=1}^n{\alpha_i}(1-y_i(\boldsymbol{w}  \cdot \boldsymbol{x_i} + b)), \quad a_i \ge 0
 \tag{5.3.4}
 $$
 
@@ -113,7 +113,7 @@ $$
 
 $$
 \begin{aligned}
-    \underset{w,b}{\min} & \ f(w,b)=\frac{1}{2}||w||^2
+    \underset{w,b}{\min} & \ f(w,b)=\frac{1}{2}||\boldsymbol{w}||^2
     \\\\
     s.t. & \ 1-(-1)(w_1+w_2+b) \le 0
     \\\\

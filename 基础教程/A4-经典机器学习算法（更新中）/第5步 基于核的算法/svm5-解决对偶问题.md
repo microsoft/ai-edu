@@ -48,7 +48,7 @@ $$
 令式 5.5.4 的结果为 0，可得：
 
 $$
-\boldsymbol{w}-\sum_{i=1}^n\alpha_iy_ix_i=0 \rightarrow \boldsymbol{w}=\sum_{i=1}^n\alpha_iy_ix_i 
+\boldsymbol{w}=\sum_{i=1}^n\alpha_iy_ix_i 
 \tag{5.5.5}
 $$
 
@@ -79,7 +79,7 @@ D(\alpha)&=\underset{w,b}{\min}\ L(w,b,\alpha)
 \\\\
 &=\frac{1}{2} \left(\sum_{i=1}^n\alpha_iy_ix_i \right)^2+\sum_{i=1}^n\alpha_i- \left(\sum_{i=1}^n\alpha_iy_ix_i \right) \left(\sum_{i=1}^n\alpha_iy_ix_i \right)
 \\\\
-&=\sum_{i=1}^n\alpha_i-\frac{1}{2}(\sum_{i=1}^n\alpha_iy_ix_i)^2
+&=\sum_{i=1}^n\alpha_i-\frac{1}{2} \left( \sum_{i=1}^n\alpha_iy_ix_i \right)^2
 \\\\
 &=\sum_{i=1}^n\alpha_i-\frac{1}{2}\sum_{i=1}^n\sum_{j=1}^n\alpha_i \alpha_j y_i y_j (x_i \cdot x_j)
 \end{aligned}

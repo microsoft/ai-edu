@@ -143,7 +143,9 @@ $$
 D(\alpha)=2\alpha_2 + 2\alpha_3 -(4\alpha_2^2+6.5\alpha_3^2+10\alpha_2\alpha_3) \tag{5.5.11}
 $$
 
-到目前为止，$D(\alpha)$ 就是对偶问题的内层最小值表达式了，从形式上看，它是一个凹函数。
+到目前为止，$D(\alpha)$ 就是对偶问题的内层最小值表达式了：
+- 从内容看，它没有 $w,b$，只包含 $\alpha$。
+- 从形式上看，它并不是一个值，而是一个凹函数。和图 5.4.2 右子图所示的红色曲线类似。
 
 ### 求对偶问题的外层极大值
 
@@ -253,9 +255,9 @@ $$
 
 $$
 \begin{cases}
-\boldsymbol{w}\boldsymbol{x_i}+b = +1, & y_i=+1（正类样本）
+\boldsymbol{w} \cdot \boldsymbol{x_i}+b = +1, & y_i=+1（正类样本）
 \\\\
-\boldsymbol{w}\boldsymbol{x_i}+b = -1, &  y_i=-1（负类样本）
+\boldsymbol{w} \cdot \boldsymbol{x_i}+b = -1, &  y_i=-1（负类样本）
 \end{cases}
 \tag{5.5.12}
 $$
@@ -264,27 +266,27 @@ $$
 
 $$
 \begin{cases}
-1 \cdot (\boldsymbol{w}\boldsymbol{x_i}+b) = 1 \cdot 1, &  y_i=+1（正类样本）
+1 * (\boldsymbol{w} \cdot \boldsymbol{x_i}+b) = 1 * 1, &  y_i=+1（正类样本）
 \\\\
-(-1) \cdot (\boldsymbol{w}\boldsymbol{x_i}+b) = (-1) \cdot (-1), &  y_i=-1（负类样本）
+(-1) * (\boldsymbol{w} \cdot \boldsymbol{x_i}+b) = (-1) * (-1), &  y_i=-1（负类样本）
 \end{cases}
 \tag{5.5.13}
 $$
 
-合并两种情况，在支持向量上有：$y_i(\boldsymbol{w} \boldsymbol{x}_i+b)=1$，所以：
+合并两种情况，在支持向量上有：$y_i(\boldsymbol{w} \cdot \boldsymbol{x}_i+b)=1$，所以：
 
 $$
-b = \frac{1}{y_i}-\boldsymbol{w} \boldsymbol{x}_i \tag{5.5.14}
+b = \frac{1}{y_i}-\boldsymbol{w} \cdot \boldsymbol{x}_i \tag{5.5.14}
 $$
 
 如果在把式 5.5.14 中的 $i$ 重命名为 $j$（避免和 $\boldsymbol{w}$ 表达式中的 $i$ 冲突），两端都乘以 $y_j^2$(=1)，并把式 5.5.5 的 $\boldsymbol{w}$ 代入，可以得到：
 
 $$
-b=y_j - (\sum_{i=1}^n \alpha_i y_i x_i) x_j=y_j - \sum_{i=1}^n \alpha_i y_i (x_i \cdot x_j)   \tag{5.5.15}
+b=y_j - (\sum_{i=1}^n \alpha_i y_i x_i) \cdot x_j=y_j - \sum_{i=1}^n \alpha_i y_i (x_i \cdot x_j)   \tag{5.5.15}
 $$
 
 
-我们分别用 $p_1$ 和 $p_2$ 两个支持向量验证：
+我们分别用 $p_1$ 和 $p_2$ 两个支持向量验证式 5.5.14：
 
 - 负类样本 $p_1(1,1)$
   
@@ -299,20 +301,20 @@ $$
 b=\frac{1}{1} - (0.5,0.5)(3,3)^T=1-3=-2
 $$
 
-所以可以确定最终的 $b=-2$。
+两者结果相同，所以可以确定最终的 $b=-2$。
 
 ### 分界线方程
 
 有了 $\boldsymbol{w}$ 和 $b$ 后，可以得到分界线方程为：
 
 $$
-\boldsymbol{w} \boldsymbol{x} + b = 0.5x_1+0.5x_2-2=0 \tag{5.5.15}
+\boldsymbol{w} \cdot \boldsymbol{x} + b = 0.5x_1+0.5x_2-2=0 \tag{5.5.15}
 $$
 
 从式 5.1.4 可知，正类样本位于分界线上方，$f(x)$ 都应该大于 0；而负类样本位于分界线下方，$f(x)$ 都应该小于 0。但是分类结果只有 1 和 -1，而不管具体数值是多少，所以有分类决策函数为：
 
 $$
-f(\boldsymbol{x})=sign(\boldsymbol{w} \boldsymbol{x}+b) \tag{5.5.16}
+f(\boldsymbol{x})=sign(\boldsymbol{w} \cdot \boldsymbol{x}+b) \tag{5.5.16}
 $$
 
 其中 $sign()$ 是符号函数，当输入为正数时，返回 1；输入为负数时，返回 -1。
@@ -320,7 +322,7 @@ $$
 我们用 $p_3(4,3)$ 点验证一下：
 
 $$
-f(x)=sign(0.5 \cdot 4 + 0.5 \cdot 3 - 2) = sign(1.5)=1
+f(x)=sign(0.5 * 4 + 0.5 * 3 - 2) = sign(1.5)=1
 $$
 
 说明 $p_3$ 点为正类，与实际情况一致。
@@ -328,7 +330,7 @@ $$
 增加一个 $p_4(2,1)$ 点测试一下：
 
 $$
-f(x)= sign(0.5 \cdot 2 + 0.5 \cdot 1 - 2) = sign(-0.5)=-1
+f(x)= sign(0.5 * 2 + 0.5 * 1 - 2) = sign(-0.5)=-1
 $$
 
 说明 $p_4$ 点是负类，与实际情况一致。

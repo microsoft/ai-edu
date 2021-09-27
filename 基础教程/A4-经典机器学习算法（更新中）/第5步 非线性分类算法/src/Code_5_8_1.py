@@ -20,12 +20,12 @@ def svc(ax, C, X, Y):
     ax.grid()
     
     w = model.coef_[0]
-    a = -w[0]/w[1]
-    b = model.intercept_
+    a = -w[0] / w[1]
+    b = -model.intercept_[0] / w[1]
     x = np.linspace(0,5,10)
-    y0 = a * x + -b/w[1]
-    y1 = a * x + -b/w[1] + 1/w[1]
-    y2 = a * x + -b/w[1] - 1/w[1]
+    y0 = a * x + b
+    y1 = a * x + b + 1/w[1]
+    y2 = a * x + b - 1/w[1]
     ax.plot(x,y0)
     ax.plot(x,y1,linestyle='--')
     ax.plot(x,y2,linestyle='--')
@@ -37,7 +37,7 @@ def svc(ax, C, X, Y):
             ax.scatter(X[i,0], X[i,1], marker='.', color='b', s=200)
         ax.text(X[i,0]+0.1, X[i,1]+0.1, str(i))
 
-    ax.set_title(str.format("C={0},W1={1:.2f},W2={2:.2f},b={3:.1f}", C, w[0], w[1], b[0]))
+    ax.set_title(str.format("C={0},W1={1:.2f},W2={2:.2f},b={3:.1f}", C, w[0], w[1], b))
 
 def main():
     X = np.array([[0,3],[1,1],[1,2],[2,1],[3,0],[1,3],  [1,4],[2,3],[3,1],[3,2],[3,3],[4,1]])

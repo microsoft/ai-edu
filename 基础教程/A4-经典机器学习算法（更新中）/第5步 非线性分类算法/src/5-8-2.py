@@ -12,9 +12,8 @@ def svc(ax, C, X, Y):
     print("b =", model.intercept_)
     print("支持向量样本序号: ", model.support_)
     print("支持向量样本值: ", model.support_vectors_)
-    
-    print("support vector num: ", model.n_support_)
-    print("distance: ", model.decision_function(X))
+    print("支持向量数量: ", model.n_support_)
+    print("到分界线的距离: ", model.decision_function(X))
     print("alpha * y:", model.dual_coef_)
 
     ax.axis('equal')
@@ -39,18 +38,21 @@ def svc(ax, C, X, Y):
             ax.scatter(X[i,0], X[i,1], marker='.', color='b', s=200)
         ax.text(X[i,0]+0.1, X[i,1]+0.1, str(i))
 
-    ax.set_title(str.format("C={0},W1={1:.1f},W2={2:.1f},b={3:.1f}", C, w[0], w[1], b[0]))
+    ax.set_title(str.format("C={0},W1={1:.2f},W2={2:.2f},b={3:.2f}", C, w[0], w[1], b[0]))
 
 def main():
     X = np.array([[3,0],[2,4],[3,4],[3,3],[3,2],[3,1],[1,1],[2,2],[2,1],[2,0],[4,1]])
     Y = np.array([1,1,1,1,1,1,-1,-1,-1,-1,-1])
 
     fig = plt.figure()
-    ax = fig.add_subplot(121)
+    ax = fig.add_subplot(131)
     C = 10
     svc(ax, C, X, Y)
-    ax = fig.add_subplot(122)
+    ax = fig.add_subplot(132)
     C = 1
+    svc(ax, C, X, Y)
+    ax = fig.add_subplot(133)
+    C = 0.1
     svc(ax, C, X, Y)
     plt.show()
 

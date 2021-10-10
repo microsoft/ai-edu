@@ -3,47 +3,32 @@ import time
 
 def f(z):
     n = z.shape[1]
+    assert(n==3)
     Z = np.zeros(shape=(1,n*n))
+    # 生成[z_1 z_1,z_1 z_2,z_1 z_3,z_2 z_1,z_2 z_2,z_2 z_3,z_3 z_1,z_3 z_2,z_3 z_3]
     for i in range(3):
         for j in range(3):
             Z[0,i*3+j] = z[0,i]*z[0,j]
-    '''
-    result = np.array([[
-        z[0,0]*z[0,0],z[0,0]*z[0,1],z[0,0]*z[0,2],
-        z[0,1]*z[0,0],z[0,1]*z[0,1],z[0,1]*z[0,2],
-        z[0,2]*z[0,0],z[0,2]*z[0,1],z[0,2]*z[0,2]
-    ]])
-    '''
     return Z
-
 
 def fx_fy(x,y):
     fx = f(x)
     fy = f(y)
     result = np.inner(fx, fy)
-    '''
-    result = \
-    x[0,0]*x[0,0] * y[0,0]*y[0,0] +\
-    x[0,0]*x[0,1] * y[0,0]*y[0,1] +\
-    x[0,0]*x[0,2] * y[0,0]*y[0,2] +\
-    x[0,1]*x[0,0] * y[0,1]*y[0,0] +\
-    x[0,1]*x[0,1] * y[0,1]*y[0,1] +\
-    x[0,1]*x[0,2] * y[0,1]*y[0,2] +\
-    x[0,2]*x[0,0] * y[0,2]*y[0,0] +\
-    x[0,2]*x[0,1] * y[0,2]*y[0,1] +\
-    x[0,2]*x[0,2] * y[0,2]*y[0,2]
-    '''
     return result
 
 def k(x,y):
     result = np.inner(x, y)**2
-    #result = (x[0,0]*y[0,0] + x[0,1]*y[0,1]+x[0,2]*y[0,2])**2
     return result
 
 
 if __name__=="__main__":
     x = np.array([1,2,3]).reshape(1,3)
     y = np.array([4,5,6]).reshape(1,3)
+
+    print("原始输入维数:", x.shape[1])
+    print("映射空间维数:", f(x).shape[1])
+
     n = 100000
     start = time.time()
     for i in range(n):
@@ -53,4 +38,5 @@ if __name__=="__main__":
         r2 = k(x, y)
     end2 = time.time()
     print(r1,r2)
-    print(end1-start, end2-end1)
+    print("fx_fy(x,y)运行时间:", end1-start)
+    print("K(x,y)运行时间:", end2-end1)

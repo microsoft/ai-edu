@@ -1,6 +1,22 @@
 
 ## RBF核函数
 
+高斯核
+
+$$K(x_i,x_j)=\exp(-\frac{\parallel x-y \parallel^2}{2 \sigma^2})$$
+
+径向基（Radial Basis Function）核，对于样本噪音有较好的抗干扰能力|
+
+高斯核变种
+
+$$\exp (-\gamma \parallel x-y \parallel^2 )$$
+
+$\gamma$ 一般取值为 1/特征数
+
+
+
+
+
 常用核函数
 
 https://blog.csdn.net/mengjizhiyou/article/details/103437423
@@ -75,49 +91,122 @@ $$
 
 
 
-高斯核函数的标准定义如式 8 所示。
+### 高斯核函数
+
+标准定义如式 8 所示。
 
 $$K(x_i,x_j)=e^{-\frac{\parallel x_i-x_j \parallel^2}{2 \sigma^2}} \tag{8}$$
 
-
-
-
 但是由于 $\sigma$ 在分母上，理解起来要绕一下，所以一般写成式 9 的形式，即令：$\gamma = \frac{1}{2\sigma^2}$
 
-$$K(x_i,x_j)=\exp (-\gamma \parallel x_i-x_j \parallel^2 ) \tag{9}$$
-
-
-一共10个样本，5 正 5 负
+$$K(x_i,x_j)=e ^ {-\gamma \parallel x_i-x_j \parallel^2 } \tag{9}$$
 
 ### 特征映射
 
+式 9 从形式上看，和前面学习的核函数都不一样：
+1. 看不出来有内积计算；
+2. 看不出有多维特征映射。
+
+为了解释上面两个问题，下面我们把式 9 展开，为了方便，可以令 $\gamma=1$：
+
 $$
 \begin{aligned}
-K(x_i,x_j)&=e^{-||x_i-x_j||^2}
+K(x_i,x_j)&=e^{-||\boldsymbol{x}_i-\boldsymbol{x}_j||^2} \quad(接下来展开求二范数的公式)
 \\\\
-&=e^{-(x_i \cdot x_i+x_j \cdot x_j -2 x_i \cdot x_j)}
+&=e^{-\boldsymbol{x}_i^2}e^{-\boldsymbol{x}_j^2}e^{2 \boldsymbol{x}_i \cdot \boldsymbol{x}_j} \quad(接下来利用泰勒公式表示第三项)
 \\\\
-&=e^{-x_i^2}e^{-x_j^2}e^{2x_i \cdot x_j} \quad(接下来利用泰勒公式展开第三项)
-\\\\
-&=e^{-x_i^2}e^{-x_j^2} \left [ \sum_{n=0}^\infty \frac{(2 x_i \cdot x_j)^n}{n!} \right] \quad (接下来展开求和项)
+&=e^{-\boldsymbol{x}_i^2}e^{-\boldsymbol{x}_j^2} \left [ \sum_{n=0}^\infty \frac{(2 x_i \cdot x_j)^n}{n!} \right] \quad (接下来展开求和项)
 \\\\
 &=e^{-x_i^2}e^{-x_j^2} \left [ 1 + \frac{2x_i \cdot x_j}{1!} + \frac{(2x_i \cdot x_j)^2}{2!} + \frac{(2x_i \cdot x_j)^3}{3!} + \cdots \right ] \quad (接下来变成内积形式)
 \\\\
-&=\left [ e^{-x_i^2}(1 \quad \sqrt{\frac{2}{1!}}x_i \quad \sqrt{\frac{2^2}{2!}}x_i^2 \quad \sqrt{\frac{2^3}{3!}}x_i^3 \cdots) \right ] \cdot \left [ e^{-x_j^2}(1 \quad \sqrt{\frac{2}{1!}}x_j \quad \sqrt{\frac{2^2}{2!}}x_j^2 \quad \sqrt{\frac{2^3}{3!}}x_j^3 \cdots) \right ]
+&=\left [ e^{-\boldsymbol{x}_i^2}(1 \quad \sqrt{\frac{2}{1!}}x_i \quad \sqrt{\frac{2^2}{2!}}x_i^2 \quad \sqrt{\frac{2^3}{3!}}x_i^3 \cdots) \right ] \cdot \left [ e^{-\boldsymbol{x}_j^2}(1 \quad \sqrt{\frac{2}{1!}}x_j \quad \sqrt{\frac{2^2}{2!}}x_j^2 \quad \sqrt{\frac{2^3}{3!}}x_j^3 \cdots) \right ]
 \\\\
 &=\phi(x_i) \cdot \phi(x_j)
 \end{aligned}
+\tag{10}
 $$
+
+式 10 的最后一行，就是内积计算的形式了。所以，高斯核函数的映射函数可以表示为式 11：
 
 $$
 \phi(x)=e^{-x^2}
 \begin{pmatrix}
 1 \quad \sqrt{\frac{2}{1!}}x \quad \sqrt{\frac{2^2}{2!}}x^2 \quad \sqrt{\frac{2^3}{3!}}x^3 \cdots   
 \end{pmatrix}
+\tag{11}
 $$
 
+在式 11 的内部，每一项都可以看作是一维特征，一共是无穷维的特征。这样就解释了前面的两个问题。
 
+### 验证特征映射
 
+我们用著名的异或问题来验证一下式 11 的映射函数可以得到什么？
+
+异或问题的样本如下：
+
+```
+X 的原始值：
+[[0 0]
+ [1 1]
+ [0 1]
+ [1 0]]
+
+Y 的原始值：
+[-1 -1  1  1]
+```
+
+X 经过标准化后（均值为 0，方差为 1）得到：
+
+```
+X 标准化后的值：
+[[-1. -1.]
+ [ 1.  1.]
+ [-1.  1.]
+ [ 1. -1.]]
+```
+
+下面用式 11 的映射函数对标准化后的数据做映射，可以取 n=4，以便得到 4 维特征。代码如下：
+
+```python
+        # 求 x 矢量的模，是一个标量
+        x_norm = np.linalg.norm(X[i])
+        # 第 0 维
+        Z[i,0] = np.exp(-gamma * (x_norm**2))
+        # 第 1 维
+        Z[i,1] = np.sqrt(2) * x_norm * Z[i,0]
+        # 第 2 维
+        Z[i,2] = np.sqrt(2**2/2) * (x_norm**2) * Z[i,0]
+        # 第 3 维
+        Z[i,3] = np.sqrt(2**3/6) * (x_norm**3) * Z[i,0]
+```
+
+运行后得到的值：
+
+```
+X 标准化后映射的特征值：
+[[0.01831564 0.03663128 0.05180445 0.05981863]
+ [0.01831564 0.03663128 0.05180445 0.05981863]
+ [0.01831564 0.03663128 0.05180445 0.05981863]
+ [0.01831564 0.03663128 0.05180445 0.05981863]]
+```
+
+到这里可以停止了！因为 4 个样本的第一个特征值都是 0.01831564，第二个特征值也都一样，第三个、第四个也是如此，就是说经过式 11 的映射函数后，所有的样本都变成了四维空间中的同一个点，这样无论如何是无法做分类的。
+
+这是为什么呢？因为对于公式 $||\boldsymbol{x}||=\sqrt{x_1^2 + x_2^2}$，无论 $x_1,x_2$ 是 1 还是 -1，总是等于 $\sqrt{2}$。
+
+可能有读者怀疑是不是因为做了标准化造成的这个结果，那我们不做标准化再做一次映射，
+
+```
+X 不做标准化直接做映射的特征值：
+[[1.         0.         0.         0.        ]
+ [0.01831564 0.03663128 0.05180445 0.05981863]
+ [0.13533528 0.19139299 0.19139299 0.15627172]
+ [0.13533528 0.19139299 0.19139299 0.15627172]]
+```
+
+从上面映射后的结果可以看到，映射函数把后两个正类样本映射到了一个点上，这是因为 [0,1] 和 [1,0] 这两个样本，经过映射后的值恰巧相同。这只是一种巧合，算法是不能依赖数据在数值上的特性来工作的。
+
+所以，我们可以得出结论：**高斯核函数的映射函数只是一种理论解释，而不是实际的算法工作原理。**
 
 把所有的样本都看作是地标（landmark），构造10x10的矩阵，
 

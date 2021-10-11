@@ -45,18 +45,6 @@ def K(X, gamma):
     print(np.round(K,3))
     return K
 
-def fake_K(X, gamma):
-    n = X.shape[0]
-    z = np.zeros((n,4))
-    for i in range(n):
-        print(X[i])
-        x_i = np.linalg.norm(X[i])
-        z[i,0] = np.exp(-gamma * (x_i**2))
-        z[i,1] = 1.414 * z[i,0] * x_i
-        z[i,2] = 1.414 * z[i,0] * (x_i**2)
-        z[i,3] = 1.155 * z[i,0] * (x_i**3)
-
-    return z
 
 def generate_file_path(file_name):
     curr_path = sys.argv[0]
@@ -64,9 +52,6 @@ def generate_file_path(file_name):
     file_path = os.path.join(curr_dir, file_name)
     return file_path
 
-def draw_2d(ax, x, y):
-    ax.scatter(x[y==1,0], x[y==1,1], marker='^')
-    ax.scatter(x[y==-1,0], x[y==-1,1], marker='o')
 
 
 def test():
@@ -112,46 +97,10 @@ def test3():
     plt.show()
 
 
-def svc(C, X, Y):
 
-    model = SVC(C=C, kernel='linear')
-    model.fit(X,Y)
-
-    print("权重:",model.coef_)
-    print("支持向量个数:",model.n_support_)
-    print("支持向量索引:",model.support_)
-    print("支持向量:", np.round(model.support_vectors_,3))
-    print("支持向量ay:",model.dual_coef_)
-    print("准确率:", model.score(X, Y))
-
-    return model
-
-
-def test_feature_linear(X,Y):
-    gamma = 2
-    K_10_10 = K(X, gamma)
-    C = 1
-    model = svc(C, K_10_10, Y)
-
-    fig = plt.figure()
-    ax1 = fig.add_subplot(121)
-    ax1.grid()
-    draw_2d(ax1, X, Y)
-
-    ax2 = fig.add_subplot(122)
-    x1 = np.linspace(-2, 2, 10)
-    x2 = np.linspace(-2, 2, 10)
-    X1,X2 = np.meshgrid(x1,x2)
-    X12 = np.c_[X1.ravel(), X2.ravel()]
-    X12_new = K2(X12, X, gamma)
-    pred = model.predict(X12_new)
-    y_pred = pred.reshape(X1.shape)
-    ax2.contourf(X1,X2, y_pred)
-
-    plt.show()
-
-def test_rgb(X,Y):
-    model = SVC(C=1, kernel='rbf', coef0=2)
+def linear_svc(X,Y):
+    #model = SVC(C=3, kernel='poly', degree=2, gamma=1, coef0=1)
+    model = SVC(C=30, kernel='linear')
     model.fit(X,Y)
 
     #print("权重:",model.coef_)
@@ -161,26 +110,91 @@ def test_rgb(X,Y):
     print("支持向量ay:",model.dual_coef_)
     print("准确率:", model.score(X, Y))
 
+    return model
+
+def show_result(model, X_sample, Y):
+
     fig = plt.figure()
 
-    x1 = np.linspace(-2, 2, 10)
-    x2 = np.linspace(-2, 2, 10)
+    x1 = np.linspace(-0.5, 1.5, 10)
+    x2 = np.linspace(-0.5, 1.5, 10)
     X1,X2 = np.meshgrid(x1,x2)
     X12 = np.c_[X1.ravel(), X2.ravel()]
-    pred = model.predict(X12)
+    X12_new = mapping_function(X12, 2)
+    pred = model.predict(X12_new)
     y_pred = pred.reshape(X1.shape)
     plt.contourf(X1,X2, y_pred)
+
+    draw_2d(plt, X_sample, Y)
+
     plt.show()
+
+
+def draw_2d(ax, x, y):
+    ax.scatter(x[y==1,0], x[y==1,1], marker='^')
+    ax.scatter(x[y==-1,0], x[y==-1,1], marker='o')
+
+def show_samples(X_raw, X, Y):
+    fig = plt.figure()
+    ax1 = fig.add_subplot(121)
+    ax1.grid()
+    ax1.set_xlim((-1.5,1.5))
+    ax1.set_ylim((-1.5,1.5))
+    ax1.axis('equal')
+    draw_2d(ax1, X_raw, Y)
+    ax2 = fig.add_subplot(122)
+    ax2.grid()
+    ax2.set_xlim((-1.5,1.5))
+    ax2.set_ylim((-1.5,1.5))
+    ax2.axis('equal')
+    draw_2d(ax2, X, Y)
+    plt.show()
+
+def mapping_function(X, gamma):
+    n = X.shape[0]
+    Z = np.zeros((n, 4))    # 做一个4维的特征映射，即式10中的n=0,1,2,3
+    for i in range(n):
+        # 求 x 矢量的模，是一个标量
+        x_norm = np.linalg.norm(X[i])
+        # 第 0 维
+        Z[i,0] = np.exp(-gamma * (x_norm**2))
+        # 第 1 维
+        Z[i,1] = np.sqrt(2) * x_norm * Z[i,0]
+        # 第 2 维
+        Z[i,2] = np.sqrt(2**2/2) * (x_norm**2) * Z[i,0]
+        # 第 3 维
+        Z[i,3] = np.sqrt(2**3/6) * (x_norm**3) * Z[i,0]
+
+    return Z
+
 
 if __name__=="__main__":
 
-    X = np.array([[-1,-1],[1,1],[-1,1],[1,-1]])
+    X_raw = np.array([[0,0],[1,1],[0,1],[1,0]])
     Y = np.array([-1,-1,1,1])
+    print("X 的原始值：")
+    print(X_raw)
+    print("Y 的原始值：")
+    print(Y)
 
     ss = StandardScaler()
-    X = ss.fit_transform(X)
+    X = ss.fit_transform(X_raw)
+    print("X 标准化后的值：")
+    print(X)
+
+    #show_samples(X_raw, X, Y)
+
     gamma = 2
-    Z = fake_K(X, gamma)
+    Z = mapping_function(X, gamma)
+    print("X 标准化后映射的特征值：")
     print(Z)
 
-    #test_feature_linear(X, Y)
+    gamma = 2
+    Z = mapping_function(X_raw, gamma)
+    print("X 不做标准化直接做映射的特征值：")
+    print(Z)
+
+    model = linear_svc(Z, Y)
+    show_result(model, X_raw, Y)
+
+

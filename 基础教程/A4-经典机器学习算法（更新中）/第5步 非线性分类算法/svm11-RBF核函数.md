@@ -208,8 +208,56 @@ X 不做标准化直接做映射的特征值：
 
 所以，我们可以得出结论：**高斯核函数的映射函数只是一种理论解释，而不是实际的算法工作原理。**
 
-把所有的样本都看作是地标（landmark），构造10x10的矩阵，
+### 实际的映射函数
 
+如果映射函数不正确，高斯核函数是如何工作的呢？
+
+注意到在幂的部分的表达式是 $-\gamma||x_i - x_j||^2$，其中 $i,j$ 表示样本序号。所以可以这样认为：对于 4 个样本的异或问题，应该构造这样的特征矩阵：
+
+$$
+异或问题特征矩阵=
+\begin{pmatrix}
+e^{-\gamma\parallel x_1 - x_1 \parallel^2} & e^{-\gamma\parallel x_1 - x_2 \parallel^2} & e^{-\gamma\parallel x_1 - x_{3} \parallel^2} & e^{-\gamma\parallel x_1 - x_{4} \parallel^2}
+\\\\
+e^{-\gamma\parallel x_2 - x_1 \parallel^2} & e^{-\gamma\parallel x_2 - x_2 \parallel^2} & e^{-\gamma\parallel x_2 - x_{3} \parallel^2} & e^{-\gamma\parallel x_2 - x_{4} \parallel^2}
+\\\\
+e^{-\gamma\parallel x_3 - x_1 \parallel^2} & e^{-\gamma\parallel x_3 - x_2 \parallel^2} & e^{-\gamma\parallel x_3 - x_{3} \parallel^2} & e^{-\gamma\parallel x_3 - x_{4} \parallel^2}
+\\\\
+e^{-\gamma\parallel x_4 - x_1 \parallel^2} & e^{-\gamma\parallel x_4 - x_2 \parallel^2} & e^{-\gamma\parallel x_4 - x_{3} \parallel^2} & e^{-\gamma\parallel x_4 - x_{4} \parallel^2}
+\end{pmatrix}
+\tag{12}
+$$
+
+式 12 实际上就是核矩阵，它的具体含义分成两步解释：
+1. 首先看图 5.11.1。
+
+<img src="./images/5-11-1.png" />
+
+<center>图 5.11.1 </center>
+
+以式 12 的第二行元素为例，分别计算从样本 $x_3$ 到其它四个样本（包括自己）之间的距离，即二范数的平方 $d=||x_3-x_j||^2$。
+
+2. 然后把 $d$ 乘以 $-\gamma$，再求自然指数。如图 5.11.2。
+
+<img src="./images/5-11-2.png" />
+
+<center>图 5.11.2 </center>
+
+由于 $||x_i-x_j||^2 \ge 0$，且 $\gamma \ge 0$，所以 $-\gamma ||x_i-x_j||^2 \le 0$，从图 5.11.2 的函数图像来看，$K(x_i,x_j)$ 的定义域是 $(-\infty,0]$，值域是 $(0,1]$，即：
+- 两个样本的距离越大，其核函数值 K 越小，趋近于 0；
+- 两个样本点的距离越小，其核函数值越大，趋近于 1；
+- 特殊地，某个样本和它本身的核函数值为 1。
+
+### 相关性的解释
+
+由于 K 函数的值与距离负相关，所以可以理解为两个样本的相关性。
+
+
+
+
+
+
+把所有的样本都看作是地标（landmark），构造10x10的矩阵，
 
 $$
 FeatureMap=

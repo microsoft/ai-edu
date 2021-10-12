@@ -174,6 +174,9 @@ def test_rgb(X,Y):
 
 if __name__=="__main__":
 
+    test3()
+    exit(0)
+
     X = np.array([[-1,-1],[1,1],[-1,1],[1,-1]])
     Y = np.array([-1,-1,1,1])
 

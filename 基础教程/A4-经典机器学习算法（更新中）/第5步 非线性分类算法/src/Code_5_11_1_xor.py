@@ -98,6 +98,9 @@ def test3():
 
 
 
+
+
+
 def linear_svc(X,Y):
     #model = SVC(C=3, kernel='poly', degree=2, gamma=1, coef0=1)
     model = SVC(C=3, kernel='linear')
@@ -164,6 +167,8 @@ def show_samples(X_raw, X, Y):
     draw_2d(ax2, X, Y)
     plt.show()
 
+
+# 理论上的映射函数，但实际上不能用
 def mapping_function(X, gamma):
     n = X.shape[0]
     Z = np.zeros((n, 4))    # 做一个4维的特征映射，即式10中的n=0,1,2,3
@@ -199,50 +204,40 @@ def load_data(file_name):
         np.savetxt(file_path, samples, fmt='%f, %f, %d', delimiter=',', header='x1, x2, y')
     return X, Y
 
-
-
 if __name__=="__main__":
-
-    
-
-    X_raw,Y = load_data("Data_5_11_xor.csv")
-    fig = plt.figure()
-    draw_2d(plt, X_raw,Y)
-    plt.show()
-    
-
-
-    '''
+    # 生成原始样本
     X_raw = np.array([[0,0],[1,1],[0,1],[1,0]])
     Y = np.array([-1,-1,1,1])
     print("X 的原始值：")
     print(X_raw)
     print("Y 的原始值：")
     print(Y)
-    '''
-
+    
+    # 标准化
     ss = StandardScaler()
     X = ss.fit_transform(X_raw)
     print("X 标准化后的值：")
     print(X)
 
-    model = poly_svc(X, Y)
-    exit(0)
-    show_result(model, X_raw, Y)
-
-    #show_samples(X_raw, X, Y)
-
+    # X 标准化后映射的特征值
     gamma = 2
     Z = mapping_function(X, gamma)
     print("X 标准化后映射的特征值：")
     print(Z)
-
+    # 通过结果可以看出来映射后4个样本被映射到了四维空间中的一个点，不能做后续的分类
+   
+    # X 不做标准化直接做映射的特征值
     gamma = 2
     Z = mapping_function(X_raw, gamma)
     print("X 不做标准化直接做映射的特征值：")
     print(Z)
 
-    model = linear_svc(X, Y)
+    # 用 K 函数做映射，形成核函数矩阵
+
+
+
+    # 尝试用线性 SVM 做分类    
+    model = linear_svc(Z, Y)
     
 
 

@@ -100,7 +100,7 @@ def test3():
 
 def linear_svc(X,Y):
     #model = SVC(C=3, kernel='poly', degree=2, gamma=1, coef0=1)
-    model = SVC(C=30, kernel='linear')
+    model = SVC(C=3, kernel='linear')
     model.fit(X,Y)
 
     #print("权重:",model.coef_)
@@ -112,12 +112,26 @@ def linear_svc(X,Y):
 
     return model
 
+def poly_svc(X,Y):
+    model = SVC(C=3, kernel='poly', degree=2, gamma=1, coef0=1)
+    model.fit(X,Y)
+
+    #print("权重:",model.coef_)
+    print("支持向量个数:",model.n_support_)
+    print("支持向量索引:",model.support_)
+    print("支持向量:",np.round(model.support_vectors_,3))
+    print("支持向量ay:",model.dual_coef_)
+    print("准确率:", model.score(X, Y))
+
+    return model
+
+
 def show_result(model, X_sample, Y):
 
     fig = plt.figure()
 
-    x1 = np.linspace(-0.5, 1.5, 10)
-    x2 = np.linspace(-0.5, 1.5, 10)
+    x1 = np.linspace(-1.5, 1.5, 10)
+    x2 = np.linspace(-1.5, 1.5, 10)
     X1,X2 = np.meshgrid(x1,x2)
     X12 = np.c_[X1.ravel(), X2.ravel()]
     X12_new = mapping_function(X12, 2)
@@ -168,19 +182,53 @@ def mapping_function(X, gamma):
     return Z
 
 
+def load_data(file_name):
+    file_path = generate_file_path(file_name)
+    file = Path(file_path)
+    if file.exists():
+        samples = np.loadtxt(file, delimiter=',')
+        X = samples[:, 0:2]
+        Y = samples[:, 2]
+    else:
+        X = np.random.randn(200,2)
+        Y_01 = np.logical_xor(X[:,0] > 0, X[:,1] > 0)
+        Y = np.zeros(Y_01.shape)
+        Y[Y_01 == False] = -1
+        Y[Y_01 == True] = 1
+        samples = np.hstack((X,Y.reshape(-1,1)))
+        np.savetxt(file_path, samples, fmt='%f, %f, %d', delimiter=',', header='x1, x2, y')
+    return X, Y
+
+
+
 if __name__=="__main__":
 
+    
+
+    X_raw,Y = load_data("Data_5_11_xor.csv")
+    fig = plt.figure()
+    draw_2d(plt, X_raw,Y)
+    plt.show()
+    
+
+
+    '''
     X_raw = np.array([[0,0],[1,1],[0,1],[1,0]])
     Y = np.array([-1,-1,1,1])
     print("X 的原始值：")
     print(X_raw)
     print("Y 的原始值：")
     print(Y)
+    '''
 
     ss = StandardScaler()
     X = ss.fit_transform(X_raw)
     print("X 标准化后的值：")
     print(X)
+
+    model = poly_svc(X, Y)
+    exit(0)
+    show_result(model, X_raw, Y)
 
     #show_samples(X_raw, X, Y)
 
@@ -194,7 +242,7 @@ if __name__=="__main__":
     print("X 不做标准化直接做映射的特征值：")
     print(Z)
 
-    model = linear_svc(Z, Y)
-    show_result(model, X_raw, Y)
+    model = linear_svc(X, Y)
+    
 
 

@@ -98,10 +98,10 @@ def gaussian_2d(x, sigma, mu):
 
 def test3():
     sigma = 1
-    x = np.linspace(-4,6,100)
+    x = np.linspace(-4,6,1000)
     f1 = gaussian_2d(x, sigma, 1)
-    f2 = gaussian_2d(x, sigma, 2)
-    f3 = np.exp(-(2*x*x - 6*x + 5)/(2*sigma*sigma)) / (sigma ** 2 * 2*np.pi)
+    f2 = gaussian_2d(x, sigma, -2)
+    f3 = np.exp(-(2*x*x + 2*x + 5)/(2*sigma*sigma)) / (2*np.pi*sigma*sigma)
     print(np.sum(f1), np.sum(f2), np.sum(f3))
     fig = plt.figure()
     plt.plot(x, f1)
@@ -110,6 +110,16 @@ def test3():
     plt.plot(x, f1 * f2)
     plt.grid()
     plt.show()
+
+from scipy import integrate
+
+def f(x):
+    sigma=1
+    f3 = np.exp(-(2*x*x + 2*x + 5)/(2*sigma*sigma)) / (2*np.pi*sigma*sigma)
+    return f3
+
+def test4():
+    print(integrate.quad(f, -10,10))
 
 
 def svc(C, X, Y):
@@ -174,7 +184,7 @@ def test_rgb(X,Y):
 
 if __name__=="__main__":
 
-    test3()
+    test4()
     exit(0)
 
     X = np.array([[-1,-1],[1,1],[-1,1],[1,-1]])

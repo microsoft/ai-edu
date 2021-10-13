@@ -282,6 +282,54 @@ e^{-\gamma\parallel x_{10} - x_1 \parallel^2} & e^{-\gamma\parallel x_{10} - x_2
 \end{pmatrix}
 $$
 
+https://zhuanlan.zhihu.com/p/135898326
+
+
+连续函数的内积定义
+
+两个函数f(x) g(x) 与区间 [a,b]，且两函数在改区间上可积且平方可积，则式 12 称作函数的内积
+
+$$
+K(x_i,y_j) = \int_a^b f(x) g(x) dx \tag{12}
+$$
+
+$$
+f_a(x)=\frac{1}{\sigma \sqrt{2\pi}} \exp \left [-\frac{(x-a)^2}{2\sigma^2} \right ]
+$$
+$$
+ f_b(x)=\frac{1}{\sigma \sqrt{2\pi}}\exp \left [-\frac{(x-b)^2}{2\sigma^2} \right ]
+$$
+
+$$
+\begin{aligned}
+f_a(x) f_b(x) &= \frac{1}{2\pi\sigma^2} \exp \left[ -\frac{(x-a)^2}{2\sigma^2} \right] \exp \left[ -\frac{(x-b)^2}{2\sigma^2} \right]
+\\\\
+&=\frac{1}{2\pi\sigma^2} \exp\left[ -\frac{(x-a)^2+(x-b)^2}{2\sigma^2} \right]
+\\\\
+&=\frac{1}{2\pi\sigma^2}\exp \left [ -\frac{2x^2+a^2+b^2-2x(a+b)}{2\sigma^2} \right ]
+\\\\
+&=\frac{1}{2\pi\sigma^2}\exp  \left \{ -\frac{1}{\sigma^2} \left [\left (x - \frac{a+b}{2}\right )^2+ \left(  \frac{a-b}{2}  \right )^2 \right ] \right \} \quad (令 \mu = \frac{a+b}{2})
+\\\\
+&=\frac{1}{2\pi\sigma^2}\exp  \left [ -\frac{\left (x - \mu \right )^2}{\sigma^2}   \right ] \exp  \left [ -\left(  \frac{a-b}{2\sigma}  \right )^2  \right]
+\end{aligned} \tag{13}
+$$
+
+对式 13 中的 $x$ 求不定积分，后面的一项成为常数项，可以提出到积分符号之外：
+
+$$
+\begin{aligned}
+\int_{-\infty}^{+\infty} f_a(x)f_b(x) &=\frac{1}{2\pi\sigma^2}\exp  \left [ -\left(  \frac{a-b}{2\sigma}  \right )^2  \right] \int_{-\infty}^{+\infty} \exp  \left [ -\frac{\left (x - \mu \right )^2}{\sigma^2}   \right ] dx  
+\\\\
+&=\frac{\sigma \sqrt{\pi}}{2\pi\sigma^2} \cdot \exp \left [ -\left(  \frac{a-b}{2\sigma}  \right )^2  \right]
+\\\\
+&=\frac{1}{2 \sigma \sqrt{\pi}} \exp \left [ -\left(  \frac{a-b}{2\sigma}  \right )^2  \right]
+\end{aligned}
+\tag{14}
+$$
+
+
+
+
 
 ### SVC 线性分类器
 

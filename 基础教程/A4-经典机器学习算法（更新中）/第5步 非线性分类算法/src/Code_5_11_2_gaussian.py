@@ -52,6 +52,7 @@ if __name__ == '__main__':
 
     f12 = f1 * f2
     f13 = f1 * f3
+    f23 = f2 * f3
     
     ax2 = fig.add_subplot(132)
     ax2.plot(x, f1, label='f1(μ=0,σ=1)')
@@ -59,6 +60,7 @@ if __name__ == '__main__':
     ax2.plot(x, f3, linestyle=':', label='f3(μ=-2,σ=1)')
     ax2.plot(x, f12, linestyle='--', marker='.', label='f1*f2')
     ax2.plot(x, f13, linestyle=':', marker='*', label='f1*f3')
+    ax2.plot(x, f23, linestyle=':', marker='*', label='f2*f3')
 
     ax2.grid()
     ax2.legend()

@@ -221,23 +221,17 @@ if __name__=="__main__":
 
     # X 标准化后映射的特征值
     gamma = 2
-    Z = mapping_function(X, gamma)
+    Z1 = mapping_function(X, gamma)
     print("X 标准化后映射的特征值：")
-    print(Z)
+    print(Z1)
     # 通过结果可以看出来映射后4个样本被映射到了四维空间中的一个点，不能做后续的分类
    
     # X 不做标准化直接做映射的特征值
     gamma = 2
-    Z = mapping_function(X_raw, gamma)
+    Z2 = mapping_function(X_raw, gamma)
     print("X 不做标准化直接做映射的特征值：")
-    print(Z)
-
-    # 用 K 函数做映射，形成核函数矩阵
-
-
+    print(Z2)
 
     # 尝试用线性 SVM 做分类    
-    model = linear_svc(Z, Y)
+    model = linear_svc(Z2, Y)
     
-
-

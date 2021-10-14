@@ -7,8 +7,8 @@ from sklearn.svm import *
 import matplotlib as mpl
 
 
-def linear_svc(X,Y):
-    model = SVC(C=1, kernel='linear')
+def linear_svc(X,Y,C):
+    model = SVC(C=C, kernel='linear')
     model.fit(X,Y)
 
     print("权重:",model.coef_)
@@ -34,19 +34,11 @@ def poly_svc(X,Y):
 
     return model
 '''
-
-# 展示分类结果
-def show_result(model, gamma, X_sample, Y):
-    # 基本绘图设置
-    mpl.rcParams['font.sans-serif'] = ['SimHei']  
-    mpl.rcParams['axes.unicode_minus']=False
-    fig = plt.figure()
-    plt.title(u"异或问题的分类结果")
-    plt.grid()
-    plt.axis('equal')
+# 生成测试数据，形成一个点阵来模拟平面
+def prediction(model, gamma, X_sample, area):
     # 生成测试数据，形成一个点阵来模拟平面
-    x1 = np.linspace(-1.5, 1.5, 10)
-    x2 = np.linspace(-1.5, 1.5, 10)
+    x1 = np.linspace(area[0], area[1], area[2])
+    x2 = np.linspace(area[3], area[4], area[5])
     X1,X2 = np.meshgrid(x1,x2)
     X12 = np.c_[X1.ravel(), X2.ravel()]
     # 用与生成训练数据相同的函数来生成测试数据特征
@@ -55,6 +47,19 @@ def show_result(model, gamma, X_sample, Y):
     pred = model.predict(X12_new)
     # 变形并绘制分类区域
     y_pred = pred.reshape(X1.shape)
+
+    return X1, X2, y_pred
+
+# 展示分类结果
+def show_result(X1, X2, y_pred, X_sample, Y):
+    # 基本绘图设置
+    mpl.rcParams['font.sans-serif'] = ['SimHei']  
+    mpl.rcParams['axes.unicode_minus']=False
+    fig = plt.figure()
+    plt.title(u"异或问题的分类结果")
+    plt.grid()
+    plt.axis('equal')
+    # 绘图
     plt.contourf(X1,X2, y_pred)
     # 绘制原始样本点用于比对
     draw_2d(plt, X_sample, Y)
@@ -103,10 +108,11 @@ if __name__=="__main__":
     print(np.round(X_new,3))
 
     # 尝试用线性 SVM 做分类    
-    model = linear_svc(X_new, Y)
-    
-    show_result(model, gamma, X, Y)
+    C = 1
+    model = linear_svc(X_new, Y, C)
+    # 显示分类预测结果
+    X1, X2, y_pred = prediction(model, gamma, X, [-1.5,1.5,10,-1.5,1.5,10])
+    show_result(X1, X2, y_pred, X, Y)
 
-    
     #model = poly_svc(X, Y)
     #show_result(model, gamma, X, Y)

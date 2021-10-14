@@ -491,21 +491,15 @@ x2 = np.linspace(-1.5, 1.5, 10)
 
 我们用 sklearn 中的一个叫做 moon 的样本数据来做进一步的理解。
 
+<img src="./images/5-11-5.png" />
+
+<center>图 5.11.5 </center>
 
 
-### 相关性的解释
-
-由于 K 函数的值与距离负相关，所以可以理解为两个样本的相关性。
-
-
-
-
-
-
-把所有的样本都看作是地标（landmark），构造10x10的矩阵，
+我们以 10 个样本为例，首先建立特征数据矩阵：
 
 $$
-FeatureMap=
+特征数据矩阵=
 \begin{pmatrix}
 e^{-\gamma\parallel x_1 - x_1 \parallel^2} & e^{-\gamma\parallel x_1 - x_2 \parallel^2} & \cdots & e^{-\gamma\parallel x_1 - x_{10} \parallel^2}
 \\\\
@@ -526,6 +520,18 @@ e^{-\gamma\parallel x_2 - x_1 \parallel^2} & 1 & \cdots & e^{-\gamma\parallel x_
 e^{-\gamma\parallel x_{10} - x_1 \parallel^2} & e^{-\gamma\parallel x_{10} - x_2 \parallel^2} & \cdots & 1
 \end{pmatrix}
 $$
+
+
+### 相关性的解释
+
+由于 K 函数的值与距离负相关，所以可以理解为两个样本的相关性。
+
+
+
+
+
+
+把所有的样本都看作是地标（landmark），构造10x10的矩阵，
 
 https://zhuanlan.zhihu.com/p/135898326
 

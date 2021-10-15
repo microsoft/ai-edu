@@ -66,7 +66,6 @@ def show_result(X1, X2, y_pred, X_sample, Y):
 
     plt.show()
 
-
 def draw_2d(ax, x, y):
     ax.scatter(x[y==1,0], x[y==1,1], marker='^')
     ax.scatter(x[y==-1,0], x[y==-1,1], marker='o')
@@ -84,14 +83,6 @@ def K_matrix(X, L, gamma):
             K[i,j] = np.exp(-gamma * np.linalg.norm(X[i] - L[j])**2)
 
     return K
-
-def gaussian_kernal(gamma, landmark, weight):
-    xx = np.linspace(-2,2,100)
-    yy = np.linspace(-2,2,100)
-    P,Q = np.meshgrid(xx, yy)
-    R = weight * np.exp(-gamma * ((P-landmark[0])**2 + (Q-landmark[1])**2))
-    return P,Q,R
-
 
 if __name__=="__main__":
     # 生成原始样本

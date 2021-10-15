@@ -10,22 +10,6 @@ def gaussian_2d(x, sigma, mu):
     f = np.exp(a) / (sigma * np.sqrt(2*np.pi))
     return f
 
-'''
-def gaussian_3d(ax):
-    xx = np.linspace(-5,5,100)
-    yy = np.linspace(-5,5,100)
-    P,Q = np.meshgrid(xx, yy)
-    R1 = np.exp(-(P*P + Q*Q))
-    #ax.plot_surface(P, Q, R1, cmap=cm.coolwarm)
-    R2 = np.exp(-(P-1)**2/2 - (Q-2)**2/2)
-    R = R1 + R2
-    #ax.plot_surface(P, Q, R, cmap=cm.coolwarm)
-
-    cset = ax.contour(P,Q,R,zdir='z',offset=0,cmap=cm.coolwarm)                     #绘制xy面投影
-    cset = ax.contour(P,Q,R,zdir='x',offset=-4,cmap = mpl.cm.winter)                 #绘制zy面投影
-    cset = ax.contour(P,Q,R,zdir='y',offset= 4,cmap =mpl.cm.winter)                  #绘制zx面投影
-'''
-
 # 验证fa·fb的积分值
 def f(x):
     sigma=1

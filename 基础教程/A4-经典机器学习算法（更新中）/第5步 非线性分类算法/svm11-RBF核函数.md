@@ -83,11 +83,6 @@ $$
 f(x)=\exp \left ( -\frac{(x-\mu)^2}{2 \sigma^2} \right )
 $$
 
-二维高斯函数
-
-$$
-f(x,y)=\exp \left ( -\frac{(x-\mu_1)^2}{2 \sigma_1^2} - \frac{(y-\mu_2)^2}{2 \sigma_2^2} \right )
-$$
 
 
 
@@ -497,43 +492,76 @@ x2 = np.linspace(-1.5, 1.5, 10)
 
 <center>图 5.11.5 </center>
 
+在图 5.11.5 中，左子图有正负样本各 50 个，其中红色三角形为正类样本；右子图只取了正负样本各 5 个，可以看到它们都处于关键位置，仍可以代表整个数据集的形状轮廓。
 
-我们以 10 个样本为例，首先建立特征数据矩阵：
+
+我们以 10 个样本为例，首先做标准化（均值为 0 方差为 1），然后建立特征数据矩阵：
 
 $$
 特征数据矩阵=
 \begin{pmatrix}
-e^{-\gamma\parallel x_1 - x_1 \parallel^2} & e^{-\gamma\parallel x_1 - x_2 \parallel^2} & \cdots & e^{-\gamma\parallel x_1 - x_{10} \parallel^2}
+e^{-\gamma\parallel x_0 - x_0 \parallel^2} & e^{-\gamma\parallel x_0 - x_1 \parallel^2} & \cdots & e^{-\gamma\parallel x_0 - x_{9} \parallel^2}
 \\\\
-e^{-\gamma\parallel x_2 - x_1 \parallel^2} & e^{-\gamma\parallel x_2 - x_2 \parallel^2} & \cdots & e^{-\gamma\parallel x_2 - x_{10} \parallel^2}
-\\\\
-\vdots & \vdots &  \ddots & \vdots
-\\\\
-e^{-\gamma\parallel x_{10} - x_1 \parallel^2} & e^{-\gamma\parallel x_{10} - x_2 \parallel^2} & \cdots & e^{-\gamma\parallel x_{10} - x_{10} \parallel^2}
-\end{pmatrix}
-=
-\begin{pmatrix}
-1 & e^{-\gamma\parallel x_1 - x_2 \parallel^2} & \cdots & e^{-\gamma\parallel x_1 - x_{10} \parallel^2}
-\\\\
-e^{-\gamma\parallel x_2 - x_1 \parallel^2} & 1 & \cdots & e^{-\gamma\parallel x_2 - x_{10} \parallel^2}
+e^{-\gamma\parallel x_1 - x_0 \parallel^2} & e^{-\gamma\parallel x_1 - x_1 \parallel^2} & \cdots & e^{-\gamma\parallel x_2 - x_{9} \parallel^2}
 \\\\
 \vdots & \vdots &  \ddots & \vdots
 \\\\
-e^{-\gamma\parallel x_{10} - x_1 \parallel^2} & e^{-\gamma\parallel x_{10} - x_2 \parallel^2} & \cdots & 1
+e^{-\gamma\parallel x_9 - x_0 \parallel^2} & e^{-\gamma\parallel x_9 - x_1 \parallel^2} & \cdots & e^{-\gamma\parallel x_9 - x_9 \parallel^2}
 \end{pmatrix}
+\tag{20}
 $$
 
+然后仍然使用线性 SVM 分类器，验证新的特征矩阵是否可以线性可分。得到的打印输出如下：
 
-### 相关性的解释
+```
+权重: [[-1.16076927 -1.11328038 -0.65285093 -1.25970266 -1.10970314  1.05151307
+   1.12589867  0.82036897  1.03337237  0.87829645]]
+支持向量个数: [5 5]
+支持向量索引: [0 1 2 3 4 5 6 7 8 9]
+支持向量ay: [[-2.         -1.39209098 -0.09042443 -1.9120296  -1.13078953  2.
+   1.54903647  0.75518565  1.37140957  0.84970285]]
+准确率: 1.0
+```
 
-由于 K 函数的值与距离负相关，所以可以理解为两个样本的相关性。
+- 使用样本数据在训练好的模型上做预测的准确率为 1.0，表明分类正确。
+- 所有的样本点都是支持向量，正负类各 5 个。
+
+绘制可视化分类结果如图 5.11.6 所示，可以看到最关键的 0 号样本和 5 号样本，都处于正确的分类区中。
+
+<img src="./images/5-11-6.png" />
+
+<center>图 5.11.6 </center>
+
+
+在二维平面中，每个样本点都可以对有一个该样本点为中心的二维高斯函数，如式 21：
+
+二维高斯函数
+
+$$
+f(x,y)=\exp \left ( -\frac{(x-x_1)^2}{2 \sigma_1^2} - \frac{(y-x_2)^2}{2 \sigma_2^2} \right ) \tag{21}
+$$
+
+由此，我们可以绘制出 10 个样本点各自的高斯函数如图 5.11.7，其中左子图是在 x-y 平面上的投影，右子图是三维图像。左子图中，每个样本点都有一个“势力范围”，用两个同心圆表示，比如 1 号样本和 2 号样本距离较近，它们的相关性就就高，那它们的内积也就较大。3 号样本和 5 号样本虽然也比较近，但是分别属于不同的类别。
+
+<img src="./images/5-11-7.png" />
+
+<center>图 5.11.7 </center>
+
+接下来我们看看高斯核函数的效果，也就是不同样本的高斯函数的内积（相乘后再积分）。
+
+图 5.11.8 展示了所有样本点之间的高斯核函数的数值之和，形成一个凹凸不平的曲面，左子图是它的等高线，对比图 5.11.6 的右子图，可以看到二者完全吻合。
+
+从等高线图上，我们可以发现令人意想不到的问题：一般都会认为 2 号样本和 7 号样本是本类的核心，应该“地位较高”，但实际上 2 号样本处于负类等高线的边缘地带，“深入敌后”的 0 号样本和 5 号样本反而处于本方较高的位置。
+
+<img src="./images/5-11-8.png" />
+
+<center>图 5.11.8 </center>
 
 
 
 
 
 
-把所有的样本都看作是地标（landmark），构造10x10的矩阵，
 
 https://zhuanlan.zhihu.com/p/135898326
 

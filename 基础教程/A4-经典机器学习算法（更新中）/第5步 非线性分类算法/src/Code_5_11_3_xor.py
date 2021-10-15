@@ -35,14 +35,14 @@ def poly_svc(X,Y):
     return model
 '''
 # 生成测试数据，形成一个点阵来模拟平面
-def prediction(model, gamma, X_sample, area):
+def prediction(model, gamma, landmark, scope):
     # 生成测试数据，形成一个点阵来模拟平面
-    x1 = np.linspace(area[0], area[1], area[2])
-    x2 = np.linspace(area[3], area[4], area[5])
+    x1 = np.linspace(scope[0], scope[1], scope[2])
+    x2 = np.linspace(scope[3], scope[4], scope[5])
     X1,X2 = np.meshgrid(x1,x2)
     X12 = np.c_[X1.ravel(), X2.ravel()]
     # 用与生成训练数据相同的函数来生成测试数据特征
-    X12_new = K_matrix(X12, X_sample, gamma)
+    X12_new = K_matrix(X12, landmark, gamma)
     # 做预测
     pred = model.predict(X12_new)
     # 变形并绘制分类区域
@@ -85,6 +85,13 @@ def K_matrix(X, L, gamma):
 
     return K
 
+def gaussian_kernal(gamma, landmark, weight):
+    xx = np.linspace(-2,2,100)
+    yy = np.linspace(-2,2,100)
+    P,Q = np.meshgrid(xx, yy)
+    R = weight * np.exp(-gamma * ((P-landmark[0])**2 + (Q-landmark[1])**2))
+    return P,Q,R
+
 
 if __name__=="__main__":
     # 生成原始样本
@@ -113,6 +120,3 @@ if __name__=="__main__":
     # 显示分类预测结果
     X1, X2, y_pred = prediction(model, gamma, X, [-1.5,1.5,10,-1.5,1.5,10])
     show_result(X1, X2, y_pred, X, Y)
-
-    #model = poly_svc(X, Y)
-    #show_result(model, gamma, X, Y)

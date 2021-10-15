@@ -32,7 +32,7 @@ PyTorch==1.5.0
 ![](./zhangliang.png)
  
 ## 项目提交方式：
-提交项目至GitHub“微软人工智能教育与学习共建社区”指定位置，需要有文档和代码，文档中给出代码的具体运行步骤。
+提交项目至GitHub“微软人工智能教育与学习共建社区”专用[Issue](https://github.com/microsoft/ai-edu/issues/680)，需要有文档和代码，文档中给出代码的具体运行步骤。
 
 ## 案例参考地址：
 AI-System/Labs/BasicLabs/Lab2 at main · microsoft/AI-System · GitHub

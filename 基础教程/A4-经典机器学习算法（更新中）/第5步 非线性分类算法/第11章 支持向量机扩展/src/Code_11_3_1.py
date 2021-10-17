@@ -3,7 +3,7 @@ from sklearn.svm import SVC
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Code_5_8_1 import *
+from Code_11_2_1 import *
 
 def main():
     X = np.array([[3,0],[2,4],[3,4],[3,3],[3,2],[3,1],[1,1],[2,2],[2,1],[2,0],[4,1]])

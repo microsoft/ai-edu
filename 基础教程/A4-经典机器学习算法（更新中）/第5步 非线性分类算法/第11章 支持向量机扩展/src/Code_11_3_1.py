@@ -10,6 +10,12 @@ def main():
     Y = np.array([1,1,1,1,1,1,-1,-1,-1,-1,-1])
 
     fig = plt.figure()
+    plt.grid()
+    plt.axis('equal')
+    show_samples(plt, X, Y)
+    plt.show()
+    
+    fig = plt.figure()
     ax = fig.add_subplot(131)
     C = 10
     svc(ax, C, X, Y)

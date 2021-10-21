@@ -219,18 +219,18 @@ nav:
         - 6.木头与团队合作的故事: './基础教程/A5-现代软件工程（更新中）/第2部分 个人与团队/4.1 木头与团队合作的故事.md'
         - 7.故事分析: './基础教程/A5-现代软件工程（更新中）/第2部分 个人与团队/4.2 故事分析.md'
     - 人工智能系统:
-      - 本课介绍: "./基础教程/A6-人工智能系统/README.md"
-      - 课程目录: "./基础教程/A6-人工智能系统/Lectures/README.md"
+      - 本课介绍: "./基础教程/A6-人工智能系统/AI-System/README.md"
+      - 课程目录: "./基础教程/A6-人工智能系统/AI-System/Lectures/README.md"
       - 实验:
-        - 1. 框架及工具入门示例: "./基础教程/A6-人工智能系统/Labs/BasicLabs/Lab1/README.md"
-        - 2. 定制一个新的张量运算: "./基础教程/A6-人工智能系统/Labs/BasicLabs/Lab2/README.md"
-        - 3. CUDA实现和优化: "./基础教程/A6-人工智能系统/Labs/BasicLabs/Lab3/README.md"
-        - 4 AllReduce的实现和优化: "./基础教程/A6-人工智能系统/Labs/BasicLabs/Lab4/README.md"
-        - 5. 配置Container进行云上训练或推理: "./基础教程/A6-人工智能系统/Labs/BasicLabs/Lab5/README.md"
-        - 6. 学习使用调度管理系统: "./基础教程/A6-人工智能系统/Labs/AdvancedLabs/Lab6/README.md"
-        - 7. 分布式训练任务练习: "./基础教程/A6-人工智能系统/Labs/AdvancedLabs/Lab7/README.md"
-        - 8 自动机器学习系统练习: "./基础教程/A6-人工智能系统/Labs/AdvancedLabs/Lab8/README.md"
-        - 9 强化学习系统练习: "./基础教程/A6-人工智能系统/Labs/AdvancedLabs/Lab9/README.md"
+        - 1. 框架及工具入门示例: "./基础教程/A6-人工智能系统/AI-System/Labs/BasicLabs/Lab1/README.md"
+        - 2. 定制一个新的张量运算: "./基础教程/A6-人工智能系统/AI-System/Labs/BasicLabs/Lab2/README.md"
+        - 3. CUDA实现和优化: "./基础教程/A6-人工智能系统/AI-System/Labs/BasicLabs/Lab3/README.md"
+        - 4 AllReduce的实现和优化: "./基础教程/A6-人工智能系统/AI-System/Labs/BasicLabs/Lab4/README.md"
+        - 5. 配置Container进行云上训练或推理: "./基础教程/A6-人工智能系统/AI-System/Labs/BasicLabs/Lab5/README.md"
+        - 6. 学习使用调度管理系统: "./基础教程/A6-人工智能系统/AI-System/Labs/AdvancedLabs/Lab6/README.md"
+        - 7. 分布式训练任务练习: "./基础教程/A6-人工智能系统/AI-System/Labs/AdvancedLabs/Lab7/README.md"
+        - 8 自动机器学习系统练习: "./基础教程/A6-人工智能系统/AI-System/Labs/AdvancedLabs/Lab8/README.md"
+        - 9 强化学习系统练习: "./基础教程/A6-人工智能系统/AI-System/Labs/AdvancedLabs/Lab9/README.md"
   - 实践案例:
     - 本页介绍: './实践案例/README.md'
     - 1.漫画翻译: './实践案例/B01-漫画翻译/README.md'

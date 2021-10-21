@@ -5,7 +5,7 @@ from sklearn.datasets import *
 from sklearn.preprocessing import *
 from sklearn.svm import *
 import matplotlib as mpl
-
+from matplotlib.colors import ListedColormap
 
 def linear_svc(X,Y,C):
     model = SVC(C=C, kernel='linear')
@@ -47,7 +47,8 @@ def show_result(X1, X2, y_pred, X_sample, Y):
     plt.grid()
     plt.axis('equal')
     # 绘图
-    plt.contourf(X1,X2, y_pred)
+    cmap = ListedColormap(['yellow','lightgray'])
+    plt.contourf(X1,X2, y_pred, cmap=cmap)
     # 绘制原始样本点用于比对
     draw_2d(plt, X_sample, Y)
 
@@ -96,5 +97,5 @@ if __name__=="__main__":
     C = 1
     model = linear_svc(X_new, Y, C)
     # 显示分类预测结果
-    X1, X2, y_pred = prediction(model, gamma, X, [-1.5,1.5,10,-1.5,1.5,10])
+    X1, X2, y_pred = prediction(model, gamma, X, [-1.5,1.5,100,-1.5,1.5,100])
     show_result(X1, X2, y_pred, X, Y)

@@ -13,6 +13,7 @@ def gaussian_2d(x, sigma, mu):
 # 验证fa·fb的积分值
 def f(x):
     sigma=1
+    # 式 11.9.8
     f = np.exp(-(2*x*x + 2*x + 5)/(2*sigma*sigma)) / (2*np.pi*sigma*sigma)
     return f
 

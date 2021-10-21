@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 import matplotlib as mpl
 from matplotlib.colors import ListedColormap
-from Code_11_8_3_Xor import *
+from Code_11_9_2_Xor import *
 
 def generate_file_path(file_name):
     curr_path = sys.argv[0]

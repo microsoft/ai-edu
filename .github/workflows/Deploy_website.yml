@@ -29,7 +29,11 @@ jobs:
           
       # Set up Node.js env
       - uses: actions/setup-node@v2.1.5
-
+      
+      # Get submodule
+      - run: git submodule init
+      - run: git submodule update
+      
       # Move content to Docs
       - run: mv './基础教程' ./docs/基础教程
       - run: mv './实践案例' ./docs/实践案例

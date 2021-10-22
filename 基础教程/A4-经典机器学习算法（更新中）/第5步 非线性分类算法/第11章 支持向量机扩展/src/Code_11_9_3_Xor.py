@@ -72,25 +72,7 @@ def K_matrix(X, L, gamma):
 
     return K
 
-def K_matrix(X, scope, gamma):
-
-    x1 = np.linspace(scope[0], scope[1], scope[2])
-    x2 = np.linspace(scope[3], scope[4], scope[5])
-    print(x1,x2)
-
-    landmark = np.zeros((scope[2]*scope[5], 2))
-    for i in range(scope[2]):
-        for j in range(scope[5]):
-            landmark[i*scope[2]+j,0] = x1[i]
-            landmark[i*scope[2]+j,1] = x2[j]
-
-    print(landmark)
-
-    
-
 if __name__=="__main__":
-
-
     # 生成原始样本
     X_raw = np.array([[0,0],[1,1],[0,1],[1,0]])
     Y = np.array([-1,-1,1,1])
@@ -104,10 +86,6 @@ if __name__=="__main__":
     X = ss.fit_transform(X_raw)
     print("X 标准化后的值：")
     print(X)
-
-    scope = [-2,2,9,-2,2,9]
-    K_matrix(X, scope, 1)
-    exit(0)
 
     # 用 K 函数做映射，形成核函数矩阵
     gamma = 1

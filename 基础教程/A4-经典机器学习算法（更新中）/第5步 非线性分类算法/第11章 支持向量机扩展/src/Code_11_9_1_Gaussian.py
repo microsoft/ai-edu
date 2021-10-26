@@ -34,6 +34,18 @@ def gaussian_2d_fun(sample, gamma, scope):
     R = np.exp(-gamma * ((P-sample[0])**2 + (Q-sample[1])**2))
     return P,Q,R
 
+# 绘图区基本设置
+def set_ax(ax, scope):
+    if (ax.name != '3d'):
+        ax.grid()
+        ax.axis('equal')
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    if (scope is not None):
+        ax.set_xlim(scope[0], scope[1])
+        ax.set_ylim(scope[3], scope[4])
+
+
 if __name__ == '__main__':
 
     print("积分结果：")
@@ -44,7 +56,7 @@ if __name__ == '__main__':
     mpl.rcParams['font.sans-serif'] = ['SimHei']  
     mpl.rcParams['axes.unicode_minus']=False
     fig = plt.figure()
-    plt.title(u"高斯函数与其内积（相关性）的理解")
+    plt.title(u"一维高斯函数与其内积（相关性）的理解")
     plt.axis('off')
 
     # 1. 基本高斯函数（二维）
@@ -78,17 +90,25 @@ if __name__ == '__main__':
 
 
     fig = plt.figure()
-    ax1 = plt
-    #ax1.set_title(u'样本的二维高斯曲面')
-    scope = [-0.5,1.5,50, -0.5,1.5,50]
-    #set_ax(ax1, scope)
+    plt.title(u"二维高斯函数与其内积（相关性）的理解")
+    plt.axis('off')
+    ax1 = fig.add_subplot(121, projection='3d')
+    ax2 = fig.add_subplot(122)   
+    scope = [-1.5,2.5,50, -1.5,2.5,50]
+    set_ax(ax1, scope)
+    set_ax(ax2, scope)
     gamma = 1
     P,Q,R1 = gaussian_2d_fun([0,1], gamma, scope)
-    ax1.contour(P, Q, R1, c='red') #cmap=cm.coolwarm)
+    ax1.plot_surface(P, Q, R1, cmap=cm.coolwarm)
+    ax2.contour(P, Q, R1, colors='red', alpha=0.2, linewidth=0.5) #cmap=cm.coolwarm)
+
     P,Q,R2 = gaussian_2d_fun([1,0], gamma, scope)
-    ax1.contour(P, Q, R2, c='blue') #cmap=cm.coolwarm)
+    ax1.plot_surface(P, Q, R2, cmap=cm.coolwarm)
+    ax2.contour(P, Q, R2, colors='blue', alpha=0.2, linewidth=0.5) #cmap=cm.coolwarm)
+    
     R = R1 * R2
-    ax1.contour(P, Q, R, c='green') # cmap=cm.coolwarm)
+    ax1.plot_surface(P, Q, R, cmap=cm.coolwarm)
+    ax2.contour(P, Q, R, colors='green') # cmap=cm.coolwarm)
 
 
     plt.show()

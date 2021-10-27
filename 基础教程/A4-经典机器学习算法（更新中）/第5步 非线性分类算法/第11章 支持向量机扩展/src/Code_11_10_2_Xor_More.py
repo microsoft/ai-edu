@@ -12,22 +12,23 @@ def linear_svc(X,Y,C):
     model = SVC(C=C, kernel='linear')
     model.fit(X,Y)
 
-    print("权重:", np.round(model.coef_, 3))
-    print("权重5x5:\n", np.round(model.coef_, 3).reshape(5,5))
-    print("支持向量个数:",model.n_support_)
-    print("支持向量索引:",model.support_)
-    print("支持向量:",np.round(model.support_vectors_,3))
-    print("支持向量 a*y:", model.dual_coef_)
-    print("准确率:", model.score(X, Y))
+    #print("权重:", np.round(model.coef_, 3))
+    #print("权重10x10:\n", np.round(model.coef_, 3).reshape(10,10))
+    #print("支持向量个数:",model.n_support_)
+    #print("支持向量索引:",model.support_)
+    #print("支持向量:",np.round(model.support_vectors_,3))
+    #print("支持向量 a*y:", model.dual_coef_)
+    score = model.score(X, Y)
+    print("准确率:", score)
 
-    return model
+    return model, score
     
 
 # 生成测试数据，形成一个点阵来模拟平面
 def prediction(model, gamma, landmark, scope):
     # 生成测试数据，形成一个点阵来模拟平面
-    x1 = np.linspace(scope[0], scope[1], scope[2])
-    x2 = np.linspace(scope[3], scope[4], scope[5])
+    x1 = np.linspace(scope[0], scope[1], 50)
+    x2 = np.linspace(scope[3], scope[4], 50)
     X1,X2 = np.meshgrid(x1,x2)
     X12 = np.c_[X1.ravel(), X2.ravel()]
     # 用与生成训练数据相同的函数来生成测试数据特征
@@ -41,27 +42,10 @@ def prediction(model, gamma, landmark, scope):
     return X1, X2, y_pred
 
 # 展示分类结果
-def show_result(X1, X2, y_pred, X_raw, X_scale, Y, scope):
-    # 基本绘图设置
-    mpl.rcParams['font.sans-serif'] = ['SimHei']  
-    mpl.rcParams['axes.unicode_minus']=False
-    fig = plt.figure()
-    plt.title(u"多样本异或问题的分类结果")
-    plt.axis('off')
-
-    ax1 = fig.add_subplot(121)
-    ax1.grid()
-    # 绘制原始样本点用于比对
-    draw_2d(ax1, X_raw, Y, False)
-
-    ax2 = fig.add_subplot(122)
-    ax2.grid()
-    #set_ax(ax2, scope)
+def show_result(ax, X1, X2, y_pred, X, Y):
     cmap = ListedColormap(['yellow','lightgray'])
-    ax2.contourf(X1,X2, y_pred, cmap=cmap)
-    draw_2d(ax2, X_scale, Y, False)
-    
-    plt.show()
+    ax.contourf(X1,X2, y_pred, cmap=cmap)
+    draw_2d(ax, X, Y, False)
 
 def draw_2d(ax, x, y, display_text=True):
     ax.scatter(x[y==1,0], x[y==1,1], marker='^', color='red')
@@ -86,7 +70,6 @@ def Feature_matrix(X, L, gamma):
     return X_feature
 
 def create_landmark(scope):
-    #scope = [-0.5,1.5,5, -0.5,1.5,5]
     x1 = np.linspace(scope[0], scope[1], scope[2])
     # 从1到-0.5，相当于y值从上向下数，便于和图像吻合
     x2 = np.linspace(scope[4], scope[3], scope[5])
@@ -146,25 +129,44 @@ def make_xor(n_samples=100):
     return X, y_xor    
 
 
-
-
-if __name__=="__main__":
-    X_raw, Y = load_data("Data_11_10_xor.csv")
-
-    ss = StandardScaler()
-    X_scale = ss.fit_transform(X_raw)
-    print(X_scale)
-    
-    scope = [-1.5,1.5,5, -1.5,1.5,5]
+def main(ax, scope):
     landmark = create_landmark(scope)
 
     gamma = 1
-    X_feature = Feature_matrix(X_scale, landmark, gamma)
+    X_feature = Feature_matrix(X, landmark, gamma)
 
     # 线性分类
     C = 1
-    model = linear_svc(X_feature, Y, C)
+    model, score = linear_svc(X_feature, Y, C)
 
     # 可视化结果
     X1,X2,y_pred = prediction(model, gamma, landmark, scope)
-    show_result(X1, X2, y_pred, X_raw, X_scale, Y, scope)
+    show_result(ax, X1, X2, y_pred, X, Y)
+    ax.set_title(str.format("地标密度 {0}x{1}, 准确率 {2:.2f}", scope[2], scope[5], score))
+
+
+if __name__=="__main__":
+    X, Y = load_data("Data_11_10_xor.csv")
+    
+    # 基本绘图设置
+    mpl.rcParams['font.sans-serif'] = ['SimHei']  
+    mpl.rcParams['axes.unicode_minus']=False
+    fig = plt.figure()
+
+    scope = [-3,3,5, -3,3,5]
+
+    ax1 = fig.add_subplot(131)
+    set_ax(ax1, scope)
+    main(ax1, scope)
+
+    scope = [-3,3,10, -3,3,10]
+    ax2 = fig.add_subplot(132)
+    set_ax(ax2, scope)
+    main(ax2, scope)
+
+    scope = [-3,3,20, -3,3,20]
+    ax3 = fig.add_subplot(133)
+    set_ax(ax3, scope)
+    main(ax3, scope)
+
+    plt.show()

@@ -13,7 +13,7 @@ def linear_svc(X,Y,C):
     model.fit(X,Y)
 
     #print("权重:", np.round(model.coef_, 3))
-    #print("权重10x10:\n", np.round(model.coef_, 3).reshape(10,10))
+    #print("权重5x5:\n", np.round(model.coef_.reshape(5,5),2))
     #print("支持向量个数:",model.n_support_)
     #print("支持向量索引:",model.support_)
     #print("支持向量:",np.round(model.support_vectors_,3))
@@ -129,9 +129,11 @@ def make_xor(n_samples=100):
     return X, y_xor    
 
 
-def main(ax, scope):
+def classify(ax, scope):
+    # 创建地标
     landmark = create_landmark(scope)
 
+    # 特征映射
     gamma = 1
     X_feature = Feature_matrix(X, landmark, gamma)
 
@@ -153,20 +155,22 @@ if __name__=="__main__":
     mpl.rcParams['axes.unicode_minus']=False
     fig = plt.figure()
 
+    # 5x5=25
     scope = [-3,3,5, -3,3,5]
-
     ax1 = fig.add_subplot(131)
     set_ax(ax1, scope)
-    main(ax1, scope)
+    classify(ax1, scope)
 
+    # 10x10=100
     scope = [-3,3,10, -3,3,10]
     ax2 = fig.add_subplot(132)
     set_ax(ax2, scope)
-    main(ax2, scope)
+    classify(ax2, scope)
 
+    # 20x20=400
     scope = [-3,3,20, -3,3,20]
     ax3 = fig.add_subplot(133)
     set_ax(ax3, scope)
-    main(ax3, scope)
+    classify(ax3, scope)
 
     plt.show()

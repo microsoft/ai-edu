@@ -27,7 +27,7 @@ def load_data(file_name, n_samples):
         X = samples[:, 0:2]
         Y = samples[:, 2]
     else:
-        X, Y = make_moons(n_samples=n_samples, noise=1, shuffle=False)
+        X, Y = make_moons(n_samples=n_samples, noise=0.1, shuffle=False)
         Y[Y == 0] = -1
         samples = np.hstack((X,Y.reshape(-1,1)))
         np.savetxt(file_path, samples, fmt='%f, %f, %d', delimiter=',', header='x1, x2, y')
@@ -103,57 +103,21 @@ def show_predication_result(ax, model, X, Y, scope):
     cmap = ListedColormap(['yellow','lightgray'])
     plt.contourf(X1,X2, y_pred, cmap=cmap)
     # 绘制原始样本点用于比对
-    if (X.shape[0]<=10):
-        draw_2d_samples(ax, X, Y, display_text=True)
-    else:
-        draw_2d_samples(ax, X, Y, display_text=False)
+    draw_2d_samples(ax, X, Y)
 
 # 高斯核函数 SVM
 def rbf_svc(X, Y, C, gamma):
     model = SVC(C=C, gamma = gamma, kernel='rbf')
     model.fit(X,Y)
 
-    #print("权重:",np.dot(model.dual_coef_, model.support_vectors_))
+    print("权重:",np.dot(model.dual_coef_, model.support_vectors_))
     print("支持向量个数:",model.n_support_)
-    #print("支持向量索引:",model.support_)
-    #print("支持向量:",np.round(model.support_vectors_,3))
-    #print("支持向量ay:",np.round(model.dual_coef_,3))
+    print("支持向量索引:",model.support_)
+    print("支持向量:",np.round(model.support_vectors_,3))
+    print("支持向量ay:",np.round(model.dual_coef_,3))
     print("准确率:", model.score(X, Y))
 
     return model
-
-
-
-def compare_3_gamma(X, Y):
-
-    scope = [-3,3,100,-3,3,100]
-
-    fig = plt.figure()
-    plt.axis('off')
-
-    gamma = 1
-    C = 2
-    model = rbf_svc(X, Y, C, gamma)
-    ax1 = fig.add_subplot(131)
-    show_predication_result(ax1, model, X, Y, scope)
-    ax1.set_title(u"gamma=1")
-
-    gamma = 10
-    C = 2
-    model = rbf_svc(X, Y, C, gamma)
-    ax2 = fig.add_subplot(132)
-    show_predication_result(ax2, model, X, Y, scope)
-    ax2.set_title(u"gamma=10")
-
-
-    gamma = 100
-    C = 2
-    model = rbf_svc(X, Y, C, gamma)
-    ax3 = fig.add_subplot(133)
-    show_predication_result(ax3, model, X, Y, scope)
-    ax3.set_title(u"gamma=100")
-
-    plt.show()
 
 
 if __name__=="__main__":
@@ -163,13 +127,56 @@ if __name__=="__main__":
 
     ss = StandardScaler()
     X = ss.fit_transform(X_raw)
+    #print("X 标准化后的值：")
+    #print(X)
 
-    compare_3_gamma(X, Y)
+    # 基本绘图设置
+    mpl.rcParams['font.sans-serif'] = ['SimHei']  
+    mpl.rcParams['axes.unicode_minus']=False
+    fig = plt.figure()
+    plt.axis('off')
+    
+    # 用rbf SVM 做分类    
+    gamma = 2
+    C = 2
+    model = rbf_svc(X, Y, C, gamma)
 
-    file_name = "Data_11_11_moon_100.csv"
-    X_raw, Y = load_data(file_name, 100)
+    # 显示高斯函数投影
+    scope = [-3,3,100,-3,3,100]
+    ax1 = fig.add_subplot(121)
+    show_sample_gaussian(ax1, gamma, X, Y, scope)
 
-    ss = StandardScaler()
-    X = ss.fit_transform(X_raw)
+    # 显示分类预测结果
+    ax2 = fig.add_subplot(122)
+    ax2.set_title(u"区域分类结果")
+    show_predication_result(ax2, model, X, Y, scope)
 
-    compare_3_gamma(X, Y)
+    plt.show()
+
+
+    fig = plt.figure()
+    plt.axis('off')
+
+    gamma = 4
+    C = 2
+    model = rbf_svc(X, Y, C, gamma)
+    ax1 = fig.add_subplot(131)
+    show_predication_result(ax1, model, X, Y, scope)
+    ax1.set_title(u"gamma=4")
+
+    gamma = 1
+    C = 2
+    model = rbf_svc(X, Y, C, gamma)
+    ax2 = fig.add_subplot(132)
+    show_predication_result(ax2, model, X, Y, scope)
+    ax2.set_title(u"gamma=1")
+
+
+    gamma = 0.5
+    C = 2
+    model = rbf_svc(X, Y, C, gamma)
+    ax3 = fig.add_subplot(133)
+    show_predication_result(ax3, model, X, Y, scope)
+    ax3.set_title(u"gamma=0.5")
+
+    plt.show()

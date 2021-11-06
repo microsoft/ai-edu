@@ -222,7 +222,7 @@ if __name__=="__main__":
     print("X 标准化后的值：")
     print(X)
 
-    gamma = 2
+    gamma = 1
     scope = [-3,3,13,-3,3,13]
     landmark = create_landmark(X, scope, gamma)
     X_new = Feature_matrix(X, landmark, gamma)

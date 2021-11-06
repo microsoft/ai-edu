@@ -12,7 +12,6 @@ import os
 from pathlib import Path
 import matplotlib as mpl
 from matplotlib.colors import ListedColormap
-from Code_11_9_2_Xor import *
 
 def generate_file_path(file_name):
     curr_path = sys.argv[0]
@@ -28,7 +27,7 @@ def load_data(file_name, n_samples):
         X = samples[:, 0:2]
         Y = samples[:, 2]
     else:
-        X, Y = make_moons(n_samples=n_samples, noise=0.1, shuffle=False)
+        X, Y = make_moons(n_samples=n_samples, noise=0.3, shuffle=False)
         Y[Y == 0] = -1
         samples = np.hstack((X,Y.reshape(-1,1)))
         np.savetxt(file_path, samples, fmt='%f, %f, %d', delimiter=',', header='x1, x2, y')
@@ -71,7 +70,7 @@ def draw_2d(ax, x, y, display_text=True):
 
 
 # 显示 1 标准化后的样本 以及 2 分类结果
-def show_result_1(X1, X2, y_pred, X, Y, scope):
+def show_result(X1, X2, y_pred, X, Y, scope):
 
     # 基本绘图设置
     mpl.rcParams['font.sans-serif'] = ['SimHei']  
@@ -84,7 +83,7 @@ def show_result_1(X1, X2, y_pred, X, Y, scope):
     # 绘图
     ax1 = fig.add_subplot(121)
     set_ax(ax1, scope)
-    draw_2d(ax1, X, Y)
+    #draw_2d(ax1, X, Y)
 
     ax2 = fig.add_subplot(122)
     set_ax(ax2, scope)
@@ -95,13 +94,58 @@ def show_result_1(X1, X2, y_pred, X, Y, scope):
 
     plt.show()
 
+# 映射特征矩阵
+# X - 样本数据
+# L - 地标 Landmark，在此例中就是样本数据
+# gamma - 形状参数
+def Feature_matrix(X, L, gamma):
+    n = X.shape[0]  # 样本数量
+    m = L.shape[0]  # 特征数量
+    X_feature = np.zeros(shape=(n,m))
+    for i in range(n):
+        for j in range(m):
+            # 计算每个样本点在地标上的高斯函数值，式 11.10.1 
+            X_feature[i,j] = np.exp(-gamma * np.linalg.norm(X[i] - L[j])**2)
+
+    return X_feature
+
+def linear_svc(X,Y,C):
+    model = SVC(C=C, kernel='linear')
+    model.fit(X,Y)
+
+    print("权重:", np.round(model.coef_, 3))
+    print("支持向量个数:",model.n_support_)
+    print("支持向量索引:",model.support_)
+    print("支持向量:",np.round(model.support_vectors_,3))
+    print("支持向量 a*y:", np.round(model.dual_coef_,3))
+    score = model.score(X, Y)
+    print("准确率:", score)
+
+    return model, score
+    
+# 生成测试数据，形成一个点阵来模拟平面
+def prediction(model, gamma, landmark, scope):
+    # 生成测试数据，形成一个点阵来模拟平面
+    x1 = np.linspace(scope[0], scope[1], 50)
+    x2 = np.linspace(scope[3], scope[4], 50)
+    X1,X2 = np.meshgrid(x1,x2)
+    X12 = np.c_[X1.ravel(), X2.ravel()]
+    # 用与生成训练数据相同的函数来生成测试数据特征
+    X12_new = Feature_matrix(X12, landmark, gamma)
+    # 做预测
+    pred = model.predict(X12_new)
+    # 变形并绘制分类区域
+    y_pred = pred.reshape(X1.shape)
+    #prob = model.decision_function(X12_new)
+
+    return X1, X2, y_pred
 
 if __name__=="__main__":
 
-    file_name = "Data_moon_10.csv"
+    file_name = "Data_11_11_moon_10.csv"
     X_10, Y_10 = load_data(file_name, 10)
 
-    file_name = "Data_moon_100.csv"
+    file_name = "Data_11_11_moon_100.csv"
     X_100, Y_100 = load_data(file_name, 100)
 
     show_samples(X_10, Y_10, X_100, Y_100, None)
@@ -112,15 +156,15 @@ if __name__=="__main__":
     print(X)
 
     gamma = 2
-    X_new = K_matrix(X, X, gamma)
+    X_new = Feature_matrix(X, X, gamma)
     print("映射结果：")
     print(np.round(X_new,3))
 
     # 尝试用线性 SVM 做分类    
     C = 2
-    model = linear_svc(X_new, Y_10, C)
+    model, score = linear_svc(X_new, Y_10, C)
     # 显示分类预测结果
-    scope = [-2,2,100,-2,2,100]
+    scope = [-3,3,100,-3,3,100]
     X1, X2, y_pred = prediction(model, gamma, X, scope)
     
-    show_result_1(X1, X2, y_pred, X, Y_10, scope)
+    show_result(X1, X2, y_pred, X, Y_10, scope)

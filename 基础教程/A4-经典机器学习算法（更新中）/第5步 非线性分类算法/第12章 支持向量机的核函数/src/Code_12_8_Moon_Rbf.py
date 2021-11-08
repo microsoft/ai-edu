@@ -122,7 +122,7 @@ def rbf_svc(X, Y, C, gamma):
 
 if __name__=="__main__":
 
-    file_name = "Data_11_11_moon_10.csv"
+    file_name = "Data_12_moon_10.csv"
     X_raw, Y = load_data(file_name, 10)
 
     ss = StandardScaler()

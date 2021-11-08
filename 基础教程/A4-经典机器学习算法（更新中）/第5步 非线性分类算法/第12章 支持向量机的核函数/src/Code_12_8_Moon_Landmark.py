@@ -142,10 +142,10 @@ def prediction(model, gamma, landmark, scope):
 
 if __name__=="__main__":
 
-    file_name = "Data_11_11_moon_10.csv"
+    file_name = "Data_12_moon_10.csv"
     X_10, Y_10 = load_data(file_name, 10)
 
-    file_name = "Data_11_11_moon_100.csv"
+    file_name = "Data_12_moon_100.csv"
     X_100, Y_100 = load_data(file_name, 100)
 
     show_samples(X_10, Y_10, X_100, Y_100, None)

@@ -126,7 +126,7 @@ def compare_3_gamma(X, Y, gamma):
 
 if __name__=="__main__":
     # 10 个样本
-    file_name = "Data_11_11_moon_10.csv"
+    file_name = "Data_12_moon_10.csv"
     X_raw, Y = load_data(file_name, 10)
     # 标准化
     ss = StandardScaler()

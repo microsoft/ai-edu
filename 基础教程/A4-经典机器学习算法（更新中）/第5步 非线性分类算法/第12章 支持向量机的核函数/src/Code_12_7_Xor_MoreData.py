@@ -148,7 +148,7 @@ def classify(ax, scope):
 
 
 if __name__=="__main__":
-    X, Y = load_data("Data_11_10_xor.csv")
+    X, Y = load_data("Data_12_xor.csv")
     
     # 基本绘图设置
     mpl.rcParams['font.sans-serif'] = ['SimHei']  

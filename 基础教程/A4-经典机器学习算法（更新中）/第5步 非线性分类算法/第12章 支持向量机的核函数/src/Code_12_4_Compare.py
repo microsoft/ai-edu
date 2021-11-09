@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs,make_circles,make_moons,make_classification
 from sklearn.svm import SVC

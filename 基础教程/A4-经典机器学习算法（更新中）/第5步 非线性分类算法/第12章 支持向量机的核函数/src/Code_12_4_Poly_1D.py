@@ -103,8 +103,8 @@ def classification(X_raw, Y):
 
     C = 1
     gamma = 1
-    degree = [2,3,4,2,3,4]
-    coef0 = [0,0,0,1,1,1]
+    degree = [2,3,4,5,6,7]
+    coef0 = [0,0,0,0,0,0]
     for i in range(2):
         for j in range(3):
             idx = i * 3 + j
@@ -113,7 +113,7 @@ def classification(X_raw, Y):
             model, score = poly_svc(X, Y, C, gamma, d, r)
             ax = plt.subplot(2,3,idx+1)
             set_ax(ax, scope)
-            title = str.format("degree={0},coef0={1}, 准确率={2}", d, r, score)
+            title = str.format("d={0},r={1},准确率={2:.2f}", d, r, score)
             ax.set_title(title)
             show_predication_result(ax, model, X, Y, scope)
 

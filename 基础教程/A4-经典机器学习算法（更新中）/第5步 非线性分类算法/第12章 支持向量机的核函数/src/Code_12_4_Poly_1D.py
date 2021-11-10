@@ -41,25 +41,26 @@ def draw_2d_samples(ax, x, y, display_text=True):
 
 
 # 多项式核函数 SVM
-def poly_svc(X, Y, C, degree):
-    model = SVC(C=C, kernel='poly', degree=degree)
+def poly_svc(X, Y, C, g, d, r):
+    model = SVC(C=C, kernel='poly', gamma=g, degree=d, coef0=r)
     model.fit(X,Y)
 
-    print("权重:",np.dot(model.dual_coef_, model.support_vectors_))
+    #print("权重:",np.dot(model.dual_coef_, model.support_vectors_))
     print("支持向量个数:",model.n_support_)
     #print("支持向量索引:",model.support_)
     #print("支持向量:",np.round(model.support_vectors_,3))
     #print("支持向量ay:",np.round(model.dual_coef_,3))
-    print("准确率:", model.score(X, Y))
+    score = model.score(X, Y)
+    print("准确率:", score)
 
-    return model
+    return model, score
 
 # 绘图区基本设置
 def set_ax(ax, scope):
     ax.axis('equal')
     ax.grid()
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
+    #ax.set_xlabel("x1")
+    #ax.set_ylabel("x2")
     if (scope is not None):
         ax.set_xlim(scope[0], scope[1])
         ax.set_ylim(scope[3], scope[4])
@@ -73,15 +74,15 @@ def show_predication_result(ax, model, X, Y, scope):
     # 从行列变形为序列数据
     X12 = np.c_[X1.ravel(), X2.ravel()]
     # 做预测
-    #pred = model.predict(X12)
-    pred = model.decision_function(X12)
+    pred = model.predict(X12)
+    #pred = model.decision_function(X12)
     # 从序列数据变形行列形式
     y_pred = pred.reshape(X1.shape)
 
     # 绘图
     cmap = ListedColormap(['yellow','lightgray'])
-    #plt.contourf(X1,X2, y_pred, cmap=cmap)
-    plt.contourf(X1,X2, y_pred)
+    plt.contourf(X1,X2, y_pred, cmap=cmap)
+    #plt.contourf(X1,X2, y_pred)
     # 绘制原始样本点用于比对
     if (X.shape[0]<=10):
         draw_2d_samples(ax, X, Y, display_text=True)
@@ -96,33 +97,25 @@ def classification(X_raw, Y):
     mpl.rcParams['font.sans-serif'] = ['SimHei']  
     mpl.rcParams['axes.unicode_minus']=False
 
+    #fig,axes = plt.subplots(nrows = 2,ncols = 3,figsize=(20,16))
+
     scope = [-2.5,2.5,100,-2.5,2.5,100]    
 
     C = 1
-    degree = 2
-    model = poly_svc(X, Y, C, degree)
-    # 原始样本
-    ax1 = fig.add_subplot(131)
-    set_ax(ax1, scope)
-    ax1.set_title(u"degree=2")
-    show_predication_result(ax1, model, X, Y, scope)
-
-    degree = 3
-    model = poly_svc(X, Y, C, degree)
-    ax2 = fig.add_subplot(132)
-    set_ax(ax2, scope)
-    ax2.set_title(u"degree=3")
-    show_predication_result(ax2, model, X, Y, scope)
-
-    degree = 4
-    model = poly_svc(X, Y, C, degree)
-    ax3 = fig.add_subplot(133)
-    set_ax(ax3, scope)
-    ax3.set_title(u"degree=4")
-    show_predication_result(ax3, model, X, Y, scope)
-
-  
-
+    gamma = 1
+    degree = [2,3,4,5,6,7]
+    coef0 = [0,0,0,0,0,0]
+    for i in range(2):
+        for j in range(3):
+            idx = i * 3 + j
+            d = degree[idx]
+            r = coef0[idx]
+            model, score = poly_svc(X, Y, C, gamma, d, r)
+            ax = plt.subplot(2,3,idx+1)
+            set_ax(ax, scope)
+            title = str.format("degree={0},coef0={1}, 准确率={2}", d, r, score)
+            ax.set_title(title)
+            show_predication_result(ax, model, X, Y, scope)
 
     plt.show()
 
@@ -132,11 +125,3 @@ if __name__=="__main__":
     X_raw = np.array([[-1.5,0], [-1,0], [-0.5,0], [0,0], [0.5,0], [1,0], [1.5,0]])
     Y = np.array([-1,-1,1,1,1,-1,-1])
     classification(X_raw, Y)
-
-    X_raw, Y = load_data("Data_12_circle_100.csv")
-    classification(X_raw, Y)
-
-    X_raw, Y = load_data("Data_12_moon_100.csv")
-    classification(X_raw, Y)
-
- 

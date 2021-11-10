@@ -103,8 +103,8 @@ def classification(X_raw, Y):
 
     C = 1
     gamma = 1
-    degree = [2,3,4,5,6,7]
-    coef0 = [0,0,0,0,0,0]
+    degree = [2,3,4,2,3,4]
+    coef0 = [0,0,0,1,1,1]
     for i in range(2):
         for j in range(3):
             idx = i * 3 + j

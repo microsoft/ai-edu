@@ -39,9 +39,24 @@ def draw_2d_samples(ax, x, y, display_text=True):
         for i in range(x.shape[0]):
             ax.text(x[i,0], x[i,1]+0.1, str(i))
 
+# 多项式核函数 SVM
+def poly_svc_1(X, Y, C, d):
+    model = SVC(C=C, kernel='poly', degree=d)
+    model.fit(X,Y)
+
+    #print("权重:",np.dot(model.dual_coef_, model.support_vectors_))
+    print("支持向量个数:",model.n_support_)
+    #print("支持向量索引:",model.support_)
+    #print("支持向量:",np.round(model.support_vectors_,3))
+    #print("支持向量ay:",np.round(model.dual_coef_,3))
+    score = model.score(X, Y)
+    print("准确率:", score)
+
+    return model, score
+
 
 # 多项式核函数 SVM
-def poly_svc(X, Y, C, g, d, r):
+def poly_svc_2(X, Y, C, g, d, r):
     model = SVC(C=C, kernel='poly', gamma=g, degree=d, coef0=r)
     model.fit(X,Y)
 
@@ -66,7 +81,7 @@ def set_ax(ax, scope):
         ax.set_ylim(scope[3], scope[4])
 
 # 显示分类区域结果
-def show_predication_result(ax, model, X, Y, scope):   
+def show_predication_result(ax, model, X, Y, scope, style='binary'):
     # 生成测试数据，形成一个点阵来模拟平面
     x1 = np.linspace(scope[0], scope[1], scope[2])
     x2 = np.linspace(scope[3], scope[4], scope[5])
@@ -74,22 +89,26 @@ def show_predication_result(ax, model, X, Y, scope):
     # 从行列变形为序列数据
     X12 = np.c_[X1.ravel(), X2.ravel()]
     # 做预测
-    pred = model.predict(X12)
-    #pred = model.decision_function(X12)
+    if (style == 'binary'):
+        pred = model.predict(X12)   # +1/-1
+    else:
+        pred = model.decision_function(X12)     # distance, float number
     # 从序列数据变形行列形式
     y_pred = pred.reshape(X1.shape)
 
     # 绘图
     cmap = ListedColormap(['yellow','lightgray'])
-    plt.contourf(X1,X2, y_pred, cmap=cmap)
-    #plt.contourf(X1,X2, y_pred)
+    if (style == 'binary'):
+        plt.contourf(X1,X2, y_pred, cmap=cmap)
+    else:
+        plt.contourf(X1,X2, y_pred)
     # 绘制原始样本点用于比对
     if (X.shape[0]<=10):
         draw_2d_samples(ax, X, Y, display_text=True)
     else:
         draw_2d_samples(ax, X, Y, display_text=False)
 
-def classification(X_raw, Y):
+def classification(X_raw, Y, function):
     ss = StandardScaler()
     X = ss.fit_transform(X_raw)
 
@@ -110,12 +129,12 @@ def classification(X_raw, Y):
             idx = i * 3 + j
             d = degree[idx]
             r = coef0[idx]
-            model, score = poly_svc(X, Y, C, gamma, d, r)
+            model, score = function(X, Y, C, d)
             ax = plt.subplot(2,3,idx+1)
             set_ax(ax, scope)
-            title = str.format("d={0},r={1},准确率={2:.2f}", d, r, score)
+            title = str.format("degree={0},coef0={1}, 准确率={2:.2f}", d, r, score)
             ax.set_title(title)
-            show_predication_result(ax, model, X, Y, scope)
+            show_predication_result(ax, model, X, Y, scope, style='detail')
 
     plt.show()
 
@@ -124,4 +143,4 @@ if __name__=="__main__":
 
     X_raw = np.array([[-1.5,0], [-1,0], [-0.5,0], [0,0], [0.5,0], [1,0], [1.5,0]])
     Y = np.array([-1,-1,1,1,1,-1,-1])
-    classification(X_raw, Y)
+    classification(X_raw, Y, poly_svc_1)

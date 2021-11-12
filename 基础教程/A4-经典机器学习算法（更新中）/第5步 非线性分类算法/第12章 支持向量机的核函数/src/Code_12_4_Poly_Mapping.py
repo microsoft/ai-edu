@@ -10,25 +10,6 @@ import matplotlib as mpl
 from matplotlib.colors import ListedColormap
 
 
-def generate_file_path(file_name):
-    curr_path = sys.argv[0]
-    curr_dir = os.path.dirname(curr_path)
-    file_path = os.path.join(curr_dir, file_name)
-    return file_path
-
-def load_data(file_name):
-    file_path = generate_file_path(file_name)
-    file = Path(file_path)
-    if file.exists():
-        samples = np.loadtxt(file, delimiter=',')
-        X = samples[:, 0:2]
-        Y = samples[:, 2]
-    else:
-        X, Y = make_circles(n_samples=100, factor=0.5, noise=0.1)
-        Y[Y == 0] = -1
-        samples = np.hstack((X,Y.reshape(-1,1)))
-        np.savetxt(file_path, samples, fmt='%f, %f, %d', delimiter=',', header='x1, x2, y')
-    return X, Y
 
 
 # 绘制平面样本点
@@ -38,7 +19,6 @@ def draw_2d_samples(ax, x, y, display_text=True):
     if (display_text):
         for i in range(x.shape[0]):
             ax.text(x[i,0], x[i,1]+0.1, str(i))
-
 
 # 多项式核函数 SVM
 def poly_svc(X, Y, d, r):
@@ -54,6 +34,7 @@ def poly_svc(X, Y, d, r):
     print("准确率:", score)
 
     return model, score
+
 
 # 绘图区基本设置
 def set_ax(ax, scope):
@@ -82,20 +63,18 @@ def show_predication_result(ax, model, X, Y, scope, style='binary'):
     y_pred = pred.reshape(X1.shape)
 
     # 绘图
+    cmap = ListedColormap(['yellow','lightgray'])
     if (style == 'binary'):
-        cmap = ListedColormap(['yellow','lightgray'])
         plt.contourf(X1,X2, y_pred, cmap=cmap)
-    elif (style=='detail'):
+    else:
         plt.contourf(X1,X2, y_pred)
-    else: # contour
-        plt.contour(X1,X2, y_pred, colors=['red', 'black', 'blue'], linestyles=['--','-','--'], levels=[-1,0,1])
     # 绘制原始样本点用于比对
     if (X.shape[0]<=10):
         draw_2d_samples(ax, X, Y, display_text=True)
     else:
         draw_2d_samples(ax, X, Y, display_text=False)
 
-def classification(X_raw, Y):
+def classification(X_raw, Y, hasCoef0):
     ss = StandardScaler()
     X = ss.fit_transform(X_raw)
 
@@ -103,33 +82,66 @@ def classification(X_raw, Y):
     mpl.rcParams['font.sans-serif'] = ['SimHei']  
     mpl.rcParams['axes.unicode_minus']=False
 
+    #fig,axes = plt.subplots(nrows = 2,ncols = 3,figsize=(20,16))
+
     scope = [-2.5,2.5,100,-2.5,2.5,100]    
 
+    degree = [2,3,4,5,6,7]
+    if (hasCoef0):  # 是否有 r 值
+        coef0 = [1,1,1,1,1,1]
+    else:
+        coef0 = [0,0,0,0,0,0]
     for i in range(2):
-        for j in range(4):
-            idx = i * 4 + j
+        for j in range(3):
+            idx = i * 3 + j
             d = degree[idx]
             r = coef0[idx]
             model, score = poly_svc(X, Y, d, r)
-            ax = plt.subplot(2,4,idx+1)
+            ax = plt.subplot(2,3,idx+1)
             set_ax(ax, scope)
-            title = str.format("degree={0},coef0={1}, 准确率={2}", d, r, score)
+            title = str.format("degree={0},coef0={1}, 准确率={2:.2f}", d, r, score)
             ax.set_title(title)
-            show_predication_result(ax, model, X, Y, scope, style='contour')
+            show_predication_result(ax, model, X, Y, scope, style='detail')
 
     plt.show()
+
+import math
+
+# 按照式 12.4.9 建立映射函数
+def mapping(X_raw):
+    # 申请一个7行4列的新特征矩阵
+    X_new = np.zeros(shape=(X_raw.shape[0],4))
+    # 第0列填入 z^3
+    X_new[:,0] = X_raw[:,0] ** 3
+    # 第1列填入 sqrt(3) * z^2
+    X_new[:,1] = math.sqrt(3) * X_raw[:,0] ** 2
+    # 第2列填入 sqrt(3) * z
+    X_new[:,2] = math.sqrt(3) * X_raw[:,0]
+    # 第3列填入 1
+    X_new[:,3] = 1
+
+    return X_new
 
 
 if __name__=="__main__":
 
-    X_raw, Y = load_data("Data_12_circle_100.csv")
-    degree = [2,3,4,5,2,3,4,5]
-    coef0 = [0,0,0,0,1,1,1,1]
-    #classification(X_raw, Y)
+    X_raw = np.array([[-1.5,0], [-1,0], [-0.5,0], [0,0], [0.5,0], [1,0], [1.5,0]])
+    Y = np.array([-1,-1,1,1,1,-1,-1])
 
-    X_raw, Y = load_data("Data_12_moon_100.csv")
-    degree = [2,3,4,5,6,7,8,9]
-    coef0 = [1,1,1,1,1,1,1,1]
-    classification(X_raw, Y)
+    X_new = mapping(X_raw)
+    print(np.round(X_new,3))
 
- 
+    ss = StandardScaler()
+    X = ss.fit_transform(X_new)
+
+    model = SVC(kernel='linear')
+    model.fit(X,Y)
+
+    #print("权重:", np.dot(model.dual_coef_, model.support_vectors_))
+    print("权重:", np.round(model.coef_,3))
+    print("支持向量个数:",model.n_support_)
+    print("支持向量索引:",model.support_)
+    #print("支持向量:",np.round(model.support_vectors_,3))
+    print("支持向量ay:",np.round(model.dual_coef_,3))
+    score = model.score(X, Y)
+    print("准确率:", score)

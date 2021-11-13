@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import matplotlib as mpl
 from matplotlib.colors import ListedColormap
-
+import time
 
 def generate_file_path(file_name):
     curr_path = sys.argv[0]
@@ -51,7 +51,7 @@ def poly_svc(X, Y, d, r):
     #print("支持向量:",np.round(model.support_vectors_,3))
     #print("支持向量ay:",np.round(model.dual_coef_,3))
     score = model.score(X, Y)
-    print("准确率:", score)
+    #print("准确率:", score)
 
     return model, score
 
@@ -66,6 +66,10 @@ def set_ax(ax, scope):
         ax.set_ylim(scope[3], scope[4])
 
 # 显示分类区域结果
+# style = 
+# 'binary': 绘制双色区域分类图
+# 'detail': 绘制渐变色区域分类图
+# 'contour': 绘制双色区域分类图 + 分类间隔
 def show_predication_result(ax, model, X, Y, scope, style='binary'):
     # 生成测试数据，形成一个点阵来模拟平面
     x1 = np.linspace(scope[0], scope[1], scope[2])
@@ -73,21 +77,24 @@ def show_predication_result(ax, model, X, Y, scope, style='binary'):
     X1,X2 = np.meshgrid(x1,x2)
     # 从行列变形为序列数据
     X12 = np.c_[X1.ravel(), X2.ravel()]
-    # 做预测
-    if (style == 'binary'):
-        pred = model.predict(X12)   # +1/-1
-    else:
-        pred = model.decision_function(X12)     # distance, float number
-    # 从序列数据变形行列形式
-    y_pred = pred.reshape(X1.shape)
 
+    cmap = ListedColormap(['yellow','lightgray'])
     # 绘图
     if (style == 'binary'):
-        cmap = ListedColormap(['yellow','lightgray'])
+        pred = model.predict(X12)   # +1/-1
+        y_pred = pred.reshape(X1.shape)
         plt.contourf(X1,X2, y_pred, cmap=cmap)
     elif (style=='detail'):
+        pred = model.decision_function(X12)     # distance, float number
+        y_pred = pred.reshape(X1.shape)
         plt.contourf(X1,X2, y_pred)
     else: # contour
+        pred = model.predict(X12)   # +1/-1
+        y_pred = pred.reshape(X1.shape)
+        plt.contourf(X1,X2, y_pred, cmap=cmap)
+
+        pred = model.decision_function(X12)     # distance, float number
+        y_pred = pred.reshape(X1.shape)
         plt.contour(X1,X2, y_pred, colors=['red', 'black', 'blue'], linestyles=['--','-','--'], levels=[-1,0,1])
     # 绘制原始样本点用于比对
     if (X.shape[0]<=10):
@@ -95,7 +102,7 @@ def show_predication_result(ax, model, X, Y, scope, style='binary'):
     else:
         draw_2d_samples(ax, X, Y, display_text=False)
 
-def classification(X_raw, Y):
+def classification(X_raw, Y, degree, coef0):
     ss = StandardScaler()
     X = ss.fit_transform(X_raw)
 
@@ -113,7 +120,8 @@ def classification(X_raw, Y):
             model, score = poly_svc(X, Y, d, r)
             ax = plt.subplot(2,4,idx+1)
             set_ax(ax, scope)
-            title = str.format("degree={0},coef0={1}, 准确率={2}", d, r, score)
+            title = str.format("degree={0},coef0={1}, 准确率={2}", d, r, score)            
+            print(title)
             ax.set_title(title)
             show_predication_result(ax, model, X, Y, scope, style='contour')
 
@@ -125,11 +133,8 @@ if __name__=="__main__":
     X_raw, Y = load_data("Data_12_circle_100.csv")
     degree = [2,3,4,5,2,3,4,5]
     coef0 = [0,0,0,0,1,1,1,1]
-    #classification(X_raw, Y)
+    classification(X_raw, Y, degree, coef0)
 
-    X_raw, Y = load_data("Data_12_moon_100.csv")
-    degree = [2,3,4,5,6,7,8,9]
-    coef0 = [1,1,1,1,1,1,1,1]
-    classification(X_raw, Y)
+
 
  

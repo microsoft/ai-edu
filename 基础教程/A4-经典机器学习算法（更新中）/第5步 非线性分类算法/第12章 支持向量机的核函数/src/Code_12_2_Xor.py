@@ -22,18 +22,29 @@ def linear_svc(X,Y):
     return model
 
 
-def draw_3d(ax, x, y):
-    ax.scatter(x[y==1,0], x[y==1,1], x[y==1,2], marker='^', c='r')
-    ax.scatter(x[y==-1,0], x[y==-1,1], x[y==-1,2], marker='o', c='b')
+def show_samples_3d(ax, X, Y):
+    for i in range(Y.shape[0]):
+        if (Y[i] == 1):
+            ax.scatter(X[i,0], X[i,1], X[i,2], marker='^', color='r')
+        else:
+            ax.scatter(X[i,0], X[i,1], X[i,2], marker='o', color='b')
+
+        ax.text(X[i,0]+0.05, X[i,1], X[i,2], str(i))
+
     ax.set_xlabel("x1")
     ax.set_ylabel("x2")
     ax.set_zlabel("x3")
 
-def draw_2d(ax, x, y):
-    ax.scatter(x[y==1,0], x[y==1,1], marker='^', c='r')
-    ax.scatter(x[y==-1,0], x[y==-1,1], marker='o', c='b')
+def show_samples(ax, X, Y):
     ax.set_xlabel("x1")
     ax.set_ylabel("x2")
+
+    for i in range(Y.shape[0]):
+        if (Y[i] == 1):
+            ax.scatter(X[i,0], X[i,1], marker='^', color='r')
+        else:
+            ax.scatter(X[i,0], X[i,1], marker='o', color='b')
+        ax.text(X[i,0]+0.05, X[i,1], str(i))
 
 if __name__=="__main__":
 
@@ -53,11 +64,11 @@ if __name__=="__main__":
     ax1.axis('equal')
     ax1.grid()
     ax1.set_title(u'原始样本')
-    draw_2d(ax1, X, Y)
+    show_samples(ax1, X, Y)
 
     ax2 = fig.add_subplot(122, projection='3d')
     ax2.set_title(u'新特征样本')
-    draw_3d(ax2, X, Y)
+    show_samples_3d(ax2, X, Y)
     plt.show()
 
     model = linear_svc(X, Y)

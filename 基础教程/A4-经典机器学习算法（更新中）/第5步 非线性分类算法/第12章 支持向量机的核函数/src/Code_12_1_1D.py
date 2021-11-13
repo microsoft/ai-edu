@@ -5,6 +5,16 @@ import matplotlib.pyplot as plt
 from sklearn.svm import *
 import matplotlib as mpl
 
+# 绘图区基本设置
+def set_ax(ax, scope):
+    ax.axis('equal')
+    ax.grid()
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    if (scope is not None):
+        ax.set_xlim(scope[0][0], scope[0][1])
+        ax.set_ylim(scope[1][0], scope[1][1])
+
 # 线性SVM分类器
 def linear_svc(X,Y):
     model = SVC(C=3, kernel='linear')
@@ -28,12 +38,11 @@ def show_result(model, X_raw, X, Y):
 
     # 映射后的线性分类
     ax1 = fig.add_subplot(121)
-    ax1.grid()
     ax1.set_title(u"映射后的线性分类")
-    ax1.set_xlabel("x1")
-    ax1.set_ylabel("x2")
-    x1 = np.linspace(-2, 2, 100)
-    x2 = np.linspace(-1, 3, 100)
+    scope = ((-2,2,100),(-1,3,100))
+    set_ax(ax1, scope)
+    x1 = np.linspace(*scope[0])
+    x2 = np.linspace(*scope[1])
     X1,X2 = np.meshgrid(x1,x2)
     X12 = np.c_[X1.ravel(), X2.ravel()]
     pred = model.predict(X12)
@@ -45,12 +54,11 @@ def show_result(model, X_raw, X, Y):
 
     # 压缩回到原始坐标系的分类界线
     ax2 = fig.add_subplot(122)
-    ax2.grid()
     ax2.set_title(u"压缩回到原始坐标系的分类界线")
-    ax2.set_xlabel("x1")
-    ax2.set_ylabel("x2")
-    x1 = np.linspace(-2, 2, 100)
-    x2 = np.linspace(-1, 1, 100)
+    scope = ((-2,2,100),(-1,1,100))
+    set_ax(ax2, scope)
+    x1 = np.linspace(*scope[0])
+    x2 = np.linspace(*scope[1])
     X1,X2 = np.meshgrid(x1,x2)
     X12 = np.c_[X1.ravel(), X2.ravel()]
     # 把测试数据增加一维平方值特征
@@ -71,7 +79,7 @@ def show_samples(ax, X, Y):
             ax.scatter(X[i,0], X[i,1], marker='^', color='r')
         else:
             ax.scatter(X[i,0], X[i,1], marker='o', color='b')
-        ax.text(X[i,0]+0.1, 0.1, str(i))
+        ax.text(X[i,0]+0.1, X[i,1]+0.1, str(i))
 
 # 把数据从一维变换到二维(x2_new = x1*x1 + x2_origin)
 def transform(X_raw):

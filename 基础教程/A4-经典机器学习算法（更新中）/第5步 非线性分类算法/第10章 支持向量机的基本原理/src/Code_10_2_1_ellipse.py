@@ -56,11 +56,34 @@ def draw_right_2d(fig, P, Q, R):
     ax2.plot(x, y)
     ax2.scatter(-4/3, -2/3, c='r')
 
+import math
+
+def draw_right_2d2(fig, P, Q, R):
+    ax2 = fig.add_subplot(122)
+    ax2.grid()
+    ax2.axis('equal')
+    ax2.set_xlabel("x")
+    ax2.set_ylabel("y")
+    ax2.set_title(u"约束直线与投影等高线相切")
+
+    # 绘制等高线
+    c = ax2.contour(P, Q, R, [1,1.7579,2])
+    ax2.clabel(c,inline=1,fontsize=10)
+    # 绘制约束直线
+    X = np.linspace(-3, 1, 100)
+    for x in X:
+        if (1-(x+2)**2 >=0):
+            y = math.sqrt(1-(x+2)**2)-1
+            ax2.scatter(x, y, s=1, c='b')
+            y = -math.sqrt(1-(x+2)**2)-1
+            ax2.scatter(x, y, s=1, c='b')
+    #ax2.scatter(-4/3, -2/3, c='r')
+
 def f(x):
-    return x**4+6*x**3+17*x**2-12*x-16
+    return x**4+6*x**3+5*x**2-12*x-16
 
 def aaa():
-    X = np.linspace(1.0841, 1.0842, 100)
+    X = np.linspace(1.4533, 1.4534, 100)
     print(X)
     for x in X:
         print(x, f(x))
@@ -68,15 +91,13 @@ def aaa():
 
 if __name__ == '__main__':
 
-    aaa()
-    exit()
 
     mpl.rcParams['font.sans-serif'] = ['SimHei']  
     mpl.rcParams['axes.unicode_minus']=False
     fig = plt.figure()
 
     P,Q,R = draw_left_3d(fig)
-    draw_right_2d(fig, P, Q, R)
+    draw_right_2d2(fig, P, Q, R)
 
     plt.show()
 

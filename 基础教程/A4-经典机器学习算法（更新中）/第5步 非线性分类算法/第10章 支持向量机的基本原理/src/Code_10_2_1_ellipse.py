@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.patches import Circle
 
-def draw_left_3d(fig):
-    ax = fig.add_subplot(121, projection='3d')
+def draw_left_3d(ax):
+
     ax.set_title(u"约束平面与曲面相交")
 
     # 绘制 x^2+2y^2 曲面
@@ -16,6 +18,7 @@ def draw_left_3d(fig):
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     
+    '''
     # 绘制x+y+2=0平面，垂直于x-y 平面
     x = np.linspace(-3, 1, 100)
     y = np.linspace(-3, 1, 100)
@@ -24,60 +27,43 @@ def draw_left_3d(fig):
     Q2 = -X-2
     R2 = 15*np.maximum(Y,0) # 增加平面的高度
     ax.plot_surface(P2, Q2, R2, color='y', alpha=0.6)
+    '''
 
-    #两平面交线
-    x = np.linspace(-3, 1, 100)
-    y = -x - 2
-    z = 3 * x * x + 8 * x + 8
-    ax.plot3D(x, y, z, color='r', alpha=0.6)
-    print(np.min(z), np.argmin(z))
-    print(x[np.argmin(z)])
+    # 绘制约束圆
 
-    # 极值点
-    ax.scatter(-4/3, -2/3, 24/9, c='r')
+    # 生成圆柱数据，底面半径为r，高度为h。
+    # 先根据极坐标方式生成数据
+    u = np.linspace(0,2*np.pi,50)  # 把圆分按角度为50等分
+    h = np.linspace(0,20,20)        # 把高度1均分为20份
+    x = np.outer(np.sin(u),np.ones(len(h)))-2  # x值重复20次
+    y = np.outer(np.cos(u),np.ones(len(h)))-1  # y值重复20次
+    z = np.outer(np.ones(len(u)),h)   # x，y 对应的高度
+
+    # Plot the surface
+    ax.plot_surface(x, y, z, cmap=plt.get_cmap('rainbow'))
+
 
     return P,Q,R
 
 
-def draw_right_2d(fig, P, Q, R):
-    ax2 = fig.add_subplot(122)
-    ax2.grid()
-    ax2.axis('equal')
-    ax2.set_xlabel("x")
-    ax2.set_ylabel("y")
-    ax2.set_title(u"约束直线与投影等高线相切")
-
-    # 绘制等高线
-    c = ax2.contour(P, Q, R, [0.5,1.5,2.67,3.5,4.5])
-    ax2.clabel(c,inline=1,fontsize=10)
-    # 绘制约束直线
-    x = np.linspace(-3, 1, 100)
-    y = -x - 2
-    ax2.plot(x, y)
-    ax2.scatter(-4/3, -2/3, c='r')
 
 import math
 
-def draw_right_2d2(fig, P, Q, R):
-    ax2 = fig.add_subplot(122)
+def draw_right_2d2(ax2, P, Q, R):
     ax2.grid()
     ax2.axis('equal')
     ax2.set_xlabel("x")
     ax2.set_ylabel("y")
     ax2.set_title(u"约束直线与投影等高线相切")
 
+    # 绘制约束圆
+    circle = Circle((-2,-1), radius=1, facecolor='white', edgecolor='red')
+    ax2.add_patch(circle)
+
     # 绘制等高线
-    c = ax2.contour(P, Q, R, [1,1.7579,2])
+    c = ax2.contour(P, Q, R, [0,0.5,1,1.5,1.7579,2,2.5,3,4])
     ax2.clabel(c,inline=1,fontsize=10)
-    # 绘制约束直线
-    X = np.linspace(-3, 1, 100)
-    for x in X:
-        if (1-(x+2)**2 >=0):
-            y = math.sqrt(1-(x+2)**2)-1
-            ax2.scatter(x, y, s=1, c='b')
-            y = -math.sqrt(1-(x+2)**2)-1
-            ax2.scatter(x, y, s=1, c='b')
-    #ax2.scatter(-4/3, -2/3, c='r')
+
 
 def f(x):
     return x**4+6*x**3+5*x**2-12*x-16
@@ -96,8 +82,10 @@ if __name__ == '__main__':
     mpl.rcParams['axes.unicode_minus']=False
     fig = plt.figure()
 
-    P,Q,R = draw_left_3d(fig)
-    draw_right_2d2(fig, P, Q, R)
+    ax1 = fig.add_subplot(121, projection='3d')
+    P,Q,R = draw_left_3d(ax1)
+    ax2 = fig.add_subplot(122)
+    draw_right_2d2(ax2, P, Q, R)
 
     plt.show()
 

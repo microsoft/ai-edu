@@ -4,6 +4,12 @@ import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import Circle
 
+def hh(x,y):
+    return (x+2)**2+(y+1)**2-1
+
+def gg(x,y):
+    return x**2+2*y**2
+
 def draw_left_3d(ax):
 
     ax.set_title(u"约束平面与曲面相交")
@@ -14,23 +20,18 @@ def draw_left_3d(ax):
     P, Q = np.meshgrid(x, y)
     R = P * P + Q * Q * 2
     ax.plot_surface(P, Q, R, alpha=0.5)
-    ax.contour(P, Q, R, [0.5,1.5,2.67,3.5,4.5], zdir='z', offset=0)
+    #ax.contour(P, Q, R, [0,0.5,1,1.5,1.7579,2,2.5,3,4], zdir='z', offset=0)
+    ax.contour(P, Q, R, [1,1.7579,2.5])
     ax.set_xlabel("x")
     ax.set_ylabel("y")
-    
-    '''
-    # 绘制x+y+2=0平面，垂直于x-y 平面
-    x = np.linspace(-3, 1, 100)
-    y = np.linspace(-3, 1, 100)
-    X, Y = np.meshgrid(x, y)
-    P2 = X
-    Q2 = -X-2
-    R2 = 15*np.maximum(Y,0) # 增加平面的高度
-    ax.plot_surface(P2, Q2, R2, color='y', alpha=0.6)
-    '''
+
+    for xx in x:
+        for yy in y:
+            if (abs(hh(xx,yy)) <= 0.05):
+                ax.scatter(xx,yy,gg(xx,yy),color='r',s=5)
 
     # 绘制约束圆
-
+    #return P,Q,R
     # 生成圆柱数据，底面半径为r，高度为h。
     # 先根据极坐标方式生成数据
     u = np.linspace(0,2*np.pi,50)  # 把圆分按角度为50等分
@@ -41,6 +42,7 @@ def draw_left_3d(ax):
 
     # Plot the surface
     ax.plot_surface(x, y, z, cmap=plt.get_cmap('rainbow'))
+
 
 
     return P,Q,R

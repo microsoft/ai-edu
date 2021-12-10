@@ -1,14 +1,3 @@
-<style>
-table th:first-of-type {
-    width: 4cm;
-}
-table th:nth-of-type(2) {
-    width: 200pt;
-}
-table th:nth-of-type(3) {
-    width: 8em;
-}
-</style>
 
 # NLP 
 

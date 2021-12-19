@@ -7,7 +7,7 @@ This community is composed of three modules: **Basic Tutorials**, **Practical Ca
 ## **Recent News**
 - August 16, 2021
   
-  **A6-Artificial Intelligence System Update**: **[A6-Artificial Intelligence System](../.././基础教程/A6-人工智能系统)** The course has been updated to the latest version!
+  **A6-Artificial Intelligence System Update**: **[A6-Artificial Intelligence System](../../基础教程/A6-人工智能系统)** The course has been updated to the latest version!
   
   From now on, the open source course of artificial intelligence system is a sub-module of this community, which will update with the original warehouse. Welcome to the community to learn!
 

@@ -79,7 +79,7 @@ This community is composed of three modules: **Basic Tutorials**, **Practical Ca
                                 <a href="./实践案例/B05-文本朗读应用/README.md">Text reading app</a>
                             </li>
                         </ul>
-                    <li>决策</li>
+                    <li>Decision Intelligence</li>
                         <ul>
                             <li>
                                 <a href="./实践案例/B08-黄金点游戏/README.md">Golden dot game</a>
@@ -118,5 +118,5 @@ Under the guidance of the Ministry of Education, relying on the new generation o
 
 As pointed out in Microsoft’s mission "to empower every person and every organization on the planet to achieve more", we look forward to the establishment of this open source community to learn and contribute together with teachers, students, and developers. Improving this community will contribute to the development of artificial intelligence in China.
 
-## **Licsense**
+## **License**
 [LICENSE](./LICENSE.md)

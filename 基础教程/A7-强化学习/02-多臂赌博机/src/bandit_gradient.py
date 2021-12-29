@@ -1,15 +1,21 @@
 from matplotlib.pyplot import grid
 from numpy.core.fromnumeric import argmax
-from bandit_best_action import *
+from numpy.lib.function_base import gradient
+from bandit_01_best_action import *
+
 
 class K_ArmBandit_Gradient(K_ArmBandit_BestAction):
-    def __init__(self, k: int, epsilon: float, step: float, has_base: bool, grid_base: float):
-        super().__init__(k, epsilon)
+    def __init__(self, k_arms:int=10, epsilon:float=0, step:float=0.1, has_base:bool=False, grad_base:float=0):
+        super().__init__(k_arms, epsilon)
         self.step = step
         self.has_base = has_base
         self.action_prob = 0
         self.average_reward = 0
-        self.q_base += grid_base
+        self.grad_base = grad_base
+
+    def reset(self):
+        super().reset()
+        self.q_base += self.grad_base
 
     def select_action(self):
         # 小于epsilon, 执行随机探索行动
@@ -44,60 +50,23 @@ class K_ArmBandit_Gradient(K_ArmBandit_BestAction):
 if __name__ == "__main__":
     runs = 2000
     time = 1000
-    k_arms = 10
 
+    all_rewards = []
+    all_best = []
+    
+    bandits = []
+    bandits.append(K_ArmBandit_Gradient(k_arms=10, epsilon=0, step=0.1, has_base=True, grad_base=4))
+    bandits.append(K_ArmBandit_Gradient(k_arms=10, epsilon=0, step=0.1, has_base=False, grad_base=4))
+    bandits.append(K_ArmBandit_Gradient(k_arms=10, epsilon=0, step=0.4, has_base=True, grad_base=4))
+    bandits.append(K_ArmBandit_Gradient(k_arms=10, epsilon=0, step=0.4, has_base=False, grad_base=4))
 
-    rewards = np.zeros((4, runs, time))
-    best_arm = np.zeros(rewards.shape)
-    
-    i = 0
-    # run 2000 次后，取平均
-    for r in trange(runs):
-        kab = K_ArmBandit_Gradient(k_arms, 0, 0.1, True, 4)
-        # 测试 time 次
-        for t in range(time):
-            action = kab.select_action()
-            reward = kab.step_reward(action)
-            rewards[i, r, t] = reward
-            if (action == kab.best_arm):
-                best_arm[i, r, t] = 1    
-    
-    i = 1
-    for r in trange(runs):
-        kab = K_ArmBandit_Gradient(k_arms, 0, 0.1, False, 4)
-        # 测试 time 次
-        for t in range(time):
-            action = kab.select_action()
-            reward = kab.step_reward(action)
-            rewards[i, r, t] = reward
-            if (action == kab.best_arm):
-                best_arm[i, r, t] = 1    
-    
-    i = 2
-    for r in trange(runs):
-        kab = K_ArmBandit_Gradient(k_arms, 0, 0.4, True, 4)
-        # 测试 time 次
-        for t in range(time):
-            action = kab.select_action()
-            reward = kab.step_reward(action)
-            rewards[i, r, t] = reward
-            if (action == kab.best_arm):
-                best_arm[i, r, t] = 1    
-    
-    i = 3
-    for r in trange(runs):
-        kab = K_ArmBandit_Gradient(k_arms, 0, 0.4, False, 4)
-        # 测试 time 次
-        for t in range(time):
-            action = kab.select_action()
-            reward = kab.step_reward(action)
-            rewards[i, r, t] = reward
-            if (action == kab.best_arm):
-                best_arm[i, r, t] = 1    
+    for bandit in bandits:
+        rewards, best_arm = bandit.simulate(runs, time)
+        all_rewards.append(rewards)
+        all_best.append(best_arm)
 
-
-    best_arm_counts = best_arm.mean(axis=1)
-    mean_rewards = rewards.mean(axis=1)
+    best_arm_counts = np.array(all_best).mean(axis=1)
+    mean_rewards = np.array(all_rewards).mean(axis=1)
 
     labels = [r'$\alpha = 0.1$, with baseline',
               r'$\alpha = 0.1$, without baseline',

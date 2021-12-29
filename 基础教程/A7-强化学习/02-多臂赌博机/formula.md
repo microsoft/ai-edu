@@ -30,3 +30,19 @@ Q_{t+1} &= \frac{1}{t} \sum_{i=1}^t R_i
 &=Q_t + \frac{1}{t} \Big ( R_t - Q_t \Big )
 \end{aligned}
 $$
+
+$$
+A_t \dot= \underset{a}{\argmax} \Big[ Q_t(a) + c \sqrt{\frac{\ln t}{N_t(a)}} \Big]
+$$
+
+$$
+\pi_t(a) \dot= \Pr\{A_t=a\} \dot= \frac{e^{H_t(a)}}{\sum^k_{b=1}e^{H_t(b)}}
+$$
+
+$$
+H_{t+1}(A_t) \dot= H_t(A_t) + \alpha (R_t- \bar{R}_t)(1-\pi_t(A_t))
+$$
+
+$$
+H_{t+1}(a) \dot= H_t(a) + \alpha (R_t- \bar{R}_t)(0-\pi_t(a))=H_t(a) - \alpha (R_t- \bar{R}_t)\pi_t(a)
+$$

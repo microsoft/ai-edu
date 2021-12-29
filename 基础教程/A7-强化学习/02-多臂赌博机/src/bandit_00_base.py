@@ -20,6 +20,7 @@ class K_ArmBandit(object):
         
         # 初始化 k 个 arm 的动作估值q*为 0
         self.q_star = np.zeros(self.k_arms)
+        # 保存每个 arm 被选择的次数
         self.action_count = np.zeros(self.k_arms)
         self.time = 0
         

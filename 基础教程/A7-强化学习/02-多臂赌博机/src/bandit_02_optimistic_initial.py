@@ -9,7 +9,6 @@ class K_ArmBandit_OptimisticInitial(K_ArmBandit_BestAction):
     def reset(self):
         super().reset()
         self.q_star = np.zeros(self.k_arms) + self.initial
-        self.best_arm = np.argmax(self.q_base)
 
     def update_q(self, action, reward):
         # 总次数(time)
@@ -21,7 +20,7 @@ class K_ArmBandit_OptimisticInitial(K_ArmBandit_BestAction):
 
 if __name__ == "__main__":
 
-    runs = 2000
+    runs = 200
     time = 1000
     k_arms = 10
 
@@ -41,19 +40,22 @@ if __name__ == "__main__":
     best_arm_counts = np.array(all_best).mean(axis=1)
     mean_rewards = np.array(all_rewards).mean(axis=1)
 
+    labels = [r'$\epsilon = 0.1$, initial=0',
+              r'$\epsilon = 0$, initial=5']
+
     plt.figure(figsize=(10, 20))
 
     plt.subplot(2, 1, 1)
-    for mean_reward in mean_rewards:
-        plt.plot(mean_reward)
+    for i in range(len(bandits)):
+        plt.plot(mean_rewards[i], label=labels[i])
     plt.xlabel('steps')
     plt.ylabel('average reward')
     plt.legend()
     plt.grid()
 
     plt.subplot(2, 1, 2)
-    for counts in best_arm_counts:
-        plt.plot(counts)
+    for i in range(len(bandits)):
+        plt.plot(best_arm_counts[i], label=labels[i])
     plt.xlabel('steps')
     plt.ylabel('% optimal action')
     plt.legend()

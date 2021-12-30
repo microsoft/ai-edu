@@ -1,7 +1,7 @@
 from matplotlib.pyplot import grid
 from numpy.core.fromnumeric import argmax
 from numpy.lib.function_base import gradient
-from bandit_01_best_action import *
+from bandit_11_best_action import *
 
 
 class K_ArmBandit_Gradient(K_ArmBandit_BestAction):

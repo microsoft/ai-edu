@@ -1,4 +1,4 @@
-from bandit_01_best_action import *
+from bandit_11_best_action import *
 
 class K_ArmBandit_OptimisticInitial(K_ArmBandit_BestAction):
     def __init__(self, k_arms=10, epsilon=0, initial=0, step=0):

@@ -4,99 +4,101 @@ import matplotlib.pyplot as plt
 
 from tqdm import trange
 
-class K_ArmBandit(object):
-    def __init__(self, k_arms=10, epsilon=0):
+class K_ArmBandit_0(object):
+    def __init__(self, k_arms=3, prob_list=[0.3, 0.5, 0.8]):
+        assert(k_arms == len(prob_list))
         self.k_arms = k_arms
-        self.epsilon = epsilon
-        self.action_idx = np.arange(self.k_arms)
+        self.prob = np.array(prob_list)
 
-
-    def reset(self):
-        # 初始化一个 k 个元素的正态分布数组，均值为0，方差为1，
-        # 作为 k 个 arm 的基本收益均值，当mu=0时有可能是正或负
-        mu = 0
-        sigma = 1
-        self.q_base = sigma * np.random.randn(self.k_arms) + mu
-        
-        # 初始化 k 个 arm 的动作估值q*为 0
-        self.q_star = np.zeros(self.k_arms)
-        # 保存每个 arm 被选择的次数
+    def reset(self, steps):
+        # 保存每个 step 被选择的 arm 的次数(index 0) 和 reward 值(index 1)
+        self.action_reward = np.zeros(shape=(steps, 2))
+        self.steps = steps
+        self.step = 0
         self.action_count = np.zeros(self.k_arms)
-        self.time = 0
-        
 
-    # 得到下一步的动作（下一步要使用哪个arm）
+
+    # 得到下一步的动作(需要子类来实现)
     def select_action(self):
-        # 小于epsilon, 执行随机探索行动
-        if (np.random.rand() < self.epsilon):
-            # 从 k 个 arm 里随机选一个
-            return np.random.choice(self.action_idx)
-
-        # 获得目前可以估计的最大值
-        q_best_value = np.max(self.q_star)
-        # 可能同时有多个最大值，获得它们在数组中的索引位置
-        best_actions = np.where(q_best_value == self.q_star)[0]
-        # 从多个最大值（索引）中随机选择一个作为下一步的动作
-        action = np.random.choice(best_actions)
-        return action
+        pass
 
 
     # 执行指定的动作，并返回此次的奖励
     def step_reward(self, action):
-        sigma = 1
-        mu = self.q_base[action]
-        # 方差为1，均值为该 arm 的 q_base 对应的初始化值
-        reward =  sigma * np.random.randn() + mu
+        if (np.random.rand() < self.prob[action]):
+            return 1
+        else:
+            return 0
+        '''
+        reward = np.random.choice(2, p=self.prob[:, action])
         return reward
+        '''
 
-
-    # 更新 q*
-    def update_q(self, action, reward):
-        # 总次数(time)
-        self.time += 1
-        # 动作次数(action_count)
+    def update_counter(self, action, reward):
         self.action_count[action] += 1
-        # 计算动作价值，采样平均
-        self.q_star[action] += (reward - self.q_star[action]) / self.action_count[action]
+        self.action_reward[self.step, 0] = action   # 0,1,2
+        self.action_reward[self.step, 1] = reward   # 0,1
+        self.step += 1
+        # self.q_star[action] += (reward - self.q_star[action]) / self.action_count[action]
 
 
     # 模拟运行
-    def simulate(self, runs, time):
+    def simulate(self, runs, steps):
         # 记录历史 reward，便于后面统计
-        rewards = np.zeros(shape=(runs, time))
-        for r in trange(runs):
+        self.action_reward_list = []
+        for run in trange(runs):
             # 每次run都独立，但是使用相同的参数
-            self.reset()
-            # 测试 time 次
-            for t in range(time):
+            self.reset(steps)
+            # 测试 step 次
+            for step in range(steps):
                 action = self.select_action()
                 reward = self.step_reward(action)
-                self.update_q(action, reward)
-                rewards[r, t] = reward
-            # end for t
-        return rewards
+                self.update_counter(action, reward)
+            # end for step
+            self.action_reward_list.append(self.action_reward)
+            #print(self.action_reward[0:100])
+        
 
+    # 统计值
+    def summary(self):
+        summary = []
 
-if __name__ == "__main__":
+        summary.append(np.arange(self.k_arms))
+        summary.append(self.prob)
 
-    epsilons = [0, 0.01, 0.05, 0.1]
-    runs = 2000
-    time = 1000
-    k_arms = 10
+        # shape = (runs, step, [action:reward])
+        action_reward_runs = np.array(self.action_reward_list)
+        # 每个arm的选择次数
+        action, count_per_action = np.unique(action_reward_runs[:,:,0], return_counts=True)
+        summary.append(count_per_action)
+        summary.append(summary[2]/summary[2].sum())
 
-    all_rewards = []
+        # 每个 arm 上的总 reward
+        rewards = []
+        for action in range(self.k_arms):
+            rewards.append(action_reward_runs[np.where(action_reward_runs[:,:,0]==action)].sum(axis=0)[1])
+        summary.append(np.array(rewards))
+        summary.append(summary[4]/summary[4].sum())
+        summary.append(summary[4]/summary[2])
 
-    for eps in epsilons:
-        bandit = K_ArmBandit(k_arms, eps)
-        rewards = bandit.simulate(runs, time)
-        all_rewards.append(rewards)
+        summary2 = []
+        mean_reward_step = action_reward_runs[:,:,1].mean(axis=0)
+        summary2.append(mean_reward_step)
 
-    # 取2000次的平均
-    mean_rewards = np.array(all_rewards).mean(axis=1)
-    for eps, mean_rewards in zip(epsilons, mean_rewards):
-        plt.plot(mean_rewards, label='$\epsilon = %.02f$' % (eps))
-    plt.xlabel('steps')
-    plt.ylabel('average reward')
-    plt.legend()
-    plt.grid()
-    plt.show()
+        best_action = np.argmax(self.prob)
+        best_action_count_per_step = np.zeros(shape=(action_reward_runs.shape[0],action_reward_runs.shape[1]))
+        for run in range(action_reward_runs.shape[0]):
+            for step in range(action_reward_runs.shape[1]):
+                if (action_reward_runs[run,step,0] == best_action):
+                    best_action_count_per_step[run,step] += 1
+        
+        summary2.append(best_action_count_per_step.mean(axis=0))
+        return summary, np.array(summary2), summary[4].sum()/summary[2].sum()
+
+        '''
+        np.set_printoptions(suppress=True)
+        print(np.round(np.array(summary), 3))
+        # 每次run的平均reward
+        mean_reward_run = action_reward_runs[:,:,1].sum(axis=1).sum(axis=0) / action_reward_runs.shape[0]
+        print(mean_reward_run)
+        '''

@@ -1,6 +1,6 @@
-from bandit_00_base import *
+from bandit_10_base import *
 
-class K_ArmBandit_BestAction(K_ArmBandit):
+class K_ArmBandit_BestAction(K_ArmBandit_1):
     def reset(self):
         super().reset()
         self.best_arm = np.argmax(self.q_base)

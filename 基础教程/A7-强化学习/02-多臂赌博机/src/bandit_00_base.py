@@ -1,6 +1,7 @@
 import re
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.lib.function_base import average
 
 from tqdm import trange
 
@@ -16,7 +17,8 @@ class K_ArmBandit_0(object):
         self.steps = steps
         self.step = 0
         self.action_count = np.zeros(self.k_arms)
-
+        # 每个arm上执行到目前为止的平均收益(总收益/总被选中次数)
+        self.average_reward = np.zeros(self.k_arms)
 
     # 得到下一步的动作(需要子类来实现)
     def select_action(self):
@@ -39,7 +41,7 @@ class K_ArmBandit_0(object):
         self.action_reward[self.step, 0] = action   # 0,1,2
         self.action_reward[self.step, 1] = reward   # 0,1
         self.step += 1
-        # self.q_star[action] += (reward - self.q_star[action]) / self.action_count[action]
+        self.average_reward[action] += (reward - self.average_reward[action]) / self.action_count[action]        
 
 
     # 模拟运行
@@ -58,32 +60,43 @@ class K_ArmBandit_0(object):
             self.action_reward_list.append(self.action_reward)
             #print(self.action_reward[0:100])
         
+        return self.summary()
 
     # 统计值
     def summary(self):
+        
+        # 用于屏幕打印统计数字
         summary = []
-
+        # 0
         summary.append(np.arange(self.k_arms))
+        # 1
         summary.append(self.prob)
 
         # shape = (runs, step, [action:reward])
         action_reward_runs = np.array(self.action_reward_list)
         # 每个arm的选择次数
         action, count_per_action = np.unique(action_reward_runs[:,:,0], return_counts=True)
+        # 2 count per action
         summary.append(count_per_action)
+        # 3 ratio of each action in all actions
         summary.append(summary[2]/summary[2].sum())
 
         # 每个 arm 上的总 reward
-        rewards = []
+        rewards_per_action = []
         for action in range(self.k_arms):
-            rewards.append(action_reward_runs[np.where(action_reward_runs[:,:,0]==action)].sum(axis=0)[1])
-        summary.append(np.array(rewards))
+            rewards_per_action.append(action_reward_runs[np.where(action_reward_runs[:,:,0]==action)].sum(axis=0)[1])
+        # 4 rewards per action
+        summary.append(np.array(rewards_per_action))
+        # 5  ratio of rewards in all action
         summary.append(summary[4]/summary[4].sum())
+        # 6 should be equal to self.prob
         summary.append(summary[4]/summary[2])
 
+        # 用于绘图，横坐标为step，纵坐标为 runs 的平均值
         summary2 = []
-        mean_reward_step = action_reward_runs[:,:,1].mean(axis=0)
-        summary2.append(mean_reward_step)
+        mean_reward_per_step = action_reward_runs[:,:,1].mean(axis=0)
+        # 0  mean on runs for reward on each step
+        summary2.append(mean_reward_per_step)
 
         best_action = np.argmax(self.prob)
         best_action_count_per_step = np.zeros(shape=(action_reward_runs.shape[0],action_reward_runs.shape[1]))
@@ -91,9 +104,12 @@ class K_ArmBandit_0(object):
             for step in range(action_reward_runs.shape[1]):
                 if (action_reward_runs[run,step,0] == best_action):
                     best_action_count_per_step[run,step] += 1
-        
+        # 1  for each step, the best action selected count
         summary2.append(best_action_count_per_step.mean(axis=0))
-        return summary, np.array(summary2), summary[4].sum()/summary[2].sum()
+
+        average_reward = summary[4].sum()/summary[2].sum()
+        print(self.__class__.__name__, average_reward, self.average_reward)
+        return summary, np.array(summary2), average_reward
 
         '''
         np.set_printoptions(suppress=True)

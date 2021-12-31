@@ -33,7 +33,7 @@ class K_ArmBandit_Thompson(K_ArmBandit_BestAction):
         self.q_star[action] += (reward - self.q_star[action]) / self.action_count[action]
 
 if __name__ == "__main__":
-    runs = 2000
+    runs = 1000
     time = 1000
 
     all_rewards = []

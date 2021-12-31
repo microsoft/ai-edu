@@ -1,3 +1,4 @@
+from functools import update_wrapper
 import re
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,20 +6,36 @@ import multiprocessing as mp
 from tqdm import trange
 from bandit_00_base import *
 from bandit_01_random import *
+from bandit_02_greedy import *
+from bandit_03_e_greedy import *
 
-class K_ArmBandit_02_Greedy(K_ArmBandit_0):
-    def __init__(self, k_arms=3, prob_list=[0.3, 0.5, 0.8], search_step=10):
+class K_ArmBandit_04_Softmax(K_ArmBandit_0):
+    def __init__(self, k_arms=3, prob_list=[0.3, 0.5, 0.8], alpha=0.1, has_base=False):
         super().__init__(k_arms=k_arms, prob_list=prob_list)
-        self.search_steps = search_step
+        self.alpha = alpha
+        self.has_base = has_base
+
+    def reset(self, steps):
+        super().reset(steps)
+        self.q_star = np.zeros(self.k_arms)
+
 
     # 得到下一步的动作（下一步要使用哪个arm）
     def select_action(self):
-        if (self.step < self.search_steps):
-            action = np.random.randint(low=0, high=self.k_arms)
-        else:
-            action = np.argmax(self.average_reward)
+        tmp = np.exp(self.q_star - np.max(self.q_star))
+        self.softmax = tmp / np.sum(tmp)
+        action = np.random.choice(self.k_arms, p=self.softmax)
         return action
-       
+
+
+    def update_counter(self, action, reward):
+        super().update_counter(action, reward)
+        one_hot = np.zeros(self.k_arms)
+        one_hot[action] = 1
+        if (self.has_base):
+            self.q_star += self.alpha * (reward - self.average_reward) * (one_hot - self.softmax)
+        else:
+            self.q_star += self.alpha * (reward) * (one_hot - self.softmax)
 
 if __name__ == "__main__":
 
@@ -30,15 +47,16 @@ if __name__ == "__main__":
     all_history = []
 
     bandits = []
-    bandits.append(K_ArmBandit_01_Random(3, [0.3, 0.5, 0.8]))
-    bandits.append(K_ArmBandit_02_Greedy(3, [0.3, 0.5, 0.8], search_step=10))
-    bandits.append(K_ArmBandit_02_Greedy(3, [0.3, 0.5, 0.8], search_step=15))
-    bandits.append(K_ArmBandit_02_Greedy(3, [0.3, 0.5, 0.8], search_step=20))
+    bandits.append(K_ArmBandit_04_Softmax(3, [0.3, 0.5, 0.8], alpha=0.1, has_base=True))
+    bandits.append(K_ArmBandit_04_Softmax(3, [0.3, 0.5, 0.8], alpha=0.1, has_base=False))
+    #bandits.append(K_ArmBandit_01_Greedy(3, [0.3, 0.5, 0.8], search_step=20))
+    #bandits.append(K_ArmBandit_01_Eps_Greedy(3, [0.3, 0.5, 0.8], epsilon=0.1))
+    
 
-    labels = [r'random, ',
-              r'greedy, 10, ',
-              r'greedy, 15, ',
-              r'greedy, 20, ']
+    labels = [r'softmax, 0.1, True, ',
+              r'softmax, 0.1, False, ',
+              r'greedy, 20, ',
+              r'e-greedy, 0.1, ']
 
     all_summary = []
     all_mean = []
@@ -46,9 +64,9 @@ if __name__ == "__main__":
 
     
     pool = mp.Pool(processes=4)
-    results = []
+    results = [None]*len(bandits)
     for i, bandit in enumerate(bandits):
-        results.append(pool.apply_async(bandit.simulate, args=(runs,steps,)))
+        results[i] = pool.apply_async(bandit.simulate, args=(runs,steps,))
     pool.close()
     pool.join()
 

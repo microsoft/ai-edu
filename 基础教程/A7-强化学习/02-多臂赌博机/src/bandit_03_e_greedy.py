@@ -5,40 +5,43 @@ import multiprocessing as mp
 from tqdm import trange
 from bandit_00_base import *
 from bandit_01_random import *
+from bandit_02_greedy import *
 
-class K_ArmBandit_02_Greedy(K_ArmBandit_0):
-    def __init__(self, k_arms=3, prob_list=[0.3, 0.5, 0.8], search_step=10):
+class K_ArmBandit_03_Eps_Greedy(K_ArmBandit_02_Greedy):
+    def __init__(self, k_arms=3, prob_list=[0.3, 0.5, 0.8], epsilon=0.0):
         super().__init__(k_arms=k_arms, prob_list=prob_list)
-        self.search_steps = search_step
+        self.epsilon = epsilon
 
     # 得到下一步的动作（下一步要使用哪个arm）
     def select_action(self):
-        if (self.step < self.search_steps):
+        if (np.random.rand() < self.epsilon):
             action = np.random.randint(low=0, high=self.k_arms)
         else:
             action = np.argmax(self.average_reward)
         return action
-       
+
 
 if __name__ == "__main__":
 
     runs = 1000
-    steps = 1000
+    steps = 500
     k_arms = 3
 
     # shape=(bandit, runs, steps, 2[action:reward])
     all_history = []
 
     bandits = []
-    bandits.append(K_ArmBandit_01_Random(3, [0.3, 0.5, 0.8]))
-    bandits.append(K_ArmBandit_02_Greedy(3, [0.3, 0.5, 0.8], search_step=10))
-    bandits.append(K_ArmBandit_02_Greedy(3, [0.3, 0.5, 0.8], search_step=15))
-    bandits.append(K_ArmBandit_02_Greedy(3, [0.3, 0.5, 0.8], search_step=20))
+    #bandits.append(K_ArmBandit_01_Random(3, [0.3, 0.5, 0.8]))
+    #bandits.append(K_ArmBandit_01_Greedy(3, [0.3, 0.5, 0.8], search_step=20))
+    bandits.append(K_ArmBandit_03_Eps_Greedy(3, [0.3, 0.5, 0.8], epsilon=0.05))
+    bandits.append(K_ArmBandit_03_Eps_Greedy(3, [0.3, 0.5, 0.8], epsilon=0.075))
+    bandits.append(K_ArmBandit_03_Eps_Greedy(3, [0.3, 0.5, 0.8], epsilon=0.1))
+    bandits.append(K_ArmBandit_03_Eps_Greedy(3, [0.3, 0.5, 0.8], epsilon=0.15))
 
-    labels = [r'random, ',
-              r'greedy, 10, ',
-              r'greedy, 15, ',
-              r'greedy, 20, ']
+    labels = [r'e-greedy, 0.05, ',
+              r'e-greedy, 0.075, ',
+              r'e-greedy, 0.1, ',
+              r'e-greedy, 0.15, ']
 
     all_summary = []
     all_mean = []

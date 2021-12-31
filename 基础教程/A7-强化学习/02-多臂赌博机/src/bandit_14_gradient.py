@@ -16,6 +16,8 @@ class K_ArmBandit_Gradient(K_ArmBandit_BestAction):
     def reset(self):
         super().reset()
         self.q_base += self.grad_base
+        self.average_reward = 0
+
 
     def select_action(self):
         # 小于epsilon, 执行随机探索行动

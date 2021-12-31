@@ -22,7 +22,7 @@ class K_ArmBandit_UCB(K_ArmBandit_BestAction):
 
 if __name__ == "__main__":
 
-    runs = 2000
+    runs = 1000
     time = 1000
     k_arms = 10
 

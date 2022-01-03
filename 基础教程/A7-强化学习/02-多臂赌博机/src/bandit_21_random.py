@@ -10,8 +10,8 @@ class KAB_Random(kab_base.KArmBandit):
     
         
 if __name__ == "__main__":
-    runs = 10
-    steps = 10
+    runs = 1000
+    steps = 1000
     k_arms = 10
 
     all_rewards = []
@@ -21,23 +21,14 @@ if __name__ == "__main__":
     bandits:kab_base.KArmBandit = []
     bandits.append(KAB_Random(k_arms))
     bandits.append(KAB_Random(k_arms))
+    bandits.append(KAB_Random(k_arms))
+    bandits.append(KAB_Random(k_arms))
 
     labels = [
         'random ',
-        'random '
+        'random ',
+        'random ',
+        'random ',
     ]
-
-    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels)
-
-
-    '''
-    for bandit in bandits:
-        rewards, best_action, actions = bandit.simulate(runs, steps)
-        all_rewards.append(rewards)
-        all_best.append(best_action)
-        all_actions.append(actions)
-    '''
-
-
-
-
+    title = "Random"
+    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)

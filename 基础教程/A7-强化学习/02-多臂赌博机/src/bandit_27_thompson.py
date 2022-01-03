@@ -10,7 +10,6 @@ class KAB_Thompson(kab_base.KArmBandit):
 
     def reset(self):
         super().reset()
-        
         self.a = np.ones(self.action_count.shape)
         self.b = np.ones(self.action_count.shape)
 
@@ -19,7 +18,6 @@ class KAB_Thompson(kab_base.KArmBandit):
         beta = np.random.beta(self.a, self.b)
         action = np.argmax(beta)
         return action
-
 
     def update_Q(self, action, reward):
         super().update_Q(action, reward)
@@ -55,5 +53,5 @@ if __name__ == "__main__":
         'KAB_Thompson(0.5), ',
         'KAB_Thompson(1), ',
     ]
-
-    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels)
+    title = "Thompson"
+    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)

@@ -9,7 +9,8 @@ class KAB_UCB(kab_base.KArmBandit):
         self.UCB = c
 
     def select_action(self):
-        estimation = self.Q + self.UCB * np.sqrt(np.log(self.step + 1) / (self.action_count + 1e-5))
+        ucb = self.UCB * np.sqrt(np.log(self.step + 1) / (self.action_count + 1e-5))
+        estimation = self.Q + ucb
         action = np.argmax(estimation)
         return action
         
@@ -23,16 +24,16 @@ if __name__ == "__main__":
     all_actions = []
 
     bandits:kab_base.KArmBandit = []
+    bandits.append(KAB_UCB(k_arms, c=0.1))
+    bandits.append(KAB_UCB(k_arms, c=0.5))
     bandits.append(KAB_UCB(k_arms, c=1))
     bandits.append(KAB_UCB(k_arms, c=2))
-    bandits.append(KAB_UCB(k_arms, c=3))
-    bandits.append(KAB_UCB(k_arms, c=4))
 
     labels = [
-        'E-Greedy-D(0.1,True,0), ',
-        'E-Greedy-D(0.1,False,0), ',
-        'E-Greedy-D(0.4,True,0), ',
-        'E-Greedy-D(0.4,False,0), ',
+        'UCB(c=0.1), ',
+        'UCB(c=0.5), ',
+        'UCB(c=1), ',
+        'UCB(c=2), ',
     ]
-
-    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels)
+    title = "UCB"
+    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)

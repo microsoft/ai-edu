@@ -33,8 +33,9 @@ if __name__ == "__main__":
     all_best = []
 
     bandits = []
+    bandits.append(K_ArmBandit_UCB(k_arms=10, epsilon=0, ucb_param=1))
     bandits.append(K_ArmBandit_UCB(k_arms=10, epsilon=0, ucb_param=2))
-    bandits.append(K_ArmBandit_BestAction(k_arms=10, epsilon=0.1))
+    #bandits.append(K_ArmBandit_BestAction(k_arms=10, epsilon=0.1))
 
     for bandit in bandits:
         rewards, best_arm = bandit.simulate(runs, time)
@@ -45,7 +46,7 @@ if __name__ == "__main__":
     best_arm_counts = np.array(all_best).mean(axis=1)
     mean_rewards = np.array(all_rewards).mean(axis=1)
    
-    labels = [r'$\epsilon = 0.1$',
+    labels = [r'$\epsilon = 0$, UCB=1',
             r'$\epsilon = 0$, UCB=2']
 
     plt.figure(figsize=(10, 20))

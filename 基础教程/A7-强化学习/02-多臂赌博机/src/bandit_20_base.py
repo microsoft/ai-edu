@@ -1,11 +1,18 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.signal as ss
 
 from tqdm import trange
 
 class KArmBandit(object):
     def __init__(self, k_arms=10):
         self.k_arms = k_arms
+        # 上次选择的动作
+        self.last_action = -1
+        # 连续选择同一个动作的次数
+        self.same_action = 0
+        # 更改q_base的阈值
+        self.change_condition = 10
 
     def reset(self):
         # 初始化一个 k 个元素的正态分布数组，均值为0，方差为1，
@@ -14,9 +21,10 @@ class KArmBandit(object):
         sigma = 1
         # sort from small to big, so the 10th is the best
         self.q_base = np.sort(sigma * np.random.randn(self.k_arms) + mu)
-        
+        self.best_arm = self.k_arms - 1
         assert(np.argmax(self.q_base) == self.k_arms-1)
         
+
         # 初始化 k 个 arm 的动作估值q*为 0
         self.Q = np.zeros(self.k_arms)
         # 保存每个 arm 被选择的次数
@@ -50,6 +58,20 @@ class KArmBandit(object):
         self.Q[action] += (reward - self.Q[action]) / self.action_count[action]
 
 
+    # 如果某个动作被多次连续选择，则降低该动作的收益值，同时提高其它动作的收益值
+    def update_Q_base(self, action):
+        if (action == self.last_action):
+            self.same_action += 1
+        else:
+            self.last_action = action
+            self.same_action = 0
+
+        if (self.same_action > self.change_condition):
+            self.q_base += 0.1
+            self.q_base[action] -= 0.1
+
+        self.best_arm = np.argmax(self.q_base)
+
     # 模拟运行
     def simulate(self, runs, steps):
         # 记录历史 reward，便于后面统计
@@ -65,8 +87,9 @@ class KArmBandit(object):
                 reward = self.step_reward(action)
                 self.update_Q(action, reward)
                 rewards[r, s] = reward
-                if (action == self.k_arms-1):
+                if (action == self.best_arm):
                     best_action[r, s] = 1
+                #self.update_Q_base(action)
             # end for t
             actions += self.action_count
         # end for r
@@ -76,7 +99,7 @@ class KArmBandit(object):
 
 import multiprocessing as mp
 
-def mp_simulate(bandits, k_arms, runs, steps, labels):
+def mp_simulate(bandits, k_arms, runs, steps, labels, title):
 
     # statistic
 
@@ -109,27 +132,39 @@ def mp_simulate(bandits, k_arms, runs, steps, labels):
     #grid = plt.GridSpec(nrows=4, ncols=3, wspace=0.2, hspace=0.2)
     grid = plt.GridSpec(nrows=4, ncols=3)
     plt.figure(figsize=(15, 20))
-
+    
     plt.subplot(grid[0:2, 0])
-    for i, mean_rewards in enumerate(all_mean_rewards):
-        plt.plot(mean_rewards[0:100], label=labels[i] + str.format("{0:0.4f}", mean_reward_per_bandit[i]))
+    for i, mean_rewards in enumerate(all_mean_rewards):     
+        tmp = ss.savgol_filter(mean_rewards[0:100], 5, 3)
+        plt.plot(tmp, label=labels[i] + str.format("{0:0.4f}", mean_reward_per_bandit[i]))
     plt.xlabel('steps')
     plt.ylabel('average reward')
     plt.legend()
     plt.grid()
 
-    plt.subplot(grid[0:2, 1])
+    plt.subplot(grid[0:1, 1])
     for i, mean_rewards in enumerate(all_mean_rewards):
-        x = mean_rewards[500:1000]
-        plt.plot(x, label=labels[i] + str.format("{0:0.4f}", mean_reward_per_bandit[i]))
-    ticks = [0,100,200,300,400,500]
-    tlabels = [500,600,700,800,900,1000]
+        tmp = ss.savgol_filter(mean_rewards[300:500], 15, 3)
+        plt.plot(tmp)
+    ticks = [0,50,100,150,200]
+    tlabels = [300,350,400,450,500]
     plt.xticks(ticks, tlabels)
     plt.xlabel('steps')
     plt.ylabel('average reward')
-    plt.legend()
     plt.grid()
-    
+
+    plt.subplot(grid[1:2, 1])
+    for i, mean_rewards in enumerate(all_mean_rewards):
+        tmp = ss.savgol_filter(mean_rewards[700:900], 15, 3)
+        plt.plot(tmp)
+    ticks = [0,50,100,150,200]
+    tlabels = [700,750,800,850,900]
+    plt.xticks(ticks, tlabels)
+    plt.xlabel('steps')
+    plt.ylabel('average reward')
+    plt.grid()
+
+
 
     plt.subplot(grid[2:4, 0:2])
     for i, counts in enumerate(all_best_actions):
@@ -140,46 +175,19 @@ def mp_simulate(bandits, k_arms, runs, steps, labels):
     plt.grid()
     
     X = ["0","1","2","3","4","5","6","7","8","9"]
+    colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red']
     for i in range(4):
         plt.subplot(grid[i, 2])
         Y = all_done_actions[i].tolist()
-        plt.bar(X, Y, label=labels[i])
+        plt.bar(X, Y, label=labels[i], color=colors[i])
         for x,y in zip(X, Y):
-            plt.text(x,y, str(y), ha='center')
-        plt.legend()
+            if (int(x) < 8):
+                plt.text(x,y, str(y), ha='center', rotation=-30)
+            else:
+                plt.text(x,y, str(y), ha='center')
+    plt.legend()
 
-
+    plt.suptitle(title)
     plt.show()
 
     return 
-
-    plt.figure(figsize=(10, 20))
-    # 左上角，绘制step从0到200
-    plt.subplot(2, 2, 1)
-    for i, mean_rewards in enumerate(all_mean_rewards):
-        plt.plot(mean_rewards[0:200], label=labels[i] + str.format("{0:0.4f}", mean_reward_per_bandit[i]))
-    plt.xlabel('steps')
-    plt.ylabel('average reward')
-    plt.legend()
-    plt.grid()
-    # 右上角，绘制step从800到100
-    plt.subplot(2, 2, 2)
-    for i, mean_rewards in enumerate(all_mean_rewards):
-        plt.plot(mean_rewards[800:1000], label=labels[i] + str.format("{0:0.4f}", mean_reward_per_bandit[i]))
-    plt.xlabel('steps')
-    plt.ylabel('average reward')
-    plt.legend()
-    plt.grid()
-
-    plt.subplot(2, 1, 2)
-    for i, counts in enumerate(all_best_actions):
-        plt.plot(counts, label=labels[i] + str.format("{0:0.3f}", best_action_per_bandit[i]))
-    plt.xlabel('steps')
-    plt.ylabel('% optimal action')
-    plt.legend()
-    plt.grid()
-
-    #plt.subplot(2, 1, 2)
-    #plt.barh(["0","1","2","3","4","5","6","7","8","9"], all_done_actions.tolist())
-    #plt.barh(["0","1","2"], [1,2,3])
-    plt.show()

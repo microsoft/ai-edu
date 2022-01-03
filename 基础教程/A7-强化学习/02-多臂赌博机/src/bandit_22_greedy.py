@@ -22,24 +22,20 @@ if __name__ == "__main__":
     steps = 1000
     k_arms = 10
 
-    all_rewards = []
-    all_best = []
-    all_actions = []
-
     bandits:kab_base.KArmBandit = []
-    bandits.append(KAB_Greedy(k_arms, 5))
     bandits.append(KAB_Greedy(k_arms, 10))
     bandits.append(KAB_Greedy(k_arms, 15))
     bandits.append(KAB_Greedy(k_arms, 20))
+    bandits.append(KAB_Greedy(k_arms, 25))
 
     labels = [
-        'Greedy(5)',
         'Greedy(10)',
         'Greedy(15)',
-        'Greedy(20)'
+        'Greedy(20)',
+        'Greedy(25)'
     ]
-
-    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels)
+    title = "Greedy"
+    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)
 
 
 

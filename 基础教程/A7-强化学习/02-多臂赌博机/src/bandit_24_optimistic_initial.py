@@ -31,18 +31,49 @@ if __name__ == "__main__":
     runs = 1000
     steps = 1000
     k_arms = 10
+    
+    bandits:kab_base.KArmBandit = []
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 0))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 1))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 2))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 4))
+
+    labels = [
+        'Initial(0.1,0), ',
+        'Initial(0.1,1), ',
+        'Initial(0.1,2), ',
+        'Initial(0.1,4), ',
+    ]
+    title = 'Optimistic Initial'
+    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)
+    
 
     bandits:kab_base.KArmBandit = []
     bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 1))
-    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 3))
-    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 5))
-    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 7))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 2))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.2, 1))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.2, 2))
 
     labels = [
         'Initial(0.1,1), ',
-        'Initial(0.1,3), ',
-        'Initial(0.1,5), ',
-        'Initial(0.1,7), ',
+        'Initial(0.1,2), ',
+        'Initial(0.2,1), ',
+        'Initial(0.2,2), ',
+    ]
+    title = 'Optimistic Initial'
+    kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)
+
+    bandits:kab_base.KArmBandit = []
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.1, 1))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.2, 1))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.3, 1))
+    bandits.append(KAB_Optimistic_Initial(k_arms, 0.4, 1))
+
+    labels = [
+        'Initial(0.1,1), ',
+        'Initial(0.2,1), ',
+        'Initial(0.3,1), ',
+        'Initial(0.4,1), ',
     ]
     title = 'Optimistic Initial'
     kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)

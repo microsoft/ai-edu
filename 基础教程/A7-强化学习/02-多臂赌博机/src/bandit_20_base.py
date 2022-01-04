@@ -67,7 +67,7 @@ class KArmBandit(object):
             self.same_action = 0
 
         if (self.same_action > self.change_condition):
-            self.q_base += 0.1
+            self.q_base += 0.01
             self.q_base[action] -= 0.1
 
         self.best_arm = np.argmax(self.q_base)
@@ -89,7 +89,7 @@ class KArmBandit(object):
                 rewards[r, s] = reward
                 if (action == self.best_arm):
                     best_action[r, s] = 1
-                #self.update_Q_base(action)
+                # self.update_Q_base(action)
             # end for t
             actions += self.action_count
         # end for r

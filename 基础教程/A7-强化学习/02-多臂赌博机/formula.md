@@ -1,4 +1,33 @@
+## 非平稳问题
+
+$$
+Q_{n+1}=Q_n + \alpha(R_n - Q_n), \ \ \ \alpha \in (0,1]
+$$
+
+$$
+\begin{aligned}
+Q_{n+1}&=Q_n + \alpha(R_n - Q_n)
+\\
+&=\alpha R_n + (1-\alpha)Q_n
+\\
+&=\alpha R_n + (1-\alpha)\alpha R_{n-1}+(1-\alpha)^2Q_{n-1}
+\\
+&=\alpha R_n + (1-\alpha)\alpha R_{n-1}+(1-\alpha)^2R_{n-1} + \cdots + (1-\alpha)^nQ_1
+\\
+&=\alpha R_n + (1-\alpha)\alpha R_{n-1}+(1-\alpha)^2R_{n-1} + \cdots + (1-\alpha)^nR_1
+\end{aligned}
+$$
+
+$$
+\sum_{i=1}^\infin \alpha_i = \infin \ 并且 \ \sum_{i=1}^\infin \alpha_i^2 < \infin
+$$
+
+
 ## softmax
+
+$$
+\theta_{n+1} = \theta_{n} + \alpha \cdot \nabla J(\theta)
+$$
 
 $$
 \pi_t(a) \dot= \Pr\{A_t=a\} \dot= \frac{e^{Q(a)/\tau}}{\sum_{b=1}^k e^{Q(b)/\tau}}

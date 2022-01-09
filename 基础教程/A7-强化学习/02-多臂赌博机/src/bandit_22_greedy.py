@@ -24,9 +24,9 @@ if __name__ == "__main__":
 
     bandits:kab_base.KArmBandit = []
     bandits.append(KAB_Greedy(k_arms, 10))
-    #bandits.append(KAB_Greedy(k_arms, 15))
-    #bandits.append(KAB_Greedy(k_arms, 20))
-    #bandits.append(KAB_Greedy(k_arms, 25))
+    bandits.append(KAB_Greedy(k_arms, 15))
+    bandits.append(KAB_Greedy(k_arms, 20))
+    bandits.append(KAB_Greedy(k_arms, 25))
 
     labels = [
         'Greedy(10)',

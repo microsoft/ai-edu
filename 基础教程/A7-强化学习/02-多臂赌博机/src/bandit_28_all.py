@@ -106,8 +106,6 @@ if __name__ == "__main__":
     steps = 1000
     k_arms = 10
 
-    staristic(k_arms, runs, steps)
-    exit(0)
 
     bandits:kab_base.KArmBandit = []
     bandits.append(KAB_Greedy(k_arms, 25))
@@ -142,3 +140,4 @@ if __name__ == "__main__":
     kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)
 
 
+    staristic(k_arms, runs, steps)

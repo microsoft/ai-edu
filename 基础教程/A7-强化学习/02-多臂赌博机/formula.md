@@ -180,3 +180,64 @@ $$
 P(q) = \frac{q^{\alpha-1}(1-q)^{\beta-1}}{B(\alpha, \beta)}
 $$
 
+
+
+
+TOPSIS
+
+正向指标
+
+$$
+y = \frac{x-x_{min}}{x_{max}-x_{min}}
+$$
+
+逆向指标
+
+$$
+y = \frac{x_{max}-x}{x_{max}-x_{min}}
+$$
+
+计算权重值
+
+$$
+z_{ij} = \frac{y_{ij}}{\sqrt{\sum_{i=1}^n y_{ij}^2}}
+$$
+
+得到规范矩阵，n个样本，m个特征值
+
+$$
+Z = \begin{bmatrix}
+z_{11} & \cdots & z_{1m}
+\\
+\vdots & \ddots & \vdots
+\\
+z_{n1} & \cdots & z_{nm}
+\end{bmatrix}
+$$
+
+确定最优最劣
+
+$$
+Z^+=\big[\max (z_{11},\cdots,z_{n1}), \cdots, \max (z_{1m}, z_{nm}) \big ] = \big [Z_1^+, \cdots ,Z_m^+ \big ]
+$$
+
+$$
+Z^-=\big[\min (z_{11},\cdots,z_{n1}), \cdots, \min (z_{1m}, z_{nm}) \big ] = \big [Z_1^-, \cdots ,Z_m^- \big ]
+$$
+
+
+$$
+D_i^+=\sqrt{\sum_{j=1}^m (Z_j^+ - z_{ij})^2}
+$$
+
+$$
+D_i^-=\sqrt{\sum_{j=1}^m (Z_j^- - z_{ij})^2}
+$$
+
+$$
+C_i = \frac{D_i^-}{D_i^++D_i^-}
+$$
+
+$$
+sort = argsort (c_i)
+$$

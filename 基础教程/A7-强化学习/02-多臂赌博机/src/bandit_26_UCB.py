@@ -18,10 +18,6 @@ if __name__ == "__main__":
     steps = 1000
     k_arms = 10
 
-    all_rewards = []
-    all_best = []
-    all_actions = []
-
     bandits:kab_base.KArmBandit = []
     bandits.append(KAB_UCB(k_arms, c=0.1))
     bandits.append(KAB_UCB(k_arms, c=0.5))

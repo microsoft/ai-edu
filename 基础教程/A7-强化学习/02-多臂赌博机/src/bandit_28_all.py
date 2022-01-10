@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import multiprocessing as mp
 
 from bandit_22_greedy import *
 from bandit_23_e_greedy import *
@@ -11,7 +8,7 @@ from bandit_27_thompson import *
 
 
 if __name__ == "__main__":
-    runs = 1000
+    runs = 2000
     steps = 1000
     k_arms = 10
 
@@ -28,13 +25,11 @@ if __name__ == "__main__":
     labels = [
         'Greedy(25), ',
         'E_Greedy(0.1), ',
-        'Optimistic(0.1,5), ',
+        'Optimistic(0.3,2), ',
         'Softmax(0.2,T,3), ',
     ]
     title = "Compare-1"
     kab_base.mp_simulate(bandits, k_arms, runs, steps, labels, title)
-
-    runs = 1000
 
     bandits:kab_base.KArmBandit = []
     bandits.append(KAB_Greedy(k_arms, 25))

@@ -1,5 +1,6 @@
 from turtle import st
 import numpy as np
+from torch import ne
 import tqdm
 
 
@@ -40,21 +41,26 @@ def episode(start_state, gamma):
     curr_state = start_state
     v = Rewards[curr_state]
     while (True):
-        next_state = next(curr_state)
+        next_state = get_next_state(curr_state)
         if (next_state == S_Sleep):
             # print("Sleep")
             break
-        v += gamma * Rewards[next_state]
+        r = get_reward(next_state)
+        v += gamma * r
         curr_state = next_state
+        gamma = gamma * gamma
     return v
     
-def next(curr_state):
+def get_next_state(curr_state):
     next_state = np.random.choice(7, p=Matrix[curr_state])
     return next_state
 
+def get_reward(curr_state):
+    return Rewards[curr_state]
+
 if __name__=="__main__":
     gamma = 0.9
-    episodes = 1000
+    episodes = 10000
     values = [0] * 7
     for start_state in States:
         q = 0
@@ -62,5 +68,5 @@ if __name__=="__main__":
             v = episode(start_state, gamma)
             q += (v - q)/(i+1)
         values[start_state] = q
-    
+    print("gamma=", gamma)
     print(values)

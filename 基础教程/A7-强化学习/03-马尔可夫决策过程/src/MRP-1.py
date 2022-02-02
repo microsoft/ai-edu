@@ -1,72 +1,66 @@
+import math
 from turtle import st
 import numpy as np
 from torch import ne
 import tqdm
+from enum import Enum
+import multiprocessing as mp
 
-
-# 状态
-S_C1 = 0
-S_C2 = 1
-S_C3 = 2
-S_Pass = 3
-S_Pub = 4
-S_Play = 5
-S_Sleep = 6
-
-States = [0,1,2,3,4,5,6]
+# 状态定义
+class States(Enum):
+    Class1 = 0
+    Class2 = 1
+    Class3 = 2
+    Pass = 3
+    Pub = 4
+    Play = 5
+    Sleep = 6
 
 # 收益向量
-# [C1, C2, C3, Pass, Pub, Play, Sleep]
+# [Class1, Class2, Class3, Pass, Pub, Play, Sleep]
 Rewards = [-2, -2, -2, 10, 1, -1, 0]
 
-# 状态转移矩阵
 Matrix = np.array(
-    [
-        [0.0, 0.5, 0.0, 0.0, 0.0, 0.5, 0.0],
-        [0.0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.2],
-        [0.0, 0.0, 0.0, 0.6, 0.4, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
-        [0.2, 0.4, 0.4, 0.0, 0.0, 0.0, 0.0],
-        [0.1, 0.0, 0.0, 0.0, 0.0, 0.9, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    [   #Cl1  Cl2  Cl3  Pas  Pub  Ply  Slp
+        [0.0, 0.5, 0.0, 0.0, 0.0, 0.5, 0.0], # Class1
+        [0.0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.2], # CLass2
+        [0.0, 0.0, 0.0, 0.6, 0.4, 0.0, 0.0], # Class3
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0], # Pass
+        [0.2, 0.4, 0.4, 0.0, 0.0, 0.0, 0.0], # Pub
+        [0.1, 0.0, 0.0, 0.0, 0.0, 0.9, 0.0], # Play
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # Sleep
     ]
 )
 
-
-
-def episode(start_state, gamma):
-    assert (start_state >= S_C1)
-    if (start_state == S_Sleep):
-        return 0
-    curr_state = start_state
-    v = Rewards[curr_state]
+def run(gamma):
+    V_curr = [0.0] * 7
+    V_next = [0.0] * 7
+    count = 0
     while (True):
-        next_state = get_next_state(curr_state)
-        if (next_state == S_Sleep):
-            # print("Sleep")
+        # 遍历每一个 state 作为 start_state
+        for start_state in States:
+            # 得到转移概率
+            prob = Matrix[start_state.value]
+            v_sum = 0
+            # 计算下一个状态的 转移概率*状态值 的 和 v
+            for next_state_value in range(len(prob)):
+                # if (prob[next_state] > 0.0):
+                v_sum += prob[next_state_value] * V_next[next_state_value]
+            # end for
+            V_curr[start_state.value] = Rewards[start_state.value] + gamma * v_sum
+        # end for
+        # 检查收敛性
+        if np.allclose(V_next, V_curr):
             break
-        r = get_reward(next_state)
-        v += gamma * r
-        curr_state = next_state
-        gamma = gamma * gamma
-    return v
-    
-def get_next_state(curr_state):
-    next_state = np.random.choice(7, p=Matrix[curr_state])
-    return next_state
-
-def get_reward(curr_state):
-    return Rewards[curr_state]
+        # 把 V_curr 赋值给 V_next
+        V_next = V_curr.copy()
+        count += 1
+    # end while
+    print(count)
+    return V_next
 
 if __name__=="__main__":
     gamma = 0.9
-    episodes = 10000
-    values = [0] * 7
+    v = run(gamma)
     for start_state in States:
-        q = 0
-        for i in tqdm.trange(episodes):
-            v = episode(start_state, gamma)
-            q += (v - q)/(i+1)
-        values[start_state] = q
-    print("gamma=", gamma)
-    print(values)
+        print(start_state, v[start_state.value])

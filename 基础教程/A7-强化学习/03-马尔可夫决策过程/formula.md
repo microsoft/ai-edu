@@ -77,7 +77,7 @@ V(Class3) = 4.09
 \begin{aligned}
 X&=R_{Class3}+\gamma*[V(Pub)*P(S_{Class3}|S_{Pub}) 
 \\
-&+ V(Pass)*P(S_{Class3}|S_{Pass})]
+&+ V(A_{Pass})*P(S_{Class3}|S_{A_{Pass}})]
 \\
 &=(-2)+0.9*(1.93*0.4+10*0.6)=4.09
 \end{aligned}
@@ -191,12 +191,12 @@ $$
 
 $$
 \begin{aligned}
-V_1 &= \pi(Play|V_1)*(R_{Play}+\gamma P_{11}V_1)+\pi(Quit|V_2)*(R_{Quit}+\gamma P_{12}V_2)
+V_1 &= \pi(A_{Play}|S_{V_1})*(R_{Play}+\gamma P_{11}V_1)+\pi(A_{Quit}|S_{V_2})*(R_{Quit}+\gamma P_{12}V_2)
 \\
-V_2 &= \pi(Play|V_2)*(R_{Play}+\gamma P_{21}V_1)+\pi(Study1|V_2)*(R_{Study1}+\gamma P_{23}V_3)
+V_2 &= \pi(A_{Play}|S_{V_2})*(R_{Play}+\gamma P_{21}V_1)+\pi(A_{Study1}|S_{V_2})*(R_{Study1}+\gamma P_{23}V_3)
 \\
-V_3 &= \pi(Sleep|V_3)*(R_{Sleep}+\gamma P_{30}V_0)+\pi(Study2|V_3)*(R_{Study2}+\gamma P_{34}V_4)
+V_3 &= \pi(Sleep|S_{V_3})*(R_{Sleep}+\gamma P_{30}V_0)+\pi(A_{Study2}|S_{V_3})*(R_{Study2}+\gamma P_{34}V_4)
 \\
-V_4 &= \pi(Study3|V_4)*(R_{Study3}+\gamma P_{40}V_0)+\pi(Pub|V_4)*(R_{Pub}+\gamma P_{42}V_2+\gamma P_{43}V_3+\gamma P_{44}V_4)
+V_4 &= \pi(A_{Pass}|S_{V_4})*(R_{Pass}+\gamma P_{40}V_0)+\pi(A_{Pub}|S_{V_4})*(R_{Pub}+\gamma P_{42}V_2+\gamma P_{43}V_3+\gamma P_{44}V_4)
 \end{aligned}
 $$

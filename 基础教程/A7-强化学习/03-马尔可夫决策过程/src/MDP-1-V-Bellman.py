@@ -9,6 +9,7 @@ class States(Enum):
     Class2 = 3
     Class3 = 4
 
+# 动作
 class Actions(Enum):
     Quit = 0
     Play1 = 1
@@ -19,9 +20,11 @@ class Actions(Enum):
     Pub = 6
     Sleep= 7
 
-Rewards = [0, -1, -1, -2, -2, 1, 10, 0]
+# 动作奖励
+Rewards = [0, -1, -1, -2, -2, 10, 1, 0]
 
-P_sa = np.array([
+# 状态->动作概率
+Pi_sa = np.array([
     # S_Rest -> A_none
     [0, 0, 0, 0, 0, 0, 0, 0],
     # S_Game -> A_Quit, A_Play1
@@ -30,11 +33,12 @@ P_sa = np.array([
     [0, 0, 0.5, 0.5, 0, 0, 0, 0],
     # S_Class2 -> A_Study2, A_Sleep
     [0, 0, 0, 0, 0.5, 0, 0, 0.5],
-    # S_Class3 -> A_Pub, A_Pass
+    # S_Class3 -> A_Pass, A_Pub
     [0, 0, 0, 0, 0, 0.5, 0.5, 0]
 ])
 
-PI_as = np.array([
+# 动作->状态概率
+P_as = np.array([
     # A_Quit -> S_Class1
     [0, 0, 1, 0, 0],
     # A_Play1 -> S_Game
@@ -45,10 +49,10 @@ PI_as = np.array([
     [0, 0, 0, 1, 0],
     # A_Study2 -> S_Class3
     [0, 0, 0, 0, 1],
-    # A_Pub -> S_Class1, S_Class2, S_Class3
-    [0, 0, 0.2, 0.4, 0.4],
     # A_Pass -> S_Rest
     [1, 0, 0, 0, 0],
+    # A_Pub -> S_Class1, S_Class2, S_Class3
+    [0, 0, 0.2, 0.4, 0.4],
     # A_Sleep -> S_None
     [0, 0, 0, 0, 0]
 ])
@@ -59,23 +63,33 @@ def run(gamma):
     V_curr = [0.0] * 5
     V_next = [0.0] * 5
     count = 0
+    # 迭代
     while (True):
+        # 遍历所有状态 s
         for curr_state in States:
-            v_pai_sum = 0
+            v_curr_sum = 0
             if (curr_state == States.Rest):
                 continue
-            next_actions_prob = P_sa[curr_state.value]
+            # 获得 状态->动作 策略概率
+            next_actions_prob = Pi_sa[curr_state.value]
+            # 遍历每个策略概率
             for action_value, action_prob in enumerate(next_actions_prob):
-                if (action_value == Actions.Sleep.value):
+                if (action_prob == 0.0 and action_value == Actions.Sleep.value):
                     continue
-                next_states_prob = PI_as[action_value]
+                # 获得 动作->状态 转移概率
+                next_states_prob = P_as[action_value]
                 v_sum = 0
+                # 遍历每个转移概率
                 for state_value, state_prob in enumerate(next_states_prob):
-                    v_sum += state_prob * V_next[state_value]
+                    if (state_prob > 0.0):
+                        # math: \sum_{s'} P_{ss'}^a v_{\pi}(s')
+                        v_sum += state_prob * V_next[state_value]
                 #end for
-                v_pai_sum += action_prob * (Rewards[action_value] + gamma * v_sum)
+                # math: \sum_a \pi(a|s) [R_s^a + \gamma \sum_{s'} P_{ss'}^a v_{\pi}(s')] 
+                v_curr_sum += action_prob * (Rewards[action_value] + gamma * v_sum)
             # end for
-            V_curr[curr_state.value] = v_pai_sum
+            
+            V_curr[curr_state.value] = v_curr_sum
         #endfor
         # 检查收敛性
         if np.allclose(V_next, V_curr):
@@ -89,7 +103,7 @@ def run(gamma):
 
 if __name__=="__main__":
     print(Rewards)
-    gamma = 0.9
+    gamma = 1
     v = run(gamma)
     for start_state in States:
         print(start_state, v[start_state.value])

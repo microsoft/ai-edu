@@ -1,12 +1,9 @@
-import math
-from turtle import st
-import numpy as np
-from torch import ne
-import tqdm
-from enum import Enum
-import multiprocessing as mp
 
-# 状态定义
+import numpy as np
+from enum import Enum
+
+
+# 状态
 class States(Enum):
     Class1 = 0
     Class2 = 1
@@ -17,7 +14,7 @@ class States(Enum):
     Sleep = 6
 
 # 收益向量
-# [Class1, Class2, Class3, Pass, Pub, Play, Sleep]
+# [Sleep, Pass, C3, C2, C1, Pub, Play]
 Rewards = [-2, -2, -2, 10, 1, -1, 0]
 
 Matrix = np.array(
@@ -31,15 +28,3 @@ Matrix = np.array(
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # Sleep
     ]
 )
-
-def InvMatrix(gamma):
-    num_state = Matrix.shape[0]
-    I = np.eye(num_state)
-    tmp1 = I - gamma * Matrix
-    tmp2 = np.linalg.inv(tmp1)
-    values = np.dot(tmp2, Rewards)
-    print(values)
-
-if __name__=="__main__":
-    gamma = 0.9
-    InvMatrix(gamma)

@@ -6,4 +6,5 @@ import Data_FrozenLake as dfl
 if __name__=="__main__":
     gamma = 0.9
     vs = mab.run(dfl.States, dfl.Matrix, dfl.Rewards, gamma)
+    np.set_printoptions(suppress=True)
     print(np.round(np.array(vs).reshape(4,4), 2))

@@ -10,4 +10,6 @@ if __name__=="__main__":
     gamma = 0.9
     episodes = 10000
     end_states = [ds.States.Sleep]
-    algoM.run(ds.Rewards, ds.Matrix, ds.States, end_states, gamma, episodes)
+    v = algoM.run(ds.Rewards, ds.Matrix, ds.States, end_states, gamma, episodes)
+    for start_state in ds.States:
+        print(start_state, "= {:.2f}".format(v[start_state.value]))

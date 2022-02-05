@@ -5,4 +5,4 @@ if __name__=="__main__":
     gamma = 0.9
     v = mbb.run(ds.States, ds.Matrix, ds.Rewards, gamma)
     for start_state in ds.States:
-        print(start_state, v[start_state.value])
+        print(start_state, "= {:.2f}".format(v[start_state.value]))

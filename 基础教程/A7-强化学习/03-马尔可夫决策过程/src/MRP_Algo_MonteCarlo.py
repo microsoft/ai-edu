@@ -3,28 +3,30 @@ import numpy as np
 import tqdm
 import multiprocessing as mp
 
-def single_run(Rewards, TransMatrix, States, start_state, end_states, episodes, gamma):
+def single_process(Rewards, TransMatrix, States, start_state, end_states, episodes, gamma):
     num_state = len(Rewards)
-    sum_g = 0
+    sum_gain = 0
     for episode in tqdm.trange(episodes):
         if (start_state in end_states):
-            return 0
+            # 最后一个状态也可能有reward值
+            return Rewards[start_state.value]
         curr_state_value = start_state.value
-        g = Rewards[curr_state_value]
+        gain = Rewards[curr_state_value]
         power = 1
         while (True):
             next_state_value = np.random.choice(num_state, p=TransMatrix[curr_state_value])
             r = Rewards[next_state_value]
-            g += math.pow(gamma, power) * r
+            gain += math.pow(gamma, power) * r
             if (States(next_state_value) in end_states):
+                # 到达终点，分幕结束
                 break
             else:
                 power += 1
                 curr_state_value = next_state_value
         # end while
-        sum_g += g
+        sum_gain += gain
     # end for
-    v = sum_g / episodes
+    v = sum_gain / episodes
     return v  
 
 def run(Rewards, TransMatrix, States, end_states, gamma, episodes):
@@ -32,7 +34,7 @@ def run(Rewards, TransMatrix, States, end_states, gamma, episodes):
     Vs = []
     results = []
     for start_state in States:
-        results.append(pool.apply_async(single_run, args=(Rewards, TransMatrix, States, start_state, end_states, episodes, gamma,)))
+        results.append(pool.apply_async(single_process, args=(Rewards, TransMatrix, States, start_state, end_states, episodes, gamma,)))
     pool.close()
     pool.join()
     for i in range(len(results)):

@@ -14,7 +14,7 @@ class States(Enum):
     Sleep = 6
 
 # 收益向量
-# [Sleep, Pass, C3, C2, C1, Pub, Play]
+# [Class1, Class2, Class3, Pass, Pub, Play, Sleep]
 Rewards = [-2, -2, -2, 10, 1, -1, 0]
 
 Matrix = np.array(

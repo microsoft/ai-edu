@@ -8,8 +8,10 @@ def InvMatrix(gamma):
     tmp1 = I - gamma * ds.Matrix
     tmp2 = np.linalg.inv(tmp1)
     values = np.dot(tmp2, ds.Rewards)
-    print(values)
+    return values
 
 if __name__=="__main__":
     gamma = 0.9
-    InvMatrix(gamma)
+    v = InvMatrix(gamma)
+    for start_state in ds.States:
+        print(start_state, "= {:.2f}".format(v[start_state.value]))

@@ -1,4 +1,5 @@
 import Data_FrozenLake2 as dfl2
+
 import numpy as np
 
 def V_pi(States, dataParser, gamma):
@@ -13,12 +14,9 @@ def V_pi(States, dataParser, gamma):
             v_curr_sum = 0
             # 获得 状态->动作 策略概率
             actions_data = dataParser.get_next_actions(curr_state)
+            # 遍历每个策略概率
             for action_data in actions_data:
                 next_action_value, next_action_prob, reward = dataParser.get_action_pi_reward(action_data)
-
-            #next_actions_prob = Pi_sa[curr_state.value]
-            # 遍历每个策略概率
-            #for action_value, action_prob in enumerate(next_actions_prob):
                 # 获得 动作->状态 转移概率
                 next_states_probs = dataParser.get_action_states_probs(action_data)
                 #next_states_prob = P_as[action_value]
@@ -31,13 +29,12 @@ def V_pi(States, dataParser, gamma):
                 # math: \sum_a \pi(a|s) [R_s^a + \gamma \sum_{s'} P_{ss'}^a v_{\pi}(s')] 
                 v_curr_sum += next_action_prob * (reward + gamma * v_sum)
             # end for
-            
             V_curr[curr_state.value] = v_curr_sum
         #endfor
         # 检查收敛性
         if np.allclose(V_next, V_curr):
             break
-        # 把 V_curr 赋值给 V_next
+        # 把 V_curr 赋值给 V_next 迭代
         V_next = V_curr.copy()
         count += 1
     # end while
@@ -66,21 +63,6 @@ def Q2_pi(Actions, dataParser, gamma, vs):
     return Q
 
 
-def find_next_best(Q, start):
-    action = None
-    value = None
-    for q in Q:
-        if (q.startswith(start)):
-            if action is None:
-                action = q
-                value = Q[q]
-            else:
-                if (Q[q] > value):
-                    action = q
-                    value = Q[q]
-    return action, value
-    
-
 if __name__=="__main__":
     gamma = 0.9
     dataParser = dfl2.DataParser()
@@ -89,16 +71,3 @@ if __name__=="__main__":
     Q = Q2_pi(dfl2.Actions, dataParser, gamma, vs)
     for q in Q:
         print(q, "={:.4f}".format(Q[q]))
-
-
-    start = "a00"
-    count = 0
-    while(True):
-        action, value = find_next_best(Q, start)
-        print(action, value)
-        if (action is None):
-            break
-        start = "a" + action.replace(start, "")
-        count +=1
-        if (count > 8):
-            break

@@ -18,8 +18,8 @@ class States(Enum):
     Safe11 = 11
     Safe12 = 12
     Safe13 = 13
-    End = 14
-    Safe15 = 15
+    Safe14 = 14
+    Goal15 = 15
     
 
 # 动作 对于4x4的方格，有正反48个动作（再减去进入终点后不能返回的数量）
@@ -86,107 +86,114 @@ class Actions(Enum):
 # 滑到左侧的概率是0.2,
 # 滑到左侧的概率是0.1,
 # 如果是边角，前方概率不变，越界时呆在原地
-F = 0.7
-L = 0.2
-R = 0.1
-H = -1
-G = 5
+Front = 0.7
+Left = 0.2
+Right = 0.1
+# Reward
+Hole = -1
+Goal = 5
 
+# 数据在数组中的位置语义
 Action = 0
 ActionPi = 1
 Reward = 2
 StateProbs = 3
 
 P=[
-    [ # state 0: action, prob, reward, [state, prob]
-        [0x0001, 1/2, 0, [[1, F],[0, L],[4, R]]],
-        [0x0004, 1/2, 0, [[4, F],[1, L],[0, R]]]
+    [ # state 0: action, pi, reward, [state, prob]
+        [0x0001, 1/2, 0, [[1, Front],[0, Left],[4, Right]]],
+        [0x0004, 1/2, 0, [[4, Front],[1, Left],[0, Right]]]
     ],
     [ # state 1: action, prob, reward, [state, prob]
-        [0x0100, 1/3, 0, [[0, F],[5, L],[1, R]]],
-        [0x0102, 1/3, 0, [[2, F],[1, L],[5, R]]],
-        [0x0105, 1/3, H, [[5, F],[2, L],[0, R]]]
+        [0x0100, 1/3, 0, [[0, Front],[5, Left],[1, Right]]],
+        [0x0102, 1/3, Hole, [[2, Front],[1, Left],[5, Right]]],
+        [0x0105, 1/3, 0, [[5, Front],[2, Left],[0, Right]]]
     ],
     [ # state 2: action, prob, reward, [state, prob]
-        [0x0201, 1/3, 0, [[1, F],[6, L],[2, R]]],
-        [0x0203, 1/3, 0, [[3, F],[2, L],[6, R]]],
-        [0x0206, 1/3, 0, [[6, F],[3, L],[1, R]]]
+        #[0x0201, 1/3, 0, [[1, Front],[6, Left],[2, Right]]],
+        #[0x0203, 1/3, 0, [[3, Front],[2, Left],[6, Right]]],
+        #[0x0206, 1/3, 0, [[6, Front],[3, Left],[1, Right]]]
+        [0x0202, 1, Hole, [[2, 1]]]
     ],
     [ # state 3: action, prob, reward, [state, prob]
-        [0x0302, 1/2, 0, [[2, F],[7, L],[3, R]]],
-        [0x0307, 1/2, H, [[7, F],[3, L],[2, R]]]
+        [0x0302, 1/2, Hole, [[2, Front],[7, Left],[3, Right]]],
+        [0x0307, 1/2, 0, [[7, Front],[3, Left],[2, Right]]]
     ],
     #############
     [ # state 4: action, prob, reward, [state, prob]
-        [0x0400, 1/3, 0, [[0, F],[4, L],[5, R]]],
-        [0x0405, 1/3, H, [[5, F],[0, L],[8, R]]],
-        [0x0408, 1/3, 0, [[8, F],[5, L],[4, R]]]
+        [0x0400, 1/3, 0, [[0, Front],[4, Left],[5, Right]]],
+        [0x0405, 1/3, 0, [[5, Front],[0, Left],[8, Right]]],
+        [0x0408, 1/3, Hole, [[8, Front],[5, Left],[4, Right]]]
     ],
     [ # state 5: action, prob, reward, [state, prob]
-        #[0x0501, 1/4, 0, [[1, F],[4, L],[6, R]]],
-        #[0x0506, 1/4, 0, [[6, F],[1, L],[9, R]]],
-        #[0x0509, 1/4, 0, [[9, F],[6, L],[4, R]]],
-        #[0x0504, 1/4, 0, [[4, F],[9, L],[1, R]]]
+        [0x0501, 1/4, 0, [[1, Front],[4, Left],[6, Right]]],
+        [0x0504, 1/4, 0, [[4, Front],[9, Left],[1, Right]]],
+        [0x0506, 1/4, 0, [[6, Front],[1, Left],[9, Right]]],
+        [0x0509, 1/4, 0, [[9, Front],[6, Left],[4, Right]]]
     ],
     [ # state 6: action, prob, reward, [state, prob]
-        [0x0602, 1/4, 0, [[2, F],[5, L],[7, R]]],
-        [0x0607, 1/4, H, [[7, F],[2, L],[10, R]]],
-        [0x0610, 1/4, 0, [[10, F],[5, L],[7, R]]],
-        [0x0605, 1/4, H, [[5, F],[10, L],[2, R]]]
+        [0x0602, 1/4, Hole, [[2, Front],[5, Left],[7, Right]]],
+        [0x0605, 1/4, 0, [[5, Front],[10, Left],[2, Right]]],
+        [0x0607, 1/4, 0, [[7, Front],[2, Left],[10, Right]]],
+        [0x0610, 1/4, Hole, [[10, Front],[5, Left],[7, Right]]],
     ],
     [ # state 7: action, prob, reward, [state, prob]
-        #[0x0703, 1/3, 0, [[3, F],[6, L],[7, R]]],
-        #[0x0706, 1/3, 0, [[6, F],[11, L],[3, R]]],
-        #[0x0711, 1/3, 0, [[11, F],[7, L],[6, R]]]
+        [0x0703, 1/3, 0, [[3, Front],[6, Left],[7, Right]]],
+        [0x0706, 1/3, 0, [[6, Front],[11, Left],[3, Right]]],
+        [0x0711, 1/3, 0, [[11, Front],[7, Left],[6, Right]]]
     ],
     ################
     [ # state 8: action, prob, reward, [state, prob]
-        [0x0804, 1/3, 0, [[4, F],[8, L],[9, R]]],
-        [0x0809, 1/3, 0, [[9, F],[4, L],[12, R]]],
-        [0x0812, 1/3, H, [[12, F],[9, L],[8, R]]]
+        #[0x0804, 1/3, 0, [[4, Front],[8, Left],[9, Right]]],
+        #[0x0809, 1/3, 0, [[9, Front],[4, Left],[12, Right]]],
+        #[0x0812, 1/3, 0, [[12, Front],[9, Left],[8, Right]]]
+        [0x0808, 1, Hole, [[8, 1]]]
     ],
     [ # state 9: action, prob, reward, [state, prob]
-        [0x0905, 1/4, H, [[5, F],[8, L],[10, R]]],
-        [0x0910, 1/4, 0, [[10, F],[5, L],[13, R]]],
-        [0x0913, 1/4, 0, [[13, F],[10, L],[8, R]]],
-        [0x0908, 1/4, 0, [[8, F],[13, L],[5, R]]]
+        [0x0905, 1/4, 0, [[5, Front],[8, Left],[10, Right]]],
+        [0x0908, 1/4, Hole, [[8, Front],[13, Left],[5, Right]]],
+        [0x0910, 1/4, Hole, [[10, Front],[5, Left],[13, Right]]],
+        [0x0913, 1/4, 0, [[13, Front],[10, Left],[8, Right]]]
     ],
     [ # state 10: action, prob, reward, [state, prob]
-        [0x1006, 1/4, 0, [[6, F],[9, L],[11, R]]],
-        [0x1011, 1/4, 0, [[11, F],[6, L],[14, R]]],
-        [0x1014, 1/4, 0, [[14, F],[11, L],[9, R]]],
-        [0x1009, 1/4, 0, [[9, F],[14, L],[6, R]]]
+        #[0x1006, 1/4, 0, [[6, Front],[9, Left],[11, Right]]],
+        #[0x1011, 1/4, 0, [[11, Front],[6, Left],[14, Right]]],
+        #[0x1014, 1/4, 0, [[14, Front],[11, Left],[9, Right]]],
+        #[0x1009, 1/4, 0, [[9, Front],[14, Left],[6, Right]]]
+        [0x1010, 1, Hole, [[10, 1]]]
     ],
     [ # state 11: action, prob, reward, [state, prob]
-        [0x1107, 1/3, H, [[7, F],[10, L],[11, R]]],
-        [0x1110, 1/3, 0, [[10, F],[15, L],[7, R]]],
-        [0x1115, 1/3, G, [[15, F],[15, L],[10, R]]]
+        [0x1107, 1/3, 0, [[7, Front],[10, Left],[11, Right]]],
+        [0x1110, 1/3, Hole, [[10, Front],[15, Left],[7, Right]]],
+        [0x1115, 1/3, 0, [[15, Front],[15, Left],[10, Right]]]
     ],
     ###########
     [ # state 12: action, prob, reward, [state, prob]
-        #[0x1208, 1/2, H, [[8, F],[12, L],[13, R]]],
-        #[0x1213, 1/2, 0, [[13, F],[8, L],[12, R]]]
+        [0x1208, 1/2, Hole, [[8, Front],[12, Left],[13, Right]]],
+        [0x1213, 1/2, 0, [[13, Front],[8, Left],[12, Right]]]
     ],
     [ # state 13: action, prob, reward, [state, prob]
-        [0x1309, 1/3, 0, [[9, F],[12, L],[14, R]]],
-        [0x1312, 1/3, H, [[12, F],[13, L],[9, R]]],
-        [0x1314, 1/3, 0, [[14, F],[9, L],[13, R]]]
+        [0x1309, 1/3, 0, [[9, Front],[12, Left],[14, Right]]],
+        [0x1312, 1/3, 0, [[12, Front],[13, Left],[9, Right]]],
+        [0x1314, 1/3, 0, [[14, Front],[9, Left],[13, Right]]]
     ],
     [ # state 14: action, prob, reward, [state, prob]
-        [0x1410, 1/3, 0, [[10, F],[13, L],[15, R]]],
-        [0x1413, 1/3, 0, [[13, F],[14, L],[10, R]]],
-        [0x1415, 1/3, G, [[15, F],[10, L],[14, R]]]
+        [0x1410, 1/3, Hole, [[10, Front],[13, Left],[15, Right]]],
+        [0x1413, 1/3, 0, [[13, Front],[14, Left],[10, Right]]],
+        [0x1415, 1/3, Goal, [[15, Front],[10, Left],[14, Right]]]
+        #[0x1414, 1, Goal, [[14, 1]]]
     ],
     [ # state 15: action, prob, reward, [state, prob]
-        #[0x1511, 1/2, 0, [[11, F],[14, L],[15, R]]],
-        #[0x1514, 1/2, G, [[14, F],[15, L],[11, R]]]
+        #[0x1511, 1/2, 0, [[15, Front],[14, Left], [15, Right]]],
+        #[0x1514, 1/2, 0, [[14, Front],[15, Left],[11, Right]]]
+        [0x1515, 1, Goal, [[15, 1]]]
     ]
+
 ]
 
 class DataParser(object):
     def get_next_actions(self, curr_state):
-        actions_data = P[curr_state.value]
-        #print(actions_data)
+        actions_data = P[curr_state]
         return actions_data
 
     def get_action_pi_reward(self, action_data):
@@ -212,3 +219,5 @@ for i in range(len(data)):
     sp = dataParser.get_action_states_probs(data[i])
     print(sp)
 '''
+
+

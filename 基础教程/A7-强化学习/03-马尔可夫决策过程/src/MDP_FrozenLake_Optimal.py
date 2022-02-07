@@ -100,7 +100,7 @@ def Q_star_from_V_star(Actions, dataParser, gamma, v_star):
         # math: R_s^a + \gamma  ( \sum_{a'} P_{ss'}^a \max q_{\pi}(s',a') )
         Q_star[curr_action.name] = reward + gamma * q_sum
     #endfor
-    return Q_star
+    return sorted(Q_star.items())
 
 
 
@@ -108,14 +108,14 @@ def find_next_best(Q, start):
     action = None
     value = None
     for q in Q:
-        if (q.startswith(start)):
+        if (q[0].startswith(start)):
             if action is None:
-                action = q
-                value = Q[q]
+                action = q[0]
+                value = q[1]
             else:
-                if (Q[q] > value):
-                    action = q
-                    value = Q[q]
+                if (q[1] > value):
+                    action = q[0]
+                    value = q[1]
     return action, value
     
 
@@ -126,7 +126,8 @@ if __name__=="__main__":
     print(np.round(np.array(vs).reshape(4,4), 2))
     
     Q_star = Q_star_from_V_star(dfl2.Actions, dataParser, gamma, vs)
-    print(Q_star)
+    for q in Q_star:
+        print(q)
 
     start = "a00"
     count = 0

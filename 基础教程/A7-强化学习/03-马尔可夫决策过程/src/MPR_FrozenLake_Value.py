@@ -22,6 +22,6 @@ def FrozenLake_Bellman(gamma):
 if __name__=="__main__":
     gamma = 1
     print(gamma)
-    #FrozenLake_MentoCarol(gamma)
+    FrozenLake_MentoCarol(gamma)
     FrozenLake_Matrix(gamma)
     FrozenLake_Bellman(gamma)

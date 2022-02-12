@@ -25,6 +25,6 @@ def Bellman(gamma):
 
 if __name__=="__main__":
     gamma = 0.9
-    #Student_MonteCarol(gamma)
+    Student_MonteCarol(gamma)
     InvMatrix(gamma)
     Bellman(gamma)

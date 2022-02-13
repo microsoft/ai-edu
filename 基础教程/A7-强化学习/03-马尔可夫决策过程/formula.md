@@ -67,7 +67,13 @@ V(s) &= \mathbb{E} [G_t \ | \ S_t=s]
 \\
 &=\mathbb{E} [R_{t+1}] + \gamma \mathbb{E} [G_{t+1}|S_t=s]
 \\
-&=R_{t+1} + \gamma V(s_{t+1}) 
+&=\mathbb{E} [R_{t+1}] + \gamma \Big \{p_1 \mathbb{E} [G_{t+1}|S_t=s,S_{t+1}=s'_1]+ p_2 \mathbb{E} [G_{t+1}|S_t=s,S_{t+1}=s'_2]+ p_3 \mathbb{E} [G_{t+1}|S_t=s,S_{t+1}=s'_3] \Big \}
+\\
+&=\mathbb{E} [R_{t+1}] + \gamma [ p_1 V(s'_1)+p_2 V(s'_2)+p_3 V(s'_3) ]
+\\
+&=\mathbb{E} [R_{t+1}] + \gamma \sum_i p_i V(s'_i)=\mathbb{E} [R_{t+1}] + \gamma \sum_{s'} P_{s->s'} V(s')
+\\
+&=R_s + \gamma \sum_{s'} P_{ss'}V(s')
 \end{aligned}
 $$
 

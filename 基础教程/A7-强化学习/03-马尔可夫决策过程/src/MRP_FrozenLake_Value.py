@@ -1,5 +1,5 @@
 import numpy as np
-import Algorithm_MPR as algoM
+import Algorithm_MRP as algoM
 import Data_FrozenLake as dfl
 
 

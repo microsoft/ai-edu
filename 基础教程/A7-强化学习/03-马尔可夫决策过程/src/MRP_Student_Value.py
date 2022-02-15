@@ -1,5 +1,5 @@
 import Data_Student as ds
-import Algorithm_MPR as algoM
+import Algorithm_MRP as algoM
 import numpy as np
 
 

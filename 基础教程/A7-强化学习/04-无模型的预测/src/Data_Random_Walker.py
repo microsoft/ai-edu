@@ -1,13 +1,9 @@
+from random import choice
 import numpy as np
 from enum import Enum
 import matplotlib.pyplot as plt
 import Algorithm_MRP as algoMRP
-import Random_Walker_MRP as ds
-
-class Action(Enum):
-    MOVE_LEFT = 0         # left
-    MOVE_RIGHT = 1       # right
-
+import Data_Random_Walker as ds
 
 '''
    [ ]-0-(A)-0-(B)-0-(C)-0-(D)-0-(E)-1-[ ]
@@ -38,6 +34,24 @@ TransMatrix = np.array(
     ]
 )
 
+def get_random_next_state(curr_state: States) -> States:
+    if (curr_state in [States.Resturant, States.Home]):
+        return curr_state
+
+    next_state_value = np.random.choice(len(States), p=TransMatrix[curr_state.value])
+    return States(next_state_value)
+
+
+def get_reward(curr_state: States):
+    return Rewards[curr_state.value]
+
+
+def is_end_state(curr_state: States):
+    if (curr_state in [States.Resturant, States.Home]):
+        return True
+    else:
+        return False
+
 
 if __name__=="__main__":
     gamma = 1
@@ -47,5 +61,5 @@ if __name__=="__main__":
     vs = algoMRP.Bellman(ds, gamma)
     print(np.round(vs, 3))
 
-#    vs = algoMRP.MonteCarol(ds, [ds.States.Resturant, ds.States.Home], gamma, 5000)
-#    print(np.round(vs, 3))
+    #vs = algoMRP.MonteCarol(ds, [ds.States.Resturant, ds.States.Home], gamma, 5000)
+    #print(np.round(vs, 3))

@@ -6,7 +6,7 @@ import Data_FrozenLake as dfl
 def FrozenLake_MentoCarol(gamma):
     episodes = 20000
     end_states = [dfl.States.Hole2, dfl.States.Hole8, dfl.States.Hole10, dfl.States.Goal15]
-    vs = algoM.MonteCarol(dfl.Rewards, dfl.Matrix, dfl.States, end_states, gamma, episodes)
+    vs = algoM.MonteCarol(dfl, end_states, gamma, episodes)
     print(np.round(np.array(vs).reshape(4,4), 2))
 
 def FrozenLake_Matrix(gamma):
@@ -14,7 +14,7 @@ def FrozenLake_Matrix(gamma):
     print(np.round(np.array(vs).reshape(4,4), 2))
 
 def FrozenLake_Bellman(gamma):
-    vs = algoM.Bellman(dfl.States, dfl.Matrix, dfl.Rewards, gamma)
+    vs = algoM.Bellman(dfl, gamma)
     np.set_printoptions(suppress=True)
     print(np.round(np.array(vs).reshape(4,4), 2))
 

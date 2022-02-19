@@ -30,7 +30,7 @@ Rewards = [0, 0, Hole, 0,
           Hole, 0, Hole, 0,
            0, 0, 0, Goal]
 
-Matrix = np.array(
+TransMatrix = np.array(
     [   
         [0.0, 1/2, 0.0, 0.0, 
          1/2, 0.0, 0.0, 0.0, 

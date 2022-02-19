@@ -1,76 +1,55 @@
 import numpy as np
-from enum import Enum
-import matplotlib.pyplot as plt
-import Algorithm_MRP as algoMRP
-import Random_Walker_MRP as ds
-
-class Action(Enum):
-    MOVE_LEFT = 0         # left
-    MOVE_RIGHT = 1       # right
+import Random_Walker_MRP_baseline as ds
 
 
-'''
-   [ ]-0-(A)-0-(B)-0-(C)-0-(D)-0-(E)-1-[ ]
-s = 0     1     2     3     4     5     6
-'''
+def MC(ds, episodes, alpha):
+    V1 = np.zeros(7)
+    V1[1:6] = 0.5
+    V2 = np.zeros(7)
+    V2[1:6] = 0.5
 
-# 状态
-class States(Enum):
-    Resturant = 0
-    RoadA = 1
-    RoadB = 2
-    RoadC = 3
-    RoadD = 4
-    RoadE = 5
-    Home = 6
+    for i in range(episodes):
+        trajectory = []
+        state = 3
+        trajectory.append((state,0))
+        while True:
+            # 左右随机游走
+            if (np.random.binomial(1, 0.5) == Action.MOVE_LEFT.value):
+                next_state = state - 1
+            else:
+                next_state = state + 1
+            #endif
+            R = 0
+            if (next_state == 6):
+                R = 1
+            #endif
+            trajectory.append((next_state, R))
+            state = next_state
+            if (state == 0 or state == 6):
+                break
+            #endif
+        #endwhile
+        # calculate G,V
+        gamma = 1
+        G = 0
+        for j in range(len(trajectory)-1, -1, -1):
+            s,r = trajectory[j]
+            G = gamma * G + r
+        
+        # 只更新起始状态的V值，中间的都忽略
+        #s,r = trajectory[0]
+        #V1[s] = V1[s] + alpha * (G - V1[s])
 
-Rewards = [0,0,0,0,0,0,1]
-
-Matrix = np.array(
-    [
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        [0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    ]
-)
-
-
-'''
-def MRP():
-    V = np.zeros(7)
-    gamma = 1
-    num_iteration = 100
-
-    for i in range(num_iteration):
-        for state in range(7):  # 0~6
-            value = 0
-            for next_state in range(7): # 0~6
-                prob = Pss[state, next_state]
-                if (prob > 0.0):
-                    # math: \sum Pss'V(s')
-                    value += prob * V[next_state]
-                #endif
-            #endfor
-            # math: V(s) = R_s + \gamma \sum Pss'V(s')
-            V[state] = Rewards[state] + gamma * value
-        #endfor
+        # 更新从状态开始到终止状态之前的所有V值
+        for (s,r) in trajectory[0:-1]:
+            # math: V(s) \leftarrow V(s) + \alpha (G - V(s))
+            V2[s] = V2[s] + alpha * (G - V2[s])
     #endfor
-    print("{0}".format(V))
+    #print(V1*6)
+    print(V2*6)
+    return V2
 
-def InvMatrix(gamma):
-    num_state = Pss.shape[0]
-    I = np.eye(num_state)
-    tmp1 = I - gamma * Pss
-    tmp2 = np.linalg.inv(tmp1)
-    values = np.dot(tmp2, Rewards)
-    print("{0}/6".format(values*6))
-'''
 
 if __name__=="__main__":
-    gamma = 1
-    vs = algoMRP.Matrix(ds, gamma)
-    print(vs)
+    alpha = 1
+    MC(ds, alpha)

@@ -89,7 +89,7 @@ def mc_single_process2(ds, start_state, episodes, gamma):
     return v  
 
 def MonteCarol2(ds, gamma, episodes):
-    pool = mp.Pool(processes=6)
+    pool = mp.Pool(processes=1)
     Vs = []
     results = []
     for start_state in ds.States:

@@ -1,11 +1,20 @@
-import tqdm
-import multiprocessing as mp
-import math
 import numpy as np
+import Data_Random_Walker as ds
+import matplotlib.pyplot as plt
+
+ground_truth = np.array([1/6,2/6,3/6,4/6,5/6])
+
+def RMSE(V):
+    return np.sqrt(np.sum(np.square(V - ground_truth))/V.shape[0])
+
 
 # 多状态同时更新的蒙特卡洛采样
-def MC(V, ds, start_state, episodes, alpha, gamma):
+def MC(ds, start_state, episodes, alpha, gamma):
+    V = np.zeros(7)
+    V[1:6] = 0.5
+    errors = []
     for i in range(episodes):
+        errors.append(RMSE(V[1:6]))
         trajectory = []
         curr_state = start_state
         trajectory.append((curr_state.value, 0))
@@ -26,12 +35,7 @@ def MC(V, ds, start_state, episodes, alpha, gamma):
         for j in range(len(trajectory)-1, -1, -1):
             state_value, reward = trajectory[j]
             G = gamma * G + reward
-        
-        """
-        # 只更新起始状态的V值,中间的都忽略,但是需要遍历所有状态为start_state
-        s,r = trajectory[0]
-        V[s] = V[s] + alpha * (G - V[s])
-        """
+
 
         # 更新从状态开始到终止状态之前的所有V值
         for (state_value, reward) in trajectory[0:-1]:
@@ -39,12 +43,18 @@ def MC(V, ds, start_state, episodes, alpha, gamma):
             V[state_value] = V[state_value] + alpha * (G - V[state_value])
         
     #endfor
-    return V
+    return errors
 
 
 # 多状态同时更新的蒙特卡洛采样
-def MC2(V, ds, start_state, episodes, alpha, gamma):
+def MC2(ds, start_state, episodes, alpha, gamma):
+    V = np.zeros(7)
+    V[1:6] = 0.5
+
+    errors = []
     for i in range(episodes):
+        errors.append(RMSE(V[1:6]))
+
         trajectory = []
         curr_state = start_state
         trajectory.append((curr_state.value, 0))
@@ -70,22 +80,20 @@ def MC2(V, ds, start_state, episodes, alpha, gamma):
             g = gamma * g + reward
             G[j] = g
         
-        """
-        # 只更新起始状态的V值,中间的都忽略,但是需要遍历所有状态为start_state
-        s,r = trajectory[0]
-        V[s] = V[s] + alpha * (G - V[s])
-        """
-
         for j in range(num_step):
             state_value, reward = trajectory[j]
             V[state_value] = V[state_value] + alpha * (G[j] - V[state_value])
         
     #endfor
-    return V
+    return errors
 
 
-def TD(V, ds, start_state, episodes, alpha, gamma):
+def TD(ds, start_state, episodes, alpha, gamma):
+    V = np.zeros(7)
+    V[1:6] = 0.5
+    errors = []
     for i in range(episodes):
+        errors.append(RMSE(V[1:6]))
         curr_state = start_state
         while True:
             # 到达终点，结束一幕
@@ -101,50 +109,49 @@ def TD(V, ds, start_state, episodes, alpha, gamma):
             #endif
         #endwhile
     #endfor
-    return V
+    return errors
 
+import tqdm
 
-# 只针对输入的start_state一个状态做MC采样
-def mc_single_process(ds, start_state, episodes, gamma):
-    # 终止状态，直接返回
-    if (ds.is_end_state(start_state)):
-        # 最后一个状态也可能有reward值
-        return ds.get_reward(start_state)
+def Runs(run_num, episode, alpha, gamma, func):
+    average_err = np.zeros(episode)
+    for i in tqdm.trange(run_num):
+        errors = func(ds.Data_Random_Walker(), ds.States.RoadC, episode, alpha, gamma)
+        average_err += np.asarray(errors)
+    #endfor
+    average_err /= run_num
+    return average_err
 
-    # 对多个幕的结果求均值=期望E[G]
-    sum_g = 0
+if __name__=="__main__":
+    gamma = 1
+    Errors = []
+    episode = 100
+    run_num = 100
 
-    for episode in tqdm.trange(episodes):
-        curr_state = start_state
-        # g = r1 + gamma*r2 + gamma^2*r3 + gamma^3*r4
-        g = 0
-        power = 0
-        # 对每一幕
-        while (True):
-            if ds.is_end_state(curr_state):
-                break
-            next_state, r = ds.step(curr_state)
-            g += math.pow(gamma, power) * r
-            power += 1
-            curr_state = next_state
-        # end while
-        sum_g += g
-    # end for
-    v = sum_g / episodes
-    return v  
+    #alphas_mc = [0.01, 0.02, 0.03, 0.04]
+    alphas_mc = [0.01, 0.02, 0.03]
+    for alpha in alphas_mc:
+        errors = Runs(run_num, episode, alpha, gamma, MC)
+        Errors.append(errors)
 
-def MonteCarol(ds, gamma, episodes):
-    pool = mp.Pool(processes=4)
-    Vs = []
-    results = []
-    for start_state in ds.get_states():
-        results.append(
-            pool.apply_async(mc_single_process, args=(ds, start_state, episodes, gamma,)))
+    for alpha in alphas_mc:
+        errors = Runs(run_num, episode, alpha, gamma, MC2)
+        Errors.append(errors)
 
-    pool.close()
-    pool.join()
-    for i in range(len(results)):
-        v = results[i].get()
-        Vs.append(v)
+    """
+    alphas_td = [0.05, 0.1, 0.15]
+    for alpha in alphas_td:
+        errors = Runs(run_num, episode, alpha, gamma, TD)
+        Errors.append(errors)
+    """
 
-    return Vs
+    alphas = alphas_mc + alphas_mc
+    i = 0
+    for errors in Errors:
+        plt.plot(errors, label=str(alphas[i]))
+        i += 1
+    
+    plt.grid()
+    plt.legend()
+    plt.show()
+

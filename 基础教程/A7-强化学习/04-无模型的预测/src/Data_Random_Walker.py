@@ -34,24 +34,30 @@ TransMatrix = np.array(
     ]
 )
 
-def get_random_next_state(curr_state: States) -> States:
-    if (curr_state in [States.Resturant, States.Home]):
-        return curr_state
 
-    next_state_value = np.random.choice(len(States), p=TransMatrix[curr_state.value])
-    return States(next_state_value)
+class Data_Random_Walker(object):
+    def __init__(self):
+        self.num_states = len(States)
 
+    def get_states(self) -> States:
+        return States
+        
+    def get_states_count(self) -> int:
+        return len(States)
 
-def get_reward(curr_state: States):
-    return Rewards[curr_state.value]
+    def step(self, curr_state: States):
+        next_state_value = np.random.choice(self.num_states, p=TransMatrix[curr_state.value])
+        reward = Rewards[next_state_value]
+        return States(next_state_value), reward
 
+    def get_reward(self, curr_state: States):
+        return Rewards[curr_state.value]
 
-def is_end_state(curr_state: States):
-    if (curr_state in [States.Resturant, States.Home]):
-        return True
-    else:
-        return False
-
+    def is_end_state(self, curr_state: States):
+        if (curr_state in [States.Home, States.Resturant]):
+            return True
+        else:
+            return False
 
 if __name__=="__main__":
     gamma = 1

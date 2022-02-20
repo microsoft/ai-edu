@@ -53,3 +53,16 @@ $$
 $$
 V(s_t) = V(s_t) + \alpha \big[ R_{t+1} + \gamma V(s_{t+1}) - V(s_t) \big]
 $$
+
+
+均方差
+$$
+MSE = \frac{1}{n} \sum_{i=1}^n (a_i-y_i)^2
+$$
+a：预测值
+y：标准值
+
+均方根误差
+$$
+RSME=\sqrt {\frac{1}{n} \sum_{i=1}^n (a_i-y_i)^2}
+$$

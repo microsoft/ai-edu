@@ -1,11 +1,12 @@
 import numpy as np
 import Data_Random_Walker as ds
 import matplotlib.pyplot as plt
+import Algorithm_MRP as algoMRP
 
-ground_truth = np.array([1/6,2/6,3/6,4/6,5/6])
+
 
 def RMSE(V):
-    return np.sqrt(np.sum(np.square(V - ground_truth))/V.shape[0])
+    return np.sqrt(np.sum(np.square(V - ground_truth[1:6]))/V.shape[0])
 
 
 # 多状态同时更新的蒙特卡洛采样
@@ -123,7 +124,12 @@ def Runs(run_num, episode, alpha, gamma, func):
     return average_err
 
 if __name__=="__main__":
-    gamma = 1
+    gamma = 0.9
+
+    global ground_truth
+    ground_truth = algoMRP.Matrix(ds, gamma)
+    print(ground_truth)
+
     Errors = []
     episode = 100
     run_num = 100
@@ -138,17 +144,22 @@ if __name__=="__main__":
         errors = Runs(run_num, episode, alpha, gamma, MC2)
         Errors.append(errors)
 
-    """
+    
     alphas_td = [0.05, 0.1, 0.15]
     for alpha in alphas_td:
         errors = Runs(run_num, episode, alpha, gamma, TD)
         Errors.append(errors)
-    """
+    
 
-    alphas = alphas_mc + alphas_mc
+    alphas = alphas_mc + alphas_mc + alphas_td
     i = 0
     for errors in Errors:
-        plt.plot(errors, label=str(alphas[i]))
+        if i <= 2:
+            plt.plot(errors, label=str(alphas[i]))
+        elif i <= 5:
+            plt.plot(errors, "--", label=str(alphas[i]))
+        else:
+            plt.plot(errors, ".-", label=str(alphas[i]))
         i += 1
     
     plt.grid()

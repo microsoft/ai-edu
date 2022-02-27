@@ -84,3 +84,15 @@ RMSE(a,y)=\sqrt{[(0.1-0)^2 + (1-1)^2 + (1.8-2)^2)]/3}=0.129
 \\
 RMSE(b,y)=\sqrt{[(0.1-0)^2 + (1.1-1)^2 + (1.8-2)^2)]/3}=0.141
 $$
+
+$$
+\begin{aligned}
+G[4] &= R_4
+\\
+G[3] &= \gamma G[4]+R_3 = R_3 + \gamma R_4
+\\
+G[2] &= \gamma G[3]+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4
+\\
+G[1] &= \gamma G[2]+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 
+\end{aligned}
+$$

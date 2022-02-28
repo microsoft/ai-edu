@@ -55,7 +55,7 @@ if __name__=="__main__":
     RMSE(v, ground_truth)
     '''
 
-    '''
+    
     VV = np.zeros(16)
     for i in range(10):
         print("\nMC2" + str(i))
@@ -66,9 +66,12 @@ if __name__=="__main__":
         RMSE(v, ground_truth)
         VV += v
 
-    print(np.round(np.array(VV).reshape(4,4), 2))
+    print(np.round(np.array(VV/10).reshape(4,4), 2))
     RMSE(VV/10, ground_truth)
-    '''
+    
+
+
+    
     VV = np.zeros(16)
     for i in range(10):
         print("\nMC3" + str(i))
@@ -79,7 +82,7 @@ if __name__=="__main__":
         RMSE(v, ground_truth)
         VV += v
 
-    print(np.round(np.array(VV).reshape(4,4), 2))
+    print(np.round(np.array(VV/10).reshape(4,4), 2))
     RMSE(VV/10, ground_truth)
     
 

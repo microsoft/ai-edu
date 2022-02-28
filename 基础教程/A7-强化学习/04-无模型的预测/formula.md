@@ -96,3 +96,16 @@ G[2] &= \gamma G[3]+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4
 G[1] &= \gamma G[2]+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 
 \end{aligned}
 $$
+
+$$
+\begin{aligned}
+G &= R_4, & V[H_{10}]+=G
+\\
+G &= \gamma G+R_3 = R_3 + \gamma R_4, & V[S_9]+=G
+\\
+G &= \gamma G+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4, & V[S_5]+=G
+\\
+G &= \gamma G+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 , & V[S_4] += G
+\end{aligned}
+$$
+

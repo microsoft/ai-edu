@@ -56,19 +56,14 @@ def MC3(V, ds, start_state, episodes, alpha, gamma):
 
         # calculate G_t
         num_step = len(trajectory) 
-        G = [0] * num_step
         g = 0
         # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
         for t in range(num_step-1, -1, -1):
             state_value, reward = trajectory[t]
             g = gamma * g + reward
-            G[t] = g
+            #G[t] = g
+            V[state_value] = V[state_value] + alpha * (g - V[state_value])
 
-        for t in range(num_step):
-            state_value, reward = trajectory[t]
-            V[state_value] = V[state_value] + alpha * (G[t] - V[state_value])
-        
-    #endfor
     return V
 
 

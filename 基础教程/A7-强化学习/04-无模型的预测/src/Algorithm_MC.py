@@ -3,7 +3,7 @@ import multiprocessing as mp
 import math
 import numpy as np
 
-
+'''
 # 多状态同时更新的蒙特卡洛采样
 def MC_wrong(V, ds, start_state, episodes, alpha, gamma):
     for i in range(episodes):
@@ -36,55 +36,24 @@ def MC_wrong(V, ds, start_state, episodes, alpha, gamma):
         
     #endfor
     return V
+'''
 
 
-# 多状态同时更新的蒙特卡洛采样
-def MC3(V, ds, start_state, episodes, alpha, gamma):
-    for i in tqdm.trange(episodes):
-        trajectory = []
-        curr_state = start_state
-        trajectory.append((curr_state.value, 0))
-        while True:
-            # 到达终点，结束一幕，退出循环开始算分
-            if (ds.is_end_state(curr_state)):
-                break
-            # 从环境获得下一个状态和奖励
-            next_state, reward = ds.step(curr_state)
-            #endif
-            trajectory.append((next_state.value, reward))
-            curr_state = next_state
+def MonteCarol(ds, gamma, episodes):
+    pool = mp.Pool(processes=4)
+    Vs = []
+    results = []
+    for start_state in ds.get_states():
+        results.append(
+            pool.apply_async(MC1, args=(ds, start_state, episodes, gamma,)))
 
-        # calculate G_t
-        num_step = len(trajectory) 
-        g = 0
-        # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
-        for t in range(num_step-1, -1, -1):
-            state_value, reward = trajectory[t]
-            g = gamma * g + reward
-            #G[t] = g
-            V[state_value] = V[state_value] + alpha * (g - V[state_value])
+    pool.close()
+    pool.join()
+    for i in range(len(results)):
+        v = results[i].get()
+        Vs.append(v)
 
-    return V
-
-
-def TD(V, ds, start_state, episodes, alpha, gamma):
-    for i in range(episodes):
-        curr_state = start_state
-        while True:
-            # 到达终点，结束一幕
-            if (ds.is_end_state(curr_state)):
-                break
-            # 随机游走
-            next_state, reward = ds.step(curr_state)
-            #endif
-            # 立刻更新状态值，不等本幕结束
-            # math: V(S) \leftarrow V(S) + \alpha[R + \gamma V(S') - V(S)]
-            V[curr_state.value] = V[curr_state.value] + alpha * (reward + gamma * V[next_state.value] - V[curr_state.value])
-            curr_state = next_state
-            #endif
-        #endwhile
-    #endfor
-    return V
+    return Vs
 
 
 # 一边生成序列一边计算
@@ -119,24 +88,6 @@ def MC1(ds, start_state, episodes, gamma):
     v = sum_g / episodes
     return v  
 
-
-def MonteCarol(ds, gamma, episodes):
-    pool = mp.Pool(processes=4)
-    Vs = []
-    results = []
-    for start_state in ds.get_states():
-        results.append(
-            pool.apply_async(MC1, args=(ds, start_state, episodes, gamma,)))
-
-    pool.close()
-    pool.join()
-    for i in range(len(results)):
-        v = results[i].get()
-        Vs.append(v)
-
-    return Vs
-
-
 # MC1的改进，利用每个状态位
 def MC2(V, ds, start_state, episodes, gamma):
     Vs = np.zeros((ds.num_states,2))  # state[total value, count of g]
@@ -165,4 +116,33 @@ def MC2(V, ds, start_state, episodes, gamma):
 
     V = Vs[:,0] / Vs[:,1]
     #endfor
+    return V
+
+
+# 多状态同时更新的蒙特卡洛采样
+def MC3(V, ds, start_state, episodes, alpha, gamma):
+    for i in range(episodes):
+        trajectory = []
+        curr_state = start_state
+        trajectory.append((curr_state.value, 0))
+        while True:
+            # 到达终点，结束一幕，退出循环开始算分
+            if (ds.is_end_state(curr_state)):
+                break
+            # 从环境获得下一个状态和奖励
+            next_state, reward = ds.step(curr_state)
+            #endif
+            trajectory.append((next_state.value, reward))
+            curr_state = next_state
+
+        # calculate G_t
+        num_step = len(trajectory) 
+        g = 0
+        # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
+        for t in range(num_step-1, -1, -1):
+            state_value, reward = trajectory[t]
+            g = gamma * g + reward
+            #G[t] = g
+            V[state_value] = V[state_value] + alpha * (g - V[state_value])
+
     return V

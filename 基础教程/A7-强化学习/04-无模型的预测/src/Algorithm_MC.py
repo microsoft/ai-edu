@@ -146,3 +146,47 @@ def MC3(V, ds, start_state, episodes, alpha, gamma):
             V[state_value] = V[state_value] + alpha * (g - V[state_value])
 
     return V
+
+
+# batch
+def MC4(V, ds, start_state, episodes, alpha, gamma):
+    trajectory_G = []
+    for i in range(episodes):
+        trajectory = []
+        curr_state = start_state
+        trajectory.append((curr_state.value, 0))
+        while True:
+            # 到达终点，结束一幕，退出循环开始算分
+            if (ds.is_end_state(curr_state)):
+                break
+            # 从环境获得下一个状态和奖励
+            next_state, reward = ds.step(curr_state)
+            #endif
+            trajectory.append((next_state.value, reward))
+            curr_state = next_state
+
+        # calculate G_t
+        num_step = len(trajectory) 
+        g = 0
+        # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
+        for t in range(num_step-1, -1, -1):
+            state_value, reward = trajectory[t]
+            g = gamma * g + reward
+            trajectory_G.append((state_value, g))
+            
+
+        # batch update
+        while True:
+            updates = np.zeros(16)
+            for (state, G) in trajectory_G:
+                updates[state] += G - V[state]
+                if (updates[state] > 1000):
+                    print(updates[state])
+            # 在这里 乘以 alpha 是为了节省计算量，本来应该在上面一行中 乘以 alpha
+            updates = updates * alpha
+            # 一次性更新所有V值
+            V += updates
+            if (np.sum(np.abs(updates)) < alpha):
+                break   # converage
+
+    return V

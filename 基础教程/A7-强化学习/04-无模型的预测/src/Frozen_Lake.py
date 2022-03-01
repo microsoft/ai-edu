@@ -42,7 +42,7 @@ if __name__=="__main__":
     RMSE(VV, ground_truth)
     exit(0)
     '''
-    episodes = 10000
+    episodes = 120
     
     '''
     v = FrozenLake_MentoCarol(gamma, episodes)
@@ -52,13 +52,13 @@ if __name__=="__main__":
     alpha = 0.01
     V = np.zeros(16)
 
-    '''
-    v = algo.MC_wrong(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)
-    print("\nMC - all state - wrong")
+    
+    v = algoMC.MC4(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)
+    print("\nMC4")
     print(np.round(np.array(v).reshape(4,4), 2))
-    set_end_state_value(v)
+    #set_end_state_value(v)
     RMSE(v, ground_truth)
-    '''
+    
 
     '''
     VV = np.zeros(16)
@@ -73,7 +73,7 @@ if __name__=="__main__":
 
     print(np.round(np.array(VV/10).reshape(4,4), 2))
     RMSE(VV/10, ground_truth)
-    '''
+
 
     alphas = [0.01,0.02,0.03,0.05]
     errors = []
@@ -89,7 +89,7 @@ if __name__=="__main__":
         print(error)
         errors.append(error/10)
     print(errors)
-
+    '''
 
     
 

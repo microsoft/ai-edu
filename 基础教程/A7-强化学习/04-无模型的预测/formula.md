@@ -87,6 +87,19 @@ $$
 
 $$
 \begin{aligned}
+G &= R_4
+\\
+G &= \gamma G+R_3 = R_3 + \gamma R_4
+\\
+G &= \gamma G+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4
+\\
+G &= \gamma G+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 
+\end{aligned}
+$$
+
+
+$$
+\begin{aligned}
 G[4] &= R_4
 \\
 G[3] &= \gamma G[4]+R_3 = R_3 + \gamma R_4
@@ -99,13 +112,13 @@ $$
 
 $$
 \begin{aligned}
-G &= R_4, & V[H_{10}]+=G
+G &= R_4, & V[S_{9}]+=G
 \\
-G &= \gamma G+R_3 = R_3 + \gamma R_4, & V[S_9]+=G
+G &= \gamma G+R_3 = R_3 + \gamma R_4, & V[S_5]+=G
 \\
-G &= \gamma G+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4, & V[S_5]+=G
+G &= \gamma G+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4, & V[S_4]+=G
 \\
-G &= \gamma G+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 , & V[S_4] += G
+G &= \gamma G+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 , & V[S_0] += G
 \end{aligned}
 $$
 

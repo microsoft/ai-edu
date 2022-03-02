@@ -1,77 +1,70 @@
+from cProfile import label
 import numpy as np
 import Data_FrozenLake as ds
 import Algorithm_MRP as algoMRP
 import Algorithm_MC as algoMC
 import Algorithm_MC_RMSE as algoMCE
 import matplotlib.pyplot as plt
+import multiprocessing as mp
+import tqdm
+
+def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
+    print(algo_fun)
+    pool = mp.Pool(processes=20)
+    Errors = []
+    Values = []
+    results = []
+    for i in range(repeat):
+        results.append(
+            pool.apply_async(
+                algo_fun, args=(
+                    ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode,
+                )
+            )
+        )
+
+    pool.close()
+    pool.join()
+    for i in range(len(results)):
+        value, error = results[i].get()
+        Values.append(value)
+        Errors.append(error)
+
+    #print("每次运行的最终结果:")
+    #print(Values)
+
+    
+
+    # use to draw plot
+    mean_errors = np.mean(np.array(Errors), axis=0) 
+    # 多次运行的平均值
+    final_mean_value = np.mean(np.array(Values), axis=0)
+    print("多次运行的平均值:")
+    print(np.round(final_mean_value,2).reshape(4,4))
+
+    # 多次运行的平均值误差
+    final_mean_value_error = RMSE(final_mean_value, ground_truth)
+    print("多次运行的平均值的误差:", final_mean_value_error)
+
+    # 得到多次运行的最终的误差
+    final_errors = np.array(Errors)[-1]
+    # 最终的误差值的平均值
+    final_mean_error = np.mean(final_errors)
+    # 最终的误差值的方差
+    final_var_error = np.var(final_errors)
+    print("多次运行的误差的平均值:", final_mean_error)
+    print("多次运行的误差的方差:", final_var_error)
+
+    return mean_errors
 
 def FrozenLake_Matrix(gamma):
     vs = algoMRP.Matrix(ds, gamma)
-    print("Matrix")
+    print("Matrix as Ground Truth")
     print(np.round(np.array(vs).reshape(4,4), 2))
     return vs
 
-def FrozenLake_Bellman(gamma):
-    vs = algoMRP.Bellman(ds, gamma)
-    np.set_printoptions(suppress=True)
-    print("Bellman")
-    print(np.round(np.array(vs).reshape(4,4), 2))
-
-def FrozenLake_MC1(repeat, episodes, gamma, ground_truth, every_n_episode):
-    print("MC1")
-    Errors = []
-    for i in range(repeat):
-        errors = algoMCE.MC1(ds.Data_Frozen_Lake(), episodes, gamma, ground_truth, every_n_episode)
-        Errors.append(errors)
-    tmp = np.array(Errors)
-    mean_errors = np.mean(tmp, axis=0)
-    return mean_errors
-
-def FrozenLake_MC2(repeat, episodes, gamma, ground_truth, every_n_episode):
-    print("MC2")
-    Errors = []
-    for i in range(repeat):
-        errors = algoMCE.MC2(ds.Data_Frozen_Lake(), ds.States.Start, episodes, gamma, ground_truth, every_n_episode)
-        Errors.append(errors)
-        print(errors)
-    tmp = np.array(Errors)
-    mean_errors = np.mean(tmp, axis=0)
-    return mean_errors
-
-
-
-
-def FrozenLake_MC3(repeat, episodes, alpha, gamma, ground_truth):
-    print("MC3")
-    err = 0
-    for i in range(repeat):
-        V = np.zeros(16)
-        v = algoMC.MC3(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)
-        print(np.round(np.array(v).reshape(4,4), 2))
-        err += RMSE(v, ground_truth)
-    print("average RMSE=", err/repeat)
-
-def FrozenLake_MC4(repeat, episodes, alpha, gamma, ground_truth):
-    print("MC4")
-    for i in range(repeat):
-        V = np.zeros(16)
-        v = algoMC.MC4(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)
-        print(np.round(np.array(v).reshape(4,4), 2))
-        RMSE(v, ground_truth)
-
-def measure(errors):
-    print("----------------")
-    print(errors)
-    print(str.format("var={0}", np.var(errors)))
-    print(str.format("mean={0}", np.mean(errors)))
-    print(str.format("max={0}", np.max(errors)))
-    print(str.format("min={0}", np.min(errors)))
-    print("----------------")
-
-
 def RMSE(a, b):
     err = np.sqrt(np.sum(np.square(a - b))/b.shape[0])
-    print("RMSE=",err)
     return err
 
 def set_end_state_value(v):
@@ -84,72 +77,35 @@ def set_end_state_value(v):
 if __name__=="__main__":
     gamma = 0.9
     ground_truth = FrozenLake_Matrix(gamma)
-    FrozenLake_Bellman(gamma)
+
     '''
     VV = np.zeros(16)
     RMSE(VV, ground_truth)
     exit(0)
     '''
-    episodes = 5000
-    repeat = 3
+
+    episodes = 8000
+    repeat = 20
     checkpoint = 10
-    mean_errors = FrozenLake_MC1(repeat, episodes, gamma, ground_truth, checkpoint)
-    print(mean_errors)
-    plt.plot(mean_errors)
+    alpha = 0.02
+
+        
+    mean_errors = MultipleProcess(repeat, algoMCE.MC1, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+    plt.plot(mean_errors, label="MC1")
     
-    mean_errors = FrozenLake_MC2(repeat, episodes, gamma, ground_truth, checkpoint)
-    print(mean_errors)
-    plt.plot(mean_errors)
+    mean_errors = MultipleProcess(repeat, algoMCE.MC2, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+    plt.plot(mean_errors, label="MC2")
+    
+    mean_errors = MultipleProcess(repeat, algoMCE.MC3, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+    plt.plot(mean_errors, label="MC3")
+    
+    mean_errors = MultipleProcess(repeat, algoMCE.MC4, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+    plt.plot(mean_errors, label="MC4")
+    '''
+    mean_errors = MultipleProcess(repeat, algoMCE.MC5, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+    plt.plot(mean_errors, label="MC5")
+    '''
+
+    plt.legend()
     plt.grid()
     plt.show()
-    alpha = 0.01
-    exit(0)
-
-    '''
-    VV = np.zeros(16)
-    for i in range(10):
-        print("\nMC2" + str(i))
-        V = np.zeros(16)
-        v = algoMC.MC2(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, gamma)
-        print(np.round(np.array(v).reshape(4,4), 2))
-        v = set_end_state_value(v)
-        RMSE(v, ground_truth)
-        VV += v
-
-    print(np.round(np.array(VV/10).reshape(4,4), 2))
-    RMSE(VV/10, ground_truth)
-
-
-    alphas = [0.01,0.02,0.03,0.05]
-    errors = []
-    for alpha in alphas:
-        error = 0
-        for i in range(10):
-            print("\nMC3-" + str(alpha))
-            V = np.zeros(16)
-            v = algoMC.MC3(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)
-            #print(np.round(np.array(v).reshape(4,4), 2))
-            #v = set_end_state_value(v)
-            error += RMSE(v, ground_truth)
-        print(error)
-        errors.append(error/10)
-    print(errors)
-    '''
-
-
-    
-    v = algoMC.MC4(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)
-    print("\nMC4")
-    print(np.round(np.array(v).reshape(4,4), 2))
-    #set_end_state_value(v)
-    RMSE(v, ground_truth)
-    
-
-    '''
-    V = np.zeros(16)
-    v = algo.TD(V, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)
-    print("\nTD")
-    print(np.round(np.array(v).reshape(4,4), 2))
-    v = set_end_state_value(v)
-    RMSE(v, ground_truth)
-    '''

@@ -1,6 +1,8 @@
+from cProfile import label
 import numpy as np
 import Data_FrozenLake as ds
 import Algorithm_MRP as algoMRP
+import Algorithm_MC as algoMC
 import Algorithm_MC_RMSE as algoMCE
 import matplotlib.pyplot as plt
 import multiprocessing as mp
@@ -75,7 +77,6 @@ def set_end_state_value(v):
 if __name__=="__main__":
     gamma = 0.9
     ground_truth = FrozenLake_Matrix(gamma)
-    
 
     '''
     VV = np.zeros(16)
@@ -86,20 +87,14 @@ if __name__=="__main__":
     episodes = 8000
     repeat = 20
     checkpoint = 10
-    alpha = 0.02
 
+
+    alphas = [0.01,0.02,0.03,0.05]    
+
+    for alpha in alphas:    
+        mean_errors = MultipleProcess(repeat, algoMCE.MC3, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+        plt.plot(mean_errors, label="MC3"+str(alpha))
     
-    mean_errors = MultipleProcess(repeat, algoMCE.MC1, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-    plt.plot(mean_errors, label="MC1")
-    
-    mean_errors = MultipleProcess(repeat, algoMCE.MC2, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-    plt.plot(mean_errors, label="MC2")
-    
-    mean_errors = MultipleProcess(repeat, algoMCE.MC3, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-    plt.plot(mean_errors, label="MC3")
-      
-    #mean_errors = MultipleProcess(repeat, algoMCE.MC4, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-    #plt.plot(mean_errors, label="MC4")
 
     plt.legend()
     plt.grid()

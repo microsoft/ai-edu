@@ -85,7 +85,7 @@ TransMatrix = np.array(
         [0.0, 0.0, 0.0, 0.0, 
          0.0, 0.0, 0.0, 0.0, 
          0.0, 0.0, 0.0, 0.0, 
-         0.0, 0.0, 0.0, 0.0],  # 10
+         0.0, 0.0, 0.0, 0.0],  # 10, Hole
 
         [0.0, 0.0, 0.0, 0.0, 
          0.0, 0.0, 0.0, 1/3, 
@@ -124,10 +124,24 @@ class Data_Frozen_Lake(object):
     def get_states_count(self) -> int:
         return len(States)
 
+    def random_select_state(self):
+        state_value = np.random.choice(16)
+        return States(state_value)
+
     def step(self, curr_state: States):
         next_state_value = np.random.choice(self.num_states, p=TransMatrix[curr_state.value])
         reward = Rewards[next_state_value]
         return States(next_state_value), reward
+
+    def step2(self, curr_state: States):
+        if self.is_end_state(curr_state):
+            reward = Rewards[curr_state.value]
+            return curr_state, reward, True
+        else:
+            next_state_value = np.random.choice(self.num_states, p=TransMatrix[curr_state.value])
+            reward = Rewards[next_state_value]
+            return States(next_state_value), reward, False
+
 
     def get_reward(self, curr_state: States):
         return Rewards[curr_state.value]

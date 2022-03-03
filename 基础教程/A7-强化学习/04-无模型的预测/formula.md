@@ -87,13 +87,13 @@ $$
 
 $$
 \begin{aligned}
-G &= R_4
+G_1 &= R_1
 \\
-G &= \gamma G+R_3 = R_3 + \gamma R_4
+G_2 &= G_1 + \gamma R_2=R_1+\gamma R_2
 \\
-G &= \gamma G+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4
+G_3 &= G_2 + \gamma^2 R_3 = R_1 + \gamma R_2 + \gamma^2 R_3
 \\
-G &= \gamma G+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 
+G_4 &= G_3 + \gamma^3 R_4 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4
 \end{aligned}
 $$
 
@@ -112,13 +112,16 @@ $$
 
 $$
 \begin{aligned}
-G &= R_4, & V[S_{9}]+=G
+G_1 &= R_4, & V[S_{9}]+=G_1
 \\
-G &= \gamma G+R_3 = R_3 + \gamma R_4, & V[S_5]+=G
+G_2 &= \gamma G_1 + R_3 = R_3 + \gamma R_4, & V[S_5]+=G_2
 \\
-G &= \gamma G+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4, & V[S_4]+=G
+G_3 &= \gamma G_2 + R_2 = R_2 + \gamma R_3 + \gamma^2 R_4, & V[S_4]+=G_3
 \\
-G &= \gamma G+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 , & V[S_0] += G
+G_4 &= \gamma G_3 + R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 , & V[S_0] += G_4
 \end{aligned}
 $$
 
+$$
+V(S_t) = V(S_t) + \alpha [G_{batch} - V(S_t)]
+$$

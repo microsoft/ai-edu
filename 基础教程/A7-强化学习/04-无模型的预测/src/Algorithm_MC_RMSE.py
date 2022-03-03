@@ -171,8 +171,9 @@ def MC4(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
 # batch
 def MC5(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     V = np.zeros((ds.num_states))
-    G_value_count_pair = np.zeros((ds.num_states,2))  # state[total value, count of g]
-    G_value_count_pair[:,1] = 1 # 避免被除数为0
+    G_value_count_pair_working = np.zeros((ds.num_states,2))  # state[total value, count of g]
+    G_value_count_pair_backup = np.zeros((ds.num_states,2))  # state[total value, count of g]
+    # G_value_count_pair[:,1] = 1 # 避免被除数为0
     errors = []
 
     for episode in tqdm.trange(episodes):
@@ -196,20 +197,23 @@ def MC5(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
         for t in range(num_step-1, -1, -1):
             state_value, reward = trajectory[t]
             g = gamma * g + reward
-            G_value_count_pair[state_value, 0] += g     # total value
-            G_value_count_pair[state_value, 1] += 1     # count
+            G_value_count_pair_working[state_value, 0] += g     # total value
+            G_value_count_pair_working[state_value, 1] += 1     # count
         #endfor
 
-        if (episode+1) % every_n_episode == 0:
-            while True:
-                V_old = V.copy()
-                count = G_value_count_pair[:,1]
-                G = G_value_count_pair[:,0] / count
-                updates = alpha * (G - V)
-                V += updates
-
-                if (np.allclose(V_old, V, alpha)):
-                    break   # converage
+        if ((episode+1) % every_n_episode == 0):
+            if (np.min(G_value_count_pair_working[:, 1] + G_value_count_pair_backup[:, 1]) > 2):
+                G_value_count_pair_working += G_value_count_pair_backup
+                while True:
+                    V_old = V.copy()
+                    count = G_value_count_pair_working[:,1]
+                    G = G_value_count_pair_working[:,0] / count
+                    # math: V(s)=V(s) + \alpha (G-V(s))
+                    V = V + alpha * (G - V)
+                    if (np.allclose(V_old, V, alpha)):
+                        G_value_count_pair_backup = G_value_count_pair_working.copy()
+                        G_value_count_pair_working[:,:] = 0
+                        break   # converage
         #endwhile
         #endif
         calculate_error(errors, episode+1, every_n_episode, V, ground_truth)

@@ -10,7 +10,7 @@ import tqdm
 
 def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     print(algo_fun)
-    pool = mp.Pool(processes=20)
+    pool = mp.Pool(processes=8)
     Errors = []
     Values = []
     results = []
@@ -39,7 +39,7 @@ def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, g
     mean_errors = np.mean(np.array(Errors), axis=0) 
     # 多次运行的平均值
     final_mean_value = np.mean(np.array(Values), axis=0)
-    print("多次运行的平均值:")
+    print("多次运行的平均 V 值:")
     print(np.round(final_mean_value,2).reshape(4,4))
 
     # 多次运行的平均值误差
@@ -47,13 +47,13 @@ def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, g
     print("多次运行的平均值的误差:", final_mean_value_error)
 
     # 得到多次运行的最终的误差
-    final_errors = np.array(Errors)[-1]
+    final_errors = np.array(Errors)[:,-1]
     # 最终的误差值的平均值
     final_mean_error = np.mean(final_errors)
     # 最终的误差值的方差
     final_var_error = np.var(final_errors)
-    print("多次运行的误差的平均值:", final_mean_error)
-    print("多次运行的误差的方差:", final_var_error)
+    print("多次运行的每次误差的平均值:", final_mean_error)
+    print("多次运行的每次误差的方差:", final_var_error)
 
     return mean_errors
 
@@ -89,7 +89,7 @@ if __name__=="__main__":
     checkpoint = 10
     alpha = 0.02
 
-        
+    
     mean_errors = MultipleProcess(repeat, algoMCE.MC1, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
     plt.plot(mean_errors, label="MC1")
     
@@ -99,12 +99,12 @@ if __name__=="__main__":
     mean_errors = MultipleProcess(repeat, algoMCE.MC3, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
     plt.plot(mean_errors, label="MC3")
     
-    mean_errors = MultipleProcess(repeat, algoMCE.MC4, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-    plt.plot(mean_errors, label="MC4")
-    '''
+    #mean_errors = MultipleProcess(repeat, algoMCE.MC4, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+    #plt.plot(mean_errors, label="MC4")
+    
     mean_errors = MultipleProcess(repeat, algoMCE.MC5, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-    plt.plot(mean_errors, label="MC5")
-    '''
+    plt.plot(mean_errors, label="MC4")
+    
 
     plt.legend()
     plt.grid()

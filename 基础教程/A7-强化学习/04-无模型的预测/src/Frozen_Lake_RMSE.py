@@ -8,7 +8,7 @@ import tqdm
 
 def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     print(algo_fun)
-    pool = mp.Pool(processes=20)
+    pool = mp.Pool(processes=8)
     Errors = []
     Values = []
     results = []
@@ -83,7 +83,7 @@ if __name__=="__main__":
     exit(0)
     '''
 
-    episodes = 8000
+    episodes = 10000
     repeat = 20
     checkpoint = 10
     alpha = 0.02
@@ -98,8 +98,9 @@ if __name__=="__main__":
     mean_errors = MultipleProcess(repeat, algoMCE.MC3, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
     plt.plot(mean_errors, label="MC3")
       
-    #mean_errors = MultipleProcess(repeat, algoMCE.MC4, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-    #plt.plot(mean_errors, label="MC4")
+    mean_errors = MultipleProcess(repeat, algoMCE.MC4, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
+    plt.plot(mean_errors, label="MC4")
+
 
     plt.legend()
     plt.grid()

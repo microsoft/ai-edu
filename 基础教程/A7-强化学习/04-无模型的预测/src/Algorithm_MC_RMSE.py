@@ -121,117 +121,11 @@ def MC3(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
 
 
 # batch
-def MC4_wrong(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
-    V = np.zeros((ds.num_states))
-    trajectory_G = []
-    errors = []
-    for episode in tqdm.trange(episodes):
-        trajectory = []
-        curr_state = start_state
-        trajectory.append((curr_state.value, 0))
-        while True:
-            # 到达终点，结束一幕，退出循环开始算分
-            if (ds.is_end_state(curr_state)):
-                break
-            # 从环境获得下一个状态和奖励
-            next_state, reward = ds.step(curr_state)
-            #endif
-            trajectory.append((next_state.value, reward))
-            curr_state = next_state
-        #endwhile
-        # calculate G_t
-        num_step = len(trajectory) 
-        g = 0
-        # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
-        for t in range(num_step-1, -1, -1):
-            state_value, reward = trajectory[t]
-            g = gamma * g + reward
-            trajectory_G.append((state_value, g))
-        #endfor
-        # batch update
-        #if ((episode+1) % every_n_episode == 0):
-        while True:
-            V_old = V.copy()
-            updates = np.zeros(16)
-            count = 0
-            for (state, G) in trajectory_G:
-                updates[state] += G - V[state]
-                count += 1
-            updates = updates / count * alpha
-            # 一次性更新所有V值
-            V += updates
-            if (np.allclose(V_old, V, alpha)):
-                break   # converage
-        #endwhile
-        #endif
-        calculate_error(errors, episode+1, every_n_episode, V, ground_truth)
-    #endfor
-    return V, errors
-
-
-# batch
 def MC4(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     V = np.zeros((ds.num_states))
-    G_value_count_pair_working = np.zeros((ds.num_states,2))  # state[total value, count of g]
-    G_value_count_pair_backup = np.zeros((ds.num_states,2))  # state[total value, count of g]
+    G_value_count_pair = np.zeros((ds.num_states,2))  # state[total value, count of g]
     errors = []
-
     for episode in tqdm.trange(episodes):
-        trajectory = []
-        curr_state = start_state
-        trajectory.append((curr_state.value, 0))
-        while True:
-            # 到达终点，结束一幕，退出循环开始算分
-            if (ds.is_end_state(curr_state)):
-                break
-            # 从环境获得下一个状态和奖励
-            next_state, reward = ds.step(curr_state)
-            #endif
-            trajectory.append((next_state.value, reward))
-            curr_state = next_state
-        #endwhile
-        # calculate G_t
-        num_step = len(trajectory) 
-        g = 0
-        # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
-        for t in range(num_step-1, -1, -1):
-            state_value, reward = trajectory[t]
-            g = gamma * g + reward
-            G_value_count_pair_working[state_value, 0] += g     # total value
-            G_value_count_pair_working[state_value, 1] += 1     # count
-        #endfor
-
-        if ((episode+1) % every_n_episode == 0):
-            if (np.min(G_value_count_pair_working[:, 1] + G_value_count_pair_backup[:, 1]) > 2):
-                G_value_count_pair_working += G_value_count_pair_backup
-                while True:
-                    V_old = V.copy()
-                    count = G_value_count_pair_working[:,1]
-                    G = G_value_count_pair_working[:,0] / count
-                    # math: V(s)=V(s) + \alpha (G-V(s))
-                    V = V + alpha * (G - V)
-                    if (np.allclose(V_old, V, alpha)):
-                        G_value_count_pair_backup = G_value_count_pair_working.copy()
-                        G_value_count_pair_working[:,:] = 0
-                        break   # converage
-        #endwhile
-        #endif
-        calculate_error(errors, episode+1, every_n_episode, V, ground_truth)
-    #endfor
-    return V, errors
-
-
-def MC5(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
-    V = np.zeros((ds.num_states))
-    G_value_count_pair_working = np.zeros((ds.num_states,2))  # state[total value, count of g]
-    G_value_count_pair_backup = np.zeros((ds.num_states,2))  # state[total value, count of g]
-    # G_value_count_pair[:,1] = 1 # 避免被除数为0
-    errors = []
-    one_batch = 64
-    sample_count = 0
-    update_count = 0
-    for episode in tqdm.trange(episodes):
-        sample_count += 1
         trajectory = []
         # randomly select on state as start state
         curr_state = ds.random_select_state()
@@ -253,26 +147,18 @@ def MC5(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
         for t in range(num_step-1, -1, -1):
             state_value, reward = trajectory[t]
             g = gamma * g + reward
-            G_value_count_pair_working[state_value, 0] += g     # total value
-            G_value_count_pair_working[state_value, 1] += 1     # count
+            G_value_count_pair[state_value, 0] += g     # total value
+            G_value_count_pair[state_value, 1] += 1     # count
         #endfor
 
-        if (sample_count >= one_batch):
-            if (np.min(G_value_count_pair_working[:, 1]) > 0):
-                #G_value_count_pair_working += G_value_count_pair_backup
-                #print(episode)
-                update_count += 1
-                while True:
-                    V_old = V.copy()
-                    count = G_value_count_pair_working[:,1]
-                    G = G_value_count_pair_working[:,0] / count
-                    # math: V(s)=V(s) + \alpha (G-V(s))
-                    V = V + alpha * (G - V)
-                    if (np.allclose(V_old, V, 1e-4)):
-                        # G_value_count_pair_backup = G_value_count_pair_working.copy()
-                        G_value_count_pair_working[:,:] = 0
-                        break   # converage
-                sample_count = 0
+        if ((episode+1)%every_n_episode == 0):
+            for state_value in range(ds.num_states):
+                count = G_value_count_pair[state_value, 1]
+                if (count == 0):
+                    continue
+                G = G_value_count_pair[state_value, 0] / count
+                V[state_value] = V[state_value] + alpha * (G - V[state_value])
+            G_value_count_pair[:,:] = 0
         #endwhile
         #endif
         calculate_error(errors, episode+1, every_n_episode, V, ground_truth)
@@ -280,54 +166,3 @@ def MC5(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     #print(update_count)
     return V, errors
 
-
-def MC6(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
-    V = np.zeros((ds.num_states))
-    G_value_count_pair_working = np.zeros((ds.num_states,2))  # state[total value, count of g]
-    G_value_count_pair_backup = np.zeros((ds.num_states,2))  # state[total value, count of g]
-    errors = []
-
-    for episode in tqdm.trange(episodes):
-        trajectory = []
-        curr_state = ds.random_select_state()
-        trajectory.append((curr_state.value, ds.get_reward(curr_state)))
-
-        while True:
-            # 到达终点，结束一幕，退出循环开始算分
-            if (ds.is_end_state(curr_state)):
-                break
-            # 从环境获得下一个状态和奖励
-            next_state, reward = ds.step(curr_state)
-            #endif
-            trajectory.append((next_state.value, reward))
-            curr_state = next_state
-        #endwhile
-        # calculate G_t
-        num_step = len(trajectory) 
-        g = 0
-        # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
-        for t in range(num_step-1, -1, -1):
-            state_value, reward = trajectory[t]
-            g = gamma * g + reward
-            G_value_count_pair_working[state_value, 0] += g     # total value
-            G_value_count_pair_working[state_value, 1] += 1     # count
-        #endfor
-
-        if ((episode+1) % every_n_episode == 0):
-            if (np.min(G_value_count_pair_working[:, 1] + G_value_count_pair_backup[:, 1]) > 2):
-                G_value_count_pair_working += G_value_count_pair_backup
-                while True:
-                    V_old = V.copy()
-                    count = G_value_count_pair_working[:,1]
-                    G = G_value_count_pair_working[:,0] / count
-                    # math: V(s)=V(s) + \alpha (G-V(s))
-                    V = V + alpha * (G - V)
-                    if (np.allclose(V_old, V, alpha)):
-                        G_value_count_pair_backup = G_value_count_pair_working.copy()
-                        G_value_count_pair_working[:,:] = 0
-                        break   # converage
-        #endwhile
-        #endif
-        calculate_error(errors, episode+1, every_n_episode, V, ground_truth)
-    #endfor
-    return V, errors

@@ -16,7 +16,7 @@ def Bellman(ds, gamma):
     V_curr = [0.0] * num_states
     V_next = [0.0] * num_states
     count = 0
-    while (count < 1000):
+    while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
         # 遍历每一个 state 作为 start_state
         for start_state in ds.States:
             # 得到转移概率

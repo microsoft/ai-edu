@@ -128,7 +128,7 @@ def MC4(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     for episode in tqdm.trange(episodes):
         trajectory = []
         # randomly select on state as start state
-        curr_state = ds.random_select_state()
+        curr_state = start_state
         trajectory.append((curr_state.value, ds.get_reward(curr_state)))
         while True:
             # 到达终点，结束一幕，退出循环开始算分
@@ -166,3 +166,74 @@ def MC4(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     #print(update_count)
     return V, errors
 
+
+
+def MC_all(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
+    V1 = np.zeros((ds.num_states))
+    V2 = np.zeros((ds.num_states))
+    V2_value_count_pair = np.zeros((ds.num_states,2))  # state[total value, count of g]
+    V2_value_count_pair[:,1] = 1 # 避免被除数为0
+
+    V3 = np.zeros((ds.num_states))    
+
+    V4 = np.zeros((ds.num_states))
+    V4_value_count_pair = np.zeros((ds.num_states,2))  # state[total value, count of g]
+
+    errors1 = []
+    errors2 = []
+    errors3 = []
+    errors4 = []
+
+    for episode in tqdm.trange(episodes):
+        trajectory = []
+        start_state = ds.random_select_state()
+
+        curr_state = start_state
+        trajectory.append((curr_state.value, ds.get_reward(curr_state)))
+        while True:
+            # 到达终点，结束一幕，退出循环开始算分
+            if (ds.is_end_state(curr_state)):
+                break
+            # 从环境获得下一个状态和奖励
+            next_state, reward = ds.step(curr_state)
+            trajectory.append((next_state.value, reward))
+            curr_state = next_state
+        #endwhile
+
+        num_step = len(trajectory)
+        g = 0
+        # 从后向前遍历，因为 G = R_t+1 + gamma * R_t + gamme^2 * R_t-1 + ...
+        for t in range(num_step-1, -1, -1):
+            state_value, reward = trajectory[t]
+            g = gamma * g + reward
+
+            V2_value_count_pair[state_value, 0] += g     # total value
+            V2_value_count_pair[state_value, 1] += 1     # count
+            V3[state_value] = V3[state_value] + alpha * (g - V3[state_value])
+            V4_value_count_pair[state_value, 0] += g     # total value
+            V4_value_count_pair[state_value, 1] += 1     # count
+        #endfor
+        V1[start_state.value] += g
+
+        if ((episode+1) % every_n_episode == 0):
+            # V1
+            calculate_error(errors1, episode+1, every_n_episode, V1*ds.num_states/(episode+1), ground_truth)
+            # V2
+            V2 = V2_value_count_pair[:,0] / V2_value_count_pair[:,1]
+            calculate_error(errors2, episode+1, every_n_episode, V2, ground_truth)
+            # V3
+            calculate_error(errors3, episode+1, every_n_episode, V3, ground_truth)
+            # V4
+            for state_value in range(ds.num_states):
+                count = V4_value_count_pair[state_value, 1]
+                if (count == 0):
+                    continue
+                G = V4_value_count_pair[state_value, 0] / count
+                V4[state_value] = V4[state_value] + alpha * (G - V4[state_value])
+            #end for
+            V4_value_count_pair[:,:] = 0
+
+            calculate_error(errors4, episode+1, every_n_episode, V4, ground_truth)
+
+    #endfor
+    return V1*ds.num_states/episodes, errors1, V2, errors2, V3, errors3, V4, errors4

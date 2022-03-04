@@ -4,10 +4,20 @@ import math
 import numpy as np
 
 
+def RMSE(a, b):
+    err = np.sqrt(np.sum(np.square(a - b))/b.shape[0])
+    return err
+
+def calculate_error(errors, episode, every_n_episode, V, ground_truth):
+    if (episode % every_n_episode == 0):
+        err = RMSE(V, ground_truth)
+        errors.append(err)
 
 
-def TD(V, ds, start_state, episodes, alpha, gamma):
-    for i in range(episodes):
+def TD(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
+    V = np.zeros((ds.num_states))
+    errors = []
+    for episode in tqdm.trange(episodes):
         curr_state = start_state
         while True:
             # 到达终点，结束一幕
@@ -22,5 +32,6 @@ def TD(V, ds, start_state, episodes, alpha, gamma):
             curr_state = next_state
             #endif
         #endwhile
+        calculate_error(errors, episode, checkpoint, V, ground_truth)
     #endfor
-    return V
+    return V, errors

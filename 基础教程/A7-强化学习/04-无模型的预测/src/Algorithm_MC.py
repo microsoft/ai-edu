@@ -88,6 +88,7 @@ def MC2(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
 
 # 多状态同时更新的蒙特卡洛采样
 # 注意输入V有初始状态
+# constant-alpha
 def MC3(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     V = np.zeros((ds.num_states))
     errors = []

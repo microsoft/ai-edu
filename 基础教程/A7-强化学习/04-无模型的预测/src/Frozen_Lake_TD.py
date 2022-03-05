@@ -145,27 +145,21 @@ if __name__=="__main__":
     ground_truth2[8] = 0
     ground_truth2[10] = 0
     ground_truth2[15] = 0
-    
 
-    '''
-    VV = np.zeros(16)
-    RMSE(VV, ground_truth)
-    exit(0)
-    '''
-
-    episodes = 10000
+    episodes = 4000
     repeat = 10
     checkpoint = 10
-    alpha = 0.02
-
     
-    mean_errors = MultipleProcess(repeat, algoMCE.MC3, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth1, checkpoint)
-    plt.plot(mean_errors, label="MC3 - single1")
-
-    alphas = [0.005, 0.01, 0.015, 0.02]
+    alphas = [0.01, 0.015, 0.02]
     for alpha in alphas:
-        mean_errors = MultipleProcess(repeat, algoTD.TD, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth2, checkpoint)
-        plt.plot(mean_errors, label="TD - " + str(alpha))
+        mean_errors = MultipleProcess(repeat, algoTD.TD_0, ds.Data_Frozen_Lake(), None, episodes, alpha, gamma, ground_truth2, checkpoint)
+        plt.plot(mean_errors, label="TD_0 - " + str(alpha))
+
+    alphas = [0.01, 0.015, 0.02]
+    for alpha in alphas:
+        mean_errors = MultipleProcess(repeat, algoTD.TD_batch, ds.Data_Frozen_Lake(), None, episodes, alpha, gamma, ground_truth2, checkpoint)
+        plt.plot(mean_errors, label="TD_batch - " + str(alpha), linestyle='--')
+
 
     '''
     v = algoTD.TD(ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma)

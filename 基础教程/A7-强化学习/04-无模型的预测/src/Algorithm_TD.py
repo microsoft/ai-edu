@@ -27,12 +27,10 @@ def TD_0(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, ):
             # 到达终点，结束一幕
             if (ds.is_end_state(curr_state)):
                 break
-            # 随机游走
             next_state, reward = ds.step(curr_state)
-            #endif
-            # 立刻更新状态值，不等本幕结束
             # math: V(S) \leftarrow V(S) + \alpha[R + \gamma V(S') - V(S)]
-            V[curr_state.value] = V[curr_state.value] + alpha * (reward + gamma * V[next_state.value] - V[curr_state.value])
+            delta = reward + gamma * V[next_state.value] - V[curr_state.value]
+            V[curr_state.value] = V[curr_state.value] + alpha * delta
             curr_state = next_state
             #endif
         #endwhile

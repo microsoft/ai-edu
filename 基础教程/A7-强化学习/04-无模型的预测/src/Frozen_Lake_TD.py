@@ -139,7 +139,9 @@ def set_end_state_value(v):
 
 if __name__=="__main__":
     gamma = 0.9
+    # for MC
     ground_truth1 = FrozenLake_Matrix(gamma)
+    # for TD
     ground_truth2 = ground_truth1.copy()
     ground_truth2[2] = 0
     ground_truth2[8] = 0
@@ -149,14 +151,16 @@ if __name__=="__main__":
     episodes = 4000
     repeat = 10
     checkpoint = 10
+    alpha = 0.02
     
-    alphas = [0.01, 0.015, 0.02]
+    mean_errors = MultipleProcess(repeat, algoMCE.MC2, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth1, checkpoint)
+    plt.plot(mean_errors, label="MC2 - full1")
+
+    alphas = [0.01, 0.02]
     for alpha in alphas:
         mean_errors = MultipleProcess(repeat, algoTD.TD_0, ds.Data_Frozen_Lake(), None, episodes, alpha, gamma, ground_truth2, checkpoint)
         plt.plot(mean_errors, label="TD_0 - " + str(alpha))
 
-    alphas = [0.01, 0.015, 0.02]
-    for alpha in alphas:
         mean_errors = MultipleProcess(repeat, algoTD.TD_batch, ds.Data_Frozen_Lake(), None, episodes, alpha, gamma, ground_truth2, checkpoint)
         plt.plot(mean_errors, label="TD_batch - " + str(alpha), linestyle='--')
 

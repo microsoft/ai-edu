@@ -125,3 +125,7 @@ $$
 $$
 V(S_t) = V(S_t) + \alpha [G_{batch} - V(S_t)]
 $$
+
+$$
+Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1},A_{t+1}) - Q(S_t,A_t)]
+$$

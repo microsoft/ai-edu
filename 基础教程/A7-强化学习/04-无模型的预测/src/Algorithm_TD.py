@@ -14,7 +14,7 @@ def calculate_error(errors, episode, every_n_episode, V, ground_truth):
         errors.append(err)
 
 
-def TD_0(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, ):
+def TD_0(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
     V = np.zeros((ds.num_states))
     errors = []
     for episode in tqdm.trange(episodes):
@@ -38,11 +38,16 @@ def TD_0(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, ):
     #endfor
     return V, errors
 
-def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
+def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, batch_num=0):
     V = np.zeros((ds.num_states))
     errors = []
+    if batch_num == 0:
+        batch_num = checkpoint
     batch_delta = np.zeros((ds.num_states, 2))
+    batch_counter = 0
+
     for episode in tqdm.trange(episodes):
+        batch_counter += 1
         if (start_state is None):
             curr_state = ds.random_select_state()
         else:
@@ -54,15 +59,19 @@ def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
                 break
             # 随机游走
             next_state, reward = ds.step(curr_state)
-            batch_delta[curr_state.value, 0] += reward + gamma * V[next_state.value] - V[curr_state.value]
+            batch_delta[curr_state.value, 0] += \
+                reward + gamma * V[next_state.value] - V[curr_state.value]
             batch_delta[curr_state.value, 1] += 1
             curr_state = next_state
             #endif
         #endwhile
-        if (episode+1) % checkpoint == 0:
+
+        if (batch_counter % batch_num == 0):
             for state_value in range(ds.num_states):
-                if (batch_delta[state_value, 1] > 0):
-                    V[state_value] = V[state_value] + alpha * batch_delta[state_value, 0] / batch_delta[state_value, 1]
+                count = batch_delta[state_value, 1]
+                if (count > 0):
+                    V[state_value] += \
+                        alpha * batch_delta[state_value, 0] / count
             batch_delta[:, :] = 0
 
         calculate_error(errors, episode, checkpoint, V, ground_truth)

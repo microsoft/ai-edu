@@ -94,7 +94,11 @@ def MC3(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     errors = []
     for episode in tqdm.trange(episodes):
         trajectory = []
-        curr_state = start_state
+        if (start_state is None):
+            curr_state = ds.random_select_state()
+        else:
+            curr_state = start_state
+
         trajectory.append((curr_state.value, 0))
         while True:
             # 到达终点，结束一幕，退出循环开始算分
@@ -129,7 +133,10 @@ def MC4(ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     for episode in tqdm.trange(episodes):
         trajectory = []
         # randomly select on state as start state
-        curr_state = start_state
+        if (start_state is None):
+            curr_state = ds.random_select_state()
+        else:
+            curr_state = start_state
         trajectory.append((curr_state.value, ds.get_reward(curr_state)))
         while True:
             # 到达终点，结束一幕，退出循环开始算分

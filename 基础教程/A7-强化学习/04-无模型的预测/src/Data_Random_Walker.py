@@ -30,7 +30,7 @@ TransMatrix = np.array(
         [0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0],    # from C
         [0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0],
         [0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]     # Home
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]     # Home
     ]
 )
 
@@ -62,10 +62,10 @@ class Data_Random_Walker(object):
 if __name__=="__main__":
     gamma = 1
     vs = algoMRP.Matrix(ds, gamma)
-    print(np.round(vs, 3))
+    print(np.round(vs*6, 3))
 
     vs = algoMRP.Bellman(ds, gamma)
-    print(np.round(vs, 3))
+    print(np.round(vs*6, 3))
 
     #vs = algoMRP.MonteCarol(ds, [ds.States.Resturant, ds.States.Home], gamma, 5000)
     #print(np.round(vs, 3))

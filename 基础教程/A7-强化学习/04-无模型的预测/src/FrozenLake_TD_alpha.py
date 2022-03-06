@@ -1,15 +1,16 @@
-from cProfile import label
+from concurrent.futures import process
 import numpy as np
 import Data_FrozenLake as ds
 import Algorithm_MRP as algoMRP
 import Algorithm_MC as algoMCE
 import matplotlib.pyplot as plt
 import multiprocessing as mp
+import Algorithm_TD as algoTD
 import tqdm
 
 def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, ground_truth, every_n_episode):
     print(algo_fun)
-    pool = mp.Pool(processes=20)
+    pool = mp.Pool(processes=8)
     Errors = []
     Values = []
     results = []
@@ -31,8 +32,6 @@ def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, g
 
     #print("每次运行的最终结果:")
     #print(Values)
-
-    
 
     # use to draw plot
     mean_errors = np.mean(np.array(Errors), axis=0) 
@@ -57,44 +56,34 @@ def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, g
     return mean_errors
 
 def FrozenLake_Matrix(gamma):
-    vs = algoMRP.Matrix(ds, gamma)
+    v = algoMRP.Matrix(ds, gamma)
     print("Matrix as Ground Truth")
-    print(np.round(np.array(vs).reshape(4,4), 2))
-    return vs
+    print(np.round(np.array(v).reshape(4,4), 2))
+    v[2] = 0
+    v[8] = 0
+    v[10] = 0
+    v[15] = 0    
+    return v
 
 def RMSE(a, b):
     err = np.sqrt(np.sum(np.square(a - b))/b.shape[0])
     return err
 
-def set_end_state_value(v):
-    v[2] = -1
-    v[8] = -1
-    v[10] = -1
-    v[15] = 5
-    return v
 
+# 不同的alpha取值对算法效果的影响
 if __name__=="__main__":
     gamma = 0.9
     ground_truth = FrozenLake_Matrix(gamma)
 
-    '''
-    VV = np.zeros(16)
-    RMSE(VV, ground_truth)
-    exit(0)
-    '''
-
-    episodes = 8000
-    repeat = 20
+    episodes = 4000
+    repeat = 8
     checkpoint = 10
 
+    alphas = [0.01, 0.02, 0.03, 0.04, 0.05]
+    for alpha in alphas:
+        mean_errors = MultipleProcess(repeat, algoTD.TD_0, ds.Data_Frozen_Lake(), None, episodes, alpha, gamma, ground_truth, checkpoint)
+        plt.plot(mean_errors, label="TD_0 - " + str(alpha))
 
-    alphas = [0.01,0.02,0.03,0.05]    
-
-    for alpha in alphas:    
-        mean_errors = MultipleProcess(repeat, algoMCE.MC3, ds.Data_Frozen_Lake(), ds.States.Start, episodes, alpha, gamma, ground_truth, checkpoint)
-        plt.plot(mean_errors, label="MC3"+str(alpha))
-    
-
-    plt.legend()
     plt.grid()
+    plt.legend()
     plt.show()

@@ -77,3 +77,31 @@ def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, 
         calculate_error(errors, episode, checkpoint, V, ground_truth)
     #endfor
     return V, errors
+
+
+def Saras(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
+    Q = np.zeros((ds.num_actions, []))
+    errors = []
+    for episode in tqdm.trange(episodes):
+        if (start_state is None):
+            curr_state = ds.random_select_state()
+        else:
+            curr_state = start_state
+        #endif
+        # SELECT ACTION
+        
+        while True:
+            # 到达终点，结束一幕
+            if (ds.is_end_state(curr_state)):
+                break
+            curr_action, next_state, reward = ds.step(curr_state)
+            next_action, _, _ = ds.step(next_state)
+            # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma Q(s',a') - Q(s,a)]
+            delta = reward + gamma * Q[next_state.value,next_action.value] - Q[curr_state.value]
+            V[curr_state.value] = [curr_state.value] + alpha * delta
+            curr_state = next_state
+            #endif
+        #endwhile
+        calculate_error(errors, episode, checkpoint, V, ground_truth)
+    #endfor
+    return V, errors

@@ -80,6 +80,16 @@ def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, 
 
 
 def Saras(env, from_start, episodes, alpha, gamma, ground_truth, checkpoint):
+    def policy(Q, state, env):
+        actions = env.get_actions(state)
+        if np.random.rand() < 0.1:
+            action = np.random.choice(actions)
+        else:
+            q_values = Q[state]
+            action = np.random.choice([a for a,v in enumerate(q_values) if (v == np.max(q_values))])
+        return action
+
+
     Q = np.zeros((env.state_space, env.action_space))
     errors = []
 
@@ -88,15 +98,15 @@ def Saras(env, from_start, episodes, alpha, gamma, ground_truth, checkpoint):
         curr_state = env.reset(from_start)
         actions = env.get_actions(curr_state)
         # put your policy here
-        idx = np.random.choice(len(actions))
-        curr_action=actions[idx]
+        curr_action = np.random.choice(actions)
         is_done = False
+        tmp = []
+        
         while not is_done:   # 到达终点，结束一幕
+            tmp.append(curr_state)
             prob, next_state, reward, is_done = env.step(curr_state, curr_action)
             #print(curr_state, next_state, reward)
-            next_actions = env.get_actions(next_state)
-            idx = np.random.choice(len(next_actions))
-            next_action = next_actions[idx]
+            next_action = policy(Q, next_state, env)
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma Q(s',a') - Q(s,a)]
             delta = reward + gamma * Q[next_state, next_action] - Q[curr_state, curr_action]
             Q[curr_state, curr_action] += alpha * delta
@@ -112,5 +122,5 @@ import Data_FrozenLake2 as dfl2
 
 if __name__=="__main__":
     env = dfl2.Data_FrozenLake_Env()
-    Q = Saras(env, False, 5000, 0.01, 0.9, None, 10)
+    Q = Saras(env, True, 1000, 0.01, 0.9, None, 10)
     print(Q)

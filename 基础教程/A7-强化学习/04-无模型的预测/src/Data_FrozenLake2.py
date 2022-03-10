@@ -1,3 +1,4 @@
+from sre_parse import State
 from sunau import AUDIO_FILE_ENCODING_ADPCM_G723_3
 import numpy as np
 from enum import Enum
@@ -22,84 +23,31 @@ class States(Enum):
     Goal15 = 15
     
 
-# 动作 对于4x4的方格，有正反48个动作（再减去进入终点后不能返回的数量）
+# 动作 对于方格有4个动作
 class Actions(Enum):
-    a0001=0x0001
-    a0004=0x0004
+    UP = 0
+    RIGHT = 1
+    DOWN = 2
+    LEFT = 3
 
-    a0100=0x0100
-    a0102=0x0102
-    a0105=0x0105
-
-    a0201=0x0201
-    a0203=0x0203
-    a0206=0x0206
-    
-    a0302=0x0302
-    a0307=0x0307
-    
-    a0400=0x0400
-    a0405 = 0x0405
-    a0408 = 0x0408
-
-    a0501 = 0x0501 
-    a0504 = 0x0504
-    a0506 = 0x0506
-    a0509 = 0x0509
-
-    a0602 = 0x0602
-    a0605 = 0x0605
-    a0607 = 0x0607
-    a0610 = 0x0610
-
-    a0703 = 0x0703
-    a0706 = 0x0706
-    a0711 = 0x0711
-    
-    a0804 = 0x0804
-    a0809 = 0x0809
-    a0812 = 0x0812
-
-    a0905 = 0x0905
-    a0908 = 0x0908
-    a0910 = 0x0910
-    a0913 = 0x0913
-
-    a1006 = 0x1006
-    a1009 = 0x1009
-    a1011 = 0x1011
-    a1014 = 0x1014
-
-    a1107 = 0x1107
-    a1110 = 0x1110
-    a1115 = 0x1115
-    
-    a1208 = 0x1208
-    a1213 = 0x1213
-
-    a1309 = 0x1309
-    a1312 = 0x1312 
-    a1314 = 0x1314
-    
-    a1410 = 0x1410
-    a1413 = 0x1413
-    a1415 = 0x1415
-
-    a1511 = 0x1511
-    a1514 = 0x1514
-
-    
 # 向前走动作F时，
 # 到达前方s的概率是0.7, 
 # 滑到左侧的概率是0.2,
 # 滑到左侧的概率是0.1,
-# 如果是边角，前方概率不变，越界时呆在原地
-Front = 0.7
-Left = 0.2
-Right = 0.1
+# 如果是边角，前方概率不变，越界时呆在原地    
+class Probs(Enum):
+    Front = 0.7
+    Left = 0.2
+    Right = 0.1
+    All = 1.0
+
+
 # Reward
 Hole = -1
 Goal = 5
+SAFE = 0
+
+
 
 # 数据在数组中的位置语义
 Action = 0
@@ -107,32 +55,107 @@ ActionPi = 1
 Reward = 2
 StateProbs = 3
 
-P=[
-    [ # state 0: action, pi, reward, [state, prob]
-        [0x0001, 1/2, 0, [[1, Front],[0, Left],[4, Right]]],
-        [0x0004, 1/2, 0, [[4, Front],[1, Left],[0, Right]]]
-    ],
-    [ # state 1: action, prob, reward, [state, prob]
-        [0x0100, 1/3, 0, [[0, Front],[5, Left],[1, Right]]],
-        [0x0102, 1/3, Hole, [[2, Front],[1, Left],[5, Right]]],
-        [0x0105, 1/3, 0, [[5, Front],[2, Left],[0, Right]]]
-    ],
-    [ # state 2: action, prob, reward, [state, prob]
-        #[0x0201, 1/3, 0, [[1, Front],[6, Left],[2, Right]]],
-        #[0x0203, 1/3, 0, [[3, Front],[2, Left],[6, Right]]],
-        #[0x0206, 1/3, 0, [[6, Front],[3, Left],[1, Right]]]
-        [0x0202, 1, Hole, [[2, 1]]]
-    ],
-    [ # state 3: action, prob, reward, [state, prob]
-        [0x0302, 1/2, Hole, [[2, Front],[7, Left],[3, Right]]],
-        [0x0307, 1/2, 0, [[7, Front],[3, Left],[2, Right]]]
-    ],
-    #############
-    [ # state 4: action, prob, reward, [state, prob]
-        [0x0400, 1/3, 0, [[0, Front],[4, Left],[5, Right]]],
-        [0x0405, 1/3, 0, [[5, Front],[0, Left],[8, Right]]],
-        [0x0408, 1/3, Hole, [[8, Front],[5, Left],[4, Right]]]
-    ],
+P={
+    States.Start:{
+        Actions.UP:   [(Probs.Left, 0,  0.0, False), (Probs.Front, 0,  0.0, False), (Probs.Right, 1,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left, 0,  0.0, False), (Probs.Front, 1,  0.0,  True), (Probs.Right, 4,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 1,  0.0, False), (Probs.Front, 4,  0.0, False), (Probs.Right, 0,  0.0, False)],
+        Actions.LEFT: [(Probs.Left, 4,  0.0, False), (Probs.Front, 0,  0.0, False), (Probs.Right, 0,  0.0, False)]
+    },
+    States.Safe1:{
+        Actions.UP:   [(Probs.Left, 0,  0.0, False), (Probs.Front, 1,  0.0, False), (Probs.Right, 2, Hole,  True)],
+        Actions.RIGHT:[(Probs.Left, 1,  0.0, False), (Probs.Front, 2, Hole,  True), (Probs.Right, 5,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 2, Hole,  True), (Probs.Front, 5,  0.0, False), (Probs.Right, 0,  0.0, False)],
+        Actions.LEFT: [(Probs.Left, 5,  0.0, False), (Probs.Front, 0,  0.0, False), (Probs.Right, 1,  0.0, False)]
+    },
+    States.Hole2:{
+        Actions.UP:   [(Probs.All, 2,  0.0, True)],
+        Actions.RIGHT:[(Probs.All, 2,  0.0, True)],
+        Actions.DOWN: [(Probs.All, 2,  0.0, True)],
+        Actions.LEFT: [(Probs.All, 2,  0.0, True)]
+    },
+    States.Safe3:{
+        Actions.UP:   [(Probs.Left, 2, Hole,  True), (Probs.Front, 3,  0.0, False), (Probs.Right, 3,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left, 3,  0.0, False), (Probs.Front, 3,  0.0, False), (Probs.Right, 7,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 3,  0.0, False), (Probs.Front, 7,  0.0, False), (Probs.Right, 2, Hole,  True)],
+        Actions.LEFT: [(Probs.Left, 7,  0.0, False), (Probs.Front, 2, Hole,  True), (Probs.Right, 3,  0.0, False)]
+    },
+    States.Safe4:{
+        Actions.UP:   [(Probs.Left, 4,  0.0, False), (Probs.Front, 0,  0.0, False), (Probs.Right, 5,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left, 0,  0.0, False), (Probs.Front, 5,  0.0, False), (Probs.Right, 8, Hole,  True)],
+        Actions.DOWN: [(Probs.Left, 5,  0.0, False), (Probs.Front, 8, Hole,  True), (Probs.Right, 4,  0.0, False)],
+        Actions.LEFT: [(Probs.Left, 8, Hole,  True), (Probs.Front, 4,  0.0, False), (Probs.Right, 0,  0.0, False)]
+    },
+    States.Safe5:{
+        Actions.UP:   [(Probs.Left, 4,  0.0, False), (Probs.Front, 1,  0.0, False), (Probs.Right, 6,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left, 1,  0.0, False), (Probs.Front, 6,  0.0, False), (Probs.Right, 9,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 6,  0.0, False), (Probs.Front, 9,  0.0, False), (Probs.Right, 4,  0.0, False)],
+        Actions.LEFT: [(Probs.Left, 9,  0.0, False), (Probs.Front, 4,  0.0, False), (Probs.Right, 1,  0.0, False)]
+    },
+    States.Safe6:{
+        Actions.UP:   [(Probs.Left, 5,  0.0, False), (Probs.Front, 2, Hole,  True), (Probs.Right, 7,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left, 2, Hole,  True), (Probs.Front, 7,  0.0, False), (Probs.Right,10, Hole,  True)],
+        Actions.DOWN: [(Probs.Left, 7,  0.0, False), (Probs.Front,10, Hole,  True), (Probs.Right, 5,  0.0, False)],
+        Actions.LEFT: [(Probs.Left,10, Hole,  True), (Probs.Front, 5,  0.0, False), (Probs.Right, 2, Hole,  True)]
+    },
+    States.Safe7:{
+        Actions.UP:   [(Probs.Left, 6,  0.0, False), (Probs.Front, 3,  0.0, False), (Probs.Right, 7,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left, 3,  0.0, False), (Probs.Front, 7,  0.0, False), (Probs.Right,11,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 7,  0.0, False), (Probs.Front,11,  0.0, False), (Probs.Right, 6,  0.0, False)],
+        Actions.LEFT: [(Probs.Left,11,  0.0, False), (Probs.Front, 6,  0.0, False), (Probs.Right, 3,  0.0, False)]
+    },
+    States.Hole8:{
+        Actions.UP:   [(Probs.All, 8,  0.0, True)],
+        Actions.RIGHT:[(Probs.All, 8,  0.0, True)],
+        Actions.DOWN: [(Probs.All, 8,  0.0, True)],
+        Actions.LEFT: [(Probs.All, 8,  0.0, True)]
+    },
+    States.Safe9:{
+        Actions.UP:   [(Probs.Left, 8, Hole,  True), (Probs.Front, 5,  0.0, False), (Probs.Right, 10, Hole,  True)],
+        Actions.RIGHT:[(Probs.Left, 5,  0.0, False), (Probs.Front,10, Hole,  True), (Probs.Right, 13,  0.0, False)],
+        Actions.DOWN: [(Probs.Left,10, Hole,  True), (Probs.Front,13,  0.0, False), (Probs.Right, 8,  Hole,  True)],
+        Actions.LEFT: [(Probs.Left,13,  0.0, False), (Probs.Front, 8, Hole,  True), (Probs.Right, 5,  0.0, False)]
+    },
+    States.Hole10:{
+        Actions.UP:   [(Probs.All, 10,  0.0, True)],
+        Actions.RIGHT:[(Probs.All, 10,  0.0, True)],
+        Actions.DOWN: [(Probs.All, 10,  0.0, True)],
+        Actions.LEFT: [(Probs.All, 10,  0.0, True)]
+    },
+    States.Safe11:{
+        Actions.UP:   [(Probs.Left, 10, Hole,  True), (Probs.Front,  7,  0.0, False), (Probs.Right, 11,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left,  7,  0.0, False), (Probs.Front, 11,  0.0, False), (Probs.Right, 15, Goal, False)],
+        Actions.DOWN: [(Probs.Left, 11,  0.0, False), (Probs.Front, 15, Goal, False), (Probs.Right, 10, Hole,  True)],
+        Actions.LEFT: [(Probs.Left, 15, Goal, False), (Probs.Front, 10, Hole,  True), (Probs.Right,  7,  0.0, False)]
+    },
+    States.Safe12:{
+        Actions.UP:   [(Probs.Left, 12,  0.0, False), (Probs.Front,  8, Hole,  True), (Probs.Right, 13,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left,  8, Hole,  True), (Probs.Front, 13,  0.0, False), (Probs.Right, 12,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 13,  0.0, False), (Probs.Front, 12,  0.0, False), (Probs.Right, 12,  0.0, False)],
+        Actions.LEFT: [(Probs.Left, 12,  0.0, False), (Probs.Front, 12,  0.0, False), (Probs.Right,  8, Hole,  True)]
+    },
+    States.Safe13:{
+        Actions.UP:   [(Probs.Left, 12,  0.0, False), (Probs.Front,  9,  0.0, False), (Probs.Right, 14,  0.0, False)],
+        Actions.RIGHT:[(Probs.Left,  9,  0.0, False), (Probs.Front, 14,  0.0, False), (Probs.Right, 13,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 14,  0.0, False), (Probs.Front, 13,  0.0, False), (Probs.Right, 12,  0.0, False)],
+        Actions.LEFT: [(Probs.Left, 13,  0.0, False), (Probs.Front, 12,  0.0, False), (Probs.Right,  9,  0.0, False)]
+    },
+    States.Safe14:{
+        Actions.UP:   [(Probs.Left, 13,  0.0, False), (Probs.Front, 10, Hole,  True), (Probs.Right, 15, Goal, False)],
+        Actions.RIGHT:[(Probs.Left, 10, Hole,  True), (Probs.Front, 15, Goal, False), (Probs.Right, 14,  0.0, False)],
+        Actions.DOWN: [(Probs.Left, 15, Goal,  True), (Probs.Front, 14,  0.0, False), (Probs.Right, 13,  0.0, False)],
+        Actions.LEFT: [(Probs.Left, 14,  0.0, False), (Probs.Front, 13,  0.0, False), (Probs.Right, 10, Hole,  True)]
+    },
+    States.Goal15:{
+        Actions.UP:   [(Probs.All, 15,  0.0, True)],
+        Actions.RIGHT:[(Probs.All, 15,  0.0, True)],
+        Actions.DOWN: [(Probs.All, 15,  0.0, True)],
+        Actions.LEFT: [(Probs.All, 15,  0.0, True)]
+    }
+}
+
+
+
     [ # state 5: action, prob, reward, [state, prob]
         [0x0501, 1/4, 0, [[1, Front],[4, Left],[6, Right]]],
         [0x0504, 1/4, 0, [[4, Front],[9, Left],[1, Right]]],

@@ -79,29 +79,38 @@ def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, 
     return V, errors
 
 
-def Saras(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
-    Q = np.zeros((ds.num_actions, []))
+def Saras(env, from_start, episodes, alpha, gamma, ground_truth, checkpoint):
+    Q = np.zeros((env.state_space, env.action_space))
     errors = []
-    for episode in tqdm.trange(episodes):
-        if (start_state is None):
-            curr_state = ds.random_select_state()
-        else:
-            curr_state = start_state
-        #endif
-        # SELECT ACTION
-        
-        while True:
-            # 到达终点，结束一幕
-            if (ds.is_end_state(curr_state)):
-                break
-            curr_action, next_state, reward = ds.step(curr_state)
-            next_action, _, _ = ds.step(next_state)
+
+    for episode in range(episodes):
+        #print("-----------------")
+        curr_state = env.reset(from_start)
+        actions = env.get_actions(curr_state)
+        # put your policy here
+        idx = np.random.choice(len(actions))
+        curr_action=actions[idx]
+        is_done = False
+        while not is_done:   # 到达终点，结束一幕
+            prob, next_state, reward, is_done = env.step(curr_state, curr_action)
+            #print(curr_state, next_state, reward)
+            next_actions = env.get_actions(next_state)
+            idx = np.random.choice(len(next_actions))
+            next_action = next_actions[idx]
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma Q(s',a') - Q(s,a)]
-            delta = reward + gamma * Q[next_state.value,next_action.value] - Q[curr_state.value]
-            V[curr_state.value] = [curr_state.value] + alpha * delta
+            delta = reward + gamma * Q[next_state, next_action] - Q[curr_state, curr_action]
+            Q[curr_state, curr_action] += alpha * delta
             curr_state = next_state
+            curr_action = next_action
             #endif
         #endwhile
-        calculate_error(errors, episode, checkpoint, V, ground_truth)
+        #calculate_error(errors, episode, checkpoint, V, ground_truth)
     #endfor
-    return V, errors
+    return Q
+
+import Data_FrozenLake2 as dfl2
+
+if __name__=="__main__":
+    env = dfl2.Data_FrozenLake_Env()
+    Q = Saras(env, False, 5000, 0.01, 0.9, None, 10)
+    print(Q)

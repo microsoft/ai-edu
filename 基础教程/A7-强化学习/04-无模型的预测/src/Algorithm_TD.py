@@ -89,38 +89,36 @@ def test():
     print(action)
     assert(action == 1 or action == 5)
 
-def Saras(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
-    def policy(Q, state, env):
-        # 获得该状态下所有可能的action
-        available_actions = env.get_actions(state)
-        # e-贪心策略
-        if np.random.rand() < 0.1:
-            action = np.random.choice(available_actions)
-        else:
-            # 取到与action对应的Q-values
-            # e.g. Q[state]=[1,2,3,4]时，actions=[1,2,3], 则q_values=[2,3]
-            q_values = Q[state][available_actions]
-            # 得到q_values里的最大值的序号列表，有可能是多个
-            # 如q_values=[-1,-2,-1], 则b=[0,2]
-            b = np.argwhere(q_values == np.max(q_values))
-            # 任意选一个,idx=0 or 2
-            idx = np.random.choice(b.flatten())
-            # 如果b=[0,2], 则action = 1 or 3
-            action = available_actions[idx]
-        return action
+def choose_action(Q, state, env):
+    # 获得该状态下所有可能的action
+    available_actions = env.get_actions(state)
+    # e-贪心策略
+    if np.random.rand() < 0.1:
+        action = np.random.choice(available_actions)
+    else:
+        # 取到与action对应的Q-values
+        # e.g. Q[state]=[1,2,3,4]时，actions=[1,2,3], 则q_values=[2,3]
+        q_values = Q[state][available_actions]
+        # 得到q_values里的最大值的序号列表，有可能是多个
+        # 如q_values=[-1,-2,-1], 则b=[0,2]
+        b = np.argwhere(q_values == np.max(q_values))
+        # 任意选一个,idx=0 or 2
+        idx = np.random.choice(b.flatten())
+        # 如果b=[0,2], 则action = 1 or 3
+        action = available_actions[idx]
+    return action
 
 
+def Sarsa(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
     Q = np.zeros((env.state_space, env.action_space))
     rewards = np.zeros(episodes)
     for episode in tqdm.trange(episodes):
         curr_state = env.reset(from_start)
-        actions = env.get_actions(curr_state)
-        # put your policy here
-        curr_action = np.random.choice(actions)
+        curr_action = choose_action(Q, curr_state, env)
         is_done = False
         while not is_done:   # 到达终点，结束一幕
             prob, next_state, reward, is_done = env.step(curr_state, curr_action)
-            next_action = policy(Q, next_state, env)
+            next_action = choose_action(Q, next_state, env)
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma Q(s',a') - Q(s,a)]
             delta = reward + GAMMA * Q[next_state, next_action] - Q[curr_state, curr_action]
             Q[curr_state, curr_action] += ALPHA * delta
@@ -133,33 +131,15 @@ def Saras(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
     #endfor
     return Q, rewards
 
+
 def Q_Learning(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
-    def policy(Q, state, env):
-        # 获得该状态下所有可能的action
-        available_actions = env.get_actions(state)
-        if np.random.rand() < 0.1:
-            action = np.random.choice(available_actions)
-        else:
-            # 取到与action对应的Q-values
-            # e.g. Q[state]=[1,2,3,4]时，actions=[1,2,3], 则q_values=[2,3]
-            q_values = Q[state][available_actions]
-            # 得到q_values里的最大值的序号列表，有可能是多个
-            # 如q_values=[-1,-2,-1], 则b=[0,2]
-            b = np.argwhere(q_values == np.max(q_values))
-            # 任意选一个,idx=0 or 2
-            idx = np.random.choice(b.flatten())
-            # 如果b=[0,2], 则action = 1 or 3
-            action = available_actions[idx]
-        return action
-
-
     Q = np.zeros((env.state_space, env.action_space))
     rewards = np.zeros(episodes)
     for episode in tqdm.trange(episodes):
         curr_state = env.reset(from_start)
         is_done = False
         while not is_done:   # 到达终点，结束一幕
-            curr_action = policy(Q, curr_state, env)
+            curr_action = choose_action(Q, curr_state, env)
             prob, next_state, reward, is_done = env.step(curr_state, curr_action)
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma \max_a Q(s',a) - Q(s,a)]
             available_actions = env.get_actions(next_state)
@@ -173,9 +153,32 @@ def Q_Learning(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint
     #endfor
     return Q, rewards
 
+
+def E_Sarsa(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
+    Q = np.zeros((env.state_space, env.action_space))
+    rewards = np.zeros(episodes)
+    for episode in tqdm.trange(episodes):
+        curr_state = env.reset(from_start)
+        is_done = False
+        while not is_done:   # 到达终点，结束一幕
+            curr_action = choose_action(Q, curr_state, env)
+            prob, next_state, reward, is_done = env.step(curr_state, curr_action)
+            # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma \sum \pi(a|s')*Q(s',a) - Q(s,a)]
+            available_actions = env.get_actions(next_state)
+            target = np.sum(Q[next_state][available_actions]) / len(available_actions)
+            Q[curr_state, curr_action] += ALPHA * (reward + GAMMA * target - Q[curr_state, curr_action])
+            curr_state = next_state
+            
+            rewards[episode] += reward
+        #endwhile
+        #calculate_error(errors, episode, checkpoint, V, ground_truth)
+    #endfor
+    return Q, rewards
+
+
 def draw_arrow(Q, width=6, height=3):
     np.set_printoptions(suppress=True)
-    print(np.round(Q, 3))
+    #print(np.round(Q, 3))
     for i in range(Q.shape[0]):
         for j in range(Q.shape[1]):
             if (Q[i,j] == 0):
@@ -193,19 +196,27 @@ def draw_arrow(Q, width=6, height=3):
             print("")
 
 
-import Data_FrozenLake3 as dfl3
+import Data_FrozenLake2 as dfl2
+import Data_Cliff as dc
 import matplotlib.pyplot as plt
 
 if __name__=="__main__":
-    env = dfl3.Data_FrozenLake_Env()
-    episodes = 200
-    Q1,R1 = Saras(env, False, episodes, 0.01, 0.9, None, 10)
-    Q2,R2 = Q_Learning(env, False, episodes, 0.01, 0.9, None, 10)
+    env = dfl2.Env()
+    episodes = 10000
+    Q1,R1 = Sarsa(env, True, episodes, 0.01, 0.9, None, 10)
+    Q2,R2 = Q_Learning(env, True, episodes, 0.01, 0.9, None, 10)
+    Q3,R3 = E_Sarsa(env, True, episodes, 0.01, 0.9, None, 10)
+    
+    
+    # draw_arrow(Q1)
+    # print("-"*20)
+    
     print("Saras")
-    draw_arrow(Q1)
-    print("-"*20)
+    draw_arrow(Q1, width=4)
     print("Q-learning")
-    draw_arrow(Q2)
+    draw_arrow(Q2, width=4)
+    print("E-Sarsa")
+    draw_arrow(Q3, width=4)
     #plt.plot(R1, label="Saras")
     #plt.plot(R2, label="Q_ln")
     #plt.show()

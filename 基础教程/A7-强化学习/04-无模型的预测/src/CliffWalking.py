@@ -4,7 +4,7 @@ import Data_Cliff as data_cliff
 if __name__=="__main__":
     env = data_cliff.Env()
     episodes = 10000
-    Q1,R1 = algoTD.Saras(env, True, episodes, 0.01, 0.9, None, 10)
+    Q1,R1 = algoTD.Sarsa(env, True, episodes, 0.01, 0.9, None, 10)
     Q2,R2 = algoTD.Q_Learning(env, True, episodes, 0.01, 0.9, None, 10)
     #print(Q1)
     #print(Q2)

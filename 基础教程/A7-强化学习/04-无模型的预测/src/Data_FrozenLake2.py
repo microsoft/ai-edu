@@ -148,7 +148,7 @@ P={
 }
 
 
-class Data_FrozenLake_Env(object):
+class Env(object):
     def __init__(self):
         self.state_space = len(States)
         self.action_space = 4

@@ -7,7 +7,7 @@ import Data_FrozenLake2 as dfl2
 if __name__=="__main__":
 
     env = dfl2.Data_FrozenLake_Env()
-    Q = algoTD.Saras(env, False, 10000, 0.01, 0.9, None, 10)
+    Q,_ = algoTD.Sarsa(env, False, 10000, 0.01, 0.9, None, 10)
     np.set_printoptions(suppress=True)
     print(np.round(Q, 3))
     for i in range(Q.shape[0]):

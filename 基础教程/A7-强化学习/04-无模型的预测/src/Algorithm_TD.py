@@ -1,6 +1,4 @@
 import tqdm
-import multiprocessing as mp
-import math
 import numpy as np
 
 
@@ -79,48 +77,135 @@ def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, 
     return V, errors
 
 
-def Saras(env, from_start, episodes, alpha, gamma, ground_truth, checkpoint):
+# test
+def test():
+    Q = np.array([0,-1,0,-2,0,-1])
+    actions = [1,3,5]
+    q = Q[actions]
+    print(q)
+    b = np.argwhere(q == np.max(q))
+    idx = np.random.choice(b.flatten())
+    action = actions[idx]
+    print(action)
+    assert(action == 1 or action == 5)
+
+def Saras(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
     def policy(Q, state, env):
-        actions = env.get_actions(state)
+        # 获得该状态下所有可能的action
+        available_actions = env.get_actions(state)
+        # e-贪心策略
         if np.random.rand() < 0.1:
-            action = np.random.choice(actions)
+            action = np.random.choice(available_actions)
         else:
-            q_values = Q[state]
-            action = np.random.choice([a for a,v in enumerate(q_values) if (v == np.max(q_values))])
+            # 取到与action对应的Q-values
+            # e.g. Q[state]=[1,2,3,4]时，actions=[1,2,3], 则q_values=[2,3]
+            q_values = Q[state][available_actions]
+            # 得到q_values里的最大值的序号列表，有可能是多个
+            # 如q_values=[-1,-2,-1], 则b=[0,2]
+            b = np.argwhere(q_values == np.max(q_values))
+            # 任意选一个,idx=0 or 2
+            idx = np.random.choice(b.flatten())
+            # 如果b=[0,2], 则action = 1 or 3
+            action = available_actions[idx]
         return action
 
 
     Q = np.zeros((env.state_space, env.action_space))
-    errors = []
-
-    for episode in range(episodes):
-        #print("-----------------")
+    rewards = np.zeros(episodes)
+    for episode in tqdm.trange(episodes):
         curr_state = env.reset(from_start)
         actions = env.get_actions(curr_state)
         # put your policy here
         curr_action = np.random.choice(actions)
         is_done = False
-        tmp = []
-        
         while not is_done:   # 到达终点，结束一幕
-            tmp.append(curr_state)
             prob, next_state, reward, is_done = env.step(curr_state, curr_action)
-            #print(curr_state, next_state, reward)
             next_action = policy(Q, next_state, env)
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma Q(s',a') - Q(s,a)]
-            delta = reward + gamma * Q[next_state, next_action] - Q[curr_state, curr_action]
-            Q[curr_state, curr_action] += alpha * delta
+            delta = reward + GAMMA * Q[next_state, next_action] - Q[curr_state, curr_action]
+            Q[curr_state, curr_action] += ALPHA * delta
             curr_state = next_state
             curr_action = next_action
-            #endif
+            
+            rewards[episode] += reward
         #endwhile
         #calculate_error(errors, episode, checkpoint, V, ground_truth)
     #endfor
-    return Q
+    return Q, rewards
 
-import Data_FrozenLake2 as dfl2
+def Q_Learning(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
+    def policy(Q, state, env):
+        # 获得该状态下所有可能的action
+        available_actions = env.get_actions(state)
+        if np.random.rand() < 0.1:
+            action = np.random.choice(available_actions)
+        else:
+            # 取到与action对应的Q-values
+            # e.g. Q[state]=[1,2,3,4]时，actions=[1,2,3], 则q_values=[2,3]
+            q_values = Q[state][available_actions]
+            # 得到q_values里的最大值的序号列表，有可能是多个
+            # 如q_values=[-1,-2,-1], 则b=[0,2]
+            b = np.argwhere(q_values == np.max(q_values))
+            # 任意选一个,idx=0 or 2
+            idx = np.random.choice(b.flatten())
+            # 如果b=[0,2], 则action = 1 or 3
+            action = available_actions[idx]
+        return action
+
+
+    Q = np.zeros((env.state_space, env.action_space))
+    rewards = np.zeros(episodes)
+    for episode in tqdm.trange(episodes):
+        curr_state = env.reset(from_start)
+        is_done = False
+        while not is_done:   # 到达终点，结束一幕
+            curr_action = policy(Q, curr_state, env)
+            prob, next_state, reward, is_done = env.step(curr_state, curr_action)
+            # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma \max_a Q(s',a) - Q(s,a)]
+            available_actions = env.get_actions(next_state)
+            delta = reward + GAMMA * np.max(Q[next_state][available_actions]) - Q[curr_state, curr_action]
+            Q[curr_state, curr_action] += ALPHA * delta
+            curr_state = next_state
+            
+            rewards[episode] += reward
+        #endwhile
+        #calculate_error(errors, episode, checkpoint, V, ground_truth)
+    #endfor
+    return Q, rewards
+
+def draw_arrow(Q, width=6, height=3):
+    np.set_printoptions(suppress=True)
+    print(np.round(Q, 3))
+    for i in range(Q.shape[0]):
+        for j in range(Q.shape[1]):
+            if (Q[i,j] == 0):
+                Q[i,j]=-10
+
+    chars = [0x2191, 0x2192, 0x2193, 0x2190]
+    for i in range(Q.shape[0]):
+        if np.sum(Q[i,:]) == -40:
+            print("O", end="")
+        else:
+            idx = np.argmax(Q[i,:])
+            print(chr(chars[idx]), end="")
+        print(" ", end="")
+        if ((i+1) % width == 0):
+            print("")
+
+
+import Data_FrozenLake3 as dfl3
+import matplotlib.pyplot as plt
 
 if __name__=="__main__":
-    env = dfl2.Data_FrozenLake_Env()
-    Q = Saras(env, True, 1000, 0.01, 0.9, None, 10)
-    print(Q)
+    env = dfl3.Data_FrozenLake_Env()
+    episodes = 200
+    Q1,R1 = Saras(env, False, episodes, 0.01, 0.9, None, 10)
+    Q2,R2 = Q_Learning(env, False, episodes, 0.01, 0.9, None, 10)
+    print("Saras")
+    draw_arrow(Q1)
+    print("-"*20)
+    print("Q-learning")
+    draw_arrow(Q2)
+    #plt.plot(R1, label="Saras")
+    #plt.plot(R2, label="Q_ln")
+    #plt.show()

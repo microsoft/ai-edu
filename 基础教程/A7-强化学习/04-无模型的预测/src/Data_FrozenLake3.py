@@ -11,7 +11,7 @@ class States(Enum):
     Safe5 = 5
     Safe6 = 6
     Safe7 = 7
-    Hole8 = 8
+    Safe8 = 8
     Safe9 = 9
     Hole10 = 10
     Safe11 = 11
@@ -75,8 +75,8 @@ P={
     },
     States.Safe4.value:{
         Actions.UP.value:   [(Probs.Left.value, 4,  0.0, False), (Probs.Front.value, 0,  0.0, False), (Probs.Right.value, 5,  0.0, False)],
-        Actions.RIGHT.value:[(Probs.Left.value, 0,  0.0, False), (Probs.Front.value, 5,  0.0, False), (Probs.Right.value, 8, Hole,  True)],
-        Actions.DOWN.value: [(Probs.Left.value, 5,  0.0, False), (Probs.Front.value, 8, Hole,  True), (Probs.Right.value, 4,  0.0, False)],
+        Actions.RIGHT.value:[(Probs.Left.value, 0,  0.0, False), (Probs.Front.value, 5,  0.0, False), (Probs.Right.value, 8,  0.0, False)],
+        Actions.DOWN.value: [(Probs.Left.value, 5,  0.0, False), (Probs.Front.value, 8,  0.0, False), (Probs.Right.value, 4,  0.0, False)],
         #Actions.LEFT.value: [(Probs.Left.value, 8, Hole,  True), (Probs.Front.value, 4,  0.0, False), (Probs.Right.value, 0,  0.0, False)]
     },
     States.Safe5.value:{
@@ -97,16 +97,16 @@ P={
         Actions.DOWN.value: [(Probs.Left.value, 7,  0.0, False), (Probs.Front.value,11,  0.0, False), (Probs.Right.value, 6,  0.0, False)],
         Actions.LEFT.value: [(Probs.Left.value,11,  0.0, False), (Probs.Front.value, 6,  0.0, False), (Probs.Right.value, 3,  0.0, False)]
     },
-    States.Hole8.value:{
-        Actions.UP.value:   [(Probs.All.value, 8,  0.0, True)],
-        Actions.RIGHT.value:[(Probs.All.value, 8,  0.0, True)],
-        Actions.DOWN.value: [(Probs.All.value, 8,  0.0, True)],
-        Actions.LEFT.value: [(Probs.All.value, 8,  0.0, True)]
+    States.Safe8.value:{
+        Actions.UP.value:   [(Probs.Left.value, 8,  0.0, False), (Probs.Front.value, 4,  0.0, False), (Probs.Right.value, 9,  0.0, False)],
+        Actions.RIGHT.value:[(Probs.Left.value, 4,  0.0, False), (Probs.Front.value, 9,  0.0, False), (Probs.Right.value, 12, 0.0, False)],
+        Actions.DOWN.value: [(Probs.Left.value, 9,  0.0, False), (Probs.Front.value, 12, 0.0, False), (Probs.Right.value, 8,  0.0, False)],
+        #Actions.LEFT.value: [(Probs.Left.value, 8, Hole,  True), (Probs.Front.value, 4,  0.0, False), (Probs.Right.value, 0,  0.0, False)]
     },
     States.Safe9.value:{
-        Actions.UP.value:   [(Probs.Left.value, 8, Hole,  True), (Probs.Front.value, 5,  0.0, False), (Probs.Right.value, 10, Hole,  True)],
+        Actions.UP.value:   [(Probs.Left.value, 8,  0.0, False), (Probs.Front.value, 5,  0.0, False), (Probs.Right.value, 10, Hole,  True)],
         Actions.RIGHT.value:[(Probs.Left.value, 5,  0.0, False), (Probs.Front.value,10, Hole,  True), (Probs.Right.value, 13,  0.0, False)],
-        Actions.DOWN.value: [(Probs.Left.value,10, Hole,  True), (Probs.Front.value,13,  0.0, False), (Probs.Right.value, 8,  Hole,  True)],
+        Actions.DOWN.value: [(Probs.Left.value,10, Hole,  True), (Probs.Front.value,13,  0.0, False), (Probs.Right.value, 8,   0.0, False)],
         Actions.LEFT.value: [(Probs.Left.value,13,  0.0, False), (Probs.Front.value, 8, Hole,  True), (Probs.Right.value, 5,   0.0, False)]
     },
     States.Hole10.value:{
@@ -122,8 +122,8 @@ P={
         Actions.LEFT.value: [(Probs.Left.value, 15, Goal,  True), (Probs.Front.value, 10, Hole,  True), (Probs.Right.value,  7,  0.0, False)]
     },
     States.Safe12.value:{
-        Actions.UP.value:   [(Probs.Left.value, 12,  0.0, False), (Probs.Front.value,  8, Hole,  True), (Probs.Right.value, 13,  0.0, False)],
-        Actions.RIGHT.value:[(Probs.Left.value,  8, Hole,  True), (Probs.Front.value, 13,  0.0, False), (Probs.Right.value, 12,  0.0, False)],
+        Actions.UP.value:   [(Probs.Left.value, 12,  0.0, False), (Probs.Front.value,  8,  0.0, False), (Probs.Right.value, 13,  0.0, False)],
+        Actions.RIGHT.value:[(Probs.Left.value,  8,  0.0, False), (Probs.Front.value, 13,  0.0, False), (Probs.Right.value, 12,  0.0, False)],
         #Actions.DOWN.value: [(Probs.Left.value, 13,  0.0, False), (Probs.Front.value, 12,  0.0, False), (Probs.Right.value, 12,  0.0, False)],
         #Actions.LEFT.value: [(Probs.Left.value, 12,  0.0, False), (Probs.Front.value, 12,  0.0, False), (Probs.Right.value,  8, Hole,  True)]
     },

@@ -11,6 +11,11 @@ def calculate_error(errors, episode, every_n_episode, V, ground_truth):
         err = RMSE(V, ground_truth)
         errors.append(err)
 
+def calculate_error_Q(env, errors, episode, checkpoint, Q):
+    if ((episode+1) % checkpoint == 0):
+        err = env.RMSE(Q)
+        errors.append(err)
+
 
 def TD_0(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
     V = np.zeros((ds.num_states))
@@ -89,11 +94,11 @@ def test():
     print(action)
     assert(action == 1 or action == 5)
 
-def choose_action(Q, state, env):
+def choose_action(Q, state, env, EPSILON):
     # 获得该状态下所有可能的action
     available_actions = env.get_actions(state)
     # e-贪心策略
-    if np.random.rand() < 0.1:
+    if np.random.rand() < EPSILON:
         action = np.random.choice(available_actions)
     else:
         # 取到与action对应的Q-values
@@ -108,75 +113,80 @@ def choose_action(Q, state, env):
         action = available_actions[idx]
     return action
 
-
-def Sarsa(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
+def Sarsa(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
     Q = np.zeros((env.state_space, env.action_space))
-    rewards = np.zeros(episodes)
+    errors = []
     for episode in tqdm.trange(episodes):
         curr_state = env.reset(from_start)
-        curr_action = choose_action(Q, curr_state, env)
+        curr_action = choose_action(Q, curr_state, env, EPSILON)
         is_done = False
         while not is_done:   # 到达终点，结束一幕
             prob, next_state, reward, is_done = env.step(curr_state, curr_action)
-            next_action = choose_action(Q, next_state, env)
+            next_action = choose_action(Q, next_state, env, EPSILON)
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma Q(s',a') - Q(s,a)]
             delta = reward + GAMMA * Q[next_state, next_action] - Q[curr_state, curr_action]
             Q[curr_state, curr_action] += ALPHA * delta
             curr_state = next_state
             curr_action = next_action
-            
-            rewards[episode] += reward
         #endwhile
-        #calculate_error(errors, episode, checkpoint, V, ground_truth)
     #endfor
-    return Q, rewards
+    return Q, errors
 
 
-def Q_Learning(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
+def Q_Learning(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
     Q = np.zeros((env.state_space, env.action_space))
-    rewards = np.zeros(episodes)
+    errors = []
     for episode in tqdm.trange(episodes):
         curr_state = env.reset(from_start)
         is_done = False
         while not is_done:   # 到达终点，结束一幕
-            curr_action = choose_action(Q, curr_state, env)
+            curr_action = choose_action(Q, curr_state, env, EPSILON)
             prob, next_state, reward, is_done = env.step(curr_state, curr_action)
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma \max_a Q(s',a) - Q(s,a)]
             available_actions = env.get_actions(next_state)
+            # 因为有的动作缺失，比如边角状态不是具有上下左右四个动作
+            # 缺失的动作的Q值被初始化为0，且保持不变
+            # 其它具备的动作的Q值很可能是负值（因为R为负)，所0成为max，要避免这种情况
             delta = reward + GAMMA * np.max(Q[next_state][available_actions]) - Q[curr_state, curr_action]
             Q[curr_state, curr_action] += ALPHA * delta
             curr_state = next_state
-            
-            rewards[episode] += reward
         #endwhile
-        #calculate_error(errors, episode, checkpoint, V, ground_truth)
+        #calculate_error_Q(env, errors, episode, checkpoint, Q)
     #endfor
-    return Q, rewards
+    return Q, errors
 
 
-def E_Sarsa(env, from_start, episodes, ALPHA, GAMMA, ground_truth, checkpoint):
+def E_Sarsa(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
+
+    def E_pi():
+        available_actions = env.get_actions(next_state)
+        q_actions = Q[next_state][available_actions]
+        return np.sum(q_actions) / len(available_actions)
+        best_action = np.argmax(q_actions)
+        q_expected = (1 - EPSILON) * Q[next_state, best_action] + \
+                     EPSILON * np.sum(q_actions) / len(available_actions)
+        return q_expected
+
+
     Q = np.zeros((env.state_space, env.action_space))
-    rewards = np.zeros(episodes)
+    steps = []
     for episode in tqdm.trange(episodes):
         curr_state = env.reset(from_start)
         is_done = False
         while not is_done:   # 到达终点，结束一幕
-            curr_action = choose_action(Q, curr_state, env)
+            curr_action = choose_action(Q, curr_state, env, EPSILON)
             prob, next_state, reward, is_done = env.step(curr_state, curr_action)
             # math: Q(s,a) \leftarrow Q(s,a) + \alpha[R + \gamma \sum \pi(a|s')*Q(s',a) - Q(s,a)]
-            available_actions = env.get_actions(next_state)
-            target = np.sum(Q[next_state][available_actions]) / len(available_actions)
-            Q[curr_state, curr_action] += ALPHA * (reward + GAMMA * target - Q[curr_state, curr_action])
+            q_expected = E_pi()
+            Q[curr_state, curr_action] += ALPHA * (reward + GAMMA * q_expected - Q[curr_state, curr_action])
             curr_state = next_state
-            
-            rewards[episode] += reward
         #endwhile
-        #calculate_error(errors, episode, checkpoint, V, ground_truth)
+        #calculate_error_Q(env, errors, episode, checkpoint, Q)
     #endfor
-    return Q, rewards
+    return Q, steps
 
 
-def draw_arrow(Q, width=6, height=3):
+def draw_arrow(Q, width=6):
     np.set_printoptions(suppress=True)
     #print(np.round(Q, 3))
     for i in range(Q.shape[0]):
@@ -197,26 +207,43 @@ def draw_arrow(Q, width=6, height=3):
 
 
 import Data_FrozenLake2 as dfl2
-import Data_Cliff as dc
+import Data_CliffWalking as dc
 import matplotlib.pyplot as plt
 
 if __name__=="__main__":
-    env = dfl2.Env()
+    env = dc.Env()
     episodes = 10000
-    Q1,R1 = Sarsa(env, True, episodes, 0.01, 0.9, None, 10)
-    Q2,R2 = Q_Learning(env, True, episodes, 0.01, 0.9, None, 10)
-    Q3,R3 = E_Sarsa(env, True, episodes, 0.01, 0.9, None, 10)
+    EPSILON = 0.1
+    GAMMA = 1
+    ALPHA = 0.1
+    repeat = 1
+    Errors1 = []
+    Errors2 = []
+    Errors3 = []
+    for i in range(repeat):
+        Q1, errors1 = Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+        Q2, errors2 = Q_Learning(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+        Q3, errors3 = E_Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+        Errors1.append(errors1)
+        Errors2.append(errors2)
+        Errors3.append(errors3)
     
+    mean_errors1 = np.mean(np.array(Errors1), axis=0) 
+    mean_errors2 = np.mean(np.array(Errors2), axis=0) 
+    mean_errors3 = np.mean(np.array(Errors3), axis=0) 
     
-    # draw_arrow(Q1)
-    # print("-"*20)
-    
+    print("-"*20)
     print("Saras")
-    draw_arrow(Q1, width=4)
+    draw_arrow(Q1, width=6)
+    print("-"*20)
     print("Q-learning")
-    draw_arrow(Q2, width=4)
+    draw_arrow(Q2, width=6)
+    print("-"*20)
     print("E-Sarsa")
-    draw_arrow(Q3, width=4)
-    #plt.plot(R1, label="Saras")
-    #plt.plot(R2, label="Q_ln")
-    #plt.show()
+    draw_arrow(Q3, width=6)
+    exit(0)
+    plt.plot(mean_errors1, label="Saras")
+    plt.plot(mean_errors2, label="Q-le")
+    plt.plot(mean_errors3, label="E-Saras")
+    plt.legend()
+    plt.show()

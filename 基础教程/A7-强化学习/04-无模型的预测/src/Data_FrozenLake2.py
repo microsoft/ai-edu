@@ -148,6 +148,13 @@ P={
 }
 
 
+ground_truth = np.array([
+    Actions.DOWN.value,  Actions.LEFT.value,                   -1, Actions.DOWN.value,
+    Actions.RIGHT.value, Actions.RIGHT.value, Actions.RIGHT.value, Actions.DOWN.value,
+                     -1, Actions.DOWN.value,                   -1, Actions.DOWN.value,
+    Actions.RIGHT.value, Actions.RIGHT.value, Actions.RIGHT.value,                 -1
+])
+
 class Env(object):
     def __init__(self):
         self.state_space = len(States)
@@ -155,6 +162,7 @@ class Env(object):
         self.P = P
         self.States = States
         self.transition = np.array([Probs.Left.value, Probs.Front.value, Probs.Right.value])
+        self.ground_truth = ground_truth
 
     def reset(self, from_start = True):
         if (from_start):
@@ -175,9 +183,19 @@ class Env(object):
             idx = np.random.choice(3, p=self.transition)
             return self.P[curr_state][action][idx]
 
+    def RMSE(self, value):
+        v = value.copy()
+        v[v == 0] = -10
+        d = np.argmax(v, axis=1)
+        d[2] = d[8] = d[10] = d[15] = -1
+        return RMSE(d, self.ground_truth)
+
+def RMSE(a, b):
+    err = np.sqrt(np.sum(np.square(a - b))/b.shape[0])
+    return err
 
 if __name__=="__main__":
-    env = Data_FrozenLake_Env()
+    env = Env()
     done = False
     curr_state_value = env.reset(from_start=True)
     while not done:

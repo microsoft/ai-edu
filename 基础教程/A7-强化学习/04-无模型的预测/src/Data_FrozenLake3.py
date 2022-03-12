@@ -5,11 +5,11 @@ from enum import Enum
 class States(Enum):
     Start = 0
     Safe1 = 1
-    Hole2 = 2
+    Safe2 = 2
     Safe3 = 3
     Safe4 = 4
     Safe5 = 5
-    Safe6 = 6
+    Hole6 = 6
     Safe7 = 7
     Safe8 = 8
     Safe9 = 9
@@ -61,11 +61,10 @@ P={
         Actions.DOWN.value: [(Probs.Left.value, 2, Hole,  True), (Probs.Front.value, 5,  0.0, False), (Probs.Right.value, 0,  0.0, False)],
         Actions.LEFT.value: [(Probs.Left.value, 5,  0.0, False), (Probs.Front.value, 0,  0.0, False), (Probs.Right.value, 1,  0.0, False)]
     },
-    States.Hole2.value:{
-        Actions.UP.value:   [(Probs.All.value, 2,  0.0, True)],
-        Actions.RIGHT.value:[(Probs.All.value, 2,  0.0, True)],
-        Actions.DOWN.value: [(Probs.All.value, 2,  0.0, True)],
-        Actions.LEFT.value: [(Probs.All.value, 2,  0.0, True)]
+    States.Safe2.value:{
+        Actions.RIGHT.value:[(Probs.Left.value, 2,  0.0, False), (Probs.Front.value, 3,  0.0, False), (Probs.Right.value, 6, Hole,  True)],
+        Actions.DOWN.value: [(Probs.Left.value, 3,  0.0, False), (Probs.Front.value, 6, Hole,  True), (Probs.Right.value, 1,  0.0, False)],
+        Actions.LEFT.value: [(Probs.Left.value, 6, Hole,  True), (Probs.Front.value, 1,  0.0, False), (Probs.Right.value, 2,  0.0, False)]
     },
     States.Safe3.value:{
         #Actions.UP.value:   [(Probs.Left.value, 2, Hole,  True), (Probs.Front.value, 3,  0.0, False), (Probs.Right.value, 3,  0.0, False)],

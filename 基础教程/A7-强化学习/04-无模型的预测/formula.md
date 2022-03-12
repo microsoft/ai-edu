@@ -129,3 +129,20 @@ $$
 $$
 Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1},A_{t+1}) - Q(S_t,A_t)]
 $$
+
+$$
+Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma \max_a Q(S_{t+1},a) - Q(S_t,A_t)]
+$$
+
+
+$$
+V(S_t) \leftarrow V(S_t) + \alpha [R_{t+1} + \gamma V(S_{t+1})-V(S_t)]
+$$
+
+$$
+\begin{aligned}
+Q(S_t,A_t) & \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma \mathbb{E}[Q(S_{t+1},A_{t+1})|S_{t+1}] - Q(S_t,A_t)]
+\\
+& \leftarrow Q(S_t,A_t) + \alpha [R_{t+1} + \gamma \sum_a \pi (a|S_{t+1}) Q(S_{t+1},a) - Q(S_t,A_t)]
+\end{aligned}
+$$

@@ -1,6 +1,8 @@
 import numpy as np
 
 # state value function
+# Pi_sa: 策略函数，用于选择动作
+# P_as: 状态转移概率，执行动作后，到达下个状态的概率
 def V_star(States, Pi_sa, P_as, Rewards, gamma):
     num_state = len(States)
     V_curr = [0.0] * num_state

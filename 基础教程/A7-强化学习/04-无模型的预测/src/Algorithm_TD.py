@@ -1,6 +1,6 @@
 import tqdm
 import numpy as np
-
+import random
 
 def RMSE(a, b):
     err = np.sqrt(np.sum(np.square(a - b))/b.shape[0])
@@ -186,6 +186,34 @@ def E_Sarsa(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
     return Q, steps
 
 
+def Double_Q(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
+    Q1 = np.zeros((env.state_space, env.action_space))
+    Q2 = np.zeros((env.state_space, env.action_space))
+    errors = []
+    for episode in tqdm.trange(episodes):
+        curr_state = env.reset(from_start)
+        is_done = False
+        while not is_done:   # 到达终点，结束一幕
+            Q = Q1 + Q2
+            curr_action = choose_action(Q, curr_state, env, EPSILON)
+            prob, next_state, reward, is_done = env.step(curr_state, curr_action)
+            available_actions = env.get_actions(next_state)
+            if (random.random() > 0.5):
+                action_id = np.argmax(Q1[next_state][available_actions])
+                q1_max_action = available_actions[action_id]
+                Q1[curr_state, curr_action] += ALPHA * (reward + GAMMA * Q2[next_state, q1_max_action] - Q1[curr_state, curr_action])
+            else:
+                action_id = np.argmax(Q2[next_state][available_actions])
+                q2_max_action = available_actions[action_id]
+                Q2[curr_state, curr_action] += ALPHA * (reward + GAMMA * Q1[next_state, q2_max_action] - Q2[curr_state, curr_action])
+            #endif
+            curr_state = next_state
+        #endwhile
+        #calculate_error_Q(env, errors, episode, checkpoint, Q)
+    #endfor
+    return Q, errors
+
+
 def draw_arrow(Q, width=6):
     np.set_printoptions(suppress=True)
     #print(np.round(Q, 3))
@@ -212,35 +240,16 @@ import matplotlib.pyplot as plt
 
 if __name__=="__main__":
     env = dc.Env()
-    episodes = 10000
+    episodes = 1000
     EPSILON = 0.1
     GAMMA = 1
     ALPHA = 0.1
-    repeat = 1
-    Errors1 = []
-    Errors2 = []
-    Errors3 = []
-    for i in range(repeat):
-        Q1, errors1 = Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
-        Q2, errors2 = Q_Learning(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
-        Q3, errors3 = E_Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
-        Errors1.append(errors1)
-        Errors2.append(errors2)
-        Errors3.append(errors3)
-    
-    mean_errors1 = np.mean(np.array(Errors1), axis=0) 
-    mean_errors2 = np.mean(np.array(Errors2), axis=0) 
-    mean_errors3 = np.mean(np.array(Errors3), axis=0) 
-    
-    print("-"*20)
-    print("Saras")
-    draw_arrow(Q1, width=6)
-    print("-"*20)
-    print("Q-learning")
-    draw_arrow(Q2, width=6)
-    print("-"*20)
-    print("E-Sarsa")
-    draw_arrow(Q3, width=6)
+
+    Q4, errors4 = Double_Q(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+
+
+    print("Double-Q")
+    draw_arrow(Q4, width=6)
     exit(0)
     plt.plot(mean_errors1, label="Saras")
     plt.plot(mean_errors2, label="Q-le")

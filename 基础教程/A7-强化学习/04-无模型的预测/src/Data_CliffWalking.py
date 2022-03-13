@@ -31,6 +31,7 @@ class States(Enum):
     Dead22 = 22
     Goal = 23
 
+end_states = [States.Dead19, States.Dead20, States.Dead21, States.Dead22, States.Goal]
 
 # 动作 对于方格有4个动作
 class Actions(Enum):
@@ -182,6 +183,7 @@ class Env(object):
         self.action_space = 4
         self.P = P
         self.States = States
+        self.EndStates = end_states
         self.transition = np.array([1.0])
 
     def reset(self, from_start = True):

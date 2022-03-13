@@ -20,6 +20,8 @@ class States(Enum):
     Safe14 = 14
     Goal15 = 15
     
+end_states = [States.Hole2, States.Hole8, States.Hole10, States.Goal15]
+
 
 # 动作 对于方格有4个动作
 class Actions(Enum):
@@ -161,6 +163,7 @@ class Env(object):
         self.action_space = 4
         self.P = P
         self.States = States
+        self.EndStates = end_states
         self.transition = np.array([Probs.Left.value, Probs.Front.value, Probs.Right.value])
         self.ground_truth = ground_truth
 
@@ -196,6 +199,7 @@ def RMSE(a, b):
 
 if __name__=="__main__":
     env = Env()
+    
     done = False
     curr_state_value = env.reset(from_start=True)
     while not done:

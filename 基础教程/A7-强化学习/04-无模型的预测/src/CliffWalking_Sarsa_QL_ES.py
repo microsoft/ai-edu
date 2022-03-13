@@ -1,6 +1,7 @@
 import Algorithm_TD as algoTD
 import Data_CliffWalking as data_cliff
 import multiprocessing as mp
+import numpy as np
 
 def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, checkpoint):
     print(algo_fun)
@@ -35,8 +36,8 @@ def MultipleProcess(repeat, algo_fun, ds, start_state, episodes, alpha, gamma, c
     print(np.round(final_mean_value,2).reshape(4,4))
 
     # 多次运行的平均值误差
-    final_mean_value_error = RMSE(final_mean_value, ground_truth)
-    print("多次运行的平均值的误差:", final_mean_value_error)
+    #final_mean_value_error = RMSE(final_mean_value, ground_truth)
+    #print("多次运行的平均值的误差:", final_mean_value_error)
 
     # 得到多次运行的最终的误差
     final_errors = np.array(Errors)[:,-1]
@@ -85,9 +86,9 @@ if __name__=="__main__":
     Errors2 = []
     Errors3 = []
     for i in range(repeat):
-        Q1, errors1 = Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
-        Q2, errors2 = Q_Learning(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
-        Q3, errors3 = E_Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+        Q1, errors1 = algoTD.Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+        Q2, errors2 = algoTD.Q_Learning(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+        Q3, errors3 = algoTD.E_Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
         Errors1.append(errors1)
         Errors2.append(errors2)
         Errors3.append(errors3)

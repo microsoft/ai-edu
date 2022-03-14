@@ -100,6 +100,10 @@ V(s)=R_s + \gamma \sum_{s' \in S} Pss' \cdot V(s')
 $$
 
 $$
+R_s = p_1 R_{s_1} + p_2 R_{s_1} + p_3 R_{s_1} = \sum_{s' \in S} P_{ss'} \cdot R_{s'}
+$$
+
+$$
 V(s)=R_s + \gamma * [p_1V(s'_1) + p_2V(s'_2) + p_3V(s'_3)]
 $$
 
@@ -178,13 +182,12 @@ $$
 q_{\pi}(s,a)=\mathbb E_{\pi} [G_t | S_t=s, A_t=a]
 $$
 
+$$
+R_s^a=p_1 \cdot R_{sa_1} + p_2 \cdot R_{sa_2} = \sum_{s' \in S} P^a_{ss'} R_{s'}
+$$
 
 $$
-\begin{aligned}
-q_{\pi}(s,a)&=R_s^a + \gamma \sum_{s' \in S} P^a_{ss'} v_{\pi}(s')
-\\
-&= R_s^a + \gamma [P_1 v_{\pi}(s'_1)+P_2 v_{\pi}(s'_2)]
-\end{aligned}
+q_{\pi}(s,a) = R_s^a + \gamma [p_1 v_{\pi}(s'_1)+p_2 v_{\pi}(s'_2)] =  R_s^a + \gamma \sum_{s' \in S} P^a_{ss'} v_{\pi}(s')
 $$
 
 $$

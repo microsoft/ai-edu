@@ -52,6 +52,7 @@ SAFE = 0.0
 
 P={
     States.Start.value:{
+        # action :[(状态转移概率, 下一个状态, 奖励值, 是否达到终点),()]
         #Actions.UP.value:   [(Probs.Left.value, 0,  0.0, False), (Probs.Front.value, 0,  0.0, False), (Probs.Right.value, 1,  0.0, False)],
         Actions.RIGHT.value:[(Probs.Left.value, 0,  0.0, False), (Probs.Front.value, 1,  0.0, False), (Probs.Right.value, 4,  0.0, False)],
         Actions.DOWN.value: [(Probs.Left.value, 1,  0.0, False), (Probs.Front.value, 4,  0.0, False), (Probs.Right.value, 0,  0.0, False)],

@@ -89,14 +89,14 @@ def draw_arrow(Q, width=4):
 import Data_FrozenLake2 as dfl2
 import Data_CliffWalking as dcw
 
-#env = dfl2.Env()
-env = dcw.Env()
-gamma = 1
+env = dfl2.Env()
+#env = dcw.Env()
+gamma = 0.9
 Q = Q_star(env, gamma)
 print("Q*")
 print(Q)
-draw_arrow(Q, width=6)
+draw_arrow(Q, width=4)
 
 V = V_star(env, gamma)
 print("V*")
-print(V.reshape(4,6))
+print(V.reshape(4,4))

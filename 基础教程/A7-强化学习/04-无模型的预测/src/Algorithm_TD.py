@@ -113,6 +113,21 @@ def choose_action(Q, state, env, EPSILON):
         action = available_actions[idx]
     return action
 
+def choose_action_wrong(Q, state, env, EPSILON):
+    # 获得该状态下所有可能的action
+    available_actions = env.get_actions(state)
+    # e-贪心策略
+    if np.random.rand() < EPSILON:
+        action = np.random.choice(available_actions)
+    else:
+        # 取到与action对应的Q-values
+        # e.g. Q[state]=[1,2,3,4]时，actions=[1,2,3], 则q_values=[2,3]
+        q_values = Q[state][available_actions]
+        idx = np.argmax(q_values)
+        action = available_actions[idx]
+    return action
+
+
 def Sarsa(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
     Q = np.zeros((env.state_space, env.action_space))
     errors = []
@@ -166,7 +181,6 @@ def E_Sarsa(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
         q_expected = (1 - EPSILON) * Q[next_state, best_action] + \
                      EPSILON * np.sum(q_actions) / len(available_actions)
         return q_expected
-
 
     Q = np.zeros((env.state_space, env.action_space))
     steps = []
@@ -240,12 +254,12 @@ import matplotlib.pyplot as plt
 
 if __name__=="__main__":
     env = dc.Env()
-    episodes = 1000
+    episodes = 2000
     EPSILON = 0.1
     GAMMA = 1
     ALPHA = 0.1
 
-    Q4, errors4 = Double_Q(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
+    Q4, errors4 = Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
 
 
     print("Double-Q")

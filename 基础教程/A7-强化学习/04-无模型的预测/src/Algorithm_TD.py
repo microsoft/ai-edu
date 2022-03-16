@@ -228,6 +228,37 @@ def Double_Q(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
     return Q, errors
 
 
+def TD_n(ds, start_state, episodes, alpha, gamma, n_step):
+    V = np.zeros(ds.num_states)
+    for episode in tqdm.trange(episodes):
+        curr_state = start_state
+        t_states = [curr_state.value]
+        t_rewards = [0]
+        t = 0
+        start_t = 0
+        is_done = False
+        while not is_done:
+            t += 1
+            next_state, reward, is_done = ds.step(curr_state)
+            t_states.append(next_state.value)
+            t_rewards.append(reward)
+            curr_state = next_state
+            if (t >= n_step):
+                G = 0
+                for step in range(n_step):
+                    G += pow(gamma, step) * t_rewards[start_t + step + 1]
+                # end for
+                state_0 = t_states[start_t]
+                state_n = t_states[start_t + n_step]
+                G = G + pow(gamma, n_step) * V[state_n]
+                V[state_0] += alpha * (G - V[state_0])
+                start_t += 1
+            # end if
+        # end while
+    # end for
+    return V
+
+
 def draw_arrow(Q, width=6):
     np.set_printoptions(suppress=True)
     #print(np.round(Q, 3))
@@ -249,24 +280,31 @@ def draw_arrow(Q, width=6):
 
 
 import Data_FrozenLake2 as dfl2
+import Data_FrozenLake as dfl
 import Data_CliffWalking as dc
 import matplotlib.pyplot as plt
 
+import Algorithm_MRP as algoMRP
+
+def FrozenLake_Matrix(gamma):
+
+    num_state = ds.get_TransMatrix().shape[0]
+    I = np.eye(num_state)
+    tmp1 = I - gamma * ds.get_TransMatrix()
+    tmp2 = np.linalg.inv(tmp1)
+    vs = np.dot(tmp2, ds.Rewards)
+    return vs
+
+
 if __name__=="__main__":
-    env = dc.Env()
-    episodes = 2000
+    episodes = 1000
     EPSILON = 0.1
-    GAMMA = 1
-    ALPHA = 0.1
-
-    Q4, errors4 = Sarsa(env, True, episodes, ALPHA, GAMMA, EPSILON, 2)
-
-
-    print("Double-Q")
-    draw_arrow(Q4, width=6)
-    exit(0)
-    plt.plot(mean_errors1, label="Saras")
-    plt.plot(mean_errors2, label="Q-le")
-    plt.plot(mean_errors3, label="E-Saras")
-    plt.legend()
-    plt.show()
+    GAMMA = 0.9
+    ALPHA = 0.02
+    n_step = 1
+    ds = dfl.Data_Frozen_Lake()
+    ground_truth = FrozenLake_Matrix(GAMMA)
+    V = TD_0(ds, ds.get_start_state(), episodes, ALPHA, GAMMA, ground_truth, 10)
+    print(V.reshape(4,4))
+    V = TD_n(ds, ds.get_start_state(), episodes, ALPHA, GAMMA, n_step)
+    print(V.reshape(4,4))

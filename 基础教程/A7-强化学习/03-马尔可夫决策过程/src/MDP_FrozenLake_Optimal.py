@@ -12,7 +12,7 @@ def V_star(States, dataParser, gamma):
         for curr_state in States:
             list_v = []
             # 获得 状态->动作 策略概率
-            next_actions_datas = dataParser.get_next_actions(curr_state.value)
+            next_actions_datas = dataParser.get_next_actions(curr_state)
             for next_action_data in next_actions_datas:
                 next_action_value, next_action_prob, reward = dataParser.get_action_pi_reward(next_action_data)
 

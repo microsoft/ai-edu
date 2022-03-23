@@ -17,7 +17,7 @@ class States(Enum):
 # [Class1, Class2, Class3, Pass, Pub, Play, Sleep]
 Rewards = [-2, -2, -2, 10, 1, -1, 0]
 
-Matrix = np.array(
+TransMatrix = np.array(
     [   #Cl1  Cl2  Cl3  Pas  Pub  Ply  Slp
         [0.0, 0.5, 0.0, 0.0, 0.0, 0.5, 0.0], # Class1
         [0.0, 0.0, 0.8, 0.0, 0.0, 0.0, 0.2], # CLass2

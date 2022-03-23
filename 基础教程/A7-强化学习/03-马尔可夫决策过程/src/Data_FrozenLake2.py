@@ -193,7 +193,7 @@ P=[
 
 class DataParser(object):
     def get_next_actions(self, curr_state):
-        actions_data = P[curr_state]
+        actions_data = P[curr_state.value]
         return actions_data
 
     def get_action_pi_reward(self, action_data):

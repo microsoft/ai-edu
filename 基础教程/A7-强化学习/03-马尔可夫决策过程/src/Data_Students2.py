@@ -38,7 +38,7 @@ Pi_sa = np.array([
 ])
 
 # 动作->状态概率
-P_as = np.array([
+Pr_as = np.array([
     # A_Quit -> S_Class1
     [0, 0, 1, 0, 0],
     # A_Play1 -> S_Game

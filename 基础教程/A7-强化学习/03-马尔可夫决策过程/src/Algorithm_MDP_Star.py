@@ -1,6 +1,8 @@
 import numpy as np
 
 # state value function
+# Pi_sa: 策略函数，用于选择动作
+# P_as: 状态转移概率，执行动作后，到达下个状态的概率
 def V_star(States, Pi_sa, P_as, Rewards, gamma):
     num_state = len(States)
     V_curr = [0.0] * num_state
@@ -42,7 +44,7 @@ def V_star(States, Pi_sa, P_as, Rewards, gamma):
 
 # action value function
 def Q_star(Actions, Pi_sa, P_as, Rewards, gamma):
-    num_action = print(len(Actions))
+    num_action = len(Actions)
     Q_curr = [0.0] * num_action
     Q_next = [0.0] * num_action
     count = 0
@@ -86,7 +88,7 @@ def Q_star(Actions, Pi_sa, P_as, Rewards, gamma):
 
 # math: q_*(s,a) = R_s^a + \gamma \sum_{s' \in S} P_{ss'}^a v_*(s')
 def Q_star_from_V_star(Actions, P_as, Rewards, gamma, v_star):
-    num_action = print(len(Actions))
+    num_action = len(Actions)
     Q = [0.0] * num_action
     # 遍历每个action
     for curr_action in Actions:

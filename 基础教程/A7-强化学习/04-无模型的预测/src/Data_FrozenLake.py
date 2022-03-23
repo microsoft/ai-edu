@@ -149,6 +149,8 @@ class Data_Frozen_Lake(object):
             reward = Rewards[next_state_value]
             return States(next_state_value), reward, False
 
+    def get_rewards(self):
+        return Rewards
 
     def get_reward(self, curr_state: States):
         return Rewards[curr_state.value]

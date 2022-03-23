@@ -26,11 +26,12 @@ def TD_0(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
         else:
             curr_state = start_state
         #endif
+        is_done  = False
         while True:
             # 到达终点，结束一幕
             if (ds.is_end_state(curr_state)):
                 break
-            next_state, reward = ds.step(curr_state)
+            next_state, reward, is_done = ds.step(curr_state)
             # math: V(S) \leftarrow V(S) + \alpha[R + \gamma V(S') - V(S)]
             delta = reward + gamma * V[next_state.value] - V[curr_state.value]
             V[curr_state.value] = V[curr_state.value] + alpha * delta
@@ -39,6 +40,56 @@ def TD_0(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint):
         #endwhile
         calculate_error(errors, episode, checkpoint, V, ground_truth)
     #endfor
+    return V, errors
+
+
+def update(V, states, rewards, alpha, gamma, update_t, n_step):
+    G = 0
+    for step in range(n_step):
+        G += pow(gamma, step) * rewards[update_t + step + 1]
+    # end for
+    state_0 = states[update_t]
+    state_n = states[update_t + n_step]
+    G = G + pow(gamma, n_step) * V[state_n]
+    V[state_0] += alpha * (G - V[state_0])
+
+def update_tail(V, states, rewards, alpha, gamma, update_t, n_step):
+    last_state = len(states) - 1
+    while update_t < last_state:
+        G = 0
+        for step in range(last_state - update_t):
+            G += pow(gamma, step) * rewards[update_t + step + 1]
+        # end for
+        state_0 = states[update_t]
+        V[state_0] += alpha * (G - V[state_0])
+        update_t += 1
+
+def TD_n(ds, start_state, episodes, alpha, gamma, n_step, ground_truth, checkpoint):
+    V = np.zeros(ds.num_states)
+    errors = []
+    for episode in tqdm.trange(episodes):
+        curr_state = start_state
+        states = [curr_state.value]
+        rewards = [0]
+        t = 0
+        update_t = 0
+        is_done = False
+        while not is_done:
+            t += 1
+            next_state, reward, is_done = ds.step(curr_state)
+            states.append(next_state.value)
+            rewards.append(reward)
+            curr_state = next_state
+            if (t >= n_step):
+                update(V, states, rewards, alpha, gamma, update_t, n_step)
+                update_t += 1
+            # end if
+        # end while
+        
+        update_tail(V, states, rewards, alpha, gamma, update_t, n_step)
+
+        calculate_error(errors, episode, checkpoint, V, ground_truth)
+    # end for
     return V, errors
 
 def TD_batch(ds, start_state, episodes, alpha, gamma, ground_truth, checkpoint, batch_num=0):
@@ -228,36 +279,6 @@ def Double_Q(env, from_start, episodes, ALPHA, GAMMA, EPSILON, checkpoint):
     return Q, errors
 
 
-def TD_n(ds, start_state, episodes, alpha, gamma, n_step):
-    V = np.zeros(ds.num_states)
-    for episode in tqdm.trange(episodes):
-        curr_state = start_state
-        t_states = [curr_state.value]
-        t_rewards = [0]
-        t = 0
-        start_t = 0
-        is_done = False
-        while not is_done:
-            t += 1
-            next_state, reward, is_done = ds.step(curr_state)
-            t_states.append(next_state.value)
-            t_rewards.append(reward)
-            curr_state = next_state
-            if (t >= n_step):
-                G = 0
-                for step in range(n_step):
-                    G += pow(gamma, step) * t_rewards[start_t + step + 1]
-                # end for
-                state_0 = t_states[start_t]
-                state_n = t_states[start_t + n_step]
-                G = G + pow(gamma, n_step) * V[state_n]
-                V[state_0] += alpha * (G - V[state_0])
-                start_t += 1
-            # end if
-        # end while
-    # end for
-    return V
-
 
 def draw_arrow(Q, width=6):
     np.set_printoptions(suppress=True)
@@ -292,19 +313,24 @@ def FrozenLake_Matrix(gamma):
     I = np.eye(num_state)
     tmp1 = I - gamma * ds.get_TransMatrix()
     tmp2 = np.linalg.inv(tmp1)
-    vs = np.dot(tmp2, ds.Rewards)
+    vs = np.dot(tmp2, ds.get_rewards())
     return vs
 
 
 if __name__=="__main__":
-    episodes = 1000
+    episodes = 10000
     EPSILON = 0.1
     GAMMA = 0.9
     ALPHA = 0.02
-    n_step = 1
+    n_step = 5
     ds = dfl.Data_Frozen_Lake()
     ground_truth = FrozenLake_Matrix(GAMMA)
-    V = TD_0(ds, ds.get_start_state(), episodes, ALPHA, GAMMA, ground_truth, 10)
-    print(V.reshape(4,4))
-    V = TD_n(ds, ds.get_start_state(), episodes, ALPHA, GAMMA, n_step)
-    print(V.reshape(4,4))
+    V1, E1 = TD_0(ds, ds.get_start_state(), episodes, ALPHA, GAMMA, ground_truth, 10)
+    print(np.array(V1).reshape(4,4))
+    V2, E2 = TD_n(ds, ds.get_start_state(), episodes, ALPHA, GAMMA, n_step, ground_truth, 10)
+    print(V2.reshape(4,4))
+
+    plt.plot(E1, label="TD-0")
+    plt.plot(E2, label="TD-" + str(n_step))
+    plt.legend()
+    plt.show()

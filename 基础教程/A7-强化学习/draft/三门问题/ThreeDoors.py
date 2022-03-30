@@ -1,6 +1,7 @@
 import random
 
-# 随机选择除forbidden_doors以外的门
+# 随机选择一扇不在forbidden_doors列表中存在的门
+# 该列表可以是空，表示可以在所有doors中选择
 def choice_one_door(doors, forbidden_doors):
     choice_candidate = doors.copy()
     for door in doors:

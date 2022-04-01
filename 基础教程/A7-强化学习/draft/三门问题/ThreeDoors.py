@@ -32,16 +32,23 @@ def try_once(n_doors: int):
 
     return no_change_but_win, win_after_change
 
-if __name__ == "__main__":
+
+def try_n_doors(n_doors):
     total = 100000
-    n_doors = 8
     n_win_0 = 0
     n_win_1 = 0
     for i in range(total):
         no_change_but_win, win_after_change = try_once(n_doors)
         n_win_0 += win_after_change
         n_win_1 += no_change_but_win
-
+    print(str.format("{0}扇门:", n_doors))
     print(n_win_0, n_win_1)
-    print(str.format("更换选择而中奖的概率={0} \n不更换而中奖的概率={1}", 
+    print(str.format("更换选择而中奖的概率={0} \n不换选择而中奖的概率={1}", 
                      n_win_0/total, n_win_1/total))
+
+if __name__ == "__main__":
+    n_doors = 3
+    try_n_doors(n_doors)
+
+    n_doors = 8
+    try_n_doors(n_doors)

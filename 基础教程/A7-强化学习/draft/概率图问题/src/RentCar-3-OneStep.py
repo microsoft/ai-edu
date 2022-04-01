@@ -8,12 +8,11 @@ P = np.array([
 ])
 
 def calculate_day(X, P, day):
-    X_curr = X.copy()
+    X_n = X.copy()
     for i in range(day):
-        print(str.format("day {0}: {1} ", i, X_curr))
-        X_next = np.dot(X_curr, P)
-        X_curr = X_next.copy()
+        print(str.format("day {0}: {1} ", i, X_n))
+        X_n = np.dot(X_n, P)
 
 if __name__=="__main__":
-    X = np.array([0,1,0,0])
-    calculate_day(X, P, 6)
+    X = np.array([0,1,0,0]) # 该车第0天在B店
+    calculate_day(X, P, 6)  # 计算第5天在哪里

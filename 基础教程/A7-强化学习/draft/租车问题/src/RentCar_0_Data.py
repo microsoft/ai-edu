@@ -37,7 +37,7 @@ def save_data(data_array):
 def read_data():
     file_name = get_fullpath()
     data_array = np.loadtxt(file_name, dtype='<U1') # 以字符形式存储
-    print(data_array.shape)
+    #print(data_array.shape)
     return data_array
 
 if __name__ == "__main__":

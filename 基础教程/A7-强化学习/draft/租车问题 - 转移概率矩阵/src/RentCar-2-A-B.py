@@ -1,29 +1,29 @@
 import RentCar_0_Data as carData
 
 # 统计ai出现的次数，以及从ai转移到aj的次数
-def counter_1(X, ai, aj):
+def counter_1(X, rent_from, return_to):
     ni = 0
     nj = 0
     for x in range(len(X)-1):
-        if ai == X[x]:
+        if rent_from == X[x]:
             ni += 1
-            if aj == X[x+1]:
+            if return_to == X[x+1]:
                 nj += 1
     return ni, nj
 
 def P_A_B(data_array):
     rows = data_array.shape[1]
-    num_i = 0
-    num_j = 0
+    num_from = 0
+    num_to = 0
     for i in range(rows):   # 一共100行记录
         data_list = data_array[i].ravel().tolist()
-        # 把 ABCD 变成 0123
+        # 把 ABCD 变成 0123, 便于计算
         X = [ord(x)-65 for x in data_list]
         ni, nj = counter_1(X, 0, 1)  # 0代表A, 1代表B, 即从A租，到B还
-        num_i += ni
-        num_j += nj
+        num_from += ni
+        num_to += nj
     #endfor
-    print(num_i, num_j, num_j/num_i)
+    print(num_from, num_to, num_to/num_from)
 
 
 

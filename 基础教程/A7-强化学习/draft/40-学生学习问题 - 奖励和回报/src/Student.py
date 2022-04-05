@@ -18,8 +18,8 @@ def Check_Convergence(P):
     for i in range(100000):
         P_next=np.dot(P,P_curr)
         print("迭代次数 =",i+1)
-        print(P_next)
-        if np.allclose(P_curr, P_next):
+        print(np.around(P_next, 2))
+        if np.allclose(P_curr, P_next, rtol=1e-2, atol=1e-4):
             break
         P_curr = P_next
     return P_next

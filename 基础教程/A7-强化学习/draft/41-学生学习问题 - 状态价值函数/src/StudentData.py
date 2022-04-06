@@ -29,6 +29,8 @@ P = np.array(
     ]
 )
 
+ground_truth = [-22.54, -12.54, 1.46, 4.32, 10.00, 0.80, 0.00]
+
 class Data(object):
     def __init__(self):
         self.P = P
@@ -36,13 +38,17 @@ class Data(object):
         self.S = States
         self.num_states = len(self.S)
         self.end_states = [self.S.End]
+        self.Y = ground_truth
     
     def is_end(self, s):
         if (s in self.end_states):
             return True
         return False
 
+    def get_reward(self, s):
+        return self.R[s.value]
+
     def step(self, curr_s):
         next_s_value = np.random.choice(self.num_states, p=self.P[curr_s.value])
         next_s = States(next_s_value)
-        return next_s, self.R[next_s_value], self.is_end(next_s)
+        return next_s, self.get_reward(next_s), self.is_end(next_s)

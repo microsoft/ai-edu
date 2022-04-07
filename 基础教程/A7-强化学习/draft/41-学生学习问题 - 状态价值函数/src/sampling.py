@@ -76,7 +76,7 @@ if __name__=="__main__":
     start = time.time()
     episodes = 10000        # 计算 10000 次的试验的均值作为数学期望值
     gammas = [0, 0.9, 1]    # 指定多个折扣因子做试验
-    dataModel = data.Model()
+    dataModel = data.DataModel()
     for gamma in gammas:
         V = Sampling_MultiProcess(dataModel, episodes, gamma)
         print("gamma =", gamma)

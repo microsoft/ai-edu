@@ -3,7 +3,7 @@ import tqdm
 import multiprocessing as mp
 import math
 import numpy as np
-import StudentData as data
+import StudentDataModel as data
 import time
 
 def Sampling_MultiProcess(dataModel, episodes, gamma):
@@ -23,34 +23,6 @@ def Sampling_MultiProcess(dataModel, episodes, gamma):
 
     return V
 
-
-def RMSE(a, b):
-    err = np.sqrt(np.sum(np.square(a-b))/a.shape[0])
-    return err
-
-
-def Sampling_with_history(dataModel, start_state, episodes, gamma):
-    G_history = []
-
-    if (start_state in dataModel.end_states):
-        # 最后一个状态也可能有reward值
-        return dataModel.R[start_state.value], None
-    
-    for episode in tqdm.trange(episodes):
-        curr_s = start_state
-        G = dataModel.get_reward(curr_s)
-        power = 1
-        done = False
-        while (done is False):
-            next_s, r, done = dataModel.step(curr_s)
-            G += math.pow(gamma, power) * r
-            power += 1
-            curr_s = next_s
-        # end while
-        G_history.append(G)
-    # end for
-    v = np.mean(G_history)
-    return v, G_history
 
 def Sampling(dataModel, start_state, episodes, gamma):
     G_mean = 0  # 定义最终的返回值，G 的平均数

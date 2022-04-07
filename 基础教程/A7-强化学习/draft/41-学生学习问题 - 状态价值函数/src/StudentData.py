@@ -31,24 +31,26 @@ P = np.array(
 
 ground_truth = [-22.54, -12.54, 1.46, 4.32, 10.00, 0.80, 0.00]
 
-class Data(object):
+class DataModel(object):
     def __init__(self):
-        self.P = P
-        self.R = Rewards
-        self.S = States
-        self.num_states = len(self.S)
-        self.end_states = [self.S.End]
-        self.Y = ground_truth
+        self.P = P                          # 状态转移矩阵
+        self.R = Rewards                    # 奖励
+        self.S = States                     # 状态集
+        self.num_states = len(self.S)       # 状态数量
+        self.end_states = [self.S.End]      # 终止状态集
+        self.Y = ground_truth       
     
+    # 判断给定状态是否为终止状态
     def is_end(self, s):
         if (s in self.end_states):
             return True
         return False
 
+    # 获得即时奖励，保留此函数可以为将来更复杂的奖励函数做准备
     def get_reward(self, s):
         return self.R[s.value]
 
+    # 根据转移概率前进一步，返回（下一个状态、即时奖励、是否为终止）
     def step(self, curr_s):
-        next_s_value = np.random.choice(self.num_states, p=self.P[curr_s.value])
-        next_s = States(next_s_value)
+        next_s = np.random.choice(self.S, p=self.P[curr_s.value])
         return next_s, self.get_reward(next_s), self.is_end(next_s)

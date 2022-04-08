@@ -39,8 +39,8 @@ def Check_Convergence(P):
     return P_next
 
 if __name__=="__main__":
-    #Pn = Check_Convergence(P)
-    print(Matrix(0.9))
-    print(Matrix(0))
-    print(Matrix(1))
+    Pn = Check_Convergence(P)
+    #print(Matrix(0.9))
+    #print(Matrix(0))
+    #print(Matrix(1))
 

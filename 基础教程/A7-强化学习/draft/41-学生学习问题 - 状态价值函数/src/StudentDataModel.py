@@ -14,7 +14,8 @@ class States(Enum):
 
 # 奖励向量
 # [Game, Class1, Class2, Class3, Pass, Rest, End]
-Rewards = [-1, -2, -2, -2, 10, 1, 0]
+#Rewards = [-1, -2, -2, -2, 10, 1, 0]
+Rewards = [-2, 0.5, 1, 1.5, 10, -2, 0]
 
 # 状态转移概率
 P = np.array(
@@ -54,3 +55,16 @@ class DataModel(object):
     def step(self, curr_s):
         next_s = np.random.choice(self.S, p=self.P[curr_s.value])
         return next_s, self.get_reward(next_s), self.is_end(next_s)
+
+def Matrix(dataModel, gamma):
+    num_state = dataModel.P.shape[0]
+    I = np.eye(dataModel.num_states) * (1+1e-7)
+    tmp1 = I - gamma * dataModel.P
+    tmp2 = np.linalg.inv(tmp1)
+    vs = np.dot(tmp2, dataModel.R)
+    return vs
+
+if __name__=="__main__":
+    dataModel = DataModel()
+    v = Matrix(dataModel, 1.0)
+    print(np.around(v,1))

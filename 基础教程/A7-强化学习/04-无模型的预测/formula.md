@@ -87,38 +87,31 @@ $$
 
 $$
 \begin{aligned}
-G_1 &= R_1
+G_{[1]} &= R_1
 \\
-G_2 &= G_1 + \gamma R_2=R_1+\gamma R_2
+G_{[2]} &= G_{[1]} + \gamma R_2=R_1+\gamma R_2
 \\
-G_3 &= G_2 + \gamma^2 R_3 = R_1 + \gamma R_2 + \gamma^2 R_3
+G_{[3]} &= G_{[2]} + \gamma^2 R_3 = R_1 + \gamma R_2 + \gamma^2 R_3
 \\
-G_4 &= G_3 + \gamma^3 R_4 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4
+G_{[4]} &= G_{[3]} + \gamma^3 R_4 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4
+\\
+G_{[5]} &= G_{[4]} + \gamma^4 R_T = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4+ \gamma^4 R_T
 \end{aligned}
 $$
 
 
-$$
-\begin{aligned}
-G[4] &= R_4
-\\
-G[3] &= \gamma G[4]+R_3 = R_3 + \gamma R_4
-\\
-G[2] &= \gamma G[3]+R_2 = R_2 + \gamma R_3 + \gamma^2 R_4
-\\
-G[1] &= \gamma G[2]+R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 
-\end{aligned}
-$$
 
 $$
 \begin{aligned}
-G_1 &= R_4, & V[S_{9}]+=G_1
+G_1 &= \gamma G_2 + R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4+\gamma^4 R_T
 \\
-G_2 &= \gamma G_1 + R_3 = R_3 + \gamma R_4, & V[S_5]+=G_2
+G_2 &= \gamma G_3 + R_2 = R_2 + \gamma R_3 + \gamma^2 R_4 + \gamma^3 R_T
 \\
-G_3 &= \gamma G_2 + R_2 = R_2 + \gamma R_3 + \gamma^2 R_4, & V[S_4]+=G_3
+G_3 &= \gamma G_4 + R_3 = R_3 + \gamma R_4 + \gamma^2 R_T
 \\
-G_4 &= \gamma G_3 + R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4 , & V[S_0] += G_4
+G_4 &= \gamma G_T + R_4 = R_4 + \gamma R_T
+\\
+G_T &= R_T
 \end{aligned}
 $$
 

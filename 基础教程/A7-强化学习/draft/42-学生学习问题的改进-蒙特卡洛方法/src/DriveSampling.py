@@ -3,7 +3,7 @@ import tqdm
 import multiprocessing as mp
 import math
 import numpy as np
-import StudentDataModel as data
+import DriveDataModel as data
 import time
 
 def Sampling_MultiProcess(dataModel, episodes, gamma):
@@ -24,7 +24,7 @@ def Sampling_MultiProcess(dataModel, episodes, gamma):
     return V
 
 # 多次采样获得回报 G 的数学期望，即状态价值函数 V
-def Sampling(dataModel, start_state, episodes, gamma):
+def MC_Sampling(dataModel, start_state, episodes, gamma):
     G_sum = 0  # 定义最终的返回值，G 的平均数
     # 循环多幕
     for episode in tqdm.trange(episodes):
@@ -50,7 +50,6 @@ if __name__=="__main__":
     start = time.time()
     episodes = 10000        # 计算 10000 次的试验的均值作为数学期望值
     gammas = [0, 0.9, 1]    # 指定多个折扣因子做试验
-    gammas = [1]    # 指定多个折扣因子做试验
     dataModel = data.DataModel()
     for gamma in gammas:
         V = Sampling_MultiProcess(dataModel, episodes, gamma)

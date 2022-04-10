@@ -17,7 +17,7 @@ P = np.array(
 )
 
 # |出发|正常行驶|礼让行人|闹市减速|超速行驶|路口闯灯|小区减速|拨打手机|发生事故|安全抵达|结束|
-R = [0,  0,      +1,       +1,     -3,      -6,     +1,     -3,      -12,   +10,   0]
+R = [0,  0,      +1,       +1,     -3,      -6,     +1,     -3,      -1,   +5,   0]
 
 def Matrix(gamma):
     num_state = P.shape[0]
@@ -39,8 +39,8 @@ def Check_Convergence(P):
     return P_next
 
 if __name__=="__main__":
-    Pn = Check_Convergence(P)
+    #Pn = Check_Convergence(P)
     #print(Matrix(0.9))
     #print(Matrix(0))
-    #print(Matrix(1))
+    print(np.around(Matrix(1),1))
 

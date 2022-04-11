@@ -1,36 +1,13 @@
 
 import tqdm
-import multiprocessing as mp
-import math
 import numpy as np
 import DriveDataModel as data
-import time
+import matplotlib.pyplot as plt
 
-
-# 多次采样获得回报 G 的数学期望，即状态价值函数 V
-def MC_Sampling(dataModel, start_state, episodes, gamma):
-    G_sum = 0  # 定义最终的返回值，G 的平均数
-    # 循环多幕
-    for episode in tqdm.trange(episodes):
-        # 由于使用了注重结果奖励方式，所以起始状态也有奖励，做为 G 的初始值
-        G = dataModel.get_reward(start_state)   
-        curr_s = start_state        # 把给定的起始状态作为当前状态
-        t = 1                       # 折扣因子
-        is_end = False                # 分幕结束标志
-        while (is_end is False):      # 本幕循环
-            # 根据当前状态和转移概率获得:下一个状态,奖励,是否到达终止状态
-            next_s, r, is_end = dataModel.step(curr_s)   
-            G += math.pow(gamma, t) * r
-            t += 1
-            curr_s = next_s
-        # end while
-        G_sum += G # 先暂时不计算平均值，而是简单地累加
-    # end for
-    V = G_sum / episodes   # 最后再一次性计算平均值，避免增加计算开销
-    return V
 
 # 反向计算G值，记录每个状态的G值，每次访问型
-def MC_Sampling_Reverse(dataModel, start_state, episodes, gamma):
+def MC_Sampling_Reverse_Checkpoint(dataModel, start_state, episodes, gamma, checkpoint):
+    V = []
     V_value_count_pair = np.zeros((dataModel.num_states, 2))  # state[total value, count of g]
     for episode in tqdm.trange(episodes):
         trajectory = []     # 按顺序 t 保留一幕内的采样序列
@@ -51,8 +28,10 @@ def MC_Sampling_Reverse(dataModel, start_state, episodes, gamma):
             V_value_count_pair[s, 0] += G     # 累积总和
             V_value_count_pair[s, 1] += 1     # 累计次数
         #endfor
+        if (episode+1)%checkpoint == 0:
+            V.append(V_value_count_pair[:,0] / V_value_count_pair[:,1])   # 计算平均值
     #endfor
-    V = V_value_count_pair[:,0] / V_value_count_pair[:,1]   # 计算平均值
+    V.append(V_value_count_pair[:,0] / V_value_count_pair[:,1])   # 计算平均值
     return V
 
 # MC1的改进，反向计算G值，记录每个状态的G值，每次访问型
@@ -90,18 +69,33 @@ def MC_Sampling_Reverse_FirstVisit(dataModel, start_state, episodes, gamma):
 
 def RMSE(a,b):
     err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])
-    print("RMSE=",err)
+    return err
+
+def test_once():
+    episodes = 40000        # 计算 50000 次的试验的均值作为数学期望值
+    gamma = 1    # 指定多个折扣因子做试验
+    dataModel = data.DataModel()
+    checkpoint = 100
+    V = MC_Sampling_Reverse_Checkpoint(dataModel, dataModel.S.Start, episodes, gamma, checkpoint)
+    print("gamma =", gamma)
+    for s in dataModel.S:
+        print(str.format("{0}:\t{1:.2f}", s.name, V[-1][s.value]))
+
+    errors = []
+    for i in range(len(V)):
+        err = RMSE(V[i], dataModel.V_ground_truth)
+        errors.append(err)
+
+    return errors
 
 if __name__=="__main__":
-    start = time.time()
-    episodes = 50000        # 计算 10000 次的试验的均值作为数学期望值
-    gammas = [1]    # 指定多个折扣因子做试验
-    dataModel = data.DataModel()
-    for gamma in gammas:
-        V = MC_Sampling_Reverse(dataModel, dataModel.S.Start, episodes, gamma)
-        print("gamma =", gamma)
-        for s in dataModel.S:
-            print(str.format("{0}:\t{1}", s.name, V[s.value]))
-    end = time.time()
-    print(end-start)
-    RMSE(V, dataModel.V_ground_truth)
+    ERRORS = []
+    for i in range(10):
+        errors = test_once()
+        ERRORS.append(errors)
+
+    avg_E = np.mean(ERRORS, axis=0)
+    plt.title(str.format("min RMSE={0}", np.min(avg_E)))
+    plt.plot(avg_E)    
+    plt.grid()
+    plt.show()

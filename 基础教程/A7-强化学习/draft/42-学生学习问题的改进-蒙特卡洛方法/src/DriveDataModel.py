@@ -57,6 +57,10 @@ class DataModel(object):
     def get_reward(self, s):
         return self.R[s.value]
 
+    def random_select_state(self):
+        s = np.random.choice(self.num_states)
+        return States(s)
+
     # 根据转移概率前进一步，返回（下一个状态、即时奖励、是否为终止）
     def step(self, curr_s):
         next_s = np.random.choice(self.S, p=self.P[curr_s.value])

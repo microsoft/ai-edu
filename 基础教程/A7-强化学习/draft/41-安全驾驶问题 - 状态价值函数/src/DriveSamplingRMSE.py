@@ -5,14 +5,15 @@ import math
 import numpy as np
 import DriveDataModel as data
 import time
+import matplotlib.pyplot as plt
 
-def Sampling_MultiProcess(dataModel, episodes, gamma):
+def Sampling_MultiProcess(dataModel, episodes, gamma, checkpoint):
     pool = mp.Pool(processes=4) # 指定合适的进程数量
-    V = np.zeros((dataModel.num_states))
+    V = dict()
     results = []
     for start_state in dataModel.S:    # 遍历状态集中的每个状态作为起始状态
-        results.append(pool.apply_async(Sampling, 
-                args=(dataModel, start_state, episodes, gamma,)
+        results.append(pool.apply_async(Sampling_Checkpoint, 
+                args=(dataModel, start_state, episodes, gamma, checkpoint,)
             )
         )
     pool.close()
@@ -24,7 +25,8 @@ def Sampling_MultiProcess(dataModel, episodes, gamma):
     return V
 
 # 多次采样获得回报 G 的数学期望，即状态价值函数 V
-def Sampling(dataModel, start_state, episodes, gamma):
+def Sampling_Checkpoint(dataModel, start_state, episodes, gamma, checkpoint):
+    V = []
     G_sum = 0  # 定义最终的返回值，G 的平均数
     # 循环多幕
     for episode in tqdm.trange(episodes):
@@ -41,26 +43,44 @@ def Sampling(dataModel, start_state, episodes, gamma):
             curr_s = next_s
         # end while
         G_sum += G # 先暂时不计算平均值，而是简单地累加
+        if (episode+1)%checkpoint == 0:
+            V.append(G_sum / (episode+1))
     # end for
-    V = G_sum / episodes   # 最后再一次性计算平均值，避免增加计算开销
+    V.append(G_sum / episodes)
     return V
+
 
 def RMSE(a,b):
     err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])
     return err
 
-if __name__=="__main__":
-    start = time.time()
+def test_once():
     episodes = 10000        # 计算 10000 次的试验的均值作为数学期望值
-    gammas = [0, 0.9, 1]    # 指定多个折扣因子做试验
-    Vs = []
+    gamma = 1   
+    checkpoint = 100
     dataModel = data.DataModel()
-    for gamma in gammas:
-        V = Sampling_MultiProcess(dataModel, episodes, gamma)
-        Vs.append(V)
-        print("gamma =", gamma)
-        for s in dataModel.S:
-            print(str.format("{0}:\t{1}", s.name, V[s.value]))
-    end = time.time()
-    #print(end-start)
-    print("RMSE = ", RMSE(Vs[2], dataModel.V_ground_truth))
+    V = Sampling_MultiProcess(dataModel, episodes, gamma, checkpoint)
+    num_checkpoint = len(V[0])
+    array = np.zeros((num_checkpoint, dataModel.num_states))
+    for s_value in range(dataModel.num_states):
+        array[:,s_value] = V[s_value]     # V is dictionary
+    
+    errors = []
+    for i in range(num_checkpoint):
+        err = RMSE(array[i], dataModel.V_ground_truth)
+        errors.append(err)
+
+    return errors
+
+if __name__=="__main__":
+    ERRORS = []
+    for i in range(10):
+        errors = test_once()
+        ERRORS.append(errors)
+
+    avg_E = np.mean(ERRORS, axis=0)
+    plt.plot(avg_E)    
+    plt.grid()
+    plt.title(str.format("min RMSE={0}", np.min(avg_E)))
+    plt.show()
+    

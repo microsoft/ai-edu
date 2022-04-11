@@ -103,15 +103,15 @@ $$
 
 $$
 \begin{aligned}
-G_1 &= \gamma G_2 + R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4+\gamma^4 R_T
+G_{[5]} &= \gamma G_{[4]} + R_1 = R_1 + \gamma R_2 + \gamma^2 R_3 + \gamma^3 R_4+\gamma^4 R_T, & V[S_S] += G_{[5]}
 \\
-G_2 &= \gamma G_3 + R_2 = R_2 + \gamma R_3 + \gamma^2 R_4 + \gamma^3 R_T
+G_{[4]} &= \gamma G_{[3]} + R_2 = R_2 + \gamma R_3 + \gamma^2 R_4 + \gamma^3 R_T,  & V[S_N] += G_{[4]}
 \\
-G_3 &= \gamma G_4 + R_3 = R_3 + \gamma R_4 + \gamma^2 R_T
+G_{[3]} &= \gamma G_{[2]} + R_3 = R_3 + \gamma R_4 + \gamma^2 R_T, & V[S_L] += G_{[3]}
 \\
-G_4 &= \gamma G_T + R_4 = R_4 + \gamma R_T
+G_{[2]} &= \gamma G_{[1]} + R_4 = R_4 + \gamma R_T, & V[S_G] += G_{[2]}
 \\
-G_T &= R_T
+G_{[1]} &= R_T, & V[S_E] += G_{[1]}
 \end{aligned}
 $$
 

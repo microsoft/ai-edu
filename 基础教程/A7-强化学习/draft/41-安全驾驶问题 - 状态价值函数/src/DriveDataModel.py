@@ -45,6 +45,7 @@ class DataModel(object):
         self.S = States                     # 状态集
         self.num_states = len(self.S)       # 状态数量
         self.end_states = [self.S.End]      # 终止状态集
+        self.V_ground_truth = Matrix(self, 1)
     
     # 判断给定状态是否为终止状态
     def is_end(self, s):
@@ -69,6 +70,8 @@ def Matrix(dataModel, gamma):
     tmp2 = np.linalg.inv(tmp1)
     vs = np.dot(tmp2, dataModel.R)
     return vs
+
+
 
 if __name__=="__main__":
     dataModel = DataModel()

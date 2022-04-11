@@ -45,16 +45,22 @@ def Sampling(dataModel, start_state, episodes, gamma):
     V = G_sum / episodes   # 最后再一次性计算平均值，避免增加计算开销
     return V
 
+def RMSE(a,b):
+    err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])
+    print("RSME=",err)
 
 if __name__=="__main__":
     start = time.time()
     episodes = 10000        # 计算 10000 次的试验的均值作为数学期望值
     gammas = [0, 0.9, 1]    # 指定多个折扣因子做试验
+    Vs = []
     dataModel = data.DataModel()
     for gamma in gammas:
         V = Sampling_MultiProcess(dataModel, episodes, gamma)
+        Vs.append(V)
         print("gamma =", gamma)
         for s in dataModel.S:
             print(str.format("{0}:\t{1}", s.name, V[s.value]))
     end = time.time()
     print(end-start)
+    print(RMSE(Vs[2], dataModel.V_ground_truth))

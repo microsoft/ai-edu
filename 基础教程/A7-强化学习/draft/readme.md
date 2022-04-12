@@ -22,3 +22,5 @@ Car
 BlackJack
 肥皂泡
 有风的世界
+迷宫
+Gym里面的more

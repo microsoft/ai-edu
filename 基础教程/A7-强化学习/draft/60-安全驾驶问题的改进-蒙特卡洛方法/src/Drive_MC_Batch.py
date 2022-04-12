@@ -7,8 +7,9 @@ import matplotlib.pyplot as plt
 # 多状态同时更新的蒙特卡洛采样
 # 注意输入V有初始状态
 # constant-alpha
-def MC_Incremental_Update(dataModel, start_state, episodes, alpha, gamma):
+def MC_Batch_Update(dataModel, start_state, episodes, alpha, gamma, batch_size):
     V = np.zeros((dataModel.num_states))
+    G_value_count_pair = np.zeros((dataModel.num_states,2))  # state[total value, count of g]
     for episode in tqdm.trange(episodes):
         trajectory = []
         if (start_state is None):
@@ -32,7 +33,13 @@ def MC_Incremental_Update(dataModel, start_state, episodes, alpha, gamma):
         for t in range(num_step-1, -1, -1):
             S, R = trajectory[t]
             G = gamma * G + R
-            V[S] = V[S] + alpha * (G - V[S])
+            G_value_count_pair[S, 0] += G     # total value
+            G_value_count_pair[S, 1] += 1     # count
+
+        if ((episode+1)%batch_size == 0):
+            G_batch = G_value_count_pair[:,0]/G_value_count_pair[:,1]
+            V = V + alpha * (G_batch - V)
+            G_value_count_pair[:,:] = 0
         #endfor
     #endfor
     return V
@@ -106,7 +113,7 @@ def test_once(alpha):
     avg_E = np.mean(ERRORS, axis=0)
     return avg_E
 
-if __name__=="__main__":
+def test():
     alphas = [0.001,0.002,0.003,0.004]
     avgErros = MultiProcess(alphas)
     for i, avg_E in enumerate(avgErros):
@@ -114,3 +121,16 @@ if __name__=="__main__":
     plt.legend()
     plt.grid()
     plt.show()
+
+def run():
+    dataModel = data.DataModel()
+    alpha = 0.02
+    episodes = 20000
+    gamma = 1
+    batch_size = 100
+    Vs = MC_Batch_Update(dataModel, dataModel.S.Start, episodes, alpha, gamma, batch_size)
+    print(Vs)
+    print(RMSE(Vs, dataModel.V_ground_truth))
+
+if __name__=="__main__":
+    run()

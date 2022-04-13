@@ -15,6 +15,7 @@ class States(Enum):
 # 奖励向量
 # [Game, Class1, Class2, Class3, Pass, Rest, End]
 Rewards = [-1, -2, -2, -2, 10, 1, 0]
+#Rewards = [-2, 0.5, 1, 1.5, 10, -2, 0]
 
 # 状态转移概率
 P = np.array(
@@ -25,20 +26,25 @@ P = np.array(
         [0.0, 0.0, 0.0, 0.0, 0.6, 0.4, 0.0],
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
         [0.0, 0.2, 0.4, 0.4, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0] 
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] 
     ]
 )
 
-ground_truth = [-22.54, -12.54, 1.46, 4.32, 10.00, 0.80, 0.00]
+ground_truth = [-22.543, -12.543, 1.457, 4.321, 10.00, 0.803, 0.00]
+a = [-22.5, -12.5, 1.5, 4.3, 10, 0.8, 0.00]
+
+def RMSE(a,b):
+    err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])
+    return err
 
 class DataModel(object):
     def __init__(self):
         self.P = P                          # 状态转移矩阵
         self.R = Rewards                    # 奖励
         self.S = States                     # 状态集
-        self.num_states = len(self.S)       # 状态数量
+        self.N = len(self.S)       # 状态数量
         self.end_states = [self.S.End]      # 终止状态集
-        self.Y = ground_truth       
+        self.Y = SolveMatrix(self, 1) 
     
     # 判断给定状态是否为终止状态
     def is_end(self, s):
@@ -54,3 +60,22 @@ class DataModel(object):
     def step(self, curr_s):
         next_s = np.random.choice(self.S, p=self.P[curr_s.value])
         return next_s, self.get_reward(next_s), self.is_end(next_s)
+
+def SolveMatrix(dataModel, gamma):
+    # 在对角矩阵上增加一个微小的值来解决奇异矩阵不可求逆的问题
+    #I = np.eye(dataModel.N) * (1+1e-7)
+    I = np.eye(dataModel.N)
+    factor = I - gamma * dataModel.P
+    inv_factor = np.linalg.inv(factor)
+    vs = np.dot(inv_factor, dataModel.R)
+    return vs
+
+if __name__=="__main__":
+    dataModel = DataModel()
+    v = SolveMatrix(dataModel, 1.0)
+    print(v)
+    vv = np.around(v,3)
+    for s in dataModel.S:
+        print(str.format("{0}:\t{1}", s.name, vv[s.value]))
+    print(RMSE(np.array(a), dataModel.Y))
+    print(RMSE(np.array(ground_truth), dataModel.Y))

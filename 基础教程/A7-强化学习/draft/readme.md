@@ -18,7 +18,7 @@ draft里面将会以日记形式存放独立的小“故事”，每个“故事
 网格世界（A->A', B-B', 5x5)
 悬崖问题
 FrozenLake
-Car
+GYM Car
 BlackJack
 肥皂泡
 有风的世界

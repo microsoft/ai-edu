@@ -4,34 +4,31 @@ from enum import Enum
 
 # 状态
 class States(Enum):
-    Game = 0
-    Class1 = 1
-    Class2 = 2
-    Class3 = 3
-    Pass = 4
-    Rest = 5
+    Bug = 0
+    Coding = 1
+    Review = 2
+    Repeat = 3
+    Merge = 4
+    Refactor = 5
     End = 6
 
 # 奖励向量
-# [Game, Class1, Class2, Class3, Pass, Rest, End]
-Rewards = [-1, -2, -2, -2, 10, 1, 0]
-#Rewards = [-2, 0.5, 1, 1.5, 10, -2, 0]
+Rewards = [-3, -2, -1, 0, 5, -4, 0]
+#Rewards = [-3, 0, 1, 2, -1, 3, 0]
 
 # 状态转移概率
 P = np.array(
     [   #Game Cl1  Cl2  Cl3  Pass Rest End
-        [0.9, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0], 
-        [0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0, 0.8, 0.0, 0.0, 0.2],
-        [0.0, 0.0, 0.0, 0.0, 0.6, 0.4, 0.0],
+        [0.7, 0.3, 0.0, 0.0, 0.0, 0.0, 0.0], 
+        [0.6, 0.0, 0.4, 0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.9, 0.0, 0.0, 0.1],
+        [0.0, 0.0, 0.0, 0.0, 0.8, 0.2, 0.0],
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
-        [0.0, 0.2, 0.4, 0.4, 0.0, 0.0, 0.0],
+        [0.0, 0.2, 0.5, 0.3, 0.0, 0.0, 0.0],
         [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0] 
     ]
 )
 
-ground_truth = [-22.543, -12.543, 1.457, 4.321, 10.00, 0.803, 0.00]
-a = [-22.5, -12.5, 1.5, 4.3, 10, 0.8, 0.00]
 
 def RMSE(a,b):
     err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])
@@ -77,5 +74,3 @@ if __name__=="__main__":
     vv = np.around(v,3)
     for s in dataModel.S:
         print(str.format("{0}:\t{1}", s.name, vv[s.value]))
-    print(RMSE(np.array(a), dataModel.Y))
-    print(RMSE(np.array(ground_truth), dataModel.Y))

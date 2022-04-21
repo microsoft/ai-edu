@@ -30,6 +30,10 @@ P = np.array(
     ]
 )
 
+D = {
+    States.Bug: [States.Bug, 0.7],
+}
+
 
 def RMSE(a,b):
     err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])

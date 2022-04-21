@@ -30,15 +30,6 @@ P = np.array(
     ]
 )
 
-D = {
-    States.Bug: [States.Bug, 0.7],
-}
-
-
-def RMSE(a,b):
-    err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])
-    return err
-
 class DataModel(object):
     def __init__(self):
         self.P = P                          # 状态转移矩阵
@@ -46,27 +37,6 @@ class DataModel(object):
         self.S = States                     # 状态集
         self.N = len(self.S)       # 状态数量
         self.end_states = [self.S.End]      # 终止状态集
-        self.Y = SolveMatrix(self, 1) 
-    
-    # 判断给定状态是否为终止状态
-    def is_end(self, s):
-        if (s in self.end_states):
-            return True
-        return False
-
-    # 获得即时奖励，保留此函数可以为将来更复杂的奖励函数做准备
-    def get_reward(self, s):
-        return self.R[s.value]
-
-    # 根据转移概率前进一步，返回（下一个状态、即时奖励、是否为终止）
-    def step(self, curr_s):
-        next_s = np.random.choice(self.S, p=self.P[curr_s.value])
-        return next_s, self.get_reward(next_s), self.is_end(next_s)
-
-    def next_step(self, curr_s):
-        next_s = np.random.choice(self.S, p=self.P[curr_s.value])
-        return next_s, self.get_reward(next_s), self.is_end(next_s)
-
 
 def SolveMatrix(dataModel, gamma):
     # 在对角矩阵上增加一个微小的值来解决奇异矩阵不可求逆的问题

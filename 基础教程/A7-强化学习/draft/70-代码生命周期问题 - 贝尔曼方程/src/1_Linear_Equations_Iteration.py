@@ -1,8 +1,8 @@
 import numpy as np
-import CodeLifeCycle_DataModel as dm
+import CodeLifeCycle_DataModel_P as dm
 
 # 原始迭代法
-def raw_iteration(dataModel, gamma):
+def linear_equations_iteration(dataModel, gamma):
     print("---原始迭代法---")
     V_next = np.zeros(dataModel.N)   # 初始化为全 0
     count = 0
@@ -32,6 +32,6 @@ if __name__=="__main__":
     dataModel = dm.DataModel()
     gamma = 1
 
-    V0 = raw_iteration(dataModel, gamma)
+    V0 = linear_equations_iteration(dataModel, gamma)
     print_V(V0)
 

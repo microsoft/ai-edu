@@ -22,6 +22,28 @@ def raw_iteration(dataModel, gamma):
     print("迭代次数 :", count)
     return V
 
+# 原始迭代法
+def raw_iteration_1(dataModel, gamma):
+    print("---原始迭代法---")
+    V = np.zeros(dataModel.N)
+    V_old = V.copy()
+    count = 0
+    while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
+        count += 1
+        V[0] = dataModel.R[0] + gamma*(0.7 * V[0] + 0.3 * V[1])
+        V[1] = dataModel.R[1] + gamma*(0.6 * V[0] + 0.4 * V[2])
+        V[2] = dataModel.R[2] + gamma*(0.9 * V[3] + 0.1 * V[6])
+        V[3] = dataModel.R[3] + gamma*(0.2 * V[4] + 0.8 * V[5])
+        V[4] = dataModel.R[4] + gamma*(0.2 * V[1] + 0.5 * V[2] + 0.3 * V[3])
+        V[5] = dataModel.R[5] + gamma*V[6]
+        V[6] = dataModel.R[6]
+        if np.allclose(V_old, V):
+            break
+        V_old = V.copy()
+    print("迭代次数 :", count)
+    return V
+
+
 # 矩阵迭代法
 def matrix_iteration(dataModel, gamma):
     print("---矩阵迭代法---")
@@ -34,6 +56,22 @@ def matrix_iteration(dataModel, gamma):
         if np.allclose(V_next, V):
             break
         V_next = V.copy()
+    print("迭代次数 :", count)
+    return V
+
+# 矩阵迭代法
+def matrix_iteration_singlearray(dataModel, gamma):
+    print("---矩阵迭代法---")
+#    V = dataModel.R
+    V = np.zeros(dataModel.N)
+    V_old = V.copy()
+    count = 0
+    while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
+        count += 1
+        V = dataModel.R + gamma * np.dot(dataModel.P, V)
+        if np.allclose(V_old, V):
+            break
+        V_old = V.copy()
     print("迭代次数 :", count)
     return V
 
@@ -73,6 +111,7 @@ def Bellman_Iteration_SingleArray(dataModel, gamma):
     V_old = V.copy()
     count = 0
     while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
+        count += 1
         # 遍历每一个 state 作为 start_state
         for curr_state in dataModel.S:
             # 得到转移概率
@@ -90,7 +129,6 @@ def Bellman_Iteration_SingleArray(dataModel, gamma):
             break
         # 把 V_curr 赋值给 V_next
         V_old = V.copy()
-        count += 1
     # end while
     print("迭代次数 :", count)
     return V
@@ -105,6 +143,14 @@ if __name__=="__main__":
     dataModel = dm.DataModel()
     gamma = 1
 
+    v = raw_iteration_1(dataModel, gamma)
+    print_V(v)
+
+    V3 = Bellman_Iteration_SingleArray(dataModel, gamma)
+    print_V(V3)
+
+    exit(0)
+
     V0 = raw_iteration(dataModel, gamma)
     print_V(V0)
 
@@ -114,5 +160,3 @@ if __name__=="__main__":
     V2 = Bellman_Iteration_DoubleArray(dataModel, gamma)
     print_V(V2)
 
-    V3 = Bellman_Iteration_SingleArray(dataModel, gamma)
-    print_V(V3)

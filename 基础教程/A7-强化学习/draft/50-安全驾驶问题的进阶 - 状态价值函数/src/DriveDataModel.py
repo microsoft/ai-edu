@@ -1,5 +1,4 @@
 
-from asyncio import create_subprocess_shell
 import numpy as np
 from enum import Enum
 
@@ -70,8 +69,6 @@ def Matrix(dataModel, gamma):
     tmp2 = np.linalg.inv(tmp1)
     vs = np.dot(tmp2, dataModel.R)
     return vs
-
-
 
 if __name__=="__main__":
     dataModel = DataModel()

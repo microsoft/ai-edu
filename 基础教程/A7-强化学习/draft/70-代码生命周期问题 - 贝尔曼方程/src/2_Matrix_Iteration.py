@@ -22,7 +22,7 @@ def print_V(V):
         print(str.format("{0}:\t{1}", s.name, vv[s.value]))
 
 def check_convergence(dataModel):
-    print("迭代100次，检查状态转移矩阵是否趋近于 0：")
+    print("迭代100次, 检查状态转移矩阵是否趋近于 0: ")
     P_new = dataModel.P.copy()
     for i in range(100):
         P_new = np.dot(dataModel.P, P_new)

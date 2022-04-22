@@ -1,7 +1,7 @@
 import numpy as np
 import CodeLifeCycle_DataModel_P as dm
 
-# 原始迭代法
+# 线性方程组原始迭代法
 def linear_equations_iteration(dataModel, gamma):
     print("---原始迭代法---")
     V_next = np.zeros(dataModel.N)   # 初始化为全 0

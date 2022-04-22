@@ -10,7 +10,7 @@ def Bellman_iteration_single_array(dataModel, gamma):
     while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
         count += 1
         V_old = V.copy()
-        # 遍历每一个 state 作为 start_state
+        # 遍历每一个 state 作为 curr_state
         for curr_state in dataModel.S:
             # 得到转移概率
             list_state_prob  = dataModel.get_next(curr_state)

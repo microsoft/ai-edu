@@ -35,7 +35,7 @@ class DataModel(object):
         self.R = Rewards                    # 奖励
         self.S = States                     # 状态集
         self.N = len(self.S)                # 状态数量
-        self.end_states = [self.S.End]      # 终止状态集
+        self.E = [self.S.End]      # 终止状态集
 
     def get_next(self, curr_s):
         list_state_prob = self.D[curr_s]    # 根据当前状态返回可用的下游状态及其概率

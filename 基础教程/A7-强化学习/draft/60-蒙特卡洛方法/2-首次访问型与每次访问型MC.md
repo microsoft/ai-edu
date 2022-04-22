@@ -56,9 +56,9 @@ $$
 　　$T \Leftarrow (S,R)$
 　　幕内循环直到终止状态：
 　　　　从 $S$ 根据状态转移概率得到 $S',R'$ 以及终止标志
-　　　　$T \Leftarrow S',R'$
+　　　　$T \Leftarrow (S',R')$
 　　　　$S \leftarrow S'$
-　　对 $T$ 从后向前遍历, $t=T-1,T-2,...,0$
+　　对 $T$ 从后向前遍历, $t=\tau-1,\tau-2,...,0$
 　　　　从 $T$ 中取出 $S_t,R_t$
 　　　　$G \leftarrow \gamma G+R_t$
 　　　　$G_{value}[S_t] \leftarrow G_{value}[S_t]+G$

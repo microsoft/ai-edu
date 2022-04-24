@@ -61,6 +61,14 @@ class DataModel(object):
         next_s = np.random.choice(self.S, p=self.P[curr_s.value])
         return next_s, self.get_reward(next_s), self.is_end(next_s)
 
+    def get_next(self, s):
+        if self.is_end(s):
+            return None
+        else:
+            next_s = np.random.choice(self.S, p=self.P[s.value])
+            return next_s
+
+
 def Matrix(dataModel, gamma):
     num_state = dataModel.P.shape[0]
     I = np.eye(dataModel.num_states) * (1+1e-7)

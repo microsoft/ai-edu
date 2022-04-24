@@ -28,6 +28,28 @@ def Sampling(dataModel, start_state, episodes, gamma):
     G_sum = 0  # 定义最终的返回值，G 的平均数
     # 循环多幕
     for episode in tqdm.trange(episodes):
+        s = start_state # 把给定的起始状态作为当前状态
+        G = 0           # 设置本幕的初始值 G=0
+        t = 0           # 步数计数器
+        while True:
+            r = dataModel.get_reward(s)
+            G += math.pow(gamma, t) * r
+            t += 1
+            s = dataModel.get_next(s)
+            if (s is None):
+                break
+        # end while
+        G_sum += G # 先暂时不计算平均值，而是简单地累加
+    # end for
+    V = G_sum / episodes   # 最后再一次性计算平均值，避免增加计算开销
+    return V
+
+'''
+# 多次采样获得回报 G 的数学期望，即状态价值函数 V
+def Sampling(dataModel, start_state, episodes, gamma):
+    G_sum = 0  # 定义最终的返回值, G 的平均数
+    # 循环多幕
+    for episode in tqdm.trange(episodes):
         # 由于使用了注重结果奖励方式，所以起始状态也有奖励，做为 G 的初始值
         G = dataModel.get_reward(start_state)   
         curr_s = start_state        # 把给定的起始状态作为当前状态
@@ -44,10 +66,11 @@ def Sampling(dataModel, start_state, episodes, gamma):
     # end for
     V = G_sum / episodes   # 最后再一次性计算平均值，避免增加计算开销
     return V
-
+'''
 def RMSE(a,b):
     err = np.sqrt(np.sum(np.square(a - b))/a.shape[0])
     return err
+
 
 if __name__=="__main__":
     start = time.time()

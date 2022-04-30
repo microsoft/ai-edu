@@ -1,5 +1,6 @@
 import numpy as np
 from enum import Enum
+import copy
 
 # 状态空间
 Num_States = 31
@@ -91,78 +92,52 @@ class Env(object):
 
 
 
-def V_pi(env: Env, gamma):
+def V_star(env: Env, gamma):
     V_curr = [0.0] * env.N
     V_next = [0.0] * env.N
+    Q_star = copy.deepcopy(env.P)    # 拷贝状态转移结构以存储Q(s,a)值
     count = 0
     # 迭代
     while (True):
         # 遍历所有状态 s
         for s in range(env.N):
-            v_sum = 0
             # 获得 状态->动作 策略概率
             actions = env.get_actions(s)
-            if actions is None:
-                v_sum = 0
-            else:
+            list_q = []
+            if actions is not None:
                 # 遍历每个策略概率
                 for action, next_p_s_r in actions:
                     # 获得 动作->状态 转移概率
-                    q_sum = 0
-                    # 遍历每个转移概率
+                    q_star = 0
+                    # 遍历每个转移概率,以计算 q_pi
                     for p, s_next, r in next_p_s_r:
-                        # math: \sum_{s'} P_{ss'}^a v_{\pi}(s')
-                        q_sum += p * r + gamma * p * V_next[s_next]
+                        # 式2.1 math: \sum_{s'} p_{ss'}^a [ r_{ss'}^a + \gamma *  v_{\pi}(s')]
+                        q_star += p * (r + gamma * V_curr[s_next])
                     #end for
-                    # math: \sum_a \pi(a|s) [R_s^a + \gamma \sum_{s'} P_{ss'}^a v_{\pi}(s')] 
-                    
-                    v_sum += env.Policy[1-action%2] * q_sum
+                    # 式5 math: \sum_a \pi(a|s) q_\pi (s,a)
+                    list_q.append(q_star)
+                    Q_star[s][action] = q_star
                 # end for
-            
-            V_curr[s] = v_sum
+            V_next[s] = max(list_q) if len(list_q) > 0 else 0
         #endfor
         # 检查收敛性
         if np.allclose(V_next, V_curr):
             break
         # 把 V_curr 赋值给 V_next
-        V_next = V_curr.copy()
+        V_curr = V_next.copy()
         count += 1
     # end while
     print(count)
+    print(Q_star)
     return V_next
 
 
-def Q_pi_from_V_pi(V, env:Env, gamma):
-    num_action = 12 # 1~12
-    Q = [0.0] * (num_action + 1)    # 0 is not used
-    # 遍历每个action
-    for action in range(1,13):
-        q_sum = 0
-        # 获得 动作->状态 转移概率
-        states = env.get_states(action)
-        # 遍历每个转移概率求和
-        for p, s_next, r in states:
-            # math: \sum_{s'} P_{ss'}^a v_{\pi}(s') 
-            q_sum += p * r + gamma * p * V[s_next]
-        # end for
-        # math: q_{\pi}(s,a)=R_s^a + \gamma \sum_{s' \in S} P_{ss'}^a v_{\pi}(s')
-        Q[action] = q_sum
-    #endfor
-    return Q
 
 
 if __name__=="__main__":
     env = Env()
-    V_pi = V_pi(env, 1)
+    V_pi = V_star(env, 1)
     print(np.round(V_pi,4))
 
-    Q_pi = Q_pi_from_V_pi(V_pi, env, 1)
-    print(np.round(Q_pi,4))
 
 
-    exit(0)
-    actions = env.get_actions(States.Start)
-    print(actions)
-    for action,trans in actions.items():
-        print(action)
-        print(trans)

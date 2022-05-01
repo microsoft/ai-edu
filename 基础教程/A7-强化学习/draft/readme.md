@@ -47,3 +47,7 @@ Gym里面的more
 从估算状态价值到计算状态价值（贝尔曼方程）
 从状态价值到动作价值
 从动作价值到最优动作价值
+
+
+书中所有示意图片，都是用 Microsoft PowerPoint 绘制。
+所有文字，都是用 Microsoft Visual Studio Code 编写。

@@ -16,7 +16,7 @@ def f(Capacity, Number, Value, Size):
     return dp_Value
 
 if __name__=="__main__":
-    Capacity = 10
+    Capacity = 5
     Number = 4
     Value = [0,2,4,3,7]
     Size = [0,2,3,5,5]

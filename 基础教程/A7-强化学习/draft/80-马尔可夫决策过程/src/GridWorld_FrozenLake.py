@@ -24,22 +24,20 @@ EndReward = {
 # 每走一步都-1，如果配置为0，则不减1，而是要在End处得到最终奖励
 StepReward = 0
 
-LEFT, UP, RIGHT, DOWN,  = 0, 1, 2, 3
-
 # 动作空间
 class Actions(Enum):
-    LEFT = LEFT
-    UP = UP
-    RIGHT = RIGHT
-    DOWN = DOWN
+    LEFT = 0
+    UP = 1
+    RIGHT = 2
+    DOWN = 3
 
 
 # 转移概率
 class Probs(Enum):
-    SlipLeft = 0.1
-    MoveFront = 0.7
-    SlipRight = 0.2
-    SlipBack = 0.0
+    SlipLeft = 0.1      # 向左滑
+    MoveFront = 0.7     # 向前走
+    SlipRight = 0.2     # 向右滑
+    SlipBack = 0.0      # 向后滑
 
 
 if __name__=="__main__":

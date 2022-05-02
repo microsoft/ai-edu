@@ -7,18 +7,21 @@ LEFT, UP, RIGHT, DOWN  = 0, 1, 2, 3
 class GridWorld(object):
     # 生成环境
     def __init__(self, GridHeight, GridWidth, Actions, EndStatesWithReward, Prob, StepReward):
+        self.Width = GridWidth
+        self.Height = GridHeight
+        self.Actions = Actions
         self.nS = GridHeight * GridWidth
         self.nA = len(Actions)
         self.E = EndStatesWithReward
-        self.P = self.__init_states(GridHeight, GridWidth, Actions, Prob, StepReward)
+        self.P = self.__init_states(Prob, StepReward)
 
-    def __init_states(self, H, W, A, Prob, StepReward):
+    def __init_states(self, Probs, StepReward):
         P = {}
         s_id = 0
         self.Pos2Sid = {}
         self.Sid2Pos = {}
-        for y in range(H):
-            for x in range(W):
+        for y in range(self.Height):
+            for x in range(self.Width):
                 self.Pos2Sid[x,y] = s_id
                 self.Sid2Pos[s_id] = [x,y]
                 s_id += 1
@@ -27,15 +30,15 @@ class GridWorld(object):
             P[s] = {}
             if ((x,y) in self.E):
                 continue
-            for action in A:
+            for action in self.Actions:
                 list_probs = []
-                for dir, prob in enumerate(Prob):
+                for dir, prob in enumerate(Probs):
                     if (prob.value == 0.0):
                         continue
                     s_next, x_next, y_next = self.__generate_transation(
-                        s, x, y, W, H, action.value + dir - 1)
-                    reward = StepReward              # 通用奖励
-                    if (x_next,y_next) in self.E:    # 如果有特殊定义
+                        s, x, y, action.value + dir - 1)    # 处理每一个转移概率，方向逆时针减1
+                    reward = StepReward              # 通用奖励定义 (-1)
+                    if (x_next,y_next) in self.E:    # 如果有特殊奖励定义
                         reward = self.E[(x_next,y_next)]
                     list_probs.append((prob.value, s_next, reward))
                 
@@ -43,29 +46,29 @@ class GridWorld(object):
         return P
 
     # 左上角为 [0,0], 横向为 x, 纵向为 y
-    def __generate_transation(self, s, x, y, MAX_X, MAX_Y, action):
-        action = action % 4     # 避免负数
-        if (action == UP):      # 向上移动
-            if (y == 0):        # 在上方边界处
-                return s, x, y  # 原地不动
+    def __generate_transation(self, s, x, y, action):
+        action = action % 4         # 避免负数
+        if (action == UP):          # 向上转移
+            if (y == 0):            # 在上方边界处
+                return s, x, y      # 原地不动
             else:
-                s = s - MAX_X
+                s = s - self.Width
                 y = y - 1
-        elif (action == DOWN):  # 向下移动
-            if (y == MAX_Y-1):  # 在下方边界处
-                return s, x, y  # 原地不动
+        elif (action == DOWN):      # 向下转移
+            if (y == self.Height-1):# 在下方边界处
+                return s, x, y      # 原地不动
             else:
-                s = s + MAX_X
+                s = s + self.Width
                 y = y + 1
-        elif (action == LEFT):  # 向左移动
-            if (x == 0):        # 在左侧边界处
-                return s, x, y  # 原地不动
+        elif (action == LEFT):      # 向左转移
+            if (x == 0):            # 在左侧边界处
+                return s, x, y      # 原地不动
             else:
                 s = s - 1
                 x = x - 1
-        elif (action == RIGHT): # 向右移动
-            if (x == MAX_X-1):  # 在右侧边界处
-                return s, x, y  # 原地不动
+        elif (action == RIGHT):     # 向右转移
+            if (x == self.Width-1): # 在右侧边界处
+                return s, x, y      # 原地不动
             else:
                 s = s + 1
                 x = x + 1

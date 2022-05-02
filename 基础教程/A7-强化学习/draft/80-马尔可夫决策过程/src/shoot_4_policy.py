@@ -166,6 +166,7 @@ if __name__=="__main__":
         if (new_policy == env.Policy).all():
             break
         else:
+            print(new_policy)
             env.Policy = new_policy.copy()
     print("最终策略")    
     print(env.Policy)

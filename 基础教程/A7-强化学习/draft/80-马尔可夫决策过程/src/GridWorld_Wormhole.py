@@ -18,7 +18,7 @@ GridHeight = 5
 
 # from s->s', get r
 # s,s' 为状态序号，不是坐标位置
-SepcialReward = {
+SpecialReward = {
     (0,0):-1,
     (1,1):-1,
     (2,2):-1,
@@ -68,7 +68,7 @@ class Probs(Enum):
     SlipBack = 0.0
 
 if __name__=="__main__":
-    env = agent2.GridWorld(GridWidth, GridHeight, Actions, SepcialReward, Probs, StepReward, EndStates, SpecialMove)
+    env = agent2.GridWorld(GridWidth, GridHeight, Actions, SpecialReward, Probs, StepReward, EndStates, SpecialMove)
     agent2.print_P(env.P)
     gamma = 0.9
     iteration = 1000

@@ -212,12 +212,14 @@ def get_policy(env: GridWorld, V, gamma):
 action_names = ['LEFT', 'UP', 'RIGHT', 'DOWN']
 
 def print_P(P):
+    print("状态->动作->转移->奖励 字典：")
     for s,v in P.items():
         print("state =",s)
         for action,v2 in v.items():
             print("\taction=", action_names[action])
             print("\t",v2)
 
+        # left,  up,     right,  down
 chars = [0x2190, 0x2191, 0x2192, 0x2193]
 
 def print_policy(policy, shape):

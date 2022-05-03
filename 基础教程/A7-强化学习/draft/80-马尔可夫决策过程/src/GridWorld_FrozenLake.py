@@ -45,24 +45,24 @@ Actions = [UP, RIGHT, DOWN, LEFT]
 
 # 转移概率
 class Probs(Enum):
-    SlipLeft = 0.1      # 向左滑
+    SlipLeft = 0.2      # 向左滑
     MoveFront = 0.7     # 向前走
-    SlipRight = 0.2     # 向右滑
+    SlipRight = 0.1     # 向右滑
     SlipBack = 0.0      # 向后滑
 
 
 if __name__=="__main__":
     env = agent2.GridWorld(GridWidth, GridHeight, Actions, SpecialReward, Probs, StepReward, EndStates, SpecialMove)
-    agent2.print_P(env.P)
+    #agent2.print_P(env.P)
     gamma = 0.9
     iteration = 1000
     print("V_pi")
     V_pi = agent2.V_pi_2array(env, gamma, iteration)
-    print(np.reshape(np.round(V_pi,2), (GridWidth,GridHeight)))
+    print(np.reshape(np.round(V_pi,3), (GridWidth,GridHeight)))
 
     V_star, Q_star = agent2.V_star(env, gamma)
     print("V*")
-    print(np.reshape(np.round(V_star,2), (GridWidth,GridHeight)))
+    print(np.reshape(np.round(V_star,3), (GridWidth,GridHeight)))
     print("Q*")
     agent2.print_P(Q_star)
 

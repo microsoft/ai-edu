@@ -25,14 +25,9 @@ UP, RIGHT, DOWN, LEFT = 0, 1, 2, 3
 
 Actions = [UP, RIGHT, DOWN, LEFT]
 
-
-
 # 转移概率
-class Probs(Enum):
-    SlipLeft = 0.0
-    MoveFront = 1.0
-    SlipRight = 0.0
-    SlipBack = 0.0
+# SlipLeft, MoveFront, SlipRight, SlipBack
+Probs = [0.0, 1.0, 0.0, 0.0]
 
 
 if __name__=="__main__":

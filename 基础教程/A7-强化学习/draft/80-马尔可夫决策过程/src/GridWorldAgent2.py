@@ -6,7 +6,12 @@ LEFT, UP, RIGHT, DOWN  = 0, 1, 2, 3
 
 class GridWorld(object):
     # 生成环境
-    def __init__(self, GridWidth, GridHeight, Actions, SpecialReward, Prob, StepReward, EndStates, SpecialMove):
+    def __init__(self, 
+        GridWidth, GridHeight, StartStates, EndStates, 
+        Actions, Policy, SlipProbs, 
+        StepReward, SpecialReward, 
+        SpecialMove, Blocks):
+        
         self.Width = GridWidth
         self.Height = GridHeight
         self.Actions = Actions
@@ -15,7 +20,8 @@ class GridWorld(object):
         self.SpecialReward = SpecialReward
         self.EndStates = EndStates
         self.SpecialMove = SpecialMove
-        self.P = self.__init_states(Prob, StepReward)
+        self.Pi = Policy
+        self.P = self.__init_states(SlipProbs, StepReward)
 
     def __init_states(self, Probs, StepReward):
         P = {}
@@ -35,14 +41,14 @@ class GridWorld(object):
             for action in self.Actions:
                 list_probs = []
                 for dir, prob in enumerate(Probs):
-                    if (prob.value == 0.0):
+                    if (prob == 0.0):
                         continue
                     s_next = self.__generate_transation(
                         s, x, y, action + dir - 1)    # 处理每一个转移概率，方向逆时针减1
                     reward = StepReward              # 通用奖励定义 (-1)
                     if (s, s_next) in self.SpecialReward:    # 如果有特殊奖励定义
                         reward = self.SpecialReward[(s, s_next)]
-                    list_probs.append((prob.value, s_next, reward))
+                    list_probs.append((prob, s_next, reward))
                 
                 P[s][action] = list_probs
         return P
@@ -100,7 +106,7 @@ def V_pi(env: GridWorld, gamma):
                     #end for
                     # 式5 math: \sum_a \pi(a|s) q_\pi (s,a)
                     Q[s][action] = q_pi
-                    v_pi += 0.25 * q_pi
+                    v_pi += env.Pi[action] * q_pi
                 # end for
             V[s] = v_pi
         #endfor

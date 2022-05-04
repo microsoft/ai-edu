@@ -29,15 +29,12 @@ UP, RIGHT, DOWN, LEFT = 0, 1, 2, 3
 Actions = [UP, RIGHT, DOWN, LEFT]
 
 # 转移概率
-class Probs(Enum):
-    SlipLeft = 0.0
-    MoveFront = 1.0
-    SlipRight = 0.0
-    SlipBack = 0.0
+# SlipLeft, MoveFront, SlipRight, SlipBack
+Probs = [0.0, 1.0, 0.0, 0.0]
 
 if __name__=="__main__":
     env = agent2.GridWorld(GridWidth, GridHeight, Actions, SpecialReward, Probs, StepReward, EndStates, SpecialMove)
     gamma = 1
     iteration = 1000
     V_pi = agent2.V_pi_2array(env, gamma, iteration)
-    print(np.reshape(np.round(V_pi,2), (4,4)))
+    print(np.reshape(np.round(V_pi,2), (GridWidth, GridHeight)))

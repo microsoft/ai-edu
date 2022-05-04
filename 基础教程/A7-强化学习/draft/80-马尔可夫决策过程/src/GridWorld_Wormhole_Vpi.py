@@ -1,35 +1,28 @@
 import numpy as np
-from enum import Enum
 import GridWorldAgent2 as agent2
+import test as t
 
 # 状态空间（尺寸）S，终点目标T，起点S，障碍B，奖励R，动作空间A，转移概率P
 
-# 空间宽度
-GridWidth = 5
-# 空间高度
-GridHeight = 5
-# 起点
+# 状态空间 = 空间宽度 x 空间高度
+GridWidth, GridHeight = 5, 5
+# 起点，可以多个
 StartStates = []
-# 终点
+# 终点，可以多个
 EndStates = []
-
-LEFT, UP, RIGHT, DOWN  = 0, 1, 2, 3
 # 动作空间
+LEFT, UP, RIGHT, DOWN  = 0, 1, 2, 3
 Actions = [LEFT, UP, RIGHT, DOWN]
+# 初始策略
 Policy = [0.25, 0.25, 0.25, 0.25]
-# 转移概率
-# SlipLeft, MoveFront, SlipRight, SlipBack
+# 转移概率: [SlipLeft, MoveFront, SlipRight, SlipBack]
 SlipProbs = [0.0, 1.0, 0.0, 0.0]
-
-# 每走一步都-1，如果配置为0，则不减1，而是要在End处得到最终奖励
+# 每走一步的奖励值，可以是0或者-1
 StepReward = 0
-# from s->s', get r
-# s,s' 为状态序号，不是坐标位置
+# 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
 SpecialReward = {
-    (0,0):-1,
-    (1,1):-1,
+    (0,0):-1,       # s0 -> s0 得到-1奖励
     (2,2):-1,
-    (3,3):-1,
     (4,4):-1,
     (5,5):-1,
     (9,9):-1,
@@ -42,23 +35,22 @@ SpecialReward = {
     (22,22):-1,
     (23,23):-1,
     (24,24):-1,
-    (1,21):+10,
-    (3,13):+5
+    (1,12):+5,
+    (3,21):+10
 }
-
 # 特殊移动，用于处理类似虫洞场景
 SpecialMove = {
-    (1,LEFT):21,
-    (1,UP):21,
-    (1,RIGHT):21,
-    (1,DOWN):21,
-    (3,LEFT):13,
-    (3,UP):13,
-    (3,RIGHT):13,
-    (3,DOWN):13
+    (1,LEFT):12,
+    (1,UP):12,
+    (1,RIGHT):12,
+    (1,DOWN):12,
+    (3,LEFT):21,
+    (3,UP):21,
+    (3,RIGHT):21,
+    (3,DOWN):21
 }
+# 墙
 Blocks = []
-
 
 
 if __name__=="__main__":
@@ -70,17 +62,11 @@ if __name__=="__main__":
     agent2.print_P(env.Psr)
     gamma = 0.9
     iteration = 1000
-    V_pi2, Q_pi2 = agent2.V_pi_2array(env, gamma, iteration)
     V_pi, Q_pi = agent2.V_in_place_update(env, gamma, iteration)
-    assert(np.allclose(V_pi, V_pi2, rtol=1e-2))
-    assert(np.allclose(Q_pi, Q_pi2, rtol=1e-2))
-    print(np.reshape(np.round(V_pi,2), (GridWidth,GridHeight)))
+    print("V_pi")
+    V = np.reshape(np.round(V_pi,2), (GridWidth,GridHeight))
+    print(V)
+    print("Q_pi")
+    print(np.round(Q_pi,2))
 
-    V_star, Q_star = agent2.V_star(env, gamma, iteration)
-    print("V*")
-    print(np.reshape(np.round(V_star,2), (GridWidth,GridHeight)))
-    print("Q*")
-    agent2.print_P(Q_star)
-
-    policy = agent2.get_policy(env, V_star, gamma)
-    agent2.print_policy(policy, (GridWidth, GridHeight))
+    t.draw(Q_pi, (GridWidth,GridHeight))

@@ -1,6 +1,6 @@
 import numpy as np
-from enum import Enum
 import copy
+import matplotlib.pyplot as plt
 
 LEFT, UP, RIGHT, DOWN  = 0, 1, 2, 3
 
@@ -11,7 +11,7 @@ class GridWorld(object):
         Actions, Policy, SlipProbs, 
         StepReward, SpecialReward, 
         SpecialMove, Blocks):
-        
+
         self.Width = GridWidth
         self.Height = GridHeight
         self.Actions = Actions
@@ -20,8 +20,8 @@ class GridWorld(object):
         self.SpecialReward = SpecialReward
         self.EndStates = EndStates
         self.SpecialMove = SpecialMove
-        self.Pi = Policy
-        self.P = self.__init_states(SlipProbs, StepReward)
+        self.Policy = Policy
+        self.Psr = self.__init_states(SlipProbs, StepReward)
 
     def __init_states(self, Probs, StepReward):
         P = {}
@@ -73,57 +73,58 @@ class GridWorld(object):
                 s = s + 1
         return s
 
-
     def step(self, s):
         pass
 
     def get_actions(self, s):
-        actions = self.P[s]
+        actions = self.Psr[s]
         return actions.items()
 
-def V_pi(env: GridWorld, gamma):
-    V = np.zeros(env.nS)
-    Q = copy.deepcopy(env.P)    # 拷贝状态转移结构以存储Q(s,a)值
-    count = 0
+# 式 (2.1) 计算 q_pi
+def q_pi(Psr, gamma, V):
+    q = 0
+    # 遍历每个转移概率,以计算 q_pi
+    for p, s_next, r in Psr:
+        # math: \sum_{s'} p_{ss'}^a [ r_{ss'}^a + \gamma *  v_{\pi}(s')]
+        q += p * (r + gamma * V[s_next])
+    return q
+
+# 式 (5) 计算 v_pi
+def v_pi(env: GridWorld, s, gamma, V, Q):
+    actions = env.get_actions(s)    # 获得当前状态s下的所有可选动作
+    v = 0
+    for a, p_s_r in actions:        # 遍历每个动作以计算q值，进而计算v值
+        q = q_pi(p_s_r, gamma, V)
+        # math: \sum_a \pi(a|s) q_\pi (s,a)
+        v += env.Policy[a] * q
+        # 顺便记录下q(s,a)值,不需要再单独计算一次
+        Q[s,a] = q
+    return v
+
+# 迭代法计算 v_pi
+def V_in_place_update(env: GridWorld, gamma, iteration):
+    V = np.zeros(env.nS)            # 初始化 V(s)
+    Q = np.zeros((env.nS, env.nA))  # 初始化 Q(s,a)
+    count = 0   # 计数器，用于衡量性能和避免无限循环
     # 迭代
-    while (count < 10):
-        V_old = V.copy()
+    while (count < iteration):
+        V_old = V.copy()    # 保存上一次的值以便检查收敛性
         # 遍历所有状态 s
         for s in range(env.nS):
-            v_pi = 0
-            # 获得 状态->动作 策略概率
-            actions = env.get_actions(s)
-            if actions is not None:
-                # 遍历每个策略概率
-
-                for action, next_p_s_r in actions:
-                    # 获得 动作->状态 转移概率
-                    q_pi = 0
-                    # 遍历每个转移概率,以计算 q_pi
-                    for p, s_next, r in next_p_s_r:
-                        # 式2.1 math: \sum_{s'} p_{ss'}^a [ r_{ss'}^a + \gamma *  v_{\pi}(s')]
-                        q_pi += p * (r + gamma * V[s_next])
-                    #end for
-                    # 式5 math: \sum_a \pi(a|s) q_\pi (s,a)
-                    Q[s][action] = q_pi
-                    v_pi += env.Pi[action] * q_pi
-                # end for
-            V[s] = v_pi
-        #endfor
+            V[s] = v_pi(env, s, gamma, V, Q)
         # 检查收敛性
         if abs(V-V_old).max() < 1e-4:
             break
-        # 把 V_curr 赋值给 V_next
-        print(np.reshape(np.round(V,2), (4,4)))
         count += 1
     # end while
-    print(count)
-    print(Q)
-    return V
+    print("迭代次数 = ",count)
+    return V, Q
 
+# 双数组迭代
 def V_pi_2array(env: GridWorld, gamma, iteration):
     V = np.zeros(env.nS)
-    Q = copy.deepcopy(env.P)    # 拷贝状态转移结构以存储Q(s,a)值
+    Q = np.zeros((env.nS, env.nA))
+
     count = 0
     # 迭代
     while (count < iteration):
@@ -159,15 +160,15 @@ def V_pi_2array(env: GridWorld, gamma, iteration):
     # end while
     print(count)
     #print(Q)
-    return V
+    return V, Q
 
 
-def V_star(env: GridWorld, gamma):
+def V_star(env: GridWorld, gamma, iteration):
     V_star = np.zeros(env.nS)
-    Q_star = copy.deepcopy(env.P)    # 拷贝状态转移结构以存储Q(s,a)值
+    Q_star = copy.deepcopy(env.Psr)    # 拷贝状态转移结构以存储Q(s,a)值
     count = 0
     # 迭代
-    while (True):
+    while (count < iteration):
         V_old = V_star.copy()
         # 遍历所有状态 s
         for s in range(env.nS):
@@ -222,12 +223,12 @@ def print_P(P):
     for s,v in P.items():
         print("state =",s)
         for action,v2 in v.items():
-            print("\taction=", action_names[action])
+            print("\taction =", action_names[action])
             print("\t",v2)
 
         # left,  up,     right,  down
 chars = [0x2190, 0x2191, 0x2192, 0x2193]
-
+# 需要处理多个值相等的情况
 def print_policy(policy, shape):
     best_actions = np.argmax(policy, axis=1)
     for i, action in enumerate(best_actions):
@@ -235,3 +236,11 @@ def print_policy(policy, shape):
         print(" ", end="")
         if ((i+1) % shape[0] == 0):
             print("")
+
+# 绘图
+def draw_table(V, shape):
+    tab = plt.table(cellText=V, loc='center', rowHeights=[0.1]*5)
+    tab.scale(1,1)
+    plt.axis('off')
+    plt.show()
+

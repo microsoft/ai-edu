@@ -61,13 +61,13 @@ if __name__=="__main__":
         Actions, Policy, SlipProbs,                     # 关于动作的参数
         StepReward, SpecialReward,                      # 关于奖励的参数
         SpecialMove, Blocks)                            # 关于移动的限制
-    agent2.print_P(env.P)
+    agent2.print_P(env.Psr)
     gamma = 0.9
     iteration = 1000
-    V_pi = agent2.V_pi_2array(env, gamma, iteration)
+    V_pi, Q_pi = agent2.V_in_place_update(env, gamma, iteration)
     print(np.reshape(np.round(V_pi,2), (GridWidth,GridHeight)))
 
-    V_star, Q_star = agent2.V_star(env, gamma)
+    V_star, Q_star = agent2.V_star(env, gamma, iteration)
     print("V*")
     print(np.reshape(np.round(V_star,2), (GridWidth,GridHeight)))
     print("Q*")

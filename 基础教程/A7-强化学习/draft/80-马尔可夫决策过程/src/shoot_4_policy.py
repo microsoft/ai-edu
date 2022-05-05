@@ -128,7 +128,7 @@ def policy_evaluation(env: Env, gamma):
         V_curr = V_next.copy()
         count += 1
     # end while
-    #print(count)
+    print("迭代次数 = ",count)
     #print(Q)
     return V_next
 

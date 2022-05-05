@@ -5,7 +5,7 @@ class GridCell(object):
     def __init__(self, policy):
         self.space = np.zeros((3,5), dtype=int)
         self.space.fill(0x0020)     # 空格
-        self.space[1,2] = 0x004f    # 圆圈 O
+        self.space[1,2] = 0x253c    # 圆圈 O
         self.policy = np.round(policy, 2)
 
     # policy 是一个1x4的数组或矩阵,如[0.1,0.1,0.4,0.4]
@@ -15,16 +15,16 @@ class GridCell(object):
     # 1  o >
     # 2
     
-        dirs = np.argwhere(self.policy == np.max(self.policy))
-        pos = dirs.flatten().tolist()
+        best_actions = np.argwhere(self.policy == np.max(self.policy))
+        pos = best_actions.flatten().tolist()
         for a in pos:
             if a == 0:      # left
                 self.space[1,0] = 0x25c4 #0x2190
-                self.space[1,1] = 0x2212
+                self.space[1,1] = 0x2015
             elif a == 1:    # up
                 self.space[0,2] = 0x25b2 #0x2191
             elif a == 2:    # right
-                self.space[1,3] = 0x2212
+                self.space[1,3] = 0x2015
                 self.space[1,4] = 0x25ba #0x2192
             elif a == 3:    # down
                 self.space[2,2] = 0x25bc #0x2193
@@ -42,13 +42,17 @@ class Grid(object):
 
 def draw(q, shape):
     grid = Grid(q, shape)
-    for rows in grid.array:
+    for j, rows in enumerate(grid.array):
+        if (j % 3 == 0):
+            print("+-----"*shape[1], end="")
+            print("+")
+        print("|", end="")
         for i,col in enumerate(rows):
             print(chr(col), end="")
             if ((i+1) % 5 == 0):
-                print(" ", end="")
+                print("|", end="")
         print()
-
+    print("+-----"*shape[1])
 
 if __name__=="__main__":
     q = np.array([

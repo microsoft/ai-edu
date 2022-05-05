@@ -1,6 +1,6 @@
 import numpy as np
 import GridWorldAgent2 as agent2
-import test as t
+import DrawQpi as drawQ
 
 # 状态空间（尺寸）S，终点目标T，起点S，障碍B，奖励R，动作空间A，转移概率P
 
@@ -69,4 +69,4 @@ if __name__=="__main__":
     print("Q_pi")
     print(np.round(Q_pi,2))
 
-    t.draw(Q_pi, (GridWidth,GridHeight))
+    drawQ.draw(Q_pi, (GridWidth,GridHeight))

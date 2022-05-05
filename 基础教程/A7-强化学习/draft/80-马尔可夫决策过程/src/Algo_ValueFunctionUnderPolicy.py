@@ -11,12 +11,14 @@ def q_pi(p_s_r, gamma, V):
 
 # 式 (5) 计算 v_pi
 def v_pi(env, s, gamma, V, Q):
+    if env.is_end(s):
+        return 0
     actions = env.get_actions(s)    # 获得当前状态s下的所有可选动作
     v = 0
     for a, p_s_r in actions:        # 遍历每个动作以计算q值，进而计算v值
         q = q_pi(p_s_r, gamma, V)
         # math: \sum_a \pi(a|s) q_\pi (s,a)
-        v += env.Policy[a] * q
+        v += env.Policy[s][a] * q
         # 顺便记录下q(s,a)值,不需要再单独计算一次
         Q[s,a] = q
     return v

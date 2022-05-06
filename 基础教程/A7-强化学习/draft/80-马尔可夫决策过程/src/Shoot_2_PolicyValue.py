@@ -167,3 +167,4 @@ if __name__=="__main__":
     env = dataModel.Env(Policy)
     V, Q = algo.V_in_place_update(env, gamma, max_iteration)
     print(np.round(V,4))
+    print(Q)

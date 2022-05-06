@@ -1,13 +1,13 @@
 from enum import Enum
 
 class States(Enum):
-     Start = 0       # 开始
-     SR0 = 1       # 脱靶
-     SR1 = 2       # 小奖
-     SR3 = 3       # 大奖
-     SB0 = 4       # 脱靶
-     SB1 = 5       # 小奖
-     T6 = 6       # 终止
+     Start = 0      # 开始
+     S_Red_R0 = 1   # 脱靶
+     S_Red_R1 = 2   # 小奖
+     S_Red_R3 = 3   # 大奖
+     S_Blue_R0 = 4  # 脱靶
+     S_Blue_R1 = 5  # 小奖
+     T = 6          # 终止
 
 # 动作空间
 class Actions(Enum):
@@ -24,76 +24,77 @@ P = {
     # state: {action: [(p, s', r),...]}
     States.Start.value:{                                    # 开始状态（第一枪）
         Actions.Red.value:[                                 # 选择射击红球
-            (0.80, States.SR0.value, Rewards.Zero.value ),  # 脱靶的概率:0.80,      转移到状态 SR0(1), 得到0分奖励
-            (0.05, States.SR1.value, Rewards.Small.value),  # 误中蓝球的概率:0.05,  转移到状态 SR1(2), 得到1分奖励
-            (0.15, States.SR3.value, Rewards.Grand.value),  # 击中红球的概率:0.15,  转移到状态 SR3(3), 得到3分奖励
+            (0.80, States.S_Red_R0.value, Rewards.Zero.value ),  # 脱靶的概率:0.80,      转移到状态 SR0(s1), 得到0分奖励
+            (0.05, States.S_Red_R1.value, Rewards.Small.value),  # 误中蓝球的概率:0.05,  转移到状态 SR1(s2), 得到1分奖励
+            (0.15, States.S_Red_R3.value, Rewards.Grand.value),  # 击中红球的概率:0.15,  转移到状态 SR3(s3), 得到3分奖励
         ],       
         Actions.Blue.value:[                                # 选择射击蓝球
-            (0.40, States.SB0.value, Rewards.Zero.value),   # 脱靶的概率:0.40,      转移到状态 SB0(4), 得到0分奖励
-            (0.60, States.SB1.value, Rewards.Small.value)   # 击中蓝球的概率:0.6,   转移到状态 SB1(5), 得到1分奖励
+            (0.40, States.S_Blue_R0.value, Rewards.Zero.value),   # 脱靶的概率:0.40,      转移到状态 SB0(s4), 得到0分奖励
+            (0.60, States.S_Blue_R1.value, Rewards.Small.value)   # 击中蓝球的概率:0.6,   转移到状态 SB1(s5), 得到1分奖励
         ]                   
     },
-    States.SR0.value:{   # 打红球脱靶
-        Actions.Red.value:[                                 # 选择射击红球
-            (0.80, States.T6.value, Rewards.Zero.value),    # 第二枪脱靶的概率降低到 0.73
-            (0.05, States.T6.value, Rewards.Small.value),   # 误中蓝球的概率不变
-            (0.15, States.T6.value, Rewards.Grand.value),   # 第二枪击中红球的概率 0.22,提高了
+    # 以下为第二枪的选择
+    States.S_Red_R0.value:{                                 # 第一枪打红球脱靶
+        Actions.Red.value:[                                 # 继续选择射击红球
+            (0.80, States.T.value, Rewards.Zero.value),     # 第二枪脱靶概率
+            (0.05, States.T.value, Rewards.Small.value),    # 第二枪误中蓝球的概率
+            (0.15, States.T.value, Rewards.Grand.value),    # 第二枪击中红球的概率
         ],
-        Actions.Blue.value:[                                # 选择射击蓝球
-            (0.40, States.T6.value, Rewards.Zero.value),    # 第二枪脱靶的概率不变
-            (0.60, States.T6.value, Rewards.Small.value)    # 第二枪击中蓝球概率不变
+        Actions.Blue.value:[                                # 第二枪选择射击蓝球
+            (0.40, States.T.value, Rewards.Zero.value),     # 第二枪脱靶的概率不变
+            (0.60, States.T.value, Rewards.Small.value)     # 第二枪击中蓝球概率不变
         ]
     },
-    States.SR1.value:{   # 打红球误中小奖
-        Actions.Red.value:[                                 # 选择射击红球
-            (0.78, States.T6.value, Rewards.Zero.value),    # 
-            (0.05, States.T6.value, Rewards.Small.value),
-            (0.17, States.T6.value, Rewards.Grand.value),
+    States.S_Red_R1.value:{                                 # 第一枪打红球误中蓝球
+        Actions.Red.value:[                                 # 继续选择射击红球
+            (0.78, States.T.value, Rewards.Zero.value),     # 脱靶率降低
+            (0.05, States.T.value, Rewards.Small.value),    # 误中蓝色球
+            (0.17, States.T.value, Rewards.Grand.value),    # 击中红球率升高
         ],
-        Actions.Blue.value:[                 
-            (0.45, States.T6.value, Rewards.Zero.value), 
-            (0.55, States.T6.value, Rewards.Small.value)
+        Actions.Blue.value:[                                # 第二枪选择射击蓝球
+            (0.45, States.T.value, Rewards.Zero.value),     # 脱靶率升高
+            (0.55, States.T.value, Rewards.Small.value)     # 击中蓝球率降低
         ]
     }, 
-    States.SR3.value:{   # 打红大奖
-        Actions.Red.value:[               
-            (0.70, States.T6.value, Rewards.Zero.value), 
-            (0.05, States.T6.value, Rewards.Small.value),
-            (0.25, States.T6.value, Rewards.Grand.value), 
+    States.S_Red_R3.value:{                                 # 第一枪打红球击中大奖
+        Actions.Red.value:[                                 # 继续选择射击红球
+            (0.70, States.T.value, Rewards.Zero.value),     # 脱靶率降低
+            (0.05, States.T.value, Rewards.Small.value),    # 误中蓝色球
+            (0.25, States.T.value, Rewards.Grand.value),    # 击中红球率升高
         ],
-        Actions.Blue.value:[                 
-            (0.20, States.T6.value, Rewards.Zero.value), 
-            (0.80, States.T6.value, Rewards.Small.value)
+        Actions.Blue.value:[                                # 第二枪选择射击蓝球                 
+            (0.20, States.T.value, Rewards.Zero.value),     # 脱靶率降低
+            (0.80, States.T.value, Rewards.Small.value)     # 击中蓝球率提高
         ]
     },
-    States.SB0.value:{   # 打蓝脱靶
-        Actions.Red.value:[                   
-            (0.80, States.T6.value, Rewards.Zero.value), 
-            (0.05, States.T6.value, Rewards.Small.value),
-            (0.15, States.T6.value, Rewards.Grand.value), 
+    States.S_Blue_R0.value:{                                # 第一枪打蓝脱靶
+        Actions.Red.value:[                                 # 继续选择射击红球
+            (0.80, States.T.value, Rewards.Zero.value),     # 脱靶率不变
+            (0.05, States.T.value, Rewards.Small.value),    # 误中蓝球
+            (0.15, States.T.value, Rewards.Grand.value),    # 击中红球率不变
         ],
-        Actions.Blue.value:[                 
-            (0.40, States.T6.value, Rewards.Zero.value), 
-            (0.60, States.T6.value, Rewards.Small.value)
+        Actions.Blue.value:[                                # 第二枪选择射击蓝球
+            (0.40, States.T.value, Rewards.Zero.value),     # 脱靶概率不变
+            (0.60, States.T.value, Rewards.Small.value)     # 击中蓝球率不变
         ]
     },
-    States.SB1.value:{   # 打蓝小奖
-        Actions.Red.value:[                   
-            (0.74, States.T6.value, Rewards.Zero.value), 
-            (0.04, States.T6.value, Rewards.Small.value),
-            (0.22, States.T6.value, Rewards.Grand.value), 
+    States.S_Blue_R1.value:{                                # 第一枪打蓝球中小奖
+        Actions.Red.value:[                                 # 选择射击红球
+            (0.74, States.T.value, Rewards.Zero.value),     # 脱靶率降低
+            (0.04, States.T.value, Rewards.Small.value),    # 误中蓝球
+            (0.22, States.T.value, Rewards.Grand.value),    # 击中目标红球率升高
         ],
-        Actions.Blue.value:[               
-            (0.25, States.T6.value, Rewards.Zero.value), 
-            (0.75, States.T6.value, Rewards.Small.value)
+        Actions.Blue.value:[                                # 第二枪选择射击蓝球
+            (0.25, States.T.value, Rewards.Zero.value),     # 脱靶率很低
+            (0.75, States.T.value, Rewards.Small.value)     # 击中蓝球率很高
         ]
     },
-    States.T6.value:{   # 终止
+    States.T.value:{   # 终止
         Actions.Red.value:[
-            (1.0, States.T6.value, 0)
+            (1.0, States.T.value, 0)
         ],
         Actions.Blue.value:[
-            (1.0, States.T6.value, 0)
+            (1.0, States.T.value, 0)
         ]
     }
 }
@@ -106,7 +107,7 @@ class Env(object):
         self.A = Actions
         self.P = P
         self.Policy = policy
-        self.end_states = [States.T6.value]
+        self.end_states = [States.T.value]
 
     def get_actions(self, s):
         actions = self.P[s]
@@ -136,18 +137,18 @@ if __name__=="__main__":
     print("第一枪脱靶", p0)
 
     # 第一枪脱靶后第二枪也脱靶
-    p00 = 0.4 * (0.4 * P[States.SR0.value][Actions.Red.value][0][0] \
-               + 0.6 * P[States.SR0.value][Actions.Blue.value][0][0]) \
-        + 0.6 * (0.4 * P[States.SB0.value][Actions.Red.value][0][0] \
-               + 0.6 * P[States.SB0.value][Actions.Blue.value][0][0])
+    p00 = 0.4 * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][0][0] \
+               + 0.6 * P[States.S_Red_R0.value][Actions.Blue.value][0][0]) \
+        + 0.6 * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][0][0] \
+               + 0.6 * P[States.S_Blue_R0.value][Actions.Blue.value][0][0])
     # 第一枪脱靶后第二枪中小奖
-    p01 = 0.4 * (0.4 * P[States.SR0.value][Actions.Red.value][1][0] \
-               + 0.6 * P[States.SR0.value][Actions.Blue.value][1][0]) \
-        + 0.6 * (0.4 * P[States.SB0.value][Actions.Red.value][1][0] \
-               + 0.6 * P[States.SB0.value][Actions.Blue.value][1][0])
+    p01 = 0.4 * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][1][0] \
+               + 0.6 * P[States.S_Red_R0.value][Actions.Blue.value][1][0]) \
+        + 0.6 * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][1][0] \
+               + 0.6 * P[States.S_Blue_R0.value][Actions.Blue.value][1][0])
     # 第一枪脱靶后第二枪中大奖
-    p02 = 0.4 * (0.4 * P[States.SR0.value][Actions.Red.value][2][0]) \
-        + 0.6 * (0.4 * P[States.SB0.value][Actions.Red.value][2][0])
+    p02 = 0.4 * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][2][0]) \
+        + 0.6 * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][2][0])
     
     p00 = round(p00,3)
     p01 = round(p01,3)
@@ -165,18 +166,18 @@ if __name__=="__main__":
     print("第一枪小奖", p1)
 
     # 第一枪小奖后第二枪脱靶
-    p10 = 0.4 * (0.4 * P[States.SR1.value][Actions.Red.value][0][0] \
-               + 0.6 * P[States.SR1.value][Actions.Blue.value][0][0]) \
-        + 0.6 * (0.4 * P[States.SB1.value][Actions.Red.value][0][0] \
-               + 0.6 * P[States.SB1.value][Actions.Blue.value][0][0])
+    p10 = 0.4 * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][0][0] \
+               + 0.6 * P[States.S_Red_R1.value][Actions.Blue.value][0][0]) \
+        + 0.6 * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][0][0] \
+               + 0.6 * P[States.S_Blue_R1.value][Actions.Blue.value][0][0])
     # 第一枪小奖后第二枪中小奖
-    p11 = 0.4 * (0.4 * P[States.SR1.value][Actions.Red.value][1][0] \
-               + 0.6 * P[States.SR1.value][Actions.Blue.value][1][0]) \
-        + 0.6 * (0.4 * P[States.SB1.value][Actions.Red.value][1][0] \
-               + 0.6 * P[States.SB1.value][Actions.Blue.value][1][0])
+    p11 = 0.4 * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][1][0] \
+               + 0.6 * P[States.S_Red_R1.value][Actions.Blue.value][1][0]) \
+        + 0.6 * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][1][0] \
+               + 0.6 * P[States.S_Blue_R1.value][Actions.Blue.value][1][0])
     # 第一枪小奖后第二枪中大奖
-    p12 = 0.4 * (0.4 * P[States.SR1.value][Actions.Red.value][2][0]) \
-        + 0.6 * (0.4 * P[States.SB1.value][Actions.Red.value][2][0])
+    p12 = 0.4 * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][2][0]) \
+        + 0.6 * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][2][0])
     p10 = round(p10,3)
     p11 = round(p11,3)
     p12 = round(p12,3)        
@@ -193,13 +194,13 @@ if __name__=="__main__":
     print("第一枪大奖",p2)
 
     # 第一枪大奖后第二枪脱靶
-    p20 = 0.4 * P[States.SR3.value][Actions.Red.value][0][0] \
-        + 0.6 * P[States.SR3.value][Actions.Blue.value][0][0]
+    p20 = 0.4 * P[States.S_Red_R3.value][Actions.Red.value][0][0] \
+        + 0.6 * P[States.S_Red_R3.value][Actions.Blue.value][0][0]
     # 第一枪大奖后第二枪中小奖
-    p21 = 0.4 * P[States.SR3.value][Actions.Red.value][1][0] \
-        + 0.6 * P[States.SR3.value][Actions.Blue.value][1][0]
+    p21 = 0.4 * P[States.S_Red_R3.value][Actions.Red.value][1][0] \
+        + 0.6 * P[States.S_Red_R3.value][Actions.Blue.value][1][0]
     # 第一枪大奖后第二枪中大奖
-    p22 = 0.4 * P[States.SR3.value][Actions.Red.value][2][0]
+    p22 = 0.4 * P[States.S_Red_R3.value][Actions.Red.value][2][0]
 
     p20 = round(p20,3)            
     p21 = round(p21,3)            

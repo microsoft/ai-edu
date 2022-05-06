@@ -1,9 +1,7 @@
 import numpy as np
-import Shoot_DataModel as dataModel
+import Shoot_0_DataModel as dataModel
 import math
 import Algo_ValueFunctionUnderPolicy as algo
-
-A = [[0,1],[1,0]]
 
 
 # 给指定的policy的前n/2个填0,后n/2个填1
@@ -15,7 +13,7 @@ def fill_number(policy, pos, n):
             policy[i,pos] = 1
 
 
-def create_policy(env):
+def create_policy():
     n = (int)(math.pow(2, 6))
     policy = np.zeros((n, 6), dtype=np.int32)
     pos = 0
@@ -34,8 +32,9 @@ def create_policy(env):
 
 if __name__=="__main__":
     
-    env = dataModel.Env()
-    all_policy = create_policy(env)
+    all_policy = create_policy()
+    env = dataModel.Env(all_policy)
+
     gamma = 1
     max_iteration = 1000
     V_values = []

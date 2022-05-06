@@ -20,65 +20,35 @@ class Rewards(Enum):
     Small = 1
     Grand = 3
 
-'''
 P = {
-    # curr state
-    0:{                                                     # 开始
-        # action:[(p, s', r), (p, s', r)]
-        0:[(0.20,States.S1.valueRewards.Grand.value), (0.75, States.S1.value, Rewards.Zero.value), (0.05, States.S3.value, Rewards.Small.value)],       # 第一次击中目标红球的概率=0.2
-        Actions.Blue.value:[(0.40, States.S4.value, Rewards.Zero.value), (0.60, States.S5.value, Rewards.Small.value)]                      # 第一次击中目标兰球的概率=0.6
-    },
-    1:{                                                     # 第一次击中目标红球
-        0:[(0.25, States.T6.value, Rewards.Grand.value), (0.70, 7, Rewards.Zero.value), (0.05, 8, Rewards.Small.value)],       # 第二次击中红球的概率=0.25，提高了
-        Actions.Blue.value:[(0.35, 9, Rewards.Zero.value), (0.65, 10, Rewards.Small.value)]                     # 第二次击中兰球的概率=0.65，提高了
-    },
-    2:{                                                     # 第一次打红球脱靶
-        0:[(0.20, 11, Rewards.Grand.value), (0.75, 12, Rewards.Zero.value), (0.05, 13, Rewards.Small.value)],    # 第二次击中红球的概率=0.20，没变化
-        Actions.Blue.value:[(0.40, 14, Rewards.Zero.value), (0.60, 15, Rewards.Small.value)]                    # 第二次击中兰球的概率=0.60，没变化
-    }, 
-    3:{                                                     # 第一次误中兰球
-        0:[(0.18, 16, Rewards.Grand.value), (0.77, 17, Rewards.Zero.value), (0.05, 18, Rewards.Small.value)],    # 第二次击中红球的概率=0.18，降低了
-        Actions.Blue.value:[(0.45, 19, Rewards.Zero.value), (0.55, 20, Rewards.Small.value)]                    # 第二次击中兰球的概率=0.55，降低了
-    },
-    4:{                                                     # 第一次打兰球脱靶
-        0:[(0.20, 21, Rewards.Grand.value), (0.75, 22, Rewards.Zero.value), (0.05, 23, Rewards.Small.value)],    # 第二次击中红球的概率=0.20，没变化
-        Actions.Blue.value:[(0.35, 24, Rewards.Zero.value), (0.65, 25, Rewards.Small.value)]                   # 第一次击中兰球的概率=0.65，提高了
-    },
-    5:{                                                     # 第一次击中目标兰球
-        0:[(0.22, 26, Rewards.Grand.value), (0.73, 27, Rewards.Zero.value), (0.05, 28, Rewards.Small.value)],   # 第二次击中红球的概率=0.22，提高了
-        Actions.Blue.value:[(0.25, 29, Rewards.Zero.value), (0.75, 30, Rewards.Small.value)]                   # 第二次击中兰球的概率=0.75，提高了
-    }
-}
-'''
-P = {
-    # curr state
-    States.Start.value:{                                         # 开始状态（第一枪）
-        Actions.Red.value:[#(p, s', r),...]                   # 选择射击红球
-            (0.80, States.SR0.value, Rewards.Zero.value ),     # 脱靶的概率 0.75,     转移到状态2, 得到0分奖励
-            (0.05, States.SR1.value, Rewards.Small.value),     # 误中蓝球的概率 0.05, 转移到状态3, 得到1分奖励
-            (0.15, States.SR3.value, Rewards.Grand.value),     # 击中红球的概率 0.20, 转移到状态1, 得到3分奖励
+    # state: {action: [(p, s', r),...]}
+    States.Start.value:{                                    # 开始状态（第一枪）
+        Actions.Red.value:[                                 # 选择射击红球
+            (0.80, States.SR0.value, Rewards.Zero.value ),  # 脱靶的概率:0.80,      转移到状态 SR0(1), 得到0分奖励
+            (0.05, States.SR1.value, Rewards.Small.value),  # 误中蓝球的概率:0.05,  转移到状态 SR1(2), 得到1分奖励
+            (0.15, States.SR3.value, Rewards.Grand.value),  # 击中红球的概率:0.15,  转移到状态 SR3(3), 得到3分奖励
         ],       
-        Actions.Blue.value:[                                  # 选择射击蓝球
-            (0.40, States.SB0.value, Rewards.Zero.value),      # 脱靶的概率0.40,   转移到状态4, 得到0分奖励
-            (0.60, States.SB1.value, Rewards.Small.value)      # 击中蓝球的概率0.6, 转移到状态5, 得到1分奖励
+        Actions.Blue.value:[                                # 选择射击蓝球
+            (0.40, States.SB0.value, Rewards.Zero.value),   # 脱靶的概率:0.40,      转移到状态 SB0(4), 得到0分奖励
+            (0.60, States.SB1.value, Rewards.Small.value)   # 击中蓝球的概率:0.6,   转移到状态 SB1(5), 得到1分奖励
         ]                   
     },
-    States.SR0.value:{   # 打红脱靶                                         
-        Actions.Red.value:[                                   # 选择射击红球
-            (0.80, States.T6.value, Rewards.Zero.value),      # 第二枪脱靶的概率降低到 0.73
-            (0.05, States.T6.value, Rewards.Small.value),     # 误中蓝球的概率不变
-            (0.15, States.T6.value, Rewards.Grand.value),     # 第二枪击中红球的概率 0.22,提高了
+    States.SR0.value:{   # 打红球脱靶
+        Actions.Red.value:[                                 # 选择射击红球
+            (0.80, States.T6.value, Rewards.Zero.value),    # 第二枪脱靶的概率降低到 0.73
+            (0.05, States.T6.value, Rewards.Small.value),   # 误中蓝球的概率不变
+            (0.15, States.T6.value, Rewards.Grand.value),   # 第二枪击中红球的概率 0.22,提高了
         ],
-        Actions.Blue.value:[                                  # 选择射击蓝球
-            (0.40, States.T6.value, Rewards.Zero.value),      # 第二枪脱靶的概率降低到 0.30
-            (0.60, States.T6.value, Rewards.Small.value)      # 第二枪击中蓝球的概率提高到 0.70
+        Actions.Blue.value:[                                # 选择射击蓝球
+            (0.40, States.T6.value, Rewards.Zero.value),    # 第二枪脱靶的概率不变
+            (0.60, States.T6.value, Rewards.Small.value)    # 第二枪击中蓝球概率不变
         ]
     },
-    States.SR1.value:{   # 打红小奖
-        Actions.Red.value:[                 
-            (0.77, States.T6.value, Rewards.Zero.value), 
+    States.SR1.value:{   # 打红球误中小奖
+        Actions.Red.value:[                                 # 选择射击红球
+            (0.78, States.T6.value, Rewards.Zero.value),    # 
             (0.05, States.T6.value, Rewards.Small.value),
-            (0.18, States.T6.value, Rewards.Grand.value),
+            (0.17, States.T6.value, Rewards.Grand.value),
         ],
         Actions.Blue.value:[                 
             (0.45, States.T6.value, Rewards.Zero.value), 
@@ -87,13 +57,13 @@ P = {
     }, 
     States.SR3.value:{   # 打红大奖
         Actions.Red.value:[               
-            (0.72, States.T6.value, Rewards.Zero.value), 
-            (0.03, States.T6.value, Rewards.Small.value),
+            (0.70, States.T6.value, Rewards.Zero.value), 
+            (0.05, States.T6.value, Rewards.Small.value),
             (0.25, States.T6.value, Rewards.Grand.value), 
         ],
         Actions.Blue.value:[                 
-            (0.25, States.T6.value, Rewards.Zero.value), 
-            (0.75, States.T6.value, Rewards.Small.value)
+            (0.20, States.T6.value, Rewards.Zero.value), 
+            (0.80, States.T6.value, Rewards.Small.value)
         ]
     },
     States.SB0.value:{   # 打蓝脱靶
@@ -239,3 +209,15 @@ if __name__=="__main__":
     print("\t第二枪大奖",p22)
     #assert((p20+p21+p22)==1)
     #assert((p0+p1+p2)==1)
+
+    assert(p00 == p0)
+    assert(p01 == p1)
+    assert(p02 == p2)
+    assert(p10 <= p0)
+    assert(p11 >= p1)
+    assert(p12 >= p2)
+    assert(p20 <= p0)
+    assert(p21 >= p1)
+    assert(p22 >= p2)
+    assert(p21 >= p11)
+    assert(p21 >= p21)

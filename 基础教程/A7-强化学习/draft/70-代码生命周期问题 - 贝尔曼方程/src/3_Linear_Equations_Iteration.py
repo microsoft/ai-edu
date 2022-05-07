@@ -1,5 +1,5 @@
 import numpy as np
-import CodeLifeCycle_DataModel_P as dm
+import CodeLifeCycle_0_DataModel_P as dm
 
 # 线性方程组原始迭代法
 def linear_equations_iteration(dataModel, gamma):

@@ -1,5 +1,5 @@
 import numpy as np
-import CodeLifeCycle_DataModel_P as dm
+import CodeLifeCycle_0_DataModel_P as dm
 
 # 矩阵迭代法
 def matrix_iteration(dataModel, gamma):

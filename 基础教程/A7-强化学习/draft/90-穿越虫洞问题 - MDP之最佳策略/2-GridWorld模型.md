@@ -1,11 +1,11 @@
 
-## 建模
+## 9.2 建模
 
 在强化学习中，经常会用图 x 这种方格（或长方格）来研究各种算法，所以有必要建立一个通用的模型，用数据定义模型的各种行为。
 
 模型可以分为四个小部分
 
-#### 状态部分
+### 9.2.1 状态部分
 
 ```Python
 # 状态空间 = 空间宽度 x 空间高度
@@ -73,59 +73,6 @@ Blocks = []
 - 墙，用于搭建迷宫类场景。撞墙后一般原地不动。
 
 
-### 实现算法
-
-#### $q_\pi$
-
-```Python
-# 根据式 (2.1) 计算 q_pi
-def q_pi(p_s_r, gamma, V):
-    q = 0
-    # 遍历每个转移概率,以计算 q_pi
-    for p, s_next, r in p_s_r:
-        # math: \sum_{s'} p_{ss'}^a [ r_{ss'}^a + \gamma *  v_{\pi}(s')]
-        q += p * (r + gamma * V[s_next])
-    return q
-```
-
-#### $v_\pi$
-
-```Python
-# 根据式 (5) 计算 v_pi
-def v_pi(env: GridWorld, s, gamma, V, Q):
-    actions = env.get_actions(s)    # 获得当前状态s下的所有可选动作
-    v = 0
-    for a, p_s_r in actions:        # 遍历每个动作以计算q值，进而计算v值
-        q = q_pi(p_s_r, gamma, V)   # 计算 q_pi 的值
-        # math: \sum_a \pi(a|s) q_\pi (s,a)
-        v += env.Policy[a] * q      # policy[a]的值为0.25
-        # 顺便记录下q(s,a)值,不需要再单独计算一次
-        Q[s,a] = q
-    return v
-```
-
-#### 单数组原地更新迭代算法
-
-```Python
-# 迭代法计算 v_pi
-def V_in_place_update(env: GridWorld, gamma, iteration):
-    V = np.zeros(env.nS)            # 初始化 V(s)
-    Q = np.zeros((env.nS, env.nA))  # 初始化 Q(s,a)
-    count = 0   # 计数器，用于衡量性能和避免无限循环
-    # 迭代
-    while (count < iteration):
-        V_old = V.copy()    # 保存上一次的值以便检查收敛性
-        # 遍历所有状态 s
-        for s in range(env.nS):
-            V[s] = v_pi(env, s, gamma, V, Q)    # 计算 v_pi 的值
-        # 检查收敛性
-        if abs(V-V_old).max() < 1e-4:   # 收敛条件
-            break
-        count += 1
-    # end while
-    print(count)
-    return V, Q
-```
 
 ### 结果
 

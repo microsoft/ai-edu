@@ -1,18 +1,19 @@
 from enum import Enum
 
+# 状态空间
 class States(Enum):
      Start = 0      # 开始
-     S_Red_R0 = 1   # 脱靶
-     S_Red_R1 = 2   # 小奖
-     S_Red_R3 = 3   # 大奖
-     S_Blue_R0 = 4  # 脱靶
-     S_Blue_R1 = 5  # 小奖
+     S_Red_R0 = 1   # 选择射击红球Red,但是脱靶R=0
+     S_Red_R1 = 2   # 选择射击红球Red,但是误中蓝球R=1小奖
+     S_Red_R3 = 3   # 选择射击红球Red,击中R=3大奖
+     S_Blue_R0 = 4  # 选择射击蓝球Blue,但是脱靶R=0
+     S_Blue_R1 = 5  # 选择射击蓝球Blue,击中R=1小奖
      T = 6          # 终止
 
 # 动作空间
 class Actions(Enum):
-    Red = 0     # 红色小气球，可以中大奖
-    Blue = 1    # 蓝色大气球，可以中小奖
+    Red = 0     # 射击红色小气球
+    Blue = 1    # 射击蓝色大气球
 
 # 奖励
 class Rewards(Enum):
@@ -89,14 +90,14 @@ P = {
             (0.75, States.T.value, Rewards.Small.value)     # 击中蓝球率很高
         ]
     },
-    States.T.value:{   # 终止
-        Actions.Red.value:[
-            (1.0, States.T.value, 0)
-        ],
-        Actions.Blue.value:[
-            (1.0, States.T.value, 0)
-        ]
-    }
+    # States.T.value:{   # 终止
+    #     Actions.Red.value:[
+    #         (1.0, States.T.value, 0)
+    #     ],
+    #     Actions.Blue.value:[
+    #         (1.0, States.T.value, 0)
+    #     ]
+    # }
 }
 
 class Env(object):
@@ -132,23 +133,23 @@ if __name__=="__main__":
     env = Env(Policy)    
     # 统计概率
     # 第一枪脱靶的概率
-    p0 = 0.4 * P[States.Start.value][Actions.Red.value][0][0] \
-        + 0.6 * P[States.Start.value][Actions.Blue.value][0][0]
+    p0 = Policy[0][0] * P[States.Start.value][Actions.Red.value][0][0] \
+       + Policy[0][1] * P[States.Start.value][Actions.Blue.value][0][0]
     print("第一枪脱靶", p0)
 
     # 第一枪脱靶后第二枪也脱靶
-    p00 = 0.4 * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][0][0] \
-               + 0.6 * P[States.S_Red_R0.value][Actions.Blue.value][0][0]) \
-        + 0.6 * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][0][0] \
+    p00 = Policy[0][0] * (Policy[States.S_Red_R0.value][0] * P[States.S_Red_R0.value][Actions.Red.value][0][0] \
+                        + Policy[States.S_Red_R0.value][1] * P[States.S_Red_R0.value][Actions.Blue.value][0][0]) \
+        + Policy[0][1] * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][0][0] \
                + 0.6 * P[States.S_Blue_R0.value][Actions.Blue.value][0][0])
     # 第一枪脱靶后第二枪中小奖
-    p01 = 0.4 * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][1][0] \
+    p01 = Policy[0][0] * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][1][0] \
                + 0.6 * P[States.S_Red_R0.value][Actions.Blue.value][1][0]) \
-        + 0.6 * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][1][0] \
+        + Policy[0][1] * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][1][0] \
                + 0.6 * P[States.S_Blue_R0.value][Actions.Blue.value][1][0])
     # 第一枪脱靶后第二枪中大奖
-    p02 = 0.4 * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][2][0]) \
-        + 0.6 * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][2][0])
+    p02 = Policy[0][0] * (0.4 * P[States.S_Red_R0.value][Actions.Red.value][2][0]) \
+        + Policy[0][1] * (0.4 * P[States.S_Blue_R0.value][Actions.Red.value][2][0])
     
     p00 = round(p00,3)
     p01 = round(p01,3)
@@ -161,23 +162,23 @@ if __name__=="__main__":
     ########################################
 
     # 第一枪中小奖的概率
-    p1 = 0.4 * P[States.Start.value][Actions.Red.value][1][0] \
-        + 0.6 * P[States.Start.value][Actions.Blue.value][1][0]
+    p1 = Policy[0][0] * P[States.Start.value][Actions.Red.value][1][0] \
+       + Policy[0][1] * P[States.Start.value][Actions.Blue.value][1][0]
     print("第一枪小奖", p1)
 
     # 第一枪小奖后第二枪脱靶
-    p10 = 0.4 * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][0][0] \
+    p10 = Policy[0][0] * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][0][0] \
                + 0.6 * P[States.S_Red_R1.value][Actions.Blue.value][0][0]) \
-        + 0.6 * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][0][0] \
+        + Policy[0][1] * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][0][0] \
                + 0.6 * P[States.S_Blue_R1.value][Actions.Blue.value][0][0])
     # 第一枪小奖后第二枪中小奖
-    p11 = 0.4 * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][1][0] \
+    p11 = Policy[0][0] * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][1][0] \
                + 0.6 * P[States.S_Red_R1.value][Actions.Blue.value][1][0]) \
-        + 0.6 * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][1][0] \
+        + Policy[0][1] * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][1][0] \
                + 0.6 * P[States.S_Blue_R1.value][Actions.Blue.value][1][0])
     # 第一枪小奖后第二枪中大奖
-    p12 = 0.4 * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][2][0]) \
-        + 0.6 * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][2][0])
+    p12 = Policy[0][0] * (0.4 * P[States.S_Red_R1.value][Actions.Red.value][2][0]) \
+        + Policy[0][1] * (0.4 * P[States.S_Blue_R1.value][Actions.Red.value][2][0])
     p10 = round(p10,3)
     p11 = round(p11,3)
     p12 = round(p12,3)        
@@ -189,18 +190,18 @@ if __name__=="__main__":
     ########################################
 
     # 第一枪中大奖的概率
-    p2 = 0.4 * P[States.Start.value][Actions.Red.value][2][0]
+    p2 = Policy[0][0] * P[States.Start.value][Actions.Red.value][2][0]
     p2 = round(p2,3)
     print("第一枪大奖",p2)
 
     # 第一枪大奖后第二枪脱靶
-    p20 = 0.4 * P[States.S_Red_R3.value][Actions.Red.value][0][0] \
-        + 0.6 * P[States.S_Red_R3.value][Actions.Blue.value][0][0]
+    p20 = Policy[0][0] * P[States.S_Red_R3.value][Actions.Red.value][0][0] \
+        + Policy[0][1] * P[States.S_Red_R3.value][Actions.Blue.value][0][0]
     # 第一枪大奖后第二枪中小奖
-    p21 = 0.4 * P[States.S_Red_R3.value][Actions.Red.value][1][0] \
-        + 0.6 * P[States.S_Red_R3.value][Actions.Blue.value][1][0]
+    p21 = Policy[0][0] * P[States.S_Red_R3.value][Actions.Red.value][1][0] \
+        + Policy[0][1] * P[States.S_Red_R3.value][Actions.Blue.value][1][0]
     # 第一枪大奖后第二枪中大奖
-    p22 = 0.4 * P[States.S_Red_R3.value][Actions.Red.value][2][0]
+    p22 = Policy[0][0] * P[States.S_Red_R3.value][Actions.Red.value][2][0]
 
     p20 = round(p20,3)            
     p21 = round(p21,3)            

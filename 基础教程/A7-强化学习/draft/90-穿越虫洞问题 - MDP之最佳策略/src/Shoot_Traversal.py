@@ -1,8 +1,8 @@
 import numpy as np
-import Shoot_0_DataModel as dataModel
+import Shoot_2_DataModel as dataModel
 import math
 import Algo_ValueFunctionUnderPolicy as algo
-
+import copy
 
 # 给指定的policy的前n/2个填0,后n/2个填1
 def fill_number(policy, pos, n):
@@ -30,8 +30,33 @@ def create_policy():
 
     return policy
 
+
+def test():
+    list2 = []
+    n = 3
+    count = 0
+    while count < n:
+        list0 = copy.deepcopy(list2)
+        list1 = copy.deepcopy(list2)
+        if len(list0) == 0:
+            list0.append(0)
+            list1.append(1)
+        else:
+            for item in list0:
+                item.append(0)
+            for item in list1:
+                item.append(1)
+        list2 = []
+        list2.append(list0)
+        list2.extend(list1)
+        count += 1
+    print(list2)
+
 if __name__=="__main__":
     
+    test()
+    exit(0)
+
     all_policy = create_policy()
     env = dataModel.Env(all_policy)
 

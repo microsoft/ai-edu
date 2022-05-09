@@ -1,6 +1,6 @@
 import numpy as np
 import Wormhole_0_Data as data              # 数据定义
-import GridWorld_0_Model as model           # 模型逻辑
+import GridWorld_Model as model           # 模型逻辑
 import Algo_PolicyValueFunction as algo     # 算法实现
 import DrawQpi as drawQ                     # 结果输出
 
@@ -15,13 +15,13 @@ if __name__=="__main__":
         # 关于移动的限制 
         data.SpecialMove, data.Blocks)                        
 
-    gamma = 0.9
-    iteration = 1000
-    V_pi, Q_pi = algo.V_in_place_update(env, gamma, iteration)
+    gamma = 0.9 # 折扣，在本例中用1.0可以收敛，但是用0.9比较保险
+    iteration = 1000    # 算法最大迭代次数
+    V_pi, Q_pi = algo.V_in_place_update(env, gamma, iteration)  # 原地更新的迭代算法
     print("V_pi")
-    V = np.reshape(np.round(V_pi,2), (data.GridWidth, data.GridHeight))
+    V = np.reshape(np.round(V_pi,3), (data.GridWidth, data.GridHeight))
     print(V)
     print("Q_pi")
-    print(np.round(Q_pi,2))
-
+    print(np.round(Q_pi,3))
+    # 字符图形化显示
     drawQ.draw(Q_pi, (data.GridWidth, data.GridHeight))

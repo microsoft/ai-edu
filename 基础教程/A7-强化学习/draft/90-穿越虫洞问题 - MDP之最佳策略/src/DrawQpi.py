@@ -1,11 +1,19 @@
 
 import numpy as np
 
+LEFT = 0x25c4 
+UP = 0x25b2
+RIGHT = 0x25ba
+DOWN = 0x25bc
+SPACE = 0x0020
+CENTER = 0x253c
+LINE = 0x2500
+
 class GridCell(object):
     def __init__(self, policy):
         self.space = np.zeros((3,5), dtype=int)
-        self.space.fill(0x0020)     # 空格
-        self.space[1,2] = 0x253c    # 圆圈 O
+        self.space.fill(SPACE)     # 空格
+        self.space[1,2] = CENTER   # 中心
         self.policy = np.round(policy, 2)
 
     # policy 是一个1x4的数组或矩阵,如[0.1,0.1,0.4,0.4]
@@ -19,15 +27,15 @@ class GridCell(object):
         pos = best_actions.flatten().tolist()
         for a in pos:
             if a == 0:      # left
-                self.space[1,0] = 0x25c4 #0x2190
-                self.space[1,1] = 0x2015
+                self.space[1,0] = LEFT
+                self.space[1,1] = LINE
             elif a == 1:    # up
-                self.space[0,2] = 0x25b2 #0x2191
+                self.space[0,2] = UP
             elif a == 2:    # right
-                self.space[1,3] = 0x2015
-                self.space[1,4] = 0x25ba #0x2192
+                self.space[1,3] = LINE
+                self.space[1,4] = RIGHT
             elif a == 3:    # down
-                self.space[2,2] = 0x25bc #0x2193
+                self.space[2,2] = DOWN
         
 
 class Grid(object):

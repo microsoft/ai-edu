@@ -1,4 +1,4 @@
-import GridWorld_0_Model as model
+import GridWorld_Model as model
 
 # 状态空间 = 空间宽度 x 空间高度
 GridWidth, GridHeight = 5, 5

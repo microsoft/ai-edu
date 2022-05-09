@@ -18,11 +18,21 @@ class GridWorld(object):
         self.nS = GridHeight * GridWidth
         self.nA = len(Actions)
         self.SpecialReward = SpecialReward
+        self.StartStates = StartStates
         self.EndStates = EndStates
         self.SpecialMove = SpecialMove
-        self.Policy = Policy
-        self.Psr = self.__init_states(SlipProbs, StepReward)
+        self.Blocks = Blocks
+        self.Policy = self.__init_policy(Policy)
+        self.P_S_R = self.__init_states(SlipProbs, StepReward)
 
+    # 把统一的policy设置复制到每个状态上
+    def __init_policy(self, Policy):
+        PI = {}
+        for s in range(self.nS):
+            PI[s] = Policy
+        return PI
+
+    # 用于生成状态->动作->转移->奖励字典
     def __init_states(self, Probs, StepReward):
         P = {}
         s_id = 0
@@ -43,7 +53,7 @@ class GridWorld(object):
                 for dir, prob in enumerate(Probs):
                     if (prob == 0.0):
                         continue
-                    s_next = self.__generate_transation(
+                    s_next = self.__get_next_state(
                         s, x, y, action + dir - 1)    # 处理每一个转移概率，方向逆时针减1
                     reward = StepReward              # 通用奖励定义 (-1)
                     if (s, s_next) in self.SpecialReward:    # 如果有特殊奖励定义
@@ -53,33 +63,35 @@ class GridWorld(object):
                 P[s][action] = list_probs
         return P
 
+    # 用于计算移动后的下一个状态
     # 左上角为 [0,0], 横向为 x, 纵向为 y
-    def __generate_transation(self, s, x, y, action):
+    def __get_next_state(self, s, x, y, action):
         action = action % 4         # 避免负数
         if (s,action) in self.SpecialMove:
             return self.SpecialMove[(s,action)]
 
         if (action == UP):          # 向上转移
-            if (y != 0):            # 在上方边界处
+            if (y != 0):            # 不在上方边界处，否则停在原地不动
                 s = s - self.Width
         elif (action == DOWN):      # 向下转移
-            if (y != self.Height-1):# 在下方边界处
+            if (y != self.Height-1):# 不在下方边界处，否则停在原地不动
                 s = s + self.Width
         elif (action == LEFT):      # 向左转移
-            if (x != 0):            # 在左侧边界处
+            if (x != 0):            # 不在左侧边界处，否则停在原地不动
                 s = s - 1
         elif (action == RIGHT):     # 向右转移
-            if (x != self.Width-1): # 在右侧边界处
+            if (x != self.Width-1): # 不在右侧边界处，否则停在原地不动
                 s = s + 1
         return s
 
-    def step(self, s):
-        pass
+    def is_end(self, s):
+        return (s in self.EndStates)
 
     def get_actions(self, s):
-        actions = self.Psr[s]
+        actions = self.P_S_R[s]
         return actions.items()
 
+'''
 # 式 (2.1) 计算 q_pi
 def q_pi(Psr, gamma, V):
     q = 0
@@ -215,7 +227,7 @@ def get_policy(env: GridWorld, V, gamma):
 
         policy[s, np.argmax(list_q)] = 1
     return policy
-
+'''
 action_names = ['LEFT', 'UP', 'RIGHT', 'DOWN']
 
 def print_P(P):

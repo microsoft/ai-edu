@@ -1,8 +1,4 @@
-import numpy as np
-import GridWorldAgent2 as agent2
-import DrawQpi as drawQ
-
-# 状态空间（尺寸）S，终点目标T，起点S，障碍B，奖励R，动作空间A，转移概率P
+import GridWorld_0_Model as model
 
 # 状态空间 = 空间宽度 x 空间高度
 GridWidth, GridHeight = 5, 5
@@ -52,21 +48,25 @@ SpecialMove = {
 # 墙
 Blocks = []
 
-
 if __name__=="__main__":
-    env = agent2.GridWorld(
+    env = model.GridWorld(
         GridWidth, GridHeight, StartStates, EndStates,  # 关于状态的参数
         Actions, Policy, SlipProbs,                     # 关于动作的参数
         StepReward, SpecialReward,                      # 关于奖励的参数
         SpecialMove, Blocks)                            # 关于移动的限制
-    agent2.print_P(env.Psr)
+    model.print_P(env.P_S_R)
+    '''
     gamma = 0.9
     iteration = 1000
-    V_pi, Q_pi = agent2.V_in_place_update(env, gamma, iteration)
-    print("V_pi")
-    V = np.reshape(np.round(V_pi,2), (GridWidth,GridHeight))
-    print(V)
-    print("Q_pi")
-    print(np.round(Q_pi,2))
+    V_pi, Q_pi = base.V_in_place_update(env, gamma, iteration)
+    print(np.reshape(np.round(V_pi,2), (GridWidth,GridHeight)))
 
-    drawQ.draw(Q_pi, (GridWidth,GridHeight))
+    V_star, Q_star = base.V_star(env, gamma, iteration)
+    print("V*")
+    print(np.reshape(np.round(V_star,2), (GridWidth,GridHeight)))
+    print("Q*")
+    base.print_P(Q_star)
+
+    policy = base.get_policy(env, V_star, gamma)
+    base.print_policy(policy, (GridWidth, GridHeight))
+    '''

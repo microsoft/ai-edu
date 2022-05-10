@@ -55,18 +55,3 @@ if __name__=="__main__":
         StepReward, SpecialReward,                      # 关于奖励的参数
         SpecialMove, Blocks)                            # 关于移动的限制
     model.print_P(env.P_S_R)
-    '''
-    gamma = 0.9
-    iteration = 1000
-    V_pi, Q_pi = base.V_in_place_update(env, gamma, iteration)
-    print(np.reshape(np.round(V_pi,2), (GridWidth,GridHeight)))
-
-    V_star, Q_star = base.V_star(env, gamma, iteration)
-    print("V*")
-    print(np.reshape(np.round(V_star,2), (GridWidth,GridHeight)))
-    print("Q*")
-    base.print_P(Q_star)
-
-    policy = base.get_policy(env, V_star, gamma)
-    base.print_policy(policy, (GridWidth, GridHeight))
-    '''

@@ -16,9 +16,9 @@ if __name__=="__main__":
     max_iteration = 1000
     env = dataModel.Env(Policy)
     V,Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)
-    print("在原始策略下的状态价值函数值")
+    print("在原始策略下的状态价值函数值 V:")
     print(np.round(V,5))
-    print("在原始策略下的动作价值函数值")
+    print("在原始策略下的动作价值函数值 Q:")
     print(Q)
 
     # 新策略

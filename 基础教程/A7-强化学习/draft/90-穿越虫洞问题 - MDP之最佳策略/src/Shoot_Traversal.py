@@ -1,7 +1,7 @@
 import numpy as np
 import Shoot_2_DataModel as dataModel
 import math
-import Algo_ValueFunctionUnderPolicy as algo
+import Algo_PolicyValueFunction as algo
 import copy
 
 # 给指定的policy的前n/2个填0,后n/2个填1
@@ -54,8 +54,8 @@ def test():
 
 if __name__=="__main__":
     
-    test()
-    exit(0)
+    #test()
+    #exit(0)
 
     all_policy = create_policy()
     env = dataModel.Env(all_policy)
@@ -70,7 +70,7 @@ if __name__=="__main__":
         print("策略", id)
         print(policy)
         env.Policy = policy
-        V, Q = algo.V_in_place_update(env, gamma, max_iteration)
+        V, Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)
         V_values.append(V)
         print(np.round(V,4))
         print("------")

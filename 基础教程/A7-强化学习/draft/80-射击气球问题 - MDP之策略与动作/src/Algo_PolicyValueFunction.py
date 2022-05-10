@@ -21,7 +21,7 @@ def v_pi(policy, s, actions, gamma, V, Q):
     return v
 
 # 迭代法计算 v_pi
-def V_in_place_update(env, gamma, iteration):
+def calculate_Vpi_Qpi(env, gamma, iteration):
     V = np.zeros(env.nS)            # 初始化 V(s)
     Q = np.zeros((env.nS, env.nA))  # 初始化 Q(s,a)
     count = 0   # 计数器，用于衡量性能和避免无限循环

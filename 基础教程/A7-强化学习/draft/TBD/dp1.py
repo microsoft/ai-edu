@@ -1,3 +1,4 @@
+@@ -1,43 +0,0 @@
 import time
 
 # 递归法
@@ -27,8 +28,7 @@ def f3(n):
 
 
 if __name__=="__main__":
-    n = 41
-
+    n = 40
 
     start = time.time()
     print("递归法结果 =", f1(n))

@@ -30,7 +30,7 @@ def Sampling_Checkpoint(dataModel, start_state, episodes, gamma, checkpoint):
     G_sum = 0  # 定义最终的返回值，G 的平均数
     # 循环多幕
     for episode in tqdm.trange(episodes):
-        # 由于使用了注重结果奖励方式，所以起始状态也有奖励，做为 G 的初始值
+        # 由于使用了面向结果奖励方式，所以起始状态也有奖励，做为 G 的初始值
         G = dataModel.get_reward(start_state)   
         curr_s = start_state        # 把给定的起始状态作为当前状态
         t = 1                       # 折扣因子

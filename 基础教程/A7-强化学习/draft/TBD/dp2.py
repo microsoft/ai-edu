@@ -1,3 +1,4 @@
+@@ -1,24 +0,0 @@
 import numpy as np
 
 # C:背包容量，N:物品数量，V:物品价值，S:物品体积
@@ -16,7 +17,7 @@ def f(Capacity, Number, Value, Size):
     return dp_Value
 
 if __name__=="__main__":
-    Capacity = 10
+    Capacity = 5
     Number = 4
     Value = [0,2,4,3,7]
     Size = [0,2,3,5,5]

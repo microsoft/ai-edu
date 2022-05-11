@@ -9,7 +9,7 @@ P = np.array([
 
 def Check_Convergence(P):
     P_curr = P.copy()
-    for i in range(100000):
+    for i in range(1000):
         P_next=np.dot(P,P_curr)
         print("迭代次数 =",i+1)
         print(P_next)

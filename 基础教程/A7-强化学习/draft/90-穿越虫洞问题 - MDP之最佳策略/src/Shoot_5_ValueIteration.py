@@ -9,7 +9,7 @@ if __name__=="__main__":
     gamma = 1
     max_iteration = 100
     V_star, Q_star = algo.calculate_Vstar(env, gamma, max_iteration)
-    print(np.round(V_star,4))
+    print(np.round(V_star,5))
     policy = algo.get_policy(env, V_star, gamma)
     print(policy)
     print(Q_star)

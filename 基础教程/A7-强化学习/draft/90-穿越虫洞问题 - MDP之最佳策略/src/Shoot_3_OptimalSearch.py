@@ -68,18 +68,12 @@ def find_best_policy(V_values, all_policy_in_binary):
     v0_best = np.max(v[:,0])                  # 获得所有策略组合中 v(s0) 的最大值
     print("v(s0)的最优价值函数 :", v0_best)
     print("="*40)
-    #print("二进制形式的最优策略组合与价值函数 :")
-    #print("-"*20)
     best_ids = np.argwhere(v[:,0] == v0_best) # 获得所有的最大值的策略组合序号
-    #for id in best_ids:
-        #print(str.format("最优策略组合({0}):\t{1}", id[0], all_policy_in_binary[id[0]]))
-        #print(str.format("最优状态价值函数:\t{0}", v[id][0]))
-        #print("-"*10)
     return best_ids
 
 if __name__=="__main__":
     all_policy_in_binary = create_binary_policy()   # 二进制形式
-    print("二进制形式的策略组合 : ")
+    print("二进制形式的策略组 : ")
     print("-"*30)
     print(all_policy_in_binary)
     print("="*30)
@@ -87,11 +81,11 @@ if __name__=="__main__":
     gamma = 1
     max_iteration = 1000
     V_values = []
-    print("OneHot形式的策略组合与状态价值函数 : ")
+    print("OneHot形式的策略组与状态价值函数 : ")
     print("-"*20)
     for id, actions in enumerate(all_policy_in_binary):
         policy = create_onehot_policy(actions)      # onehot形式
-        print(str.format("策略组合({0}):\t{1}", id, policy))
+        print(str.format("策略组-{0}:\t{1}", id, policy))
         env = dataModel.Env(policy)     # 创建环境，代入策略组合
         V, Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)    # 迭代法计算V,Q
         V_values.append(V)              # 保存每个策略组合的价值函数结果,便于比较
@@ -101,11 +95,11 @@ if __name__=="__main__":
     print("="*40)
     # 输出最优策略的价值函数
     best_ids = find_best_policy(V_values, all_policy_in_binary)
-    print("OneHot形式的最优策略组合与最优价值函数 :")
+    print("二进制形式的最优策略组与最优价值函数 :")
     print("-"*20)
     for id in best_ids:
         policy = create_onehot_policy(all_policy_in_binary[id[0]])      # onehot形式
-        print(str.format("最优策略组合({0}):\t{1}", id[0], policy))
+        print(str.format("最优策略组-{0}:\t{1}", id[0], all_policy_in_binary[id[0]]))
         env = dataModel.Env(policy)     # 创建环境，代入策略组合
         V, Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)    # 迭代法计算V,Q
         print(str.format("最优状态价值函数:\t{0}", V))

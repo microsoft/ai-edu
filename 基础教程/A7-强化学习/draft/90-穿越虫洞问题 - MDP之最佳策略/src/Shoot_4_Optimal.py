@@ -32,28 +32,6 @@ def create_binary_policy():
     return policy
 
 
-def test():
-    list2 = []
-    n = 3
-    count = 0
-    while count < n:
-        list0 = copy.deepcopy(list2)
-        list1 = copy.deepcopy(list2)
-        if len(list0) == 0:
-            list0.append(0)
-            list1.append(1)
-        else:
-            for item in list0:
-                item.append(0)
-            for item in list1:
-                item.append(1)
-        list2 = []
-        for item in list0:
-            list2.append([item])
-        for item in list1:
-            list2.append([item])
-        count += 1
-    print(list2)
 
 # 创建onehot编码形式的policy，如 [[0,1],[1,0],[1,0]...]
 def create_onehot_policy(actions):
@@ -79,36 +57,19 @@ def find_best_policy(V_values, all_policy_in_binary):
 
 if __name__=="__main__":
     all_policy_in_binary = create_binary_policy()   # 二进制形式
-    print("二进制形式的策略组合 : ")
-    print("-"*30)
-    print(all_policy_in_binary)
-    print("="*30)
-    # 遍历所有策略组合
     gamma = 1
     max_iteration = 1000
     V_values = []
     print("OneHot形式的策略组合与状态价值函数 : ")
     print("-"*20)
-    for id, actions in enumerate(all_policy_in_binary):
+    for id in range(59,64):
+        actions = all_policy_in_binary[id]
         policy = create_onehot_policy(actions)      # onehot形式
         print(str.format("策略组合({0}):\t{1}", id, policy))
         env = dataModel.Env(policy)     # 创建环境，代入策略组合
         V, Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)    # 迭代法计算V,Q
         V_values.append(V)              # 保存每个策略组合的价值函数结果,便于比较
-        print(str.format("状态价值函数:\t{0}",V))
+        print(str.format("状态价值函数:\t{0}",V[0]))
+        print(str.format("动作价值函数:\n{0}",Q))
         print("-"*10)
     
-    print("="*40)
-    # 输出最优策略的价值函数
-    best_ids = find_best_policy(V_values, all_policy_in_binary)
-    print("OneHot形式的最优策略组合与最优价值函数 :")
-    print("-"*20)
-    for id in best_ids:
-        policy = create_onehot_policy(all_policy_in_binary[id[0]])      # onehot形式
-        print(str.format("最优策略组合({0}):\t{1}", id[0], policy))
-        env = dataModel.Env(policy)     # 创建环境，代入策略组合
-        V, Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)    # 迭代法计算V,Q
-        print(str.format("最优状态价值函数:\t{0}", V))
-        print("最优动作价值函数:")
-        print(Q)
-        print("-"*10)

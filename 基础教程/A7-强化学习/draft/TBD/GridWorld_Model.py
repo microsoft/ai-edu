@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 import matplotlib.pyplot as plt
 
 LEFT, UP, RIGHT, DOWN  = 0, 1, 2, 3

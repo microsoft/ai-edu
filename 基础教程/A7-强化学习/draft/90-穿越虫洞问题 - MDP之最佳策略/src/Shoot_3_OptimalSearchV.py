@@ -1,8 +1,8 @@
 import numpy as np
 import Shoot_2_DataModel as dataModel
 import math
-import Algo_PolicyValueFunction as algo
-import common_helper as helper
+import Algorithm.Algo_PolicyValueFunction as algo
+import common.PrintHelper as helper
 
 # 给指定的policy的前n/2个填0,后n/2个填1
 def fill_number(policy, pos, n):
@@ -95,7 +95,7 @@ def caculate_all_V_Q(all_policy_in_binary, verbose=True):
     for id, binary_actions in enumerate(all_policy_in_binary):
         policy = create_onehot_policy(binary_actions)      # onehot形式
         env = dataModel.Env(policy)     # 创建环境，代入策略组
-        V, Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)    # 迭代法计算V,Q
+        V, Q = algo.calculate_VQ_pi(env, gamma, max_iteration)    # 迭代法计算V,Q
         V_all_policy.append(V)              # 保存每个策略组合的 V 函数结果,便于比较
         Q_all_policy.append(Q)
         if (verbose):

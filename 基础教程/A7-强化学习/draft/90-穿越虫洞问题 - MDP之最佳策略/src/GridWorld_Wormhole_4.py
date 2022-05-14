@@ -53,13 +53,13 @@ if __name__=="__main__":
     model.print_P(env.P_S_R)
     gamma = 0.5
     iteration = 1000
-    V_pi, Q_pi = algo.calculate_Vpi_Qpi(env, gamma, iteration)
+    V_pi, Q_pi = algo.calculate_VQ_pi(env, gamma, iteration)
     print("v_pi")
     print(np.reshape(np.round(V_pi,2), (GridWidth,GridHeight)))
     print("q_pi")
     print(np.round(Q_pi,2))
 
-    V_star, Q_star = algo2.calculate_Vstar(env, gamma, 100)
+    V_star, Q_star = algo2.calculate_VQ_star(env, gamma, 100)
     
     print("v*=",np.round(V_star,5))
     policy = algo2.get_policy(env, V_star, gamma)

@@ -1,8 +1,8 @@
 import numpy as np
 import copy
 
-# 式 (8.4.2) 计算 q
-def q_pi(p_s_r, gamma, V):
+# 式 (9.6.1) 计算 q，假设已知 v*(s')
+def q_star(p_s_r, gamma, V):
     q = 0
     # 遍历每个转移概率,以计算 q
     for p, s_next, r in p_s_r:
@@ -10,18 +10,16 @@ def q_pi(p_s_r, gamma, V):
         q += p * (r + gamma * V[s_next])
     return q
 
-# 式 (8.4.5) 计算 v_pi
-def v_pi(s, actions, gamma, V, Q):
-    list_q = []
+# 式 (9.6.3) 计算 v*
+def v_star(s, actions, gamma, V, Q):
+    list_q = []                     # 准备列表记录所有下游的 q*
     for a, p_s_r in actions:        # 遍历每个动作以计算q值，进而计算v值
-        q = q_pi(p_s_r, gamma, V)
-        list_q.append(q)
-        # 顺便记录下q(s,a)值,不需要再单独计算一次
-        Q[s,a] = q
-    return max(list_q)
-           #V[s] = max(list_q) if len(list_q) > 0 else 0
+        q = q_star(p_s_r, gamma, V) # 计算 q*
+        list_q.append(q)            # 加入列表
+        Q[s,a] = q                  # 记录下所有的q(s,a)值,不需要再单独计算一次
+    return max(list_q)              # 返回几个q*中的最大值,即 v=max(q)
 
-def calculate_Vstar(env, gamma, max_iteration):
+def calculate_VQ_star(env, gamma, max_iteration):
     V = np.zeros(env.nS)
     Q = np.zeros((env.nS, env.nA))
     count = 0
@@ -34,7 +32,7 @@ def calculate_Vstar(env, gamma, max_iteration):
                 continue            
             # 获得 状态->动作 策略概率
             actions = env.get_actions(s)
-            V[s] = v_pi(s, actions, gamma, V, Q)
+            V[s] = v_star(s, actions, gamma, V, Q)
         # 检查收敛性
         if abs(V-V_old).max() < 1e-4:
             break

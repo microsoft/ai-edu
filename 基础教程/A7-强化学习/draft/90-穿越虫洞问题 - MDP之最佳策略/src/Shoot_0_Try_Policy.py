@@ -1,7 +1,7 @@
 import numpy as np
 import copy
 import Shoot_2_DataModel as dataModel
-import Algo_PolicyValueFunction as algo
+import Algorithm.Algo_PolicyValueFunction as algo
 
 if __name__=="__main__":
     Policy = {      # 原始状态
@@ -15,7 +15,7 @@ if __name__=="__main__":
     gamma = 1
     max_iteration = 1000
     env = dataModel.Env(Policy)
-    V,Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)
+    V,Q = algo.calculate_VQ_pi(env, gamma, max_iteration)
     print("在原始策略下的状态价值函数值 V:")
     print(np.round(V,5))
     print("在原始策略下的动作价值函数值 Q:")
@@ -36,5 +36,5 @@ if __name__=="__main__":
         new_policy = copy.deepcopy(Policy)  # 继承原始策略
         new_policy[i] = test_policy[i]      # 只修改其中一个状态的策略
         env = dataModel.Env(new_policy)
-        V,Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)
+        V,Q = algo.calculate_VQ_pi(env, gamma, max_iteration)
         print(np.round(V,5))

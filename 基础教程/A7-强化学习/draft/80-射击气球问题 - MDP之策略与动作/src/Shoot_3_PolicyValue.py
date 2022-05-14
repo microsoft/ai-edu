@@ -15,7 +15,7 @@ if __name__=="__main__":
         6:[0.4,0.6]     # 可以不定义，因为在终止状态没有动作
     }
     env = dataModel.Env(Policy) # 初始化环境
-    V, Q = algo.calculate_Vpi_Qpi(env, gamma, max_iteration)    # 迭代计算V,Q
+    V, Q = algo.calculate_VQ_pi(env, gamma, max_iteration)    # 迭代计算V,Q
     V = np.round(V,5)
     Q = np.round(Q,5)
     for i,s in enumerate(env.S):

@@ -41,9 +41,14 @@ if __name__ == "__main__":
     print("天数 =",2)
     for return_to in RentalStore:
         num_from, num_to = Statistic(data_array, rent_from, return_to, t=2)
-        print(str.format("{0}->{1} : {2},{3}", rent_from.name, return_to.name, num_from, num_to))
+        print(str.format("从 {0} 店出租 {2} 次，还到 {1} 店 {3} 次", rent_from.name, return_to.name, num_from, num_to))
 
     print("天数 =",5)
     for return_to in RentalStore:
         num_from, num_to = Statistic(data_array, rent_from, return_to, t=5)
-        print(str.format("{0}->{1} : {2},{3}", rent_from.name, return_to.name, num_from, num_to))
+        print(str.format("从 {0} 店出租 {2} 次，还到 {1} 店 {3} 次", rent_from.name, return_to.name, num_from, num_to))
+
+    print("天数 =",1)
+    for return_to in RentalStore:
+        num_from, num_to = Statistic(data_array, rent_from, return_to, t=1)
+        print(str.format("从 {0} 店出租 {2} 次，还到 {1} 店 {3} 次", rent_from.name, return_to.name, num_from, num_to))

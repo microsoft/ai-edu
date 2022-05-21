@@ -58,7 +58,7 @@ class DataModel(object):
         return self.R[s_curr][s_next]
 
     # 根据转移概率前进一步，返回（下一个状态、即时奖励、是否为终止）
-    def get_next(self, s_curr):
+    def step(self, s_curr):
         if self.is_end(s_curr):
             return None
         else:

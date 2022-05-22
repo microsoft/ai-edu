@@ -19,5 +19,4 @@ if __name__=="__main__":
             V[s.value] = algo.Sampling(model, s, episodes, gamma)
 
         print("gamma =", gamma)
-        for s in model.S:    # 遍历状态集中的每个状态作为起始状态
-            print(s, V[s.value])
+        algo.print_V(model, V)

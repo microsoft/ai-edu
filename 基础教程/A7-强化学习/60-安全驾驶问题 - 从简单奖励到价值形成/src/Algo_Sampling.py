@@ -1,4 +1,4 @@
-
+import numpy as np
 import tqdm
 import math
 
@@ -21,3 +21,9 @@ def Sampling(dataModel, start_state, episodes, gamma):
     # end for
     v = G_sum / episodes   # 最后再一次性计算平均值，避免增加计算开销
     return v
+
+def print_V(dataModel, V):
+    vv = np.around(V,2)
+    print("状态价值函数计算结果(数组) :", vv)
+    for s in dataModel.S:
+        print(str.format("{0}:\t{1}", s.name, vv[s.value]))

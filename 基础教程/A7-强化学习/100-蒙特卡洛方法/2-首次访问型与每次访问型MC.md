@@ -29,7 +29,7 @@ $$
 聪明的读者可能会发现一个问题：如果不“从头”开始，而是从第二个、第三个状态开始计算，是不是就能在一次采样中就可以得到很多状态的 G 值呢？
 
 <center>
-<img src="./img/MC-1.png" width="600">
+<img src="./img/MC-1.png">
 
 图 1 
 </center>
@@ -110,7 +110,7 @@ def MC_Sampling_Reverse(dataModel, start_state, episodes, gamma):
 
 
 <center>
-<img src="./img/MC-2-RMSE.png" width="500">
+<img src="./img/MC-2-RMSE.png">
 
 图 2
 </center>

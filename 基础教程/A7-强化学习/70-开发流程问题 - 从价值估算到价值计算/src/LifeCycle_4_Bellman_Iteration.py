@@ -39,9 +39,9 @@ class DataModel(object):
         return list_state_prob
 
 
-# 贝尔曼方程单数组就地更新
+# 贝尔曼方程单数组更新
 def Bellman_iteration(dataModel, gamma, max_iteration):
-    print("单数组就地更新法")
+    print("贝尔曼方程单数组更新法")
     helper.print_seperator_line(helper.SeperatorLines.long)
     V = np.zeros(dataModel.N)
     count = 0
@@ -52,12 +52,11 @@ def Bellman_iteration(dataModel, gamma, max_iteration):
         for s in dataModel.S:
             # 得到转移概率
             list_state_prob  = dataModel.get_next(s)
-            # 计算 \sum(P·V)
-            v_s_next = 0
-            for s_next, p_s_s_next in list_state_prob:
-                v_s_next += p_s_s_next * V[s_next.value]
-            # 计算 V = R + gamma * \sum(P·V)
-            V[s.value] = dataModel.R[s.value] + gamma * v_s_next
+            temp = 0
+            for s_next, p_s_snext in list_state_prob:
+                temp += p_s_snext * V[s_next.value]  # 计算 \sum(p·v)
+            # 计算 V = R + gamma * \sum(p·v)
+            V[s.value] = dataModel.R[s.value] + gamma * temp
         # 检查收敛性
         if np.allclose(V, V_old):
             break

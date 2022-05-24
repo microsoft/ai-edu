@@ -2,17 +2,17 @@ import numpy as np
 import LifeCycle_0_DataModel as data
 import common_helper as helper
 
-# 矩阵迭代法
-def matrix_iteration(dataModel, gamma):
-    print("矩阵迭代法")
+# 双数组矩阵迭代法
+def matrix_iteration(dataModel, gamma, max_iteration):
+    print("双数组矩阵迭代法")
     helper.print_seperator_line(helper.SeperatorLines.long)
     V_new = np.zeros(dataModel.N)
     count = 0   # 迭代计数器
-    while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
-        count += 1  # 计数器+1
-        V_old = V_new.copy()   # 准备一个备份，用于比较，检查是否收敛
-        V_new = dataModel.R + gamma * np.dot(dataModel.P, V_old)   # 式 3
-        if np.allclose(V_new, V_old):  # 检查收敛性
+    while (count < max_iteration):      # 避免不收敛而导致while无限
+        count += 1                      # 计数器+1
+        V_old = V_new.copy()            # 保存旧值
+        V_new = dataModel.R + gamma * np.dot(dataModel.P, V_old)
+        if np.allclose(V_new, V_old):   # 检查收敛性
             break
     print("迭代次数 :", count)
     return V_new
@@ -28,8 +28,8 @@ def check_convergence(dataModel):
 if __name__=="__main__":
     dataModel = data.DataModel()
     gamma = 1
-
-    V = matrix_iteration(dataModel, gamma)
+    max_iteration = 1000
+    V = matrix_iteration(dataModel, gamma, max_iteration)
     helper.print_V(dataModel, V)
 
     check_convergence(dataModel)

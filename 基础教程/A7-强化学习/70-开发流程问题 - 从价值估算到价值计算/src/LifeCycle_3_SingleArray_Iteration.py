@@ -2,13 +2,13 @@ import numpy as np
 import LifeCycle_0_DataModel as data
 import common_helper as helper
 
-# 单数组原始迭代法
-def linear_equations_iteration_single_array(dataModel, gamma):
-    print("单数组原始迭代法")
+# 单数组线性迭代法
+def single_array_iteration(dataModel, gamma, max_iteration):
+    print("单数组线性迭代法")
     helper.print_seperator_line(helper.SeperatorLines.long)
     V = np.zeros(dataModel.N)   # 初始化为全 0
     count = 0   # 迭代计数器
-    while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
+    while (count < max_iteration):   # 避免不收敛而导致while无限
         count += 1          # 计数器+1
         V_old = V.copy()    # 备份上一次的迭代值用于检查收敛性
         # 线性方程组
@@ -27,5 +27,6 @@ def linear_equations_iteration_single_array(dataModel, gamma):
 if __name__=="__main__":
     dataModel = data.DataModel()
     gamma = 1
-    V = linear_equations_iteration_single_array(dataModel, gamma)
+    max_iteration = 1000
+    V = single_array_iteration(dataModel, gamma, max_iteration)
     helper.print_V(dataModel, V)

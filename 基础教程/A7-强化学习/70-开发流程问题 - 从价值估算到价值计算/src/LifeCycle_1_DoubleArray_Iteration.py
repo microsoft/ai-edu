@@ -2,9 +2,10 @@ import numpy as np
 import LifeCycle_0_DataModel as data
 import common_helper as helper
 
-# 线性方程组原始迭代法
-def linear_equations_iteration(dataModel, gamma):
-    print("---原始迭代法---")
+# 线性方程组双数组迭代法
+def double_array_iteration(dataModel, gamma):
+    print("线性方程组双数组迭代法")
+    helper.print_seperator_line(helper.SeperatorLines.long)
     V_new = np.zeros(dataModel.N)   # 初始化为全 0
     count = 0
     while (count < 1000):   # 1000 是随意指定的一个比较大的数，避免不收敛而导致while无限
@@ -26,6 +27,6 @@ def linear_equations_iteration(dataModel, gamma):
 if __name__=="__main__":
     dataModel = data.DataModel()
     gamma = 1
-    V = linear_equations_iteration(dataModel, gamma)
+    V = double_array_iteration(dataModel, gamma)
     helper.print_V(dataModel, V)
 

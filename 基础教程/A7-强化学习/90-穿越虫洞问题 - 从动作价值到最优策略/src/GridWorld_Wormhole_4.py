@@ -1,14 +1,14 @@
 import numpy as np
-from enum import Enum
-import GridWorld_Model as model
-import Algo_OptimalValueFunction as algo
-import DrawQpi as drawQ
+import GridWorld_Model as model           # 模型逻辑
+import Algo_PolicyValueFunction as algo     # 算法实现
+import Algo_OptimalValueFunction as algo2
+
 # 状态空间（尺寸）S，终点目标T，起点S，障碍B，奖励R，动作空间A，转移概率P
 
 # 空间宽度
-GridWidth = 5
+GridWidth = 2
 # 空间高度
-GridHeight = 5
+GridHeight = 2
 # 起点
 StartStates = []
 # 终点
@@ -31,35 +31,17 @@ SpecialReward = {
     (1,1):-1,
     (2,2):-1,
     (3,3):-1,
-    (4,4):-1,
-    (5,5):-1,
-    (9,9):-1,
-    (10,10):-1,
-    (14,14):-1,
-    (15,15):-1,
-    (19,19):-1,
-    (20,20):-1,
-    (21,21):-1,
-    (22,22):-1,
-    (23,23):-1,
-    (24,24):-1,
-    (1,21):+10,
-    (3,13):+5
+    (0,3):+5
 }
 
 # 特殊移动，用于处理类似虫洞场景
 SpecialMove = {
-    (1,LEFT):21,
-    (1,UP):21,
-    (1,RIGHT):21,
-    (1,DOWN):21,
-    (3,LEFT):13,
-    (3,UP):13,
-    (3,RIGHT):13,
-    (3,DOWN):13
+    (0,LEFT):   3,
+    (0,UP):     3,
+    (0,RIGHT):  3,
+    (0,DOWN):   3,
 }
 Blocks = []
-
 
 
 if __name__=="__main__":
@@ -68,14 +50,20 @@ if __name__=="__main__":
         Actions, Policy, SlipProbs,                     # 关于动作的参数
         StepReward, SpecialReward,                      # 关于奖励的参数
         SpecialMove, Blocks)                            # 关于移动的限制
-    #model.print_P(env.Psr)
-    gamma = 0.9
+    model.print_P(env.P_S_R)
+    gamma = 0.5
     iteration = 1000
-    V_star, Q_star = algo.calculate_Vstar(env, gamma, iteration)
-    print(np.reshape(np.round(V_star,2), (GridWidth,GridHeight)))
+    V_pi, Q_pi = algo.calculate_VQ_pi(env, gamma, iteration)
+    print("v_pi")
+    print(np.reshape(np.round(V_pi,2), (GridWidth,GridHeight)))
+    print("q_pi")
+    print(np.round(Q_pi,2))
 
-    print("V*")
-    print(np.reshape(np.round(V_star,2), (GridWidth,GridHeight)))
-    print("Q*")
-
-    drawQ.draw(Q_star, (GridWidth, GridHeight))
+    V_star, Q_star = algo2.calculate_VQ_star(env, gamma, 100)
+    
+    print("v*=",np.round(V_star,5))
+    policy = algo2.get_policy(env, V_star, gamma)
+    print("policy")
+    print(policy)
+    print("q*=")
+    print(np.round(Q_star,2))

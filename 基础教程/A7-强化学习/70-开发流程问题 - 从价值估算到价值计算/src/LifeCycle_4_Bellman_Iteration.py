@@ -34,8 +34,8 @@ class DataModel(object):
         self.N = len(self.S)                # 状态数量
         self.E = [self.S.End]      # 终止状态集
 
-    def get_next(self, curr_s):
-        list_state_prob = self.D[curr_s]    # 根据当前状态返回可用的下游状态及其概率
+    def get_next(self, s):
+        list_state_prob = self.D[s]    # 根据当前状态返回可用的下游状态及其概率
         return list_state_prob
 
 

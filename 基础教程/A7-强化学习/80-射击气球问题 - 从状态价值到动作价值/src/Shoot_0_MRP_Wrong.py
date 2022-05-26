@@ -1,5 +1,6 @@
 import numpy as np
 from enum import Enum
+import common_helper as helper
 
 # 奖励
 #    0   1  2  3  4  5  6  7  8  9  10 11 12
@@ -43,18 +44,19 @@ def check_convergence(dataModel, gamma=1):
     for i in range(100):
         P_new = np.dot(dataModel.P, P_new) * gamma
     print(np.around(P_new, 3))
-    print("------------")
 
 if __name__=="__main__":
     dataModel = DataModel()
     gammas = [1,0.9]
     for gamma in gammas:
+        helper.print_seperator_line(helper.SeperatorLines.long)
         print("折扣 =", gamma)
+        helper.print_seperator_line(helper.SeperatorLines.middle)
         check_convergence(dataModel, gamma)
         V = SolveMatrix(dataModel, gamma)
         vv = np.around(V,3)
+        helper.print_seperator_line(helper.SeperatorLines.middle)
         print("价值函数：")
         for s in dataModel.S:
             print(str.format("{0}:\t{1}", s.name, vv[s.value]))
-        print("------------")
     

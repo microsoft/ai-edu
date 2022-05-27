@@ -1,12 +1,15 @@
 import numpy as np
-from enum import Enum
+import Algo_PolicyValueFunction as algo
+import common_helper as helper
 
+# 状态数量
 N_States = 13
 
 # 奖励
 #    0   1  2  3  4  5  6  7  8  9  10 11 12
 R = [-4, 0, 1, 3, 0, 1, 3, 0, 1, 3, 0, 1, 3]
 
+# 转移矩阵
 P = np.array(
     [   # 0     1     2     3    4     5      6     7     8     9     10    11    12
         [0.00, 0.56, 0.38, 0.06, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00], # 0
@@ -25,21 +28,25 @@ P = np.array(
     ]
 )
 
+# 简单模型
+class DataModel(object):
+    def __init__(self):
+        self.P = P              # 状态转移矩阵
+        self.R = R              # 奖励
+        self.nS = N_States      # 状态数量
 
-def SolveMatrix(gamma):
-    # 在对角矩阵上增加一个微小的值来解决奇异矩阵不可求逆的问题
-    #I = np.eye(dataModel.N) * (1+1e-7)
-    I = np.eye(N_States)
-    factor = I - gamma * P
-    inv_factor = np.linalg.inv(factor)
-    vs = np.dot(inv_factor, R)
-    return vs
 
 if __name__=="__main__":
-    v = SolveMatrix(1.0)
+    gamma = 1.0
+    model = DataModel()
+    V = algo.solve_matrix(model, gamma)
+    V = np.round(V, 2)
     print("状态价值函数：")
-    print("v0 =", v[0])
-    print(str.format("v1={0},\tv2={1},\tv3={2}", v[1],v[2],v[3]))
-    print(str.format("v4={0},\t\tv5={1},\t\tv6={2}", v[4],v[5],v[6]))
-    print(str.format("v7={0},\t\tv8={1},\t\tv9={2}", v[7],v[8],v[9]))
-    print(str.format("v10={0},\tv11={1},\tv12={2}", v[10],v[11],v[12]))
+    helper.print_seperator_line(helper.SeperatorLines.middle)
+    print("v0 =", V[0])
+    helper.print_seperator_line(helper.SeperatorLines.short)
+    print(str.format("v1={0},\tv2={1},\tv3={2}", V[1],V[2],V[3]))
+    helper.print_seperator_line(helper.SeperatorLines.short)
+    print(str.format("v4={0},\t\tv5={1},\t\tv6={2}", V[4],V[5],V[6]))
+    print(str.format("v7={0},\t\tv8={1},\t\tv9={2}", V[7],V[8],V[9]))
+    print(str.format("v10={0},\tv11={1},\tv12={2}", V[10],V[11],V[12]))

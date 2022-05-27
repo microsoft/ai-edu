@@ -1,5 +1,14 @@
 import numpy as np
 
+def solve_matrix(dataModel, gamma):
+    # 在对角矩阵上增加一个微小的值来解决奇异矩阵不可求逆的问题
+    #I = np.eye(dataModel.N) * (1+1e-7)
+    I = np.eye(dataModel.nS)
+    factor = I - gamma * dataModel.P
+    inv_factor = np.linalg.inv(factor)
+    vs = np.dot(inv_factor, dataModel.R)
+    return vs
+
 # 式 (8.4.2) 计算 q_pi
 def q_pi(p_s_r, gamma, V):
     q = 0

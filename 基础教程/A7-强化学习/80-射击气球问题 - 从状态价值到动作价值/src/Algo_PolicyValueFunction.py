@@ -1,3 +1,4 @@
+
 import numpy as np
 
 def solve_matrix(dataModel, gamma):
@@ -18,7 +19,7 @@ def q_pi(p_s_r, gamma, V):
         q += p * (r + gamma * V[s_next])
     return q
 
-# 式 (8.4.5) 计算 v_pi
+# 式 (8.4.3) 计算 v_pi
 def v_pi(policy, s, actions, gamma, V, Q):
     v = 0
     for a, p_s_r in actions:        # 遍历每个动作以计算q值，进而计算v值

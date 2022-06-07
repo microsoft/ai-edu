@@ -7,7 +7,7 @@ class GridWorld(object):
     # 生成环境
     def __init__(self, 
         GridWidth, GridHeight, StartStates, EndStates, 
-        Actions, Policy, SlipProbs, 
+        Actions, Policy, Transition, 
         StepReward, SpecialReward, 
         SpecialMove, Blocks):
 
@@ -22,7 +22,7 @@ class GridWorld(object):
         self.SpecialMove = SpecialMove
         self.Blocks = Blocks
         self.Policy = self.__init_policy(Policy)
-        self.P_S_R = self.__init_states(SlipProbs, StepReward)
+        self.P_S_R = self.__init_states(Transition, StepReward)
 
     # 把统一的policy设置复制到每个状态上
     def __init_policy(self, Policy):
@@ -32,7 +32,7 @@ class GridWorld(object):
         return PI
 
     # 用于生成状态->动作->转移->奖励字典
-    def __init_states(self, Probs, StepReward):
+    def __init_states(self, Transition, StepReward):
         P = {}
         s_id = 0
         self.Pos2Sid = {}
@@ -49,7 +49,7 @@ class GridWorld(object):
                 continue
             for action in self.Actions:
                 list_probs = []
-                for dir, prob in enumerate(Probs):
+                for dir, prob in enumerate(Transition):
                     if (prob == 0.0):
                         continue
                     s_next = self.__get_next_state(

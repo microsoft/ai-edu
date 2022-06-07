@@ -12,7 +12,7 @@ Actions = [LEFT, UP, RIGHT, DOWN]
 # 初始策略
 Policy = [0.25, 0.25, 0.25, 0.25]
 # 转移概率: [SlipLeft, MoveFront, SlipRight, SlipBack]
-SlipProbs = [0.0, 1.0, 0.0, 0.0]
+Transition = [0.0, 1.0, 0.0, 0.0]
 # 每走一步的奖励值，可以是0或者-1
 StepReward = 0
 # 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
@@ -53,7 +53,7 @@ Blocks = []
 if __name__=="__main__":
     env = model.GridWorld(
         GridWidth, GridHeight, StartStates, EndStates,  # 关于状态的参数
-        Actions, Policy, SlipProbs,                     # 关于动作的参数
+        Actions, Policy, Transition,                     # 关于动作的参数
         StepReward, SpecialReward,                      # 关于奖励的参数
         SpecialMove, Blocks)                            # 关于移动的限制
     model.print_P(env.P_S_R)

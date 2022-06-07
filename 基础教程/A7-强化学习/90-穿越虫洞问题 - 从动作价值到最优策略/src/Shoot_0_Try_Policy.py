@@ -2,6 +2,7 @@ import numpy as np
 import copy
 import Shoot_2_DataModel as dataModel
 import Algorithm.Algo_PolicyValueFunction as algo
+import common.PrintHelper as helper
 
 if __name__=="__main__":
     Policy = {      # 原始状态
@@ -32,9 +33,10 @@ if __name__=="__main__":
     ])
     # 每次只修改一个策略,保持其它策略不变,以便观察其影响
     for i in range(6):
+        helper.print_seperator_line(helper.SeperatorLines.middle)
         print(str.format("修改状态 {0} 的策略:{1}", i, test_policy[i]))
         new_policy = copy.deepcopy(Policy)  # 继承原始策略
         new_policy[i] = test_policy[i]      # 只修改其中一个状态的策略
         env = dataModel.Env(new_policy)
         V,Q = algo.calculate_VQ_pi(env, gamma, max_iteration)
-        print(np.round(V,5))
+        print("价值函数：",np.round(V,5))

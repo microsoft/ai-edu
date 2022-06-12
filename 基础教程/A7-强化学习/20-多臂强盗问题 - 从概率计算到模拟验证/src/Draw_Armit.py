@@ -17,9 +17,9 @@ def normpdf(x,mu,sigma):
     pdf=np.exp(-(x-mu)**2/(2*sigma**2))/(sigma * np.sqrt(2 * np.pi))
     return pdf
 
-def draw(x, y, color, y_label, title):
+def draw(x, y, color, y_label, title, label=None):
     #概率分布曲线
-    plt.plot(x,y,color,linewidth=2)
+    plt.plot(x,y,color,linewidth=2,label=label)
     plt.title(title)
     #plt.xticks ([mu-2*sigma,mu-sigma,mu,mu+sigma,mu+2*sigma],['-2','-1','0','1','2'])
     plt.xlabel(u"奖励")
@@ -42,11 +42,12 @@ if __name__=="__main__":
     plt.grid()
     plt.show()
 
-    for mu, color in zip([-1,0,1],['b--','r--','g--']):
+    for mu, color, label in zip([-1,0,1],['b--','r--','g--'],['2','1','3']):
         x= np.arange(mu-3*sigma,mu+3*sigma,0.01) #生成数据，步长越小，曲线越平滑
         y=normpdf(x,mu,sigma)
         title = '$\mu = [-1,0,1], \sigma=1$'
-        draw(x, y, color, u"概率密度", title)
-    plt.grid()        
+        draw(x, y, color, u"概率密度", title, label)
+    plt.legend()
+    plt.grid()
     plt.show()
     

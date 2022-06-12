@@ -40,7 +40,6 @@ plt.ylabel(u"次数")
 plt.grid()
 plt.show()
 
-exit(0)
 
 a = np.random.randn(num_arm)
 b = np.random.randn(num_data, num_arm)

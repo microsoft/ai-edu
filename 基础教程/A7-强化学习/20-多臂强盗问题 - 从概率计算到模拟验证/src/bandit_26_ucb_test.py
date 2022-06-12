@@ -30,7 +30,7 @@ class KAB_UCB_test(kab_base.KArmBandit):
                 actions[r, s] = action
                 values[r, s, 0] = mu
                 values[r, s, 1] = ucb
-                reward = self.step_reward(action)
+                reward = self.pull_arm(action)
                 rewards[r, s] = reward
                 self.update_Q(action, reward)
             # end for t

@@ -8,7 +8,7 @@ class KAB_UCB(kab_base.KArmBandit):
         self.UCB = c
 
     def select_action(self):
-        ucb = self.UCB * np.sqrt(np.log(self.step + 1) / (self.action_count + 1e-2))
+        ucb = self.UCB * np.sqrt(np.log(self.pull_arm + 1) / (self.action_count + 1e-2))
         estimation = self.Q + ucb
         action = np.argmax(estimation)
         return action

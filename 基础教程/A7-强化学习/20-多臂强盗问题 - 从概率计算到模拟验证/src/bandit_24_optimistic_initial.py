@@ -19,7 +19,7 @@ class KAB_Optimistic_Initial(kab_base.KArmBandit):
     
     def update_Q(self, action, reward):
         # 总次数(time)
-        self.step += 1
+        self.pull_arm += 1
         # 动作次数(action_count)
         self.action_count[action] += 1
         # 计算动作价值，固定步长更新

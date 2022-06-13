@@ -4,13 +4,13 @@ import bandit_20_base as kab_base
 class KAB_E_Greedy(kab_base.KArmBandit):
     def __init__(self, k_arms=10, epsilon=0.1):
         super().__init__(k_arms=k_arms)
-        self.epsilon = epsilon
+        self.epsilon = epsilon  # 非贪心概率
 
     def select_action(self):
         if (np.random.random_sample() < self.epsilon):
-            action = np.random.randint(self.k_arms)
+            action = np.random.randint(self.k_arms) # 随机选择动作
         else:
-            action = np.argmax(self.Q)
+            action = np.argmax(self.Q)  # 贪心选择目前最好的动作
         return action
     
         

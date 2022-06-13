@@ -4,15 +4,15 @@ import multiprocessing as mp
 import bandit_20_base as kab_base
 
 class KAB_Greedy(kab_base.KArmBandit):
-    def __init__(self, k_arms=10, mu=0, sigma=1, try_steps=10):
-        super().__init__(k_arms=k_arms, mu=mu, sigma=sigma)
-        self.try_steps = try_steps
+    def __init__(self, k_arms=10, try_steps=10):
+        super().__init__(k_arms=k_arms)
+        self.try_steps = try_steps  # 试探次数
 
     def select_action(self):
         if (self.step < self.try_steps):
-            action = np.random.randint(self.k_arms)
+            action = np.random.randint(self.k_arms) # 随机选择动作
         else:
-            action = np.argmax(self.Q)
+            action = np.argmax(self.Q)  # 贪心选择目前最好的动作
         return action
 
 

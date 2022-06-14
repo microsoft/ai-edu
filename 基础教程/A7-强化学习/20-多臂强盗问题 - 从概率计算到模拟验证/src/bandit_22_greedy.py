@@ -17,7 +17,7 @@ class KAB_Greedy(kab_base.KArmBandit):
 
 
 if __name__ == "__main__":
-    runs = 2000
+    runs = 200
     steps = 1000
     k_arms = 10
 

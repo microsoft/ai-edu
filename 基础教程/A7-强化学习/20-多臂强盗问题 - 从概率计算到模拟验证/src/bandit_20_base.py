@@ -58,10 +58,10 @@ class KArmBandit(object):
                 reward = self.pull_arm(action)
                 self.update_Q(action, reward)
                 rewards[r, s] = reward
-                if (action == self.__best_arm):
+                if (action == self.__best_arm): # 是否为最佳动作
                     is_best_action[r, s] = 1
             # end for t
-            num_actions_per_arm += self.action_count
+            num_actions_per_arm += self.action_count    # 每个动作的选择次数
         # end for r
         return rewards, is_best_action, num_actions_per_arm
 #end class

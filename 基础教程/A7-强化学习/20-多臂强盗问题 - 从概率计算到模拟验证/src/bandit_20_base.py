@@ -99,7 +99,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     # 绘图
     # 四行三列
     grid = plt.GridSpec(nrows=4, ncols=3)
-    plt.figure(figsize=(15, 20))
+    plt.figure(figsize=(15, 10))
     # 绘制average reward[0:100]
     plt.subplot(grid[0:2, 0])
     for i, mean_rewards in enumerate(all_mean_rewards):     
@@ -140,6 +140,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     plt.legend()
     plt.grid()
     # 绘制所有动作的执行次数
+    all_done_actions = (all_done_actions/runs + 0.5).astype(int)
     X = ["0","1","2","3","4","5","6","7","8","9"]
     colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red']
     for i in range(4):
@@ -147,7 +148,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
         Y = all_done_actions[i].tolist()
         ax.bar(X, Y, label=labels[i], color=colors[i])
         for x, y in zip(X, Y):   # 在bar上方标出动作执行次数
-            ax.text(x, y, str(int(y/runs)), ha='center')
+            ax.text(x, y, str(y), ha='center')
         ax.legend()
     plt.legend()
 

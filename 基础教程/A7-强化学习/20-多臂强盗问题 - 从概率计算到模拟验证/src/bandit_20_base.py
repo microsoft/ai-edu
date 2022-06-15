@@ -103,7 +103,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     # 绘制average reward[0:100]
     plt.subplot(grid[0:2, 0])
     for i, mean_rewards in enumerate(all_mean_rewards):     
-        tmp = ss.savgol_filter(mean_rewards[0:100], 5, 3)
+        tmp = ss.savgol_filter(mean_rewards[0:100], 10, 3)
         plt.plot(tmp, label=labels[i] + str.format("={0:0.3f}", mean_reward_per_bandit[i]))
     plt.xlabel('steps')
     plt.ylabel('average reward')
@@ -112,7 +112,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     # 绘制average reward[300:500]
     plt.subplot(grid[0:1, 1])
     for i, mean_rewards in enumerate(all_mean_rewards):
-        tmp = ss.savgol_filter(mean_rewards[300:500], 15, 3)
+        tmp = ss.savgol_filter(mean_rewards[300:500], 20, 3)
         plt.plot(tmp)
     ticks = [0,50,100,150,200]
     tlabels = [300,350,400,450,500]
@@ -123,7 +123,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     # 绘制average reward[700:900]
     plt.subplot(grid[1:2, 1])
     for i, mean_rewards in enumerate(all_mean_rewards):
-        tmp = ss.savgol_filter(mean_rewards[700:900], 15, 3)
+        tmp = ss.savgol_filter(mean_rewards[700:900], 20, 3)
         plt.plot(tmp)
     ticks = [0,50,100,150,200]
     tlabels = [700,750,800,850,900]
@@ -134,7 +134,8 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     # 绘制正确的最优动作选择频率
     plt.subplot(grid[2:4, 0:2])
     for i, counts in enumerate(all_best_actions):
-        plt.plot(counts, label=labels[i] + str.format("={0:0.3f}", best_action_per_bandit[i]))
+        tmp = ss.savgol_filter(counts, 20, 3)
+        plt.plot(tmp, label=labels[i] + str.format("={0:0.3f}", best_action_per_bandit[i]))
     plt.xlabel('steps')
     plt.ylabel('% (optimal action)')
     plt.legend()

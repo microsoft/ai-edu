@@ -9,7 +9,7 @@ class KAB_Greedy(kab_base.KArmBandit):
         self.try_steps = try_steps  # 试探次数
 
     def select_action(self):
-        if (self.step < self.try_steps):
+        if (self.steps < self.try_steps):
             action = np.random.randint(self.k_arms) # 随机选择动作
         else:
             action = np.argmax(self.Q)  # 贪心选择目前最好的动作

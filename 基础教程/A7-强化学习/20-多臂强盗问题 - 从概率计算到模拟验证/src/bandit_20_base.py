@@ -23,7 +23,7 @@ class KArmBandit(object):
         self.Q = np.zeros(self.k_arms)
         # 保存每个 arm 被选择的次数 n
         self.action_count = np.zeros(self.k_arms, dtype=int)
-        self.step = 0   # 总步数，用于统计
+        self.steps = 0   # 总步数，用于统计
 
     # 得到下一步的动作（下一步要使用哪个arm，由算法决定）
     def select_action(self):
@@ -37,7 +37,7 @@ class KArmBandit(object):
     # 更新 q_n
     def update_Q(self, action, reward):
         # 总次数(time)
-        self.step += 1
+        self.steps += 1
         # 动作次数(action_count)
         self.action_count[action] += 1
         # 计算动作价值，采样平均
@@ -177,7 +177,7 @@ if __name__=="__main__":
         # 玩 1000 轮
         for t in range(steps):
             action = np.random.randint(k_arms)
-            reward = bandit.pull_arm(action)
+            reward = bandit.steps(action)
             bandit.update_Q(action, reward)
             rewards[r, t] = reward
             if (action == 9):

@@ -27,7 +27,7 @@ class KAB_Softmax_test(kab_base.KArmBandit):
     
     def update_Q(self, action, reward):
         # 总次数(time)
-        self.pull_arm += 1
+        self.steps += 1
         # 动作次数(action_count)
         self.action_count[action] += 1
 
@@ -35,7 +35,7 @@ class KAB_Softmax_test(kab_base.KArmBandit):
         # 计算动作价值，偏好函数
         one_hot = np.zeros(self.k_arms)
         one_hot[action] = 1
-        self.average_reward += (reward - self.average_reward) / self.pull_arm
+        self.average_reward += (reward - self.average_reward) / self.steps
         if (self.has_base):
             base = self.average_reward
         else:

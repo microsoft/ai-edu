@@ -45,7 +45,7 @@ class KAB_Thompson(kab_base.KArmBandit):
                 A[r, s] = self.a
                 B[r, s] = self.b
                 actions[r, s] = action
-                reward = self.pull_arm(action)
+                reward = self.steps(action)
                 self.update_Q(action, reward)
             # end for t
         # end for r

@@ -9,7 +9,7 @@ class KAB_UCB_test(kab_base.KArmBandit):
         self.UCB_param = c
 
     def select_action(self):
-        ucb = self.UCB_param * np.sqrt(np.log(self.step + 1) / (self.action_count + 1e-2))
+        ucb = self.UCB_param * np.sqrt(np.log(self.steps + 1) / (self.action_count + 1e-2))
         estimation = self.Q + ucb
         action = np.argmax(estimation)
         return action, self.Q, ucb
@@ -30,7 +30,7 @@ class KAB_UCB_test(kab_base.KArmBandit):
                 actions[r, s] = action
                 values[r, s, 0] = mu
                 values[r, s, 1] = ucb
-                reward = self.pull_arm(action)
+                reward = self.steps(action)
                 rewards[r, s] = reward
                 self.update_Q(action, reward)
             # end for t

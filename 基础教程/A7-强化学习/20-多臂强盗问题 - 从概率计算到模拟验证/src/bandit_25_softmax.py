@@ -1,13 +1,11 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import multiprocessing as mp
 import bandit_20_base as kab_base
 
 class KAB_Softmax(kab_base.KArmBandit):
     def __init__(self, k_arms=10, alpha:float=0.1):
         super().__init__(k_arms=k_arms)
         self.alpha = alpha
-        self.action_prob = 0
+        self.P = 0
 
     def reset(self):
         super().reset()
@@ -15,8 +13,8 @@ class KAB_Softmax(kab_base.KArmBandit):
 
     def select_action(self):
         q_exp = np.exp(self.Q - np.max(self.Q))     # 所有的值都减去最大值
-        self.action_prob = q_exp / np.sum(q_exp)    # softmax 实现
-        action = np.random.choice(self.k_arms, p=self.action_prob)  # 按概率选择动作
+        self.P = q_exp / np.sum(q_exp)    # softmax 实现
+        action = np.random.choice(self.k_arms, p=self.P)  # 按概率选择动作
         return action
 
     def update_Q(self, action, reward):
@@ -26,7 +24,7 @@ class KAB_Softmax(kab_base.KArmBandit):
         one_hot = np.zeros(self.k_arms)
         one_hot[action] = 1
         self.average_reward += (reward - self.average_reward) / self.steps
-        self.Q += self.alpha * (reward - self.average_reward) * (one_hot - self.action_prob)
+        self.Q += self.alpha * (reward - self.average_reward) * (one_hot - self.P)
 
     # def simulate(self, runs, steps):
     #     rewards, best_action, actions = super().simulate(runs, steps)

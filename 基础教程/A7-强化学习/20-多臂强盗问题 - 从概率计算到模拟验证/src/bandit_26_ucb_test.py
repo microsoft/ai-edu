@@ -30,7 +30,7 @@ class KAB_UCB_test(kab_base.KArmBandit):
                 actions[r, s] = action
                 values[r, s, 0] = mu
                 values[r, s, 1] = ucb
-                reward = self.steps(action)
+                reward = self.pull_arm(action)
                 rewards[r, s] = reward
                 self.update_Q(action, reward)
             # end for t
@@ -42,17 +42,17 @@ class KAB_UCB_test(kab_base.KArmBandit):
 if __name__ == "__main__":
     runs = 1
     steps = 100
-    k_arms = 5
+    k_arms = 3
 
-    bandit = KAB_UCB_test(k_arms, c=2)
+    bandit = KAB_UCB_test(k_arms, c=1)
     rewards, actions, values = bandit.simulate(runs, steps)
     
     for step in range(steps):
         mu = values[0,step,0]
         ucb = values[0,step,1]
         action = actions[0,step]
-        print("step=",step, end=',');
-        print("Q=", np.around(mu,2), end=',')
-        print("UCB=", np.around(ucb,2),end=',')
-        print("Q+UCB=", np.around(mu+ucb,2),end=',')
-        print("action=", action)
+        reward = rewards[0,step]
+
+        s = str.format("step={0:2d}, Q={1}, UCB={2}, Q+UCB={3}, a={4}, r={5:.2f}", 
+            step, np.around(mu,2), np.around(ucb,2), np.around(mu+ucb,2), action, reward)
+        print(s)

@@ -33,7 +33,7 @@ UCB - Upper Confidence Bound，置信上界。
 若 $[X_1,\cdots,X_n]$ 为 [0,1] 之间的随机变量，其均值为 $\bar{X} = \frac{1}{n}(X_1+\cdots+X_n)$，则有
 
 $$
-\mathbb P\big[\mathbb E [X] - \bar{X} > u \big ] \le e^{-2nu^2}
+\mathbb P\big[\bar{X} - \mathbb E [X] > \epsilon \big ] \le e^{-2n\epsilon^2}
 $$
 
 可以
@@ -41,7 +41,7 @@ $$
 - $\mathbb E[X]$，样本期望值，可以看作某个动作的真实价值 $Q(a)$；
 - $\bar{X}$，样本均值，可以看作根据历史记录计算出来的某个动作的价值 $\hat{Q}(a)$；
 - $n$，样本数量，可以看作选择某个动作的次数 $N(a)$；
-- $u$，任意正数，可以看作某个动作的上界 $U(a)$。
+- $\epsilon$，任意正数，一般表示误差，可以看作某个动作的价值上界 $U(a)$。
 
 $$
 \mathbb P[Q(a) - \hat{Q}(a) > U(a)] \le e^{-2N(a)U(a)^2}

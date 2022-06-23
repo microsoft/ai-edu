@@ -1,7 +1,7 @@
 import numpy as np
 import bandit_20_base as kab_base
 
-class KAB_Softmax(kab_base.KArmBandit):
+class KAB_Softmax_copy(kab_base.KArmBandit):
     def __init__(self, k_arms=10, alpha:float=0.1):
         super().__init__(k_arms=k_arms)
         self.alpha = alpha
@@ -21,22 +21,20 @@ class KAB_Softmax(kab_base.KArmBandit):
         self.steps += 1 # 迭代次数
         self.action_count[action] += 1  # 动作次数(action_count)
         # 计算动作价值
-        one_hot = np.zeros(self.k_arms)
-        one_hot[action] = 1
-        self.average_reward += (reward - self.average_reward) / self.steps
-        self.Q += self.alpha * (reward - self.average_reward) * (one_hot - self.P)
-
+        #self.Q[action] += self.alpha * (reward - self.Q.mean()) * self.P[action]
+        self.Q[action] += self.alpha * (reward - self.Q.mean()) * (1-self.P[action])
+        # Q(a) = Q(a) + alpha * (R - Q.mean()) * P(a)
 
 if __name__ == "__main__":
-    runs = 2000
+    runs = 200
     steps = 1000
     k_arms = 10 
     
     bandits:kab_base.KArmBandit = []
-    bandits.append(KAB_Softmax(k_arms, alpha=0.10))
-    bandits.append(KAB_Softmax(k_arms, alpha=0.15))
-    bandits.append(KAB_Softmax(k_arms, alpha=0.20))
-    bandits.append(KAB_Softmax(k_arms, alpha=0.25))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.10))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.15))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.20))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.25))
 
     labels = [
         'Softmax(0.10)',

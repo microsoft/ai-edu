@@ -1,14 +1,14 @@
 from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
-from bandit_25_softmax import KAB_Softmax
+from bandit_25_softmax_copy import KAB_Softmax_copy 
 import matplotlib as mpl
 
 
 mpl.rcParams['font.sans-serif'] = ['SimHei']  
 mpl.rcParams['axes.unicode_minus']=False
 
-class KAB_Softmax_test(KAB_Softmax):
+class KAB_Softmax_test(KAB_Softmax_copy):
     def __init__(self, k_arms=10, alpha:float=0.1):
         super().__init__(k_arms=k_arms, alpha=alpha)
         self.Ps = []
@@ -16,9 +16,9 @@ class KAB_Softmax_test(KAB_Softmax):
 
     def select_action(self):
         q_exp = np.exp(self.Q - np.max(self.Q))     # 所有的值都减去最大值
-        self.action_prob = q_exp / np.sum(q_exp)    # softmax 实现
-        action = np.random.choice(self.k_arms, p=self.action_prob)  # 按概率选择动作
-        self.Ps.append(self.action_prob)
+        self.P = q_exp / np.sum(q_exp)    # softmax 实现
+        action = np.random.choice(self.k_arms, p=self.P)  # 按概率选择动作
+        self.Ps.append(self.P)
         self.Qs.append(self.Q.copy())
         return action
 

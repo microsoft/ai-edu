@@ -20,27 +20,33 @@ class KAB_Softmax_copy(kab_base.KArmBandit):
     def update_Q(self, action, reward):
         self.steps += 1 # 迭代次数
         self.action_count[action] += 1  # 动作次数(action_count)
+        self.average_reward += (reward - self.average_reward) / self.steps
         # 计算动作价值
-        #self.Q[action] += self.alpha * (reward - self.Q.mean()) * self.P[action]
-        self.Q[action] += self.alpha * (reward - self.Q.mean()) * (1-self.P[action])
+        self.Q[action] += self.alpha * (reward - self.average_reward) * self.P[action]
+        '''
+        for i in range(self.k_arms):
+            if (i != action):
+                self.Q[i] += self.alpha * (-self.average_reward) * self.P[i]
+        '''
+        #self.Q[action] += self.alpha * (reward - self.Q.mean()) * (1-self.P[action])
         # Q(a) = Q(a) + alpha * (R - Q.mean()) * P(a)
 
 if __name__ == "__main__":
-    runs = 200
+    runs = 1000
     steps = 1000
     k_arms = 10 
     
     bandits:kab_base.KArmBandit = []
-    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.10))
-    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.15))
-    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.20))
-    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.25))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.4))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.5))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.6))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.7))
 
     labels = [
-        'Softmax(0.10)',
-        'Softmax(0.15)',
-        'Softmax(0.20)',
-        'Softmax(0.25)',
+        'Softmax(0.4)',
+        'Softmax(0.5)',
+        'Softmax(0.6)',
+        'Softmax(0.7)',
     ]
 
     title = 'Softmax'

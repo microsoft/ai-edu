@@ -37,16 +37,16 @@ if __name__ == "__main__":
     k_arms = 10 
     
     bandits:kab_base.KArmBandit = []
-    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.4))
-    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.5))
     bandits.append(KAB_Softmax_copy(k_arms, alpha=0.6))
     bandits.append(KAB_Softmax_copy(k_arms, alpha=0.7))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.8))
+    bandits.append(KAB_Softmax_copy(k_arms, alpha=0.9))
 
     labels = [
-        'Softmax(0.4)',
-        'Softmax(0.5)',
         'Softmax(0.6)',
         'Softmax(0.7)',
+        'Softmax(0.8)',
+        'Softmax(0.9)',
     ]
 
     title = 'Softmax'

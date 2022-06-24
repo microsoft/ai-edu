@@ -1,14 +1,14 @@
 from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
-from bandit_25_softmax_copy import KAB_Softmax_copy 
+from bandit_25_softmax import KAB_Softmax
 import matplotlib as mpl
 
 
 mpl.rcParams['font.sans-serif'] = ['SimHei']  
 mpl.rcParams['axes.unicode_minus']=False
 
-class KAB_Softmax_test(KAB_Softmax_copy):
+class KAB_Softmax_test(KAB_Softmax):
     def __init__(self, k_arms=10, alpha:float=0.1):
         super().__init__(k_arms=k_arms, alpha=alpha)
         self.Ps = []

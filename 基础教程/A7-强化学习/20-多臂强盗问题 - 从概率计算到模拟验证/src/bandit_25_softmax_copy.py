@@ -21,8 +21,7 @@ class KAB_Softmax_copy(kab_base.KArmBandit):
         self.action_count[action] += 1  # 动作次数(action_count)
         self.average_reward += (reward - self.average_reward) / self.steps
         # 计算动作价值
-        self.Q[action] += self.alpha * (reward - self.average_reward) * self.P[action]
-
+        self.Q[action] += self.alpha * (reward - self.average_reward) #* self.P[action]
         '''
         for i in range(self.k_arms):
             if (i != action):
@@ -32,7 +31,7 @@ class KAB_Softmax_copy(kab_base.KArmBandit):
         # Q(a) = Q(a) + alpha * (R - Q.mean()) * P(a)
 
 if __name__ == "__main__":
-    runs = 2000
+    runs = 200
     steps = 1000
     k_arms = 10 
     

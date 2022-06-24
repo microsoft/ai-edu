@@ -20,29 +20,36 @@ class KAB_Softmax(kab_base.KArmBandit):
     def update_Q(self, action, reward):
         self.steps += 1 # 迭代次数
         self.action_count[action] += 1  # 动作次数(action_count)
-        # 计算动作价值
+        self.average_reward += (reward - self.average_reward) / self.steps
+        self.Q[action] += alpha * (reward - self.average_reward) * self.P[action]
+        ''' # 是否要更新没有被选中的动作 Q 值
+        for i in range(self.k_arms):
+            if (i != action):
+                self.Q[i] += self.alpha * (-self.average_reward) * self.P[i]
+        '''
+        ''' # Sutton 的算法
         one_hot = np.zeros(self.k_arms)
         one_hot[action] = 1
         self.average_reward += (reward - self.average_reward) / self.steps
         self.Q += self.alpha * (reward - self.average_reward) * (one_hot - self.P)
-
+        '''
 
 if __name__ == "__main__":
-    runs = 2000
+    runs = 200
     steps = 1000
     k_arms = 10 
     
     bandits:kab_base.KArmBandit = []
-    bandits.append(KAB_Softmax(k_arms, alpha=0.10))
-    bandits.append(KAB_Softmax(k_arms, alpha=0.15))
-    bandits.append(KAB_Softmax(k_arms, alpha=0.20))
-    bandits.append(KAB_Softmax(k_arms, alpha=0.25))
+    bandits.append(KAB_Softmax(k_arms, alpha=0.5))
+    bandits.append(KAB_Softmax(k_arms, alpha=0.6))
+    bandits.append(KAB_Softmax(k_arms, alpha=0.7))
+    bandits.append(KAB_Softmax(k_arms, alpha=0.8))
 
     labels = [
-        'Softmax(0.10)',
-        'Softmax(0.15)',
-        'Softmax(0.20)',
-        'Softmax(0.25)',
+        'Softmax(0.5)',
+        'Softmax(0.6)',
+        'Softmax(0.7)',
+        'Softmax(0.8)',
     ]
 
     title = 'Softmax'

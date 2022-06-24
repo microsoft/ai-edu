@@ -21,7 +21,7 @@ class KAB_Thompson(kab_base.KArmBandit):
     def update_Q(self, action, reward):
         super().update_Q(action, reward)
         if (self.threshold == -1):
-            if (reward > self.__expaction[self.k_arms-1]):
+            if (reward > self.E[self.k_arms-1]):
                 self.a[action] += 1
             else:
                 self.b[action] += 1

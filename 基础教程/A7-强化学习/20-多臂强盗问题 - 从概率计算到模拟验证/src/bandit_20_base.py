@@ -16,9 +16,7 @@ class KArmBandit(object):
 
     def reset(self):
         # 初始化 k 个 arm 的期望收益，并排序，但算法不要依赖这个排序
-        self.__expaction = np.sort(self.sigma * np.random.randn(self.k_arms) + self.mu)
-        #print(self.__expaction)
-        #print(self.__expaction.mean())
+        self.E = np.sort(self.sigma * np.random.randn(self.k_arms) + self.mu)
         # 初始化 k 个 arm 的动作估值 Q_n 为 0
         self.Q = np.zeros(self.k_arms)
         # 保存每个 arm 被选择的次数 n
@@ -31,7 +29,7 @@ class KArmBandit(object):
 
     # 执行指定的动作，并返回此次的奖励
     def pull_arm(self, action):
-        reward =  np.random.randn() + self.__expaction[action]
+        reward =  np.random.randn() + self.E[action]
         return reward
 
     # 更新 q_n

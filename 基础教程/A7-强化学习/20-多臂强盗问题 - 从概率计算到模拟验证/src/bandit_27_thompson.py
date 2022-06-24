@@ -10,9 +10,9 @@ class KAB_Thompson(kab_base.KArmBandit):
 
     def reset(self):
         super().reset()
+        self.average_reward = 0
         self.win = np.ones(self.action_count.shape)
         self.loss = np.ones(self.action_count.shape)
-
 
     def select_action(self):
         beta = np.random.beta(self.win, self.loss)
@@ -21,8 +21,13 @@ class KAB_Thompson(kab_base.KArmBandit):
 
     def update_Q(self, action, reward):
         super().update_Q(action, reward)
+
+        self.average_reward += (reward - self.average_reward) / self.steps
+
+        
         if (self.threshold == -1):
-            if (reward > self.__expaction[self.k_arms-1]):
+            if (reward > self.average_reward):
+            #if (reward > self.E[self.k_arms-1]):
                 self.win[action] += 1
             else:
                 self.loss[action] += 1
@@ -31,9 +36,10 @@ class KAB_Thompson(kab_base.KArmBandit):
                 self.win[action] += 1
             else:
                 self.loss[action] += 1
+        
 
 if __name__ == "__main__":
-    runs = 1000
+    runs = 2000
     steps = 1000
     k_arms = 10
 

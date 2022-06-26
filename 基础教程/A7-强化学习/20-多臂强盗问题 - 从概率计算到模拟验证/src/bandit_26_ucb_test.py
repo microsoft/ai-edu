@@ -1,15 +1,11 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import multiprocessing as mp
-import bandit_20_base as kab_base
+from bandit_26_UCB import KAB_UCB
+import matplotlib.pyplot as plt
 
-class KAB_UCB_test(kab_base.KArmBandit):
-    def __init__(self, k_arms=10, c=2):
-        super().__init__(k_arms=k_arms)
-        self.UCB_param = c
 
+class KAB_UCB_test(KAB_UCB):
     def select_action(self):
-        ucb = self.UCB_param * np.sqrt(np.log(self.steps + 1) / (self.action_count + 1e-2))
+        ucb = self.C * np.sqrt(np.log(self.steps + 1) / (self.action_count + 1e-2))
         estimation = self.Q + ucb
         action = np.argmax(estimation)
         return action, self.Q, ucb
@@ -38,12 +34,12 @@ class KAB_UCB_test(kab_base.KArmBandit):
         return rewards, actions, values
 
 
-
 if __name__ == "__main__":
     runs = 1
     steps = 100
     k_arms = 3
 
+    np.random.seed(13)
     bandit = KAB_UCB_test(k_arms, c=1)
     rewards, actions, values = bandit.simulate(runs, steps)
     
@@ -56,3 +52,21 @@ if __name__ == "__main__":
         s = str.format("step={0:2d}, Q={1}, UCB={2}, Q+UCB={3}, a={4}, r={5:.2f}", 
             step, np.around(mu,2), np.around(ucb,2), np.around(mu+ucb,2), action, reward)
         print(s)
+
+
+    grid = plt.GridSpec(nrows=1, ncols=6)
+
+    for step in range(steps):
+        if step > 5:
+            continue
+        mu = values[0,step,0]
+        ucb = values[0,step,1]
+        action = actions[0,step]
+        reward = rewards[0,step]
+
+        plt.subplot(grid[0, step])
+        plt.bar([0,1,2], mu + ucb, width=0.5, bottom=mu, color=['r','g','b'])
+        plt.title(str.format("a={0},r={1:.2f}", action, reward))
+        plt.grid()
+
+    plt.show()

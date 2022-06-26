@@ -21,7 +21,7 @@ class KAB_Softmax(kab_base.KArmBandit):
         self.steps += 1 # 迭代次数
         self.action_count[action] += 1  # 动作次数(action_count)
         self.average_reward += (reward - self.average_reward) / self.steps
-        self.Q[action] += alpha * (reward - self.average_reward) * self.P[action]
+        self.Q[action] += self.alpha * (reward - self.average_reward) * self.P[action]
         ''' # 是否要更新没有被选中的动作 Q 值
         for i in range(self.k_arms):
             if (i != action):

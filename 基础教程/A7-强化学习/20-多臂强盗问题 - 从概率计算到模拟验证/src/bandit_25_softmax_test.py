@@ -1,9 +1,8 @@
 from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
-from bandit_25_softmax import KAB_Softmax
+from bandit_25_Softmax import KAB_Softmax
 import matplotlib as mpl
-
 
 mpl.rcParams['font.sans-serif'] = ['SimHei']  
 mpl.rcParams['axes.unicode_minus']=False
@@ -23,12 +22,12 @@ class KAB_Softmax_test(KAB_Softmax):
         return action
 
 
-
 if __name__ == "__main__":
     runs = 1
     steps = 200
     k_arms = 3
-    bandit = KAB_Softmax_test(k_arms, alpha=0.15)
+    np.random.seed(15)
+    bandit = KAB_Softmax_test(k_arms, alpha=0.10)
     bandit.simulate(runs, steps)
 
     grid = plt.GridSpec(nrows=1, ncols=2)

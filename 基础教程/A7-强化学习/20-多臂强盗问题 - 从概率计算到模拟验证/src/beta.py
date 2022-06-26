@@ -1,21 +1,28 @@
+from turtle import color
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-a = np.random.beta(1,2,size=(100))
-plt.plot(a, '.')
-plt.show()
 
 import numpy as np
 from scipy.stats import beta
 import matplotlib.pyplot as plot
+import matplotlib as mpl
+import matplotlib.colors as mcolors
 
-# 设置 plot 支持中文
-from matplotlib.font_manager import FontProperties
-font = FontProperties(fname=r"c:\windows\fonts\SimSun.ttc", size=14)
+mpl.rcParams['font.sans-serif'] = ['SimHei']  
+mpl.rcParams['axes.unicode_minus']=False
+colors = list(mcolors.TABLEAU_COLORS.keys())
+
+a = np.random.beta(10, 50,size=(10))
+print(a)
+plt.scatter(a, np.zeros_like(a), color=mcolors.TABLEAU_COLORS[colors[1]])
+
+a = np.random.beta(105.3,32.5,size=(10))
+print(a)
+plt.scatter(a, np.zeros_like(a), color=mcolors.TABLEAU_COLORS[colors[2]])
+
 
 # 定义一组alpha 跟 beta值
-alpha_beta_values = [[2,2], [1,1], [2,5], [8,3]]
+alpha_beta_values = [[50,50], [10,50], [105.3,32.5], [1,1], [10,10],]
 linestyles = []
 
 # 定义 x 值
@@ -30,7 +37,7 @@ for alpha_beta_value in alpha_beta_values:
   plot.plot(x, dist_y, label=r'$\alpha=%.1f,\ \beta=%.1f$' % (alpha_beta_value[0], alpha_beta_value[1]))
 
 # 设置标题
-plot.title(u'B分布', fontproperties=font)
+plot.title(u'Beta分布')
 # 设置 x,y 轴取值范围
 plot.xlim(0, 1)
 #plot.ylim(0, 2.5)

@@ -1,6 +1,6 @@
 import numpy as np
 import math
-import bandit_20_base as kab_base
+import bandit_23_Base as kab_base
 
 class KAB_UCB(kab_base.KArmBandit):
     def __init__(self, k_arms=10, c=1):

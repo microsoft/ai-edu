@@ -103,9 +103,8 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     for i, mean_rewards in enumerate(all_mean_rewards):     
         tmp = ss.savgol_filter(mean_rewards[0:100], 10, 3)
         plt.plot(tmp, label=labels[i] + str.format("={0:0.3f}", mean_reward_per_bandit[i]))
-    plt.xlabel('steps')
-    plt.ylabel('average reward')
-    plt.legend()
+    plt.ylabel('平均收益(0~100)', fontsize=14)
+    plt.legend(fontsize=14)
     plt.grid()
     # 绘制average reward[300:500]
     plt.subplot(grid[0:1, 1])
@@ -115,8 +114,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     ticks = [0,50,100,150,200]
     tlabels = [300,350,400,450,500]
     plt.xticks(ticks, tlabels)
-    plt.xlabel('steps')
-    plt.ylabel('average reward')
+    plt.ylabel('平均收益(300~500)', fontsize=14)
     plt.grid()
     # 绘制average reward[700:900]
     plt.subplot(grid[1:2, 1])
@@ -126,17 +124,16 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
     ticks = [0,50,100,150,200]
     tlabels = [700,750,800,850,900]
     plt.xticks(ticks, tlabels)
-    plt.xlabel('steps')
-    plt.ylabel('average reward')
+    plt.ylabel('平均收益(700~900)', fontsize=14)
     plt.grid()
     # 绘制正确的最优动作选择频率
     plt.subplot(grid[2:4, 0:2])
     for i, counts in enumerate(all_best_actions):
         tmp = ss.savgol_filter(counts, 20, 3)
         plt.plot(tmp, label=labels[i] + str.format("={0:0.3f}", best_action_per_bandit[i]))
-    plt.xlabel('steps')
-    plt.ylabel('% (optimal action)')
-    plt.legend()
+    plt.xlabel('迭代步数', fontsize=14)
+    plt.ylabel('最佳动作采用比例', fontsize=14)
+    plt.legend(fontsize=14)
     plt.grid()
     # 绘制所有动作的执行次数
     all_done_actions = (all_done_actions/runs + 0.5).astype(int)
@@ -148,10 +145,7 @@ def mp_simulate(bandits, k_arms, runs, steps, labels, title):
         ax.bar(X, Y, label=labels[i], color=colors[i])
         for x, y in zip(X, Y):   # 在bar上方标出动作执行次数
             ax.text(x, y, str(y), ha='center')
-        ax.legend()
-    plt.legend()
-
-    plt.suptitle(title)
+        ax.legend(fontsize=14)
     plt.show()
 
     return 
@@ -175,7 +169,7 @@ if __name__=="__main__":
         # 玩 1000 轮
         for t in range(steps):
             action = np.random.randint(k_arms)
-            reward = bandit.steps(action)
+            reward = bandit.pull_arm(action)
             bandit.update_Q(action, reward)
             rewards[r, t] = reward
             if (action == 9):

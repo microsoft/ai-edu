@@ -1,6 +1,5 @@
 import numpy as np
-import math
-import bandit_20_base as kab_base
+import bandit_23_Base as kab_base
 
 
 class KAB_Thompson(kab_base.KArmBandit):

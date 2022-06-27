@@ -1,7 +1,5 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import multiprocessing as mp
-import bandit_20_base as kab_base
+import bandit_23_Base as kab_base
 
 class KAB_Greedy(kab_base.KArmBandit):
     def __init__(self, k_arms=10, try_steps=10):

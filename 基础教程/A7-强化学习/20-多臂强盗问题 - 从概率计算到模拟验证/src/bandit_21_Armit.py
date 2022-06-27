@@ -9,9 +9,6 @@ mpl.rcParams['font.sans-serif'] = ['SimHei']
 mpl.rcParams['axes.unicode_minus']=False
 
 
-
-
-
 #正态分布的概率密度函数
 def normpdf(x,mu,sigma):       
     pdf=np.exp(-(x-mu)**2/(2*sigma**2))/(sigma * np.sqrt(2 * np.pi))

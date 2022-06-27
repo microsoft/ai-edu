@@ -1,5 +1,5 @@
 import numpy as np
-import bandit_20_base as kab_base
+import bandit_23_Base as kab_base
 
 class KAB_Softmax(kab_base.KArmBandit):
     def __init__(self, k_arms=10, alpha:float=0.1):
@@ -22,17 +22,18 @@ class KAB_Softmax(kab_base.KArmBandit):
         self.action_count[action] += 1  # 动作次数(action_count)
         self.average_reward += (reward - self.average_reward) / self.steps
         self.Q[action] += self.alpha * (reward - self.average_reward) * self.P[action]
-        ''' # 是否要更新没有被选中的动作 Q 值
+        return
+        # 是否要更新没有被选中的动作 Q 值
         for i in range(self.k_arms):
             if (i != action):
-                self.Q[i] += self.alpha * (-self.average_reward) * self.P[i]
-        '''
-        ''' # Sutton 的算法
+                self.Q[i] += self.alpha * (-self.average_reward) * (self.P[i])
+        return
+        # Sutton 的算法
         one_hot = np.zeros(self.k_arms)
         one_hot[action] = 1
         self.average_reward += (reward - self.average_reward) / self.steps
         self.Q += self.alpha * (reward - self.average_reward) * (one_hot - self.P)
-        '''
+        
 
 if __name__ == "__main__":
     runs = 200

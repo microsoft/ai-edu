@@ -17,7 +17,7 @@ class KAB_Softmax_test(KAB_Softmax):
         q_exp = np.exp(self.Q - np.max(self.Q))     # 所有的值都减去最大值
         self.P = q_exp / np.sum(q_exp)    # softmax 实现
         action = np.random.choice(self.k_arms, p=self.P)  # 按概率选择动作
-        self.Ps.append(self.P)
+        self.Ps.append(self.P.copy())
         self.Qs.append(self.Q.copy())
         return action
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     steps = 200
     k_arms = 3
     np.random.seed(15)
-    bandit = KAB_Softmax_test(k_arms, alpha=0.10)
+    bandit = KAB_Softmax_test(k_arms, alpha=0.15)
     bandit.simulate(runs, steps)
 
     grid = plt.GridSpec(nrows=1, ncols=2)

@@ -1,5 +1,5 @@
 import numpy as np
-import bandit_20_base as kab_base
+import bandit_23_Base as kab_base
 
 class KAB_E_Greedy(kab_base.KArmBandit):
     def __init__(self, k_arms=10, epsilon=0.1):

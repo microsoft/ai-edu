@@ -31,6 +31,7 @@ def put_points(ax, num_total_points):
     ax.grid()
 
 if __name__=="__main__":
+    np.random.seed(15)
     fig = plt.figure()
 
     ax = fig.add_subplot(141)

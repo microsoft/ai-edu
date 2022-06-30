@@ -13,13 +13,14 @@ def f3(x):
     y = 0.4 * x * x + 0.3 * x * np.sin(15*x) + 0.01 * np.cos(50*x) - 0.3
     return y
 
+# 求积分 式（10.1.1）
 def integral(f, a, b, n):
     v = 0
     repeat = 10
     for i in range(repeat):
-        x = np.random.uniform(a, b, size=(n, 1))
+        x = np.random.uniform(a, b, size=(n, 1))    # 在[a,b]区间上均匀随机取点
         y = f(x)
-        v += np.sum(y) / n * (b-a)
+        v += np.sum(y) / n * (b-a)  # 式(10.1.2)
     return v/repeat
 
 def show(ax, f, a, b, n, v):
@@ -41,6 +42,7 @@ def show(ax, f, a, b, n, v):
             ax.plot(x,y,'o',markersize=1,c='b')
 
 if __name__=="__main__":
+    np.random.seed(15)
     v1 = integral(f1, 0.2, 1, 10000)
     print("S1 =",v1)
     v2 = integral(f2, 0, 3.1416, 10000)

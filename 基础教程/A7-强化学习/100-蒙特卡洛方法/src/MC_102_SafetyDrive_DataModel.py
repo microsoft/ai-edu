@@ -1,6 +1,8 @@
 
 import numpy as np
 from enum import Enum
+import common_helper as helper
+
 
 # 状态
 class States(Enum):
@@ -72,5 +74,5 @@ def Matrix(dataModel, gamma):
 
 if __name__=="__main__":
     dataModel = DataModel()
-    v = Matrix(dataModel, 1.0)
-    print(np.around(v,2))
+    V = Matrix(dataModel, 1.0)
+    helper.print_V(dataModel, V)

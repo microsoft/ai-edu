@@ -67,31 +67,15 @@ $$
 　　　　$G_t \leftarrow 0$
 　　对 $T$ 从后向前遍历, $t=\tau-1,\tau-2,...,0$
 　　　　从 $T$ 中取出 $s_t,r_t$
-　　　　$G_t \leftarrow \gamma G_t+r_t$
-　　　　$G(s_t) \leftarrow G(s_t)+G_t$
-　　　　$N(s_t) \leftarrow N(s_t)+1$
+　　　　如果 $s_t$ 不在 $s_0,s_1,\cdots,s_{t-1}$ 中：
+　　　　　　$G_t \leftarrow \gamma G_t+r_t$
+　　　　　　$G(s_t) \leftarrow G(s_t)+G_t$
+　　　　　　$N(s_t) \leftarrow N(s_t)+1$
 $V(S) \leftarrow G(S) / N(S)$
 输出：$V(S)$
 
 ---
 
-----
-
-输入：起始状态 $s$, Episodes, $\gamma$
-初始化：$G_{sum} \leftarrow 0$  # 累计多幕的G值以便求平均
-多幕 Episodes 循环：
-　　当前幕的 $G \leftarrow 0$
-　　计数器 $t \leftarrow 0$
-　　幕内循环直到终止状态：
-　　　　从 $S$ 根据状态转移概率得到 $s',r$ 以及是否终止的标志
-　　　　$G \leftarrow G + \gamma^t r$
-　　　　$t \leftarrow t+1$
-　　　　$s \leftarrow s'$
-　　$G_{sum} \leftarrow G_{sum}+G$
-$v(s) \leftarrow G_{sum} /$ Episodes
-输出：$v(s)$
-
----
 
 
 ### 算法说明
@@ -147,18 +131,18 @@ def MC_Sampling_Reverse(dataModel, start_state, episodes, gamma):
 
 |状态|原始算法|改进算法|准确值|
 |-|-:|-:|-:|-:|
-|出发 Start|           1.09|1.07|1.03|
-|正常行驶 Normal|      1.64|1.77|1.72|
-|礼让行人 Pedestrians| 2.74|2.75|2.72|
-|闹市减速 DownSpeed|   2.99|3.18|3.02|
-|超速行驶 ExceedSpeed| -5.81|-5.06|-5.17|
-|路口闯灯 RedLight|    -6.72|-6.72|-6.73|
+|出发 Start|           0.98|1.02|1.03|
+|正常行驶 Normal|      1.77|1.71|1.72|
+|礼让行人 Pedestrians| 2.71|2.75|2.72|
+|闹市减速 DownSpeed|   2.92|2.95|3.02|
+|超速行驶 ExceedSpeed| -5.19|-5.23|-5.17|
+|路口闯灯 RedLight|    -6.71|-6.72|-6.73|
 |小区减速 LowSpeed|     6.00|6.00|6.00|
-|拨打电话 MobilePhone| -2.32|-2.40|-2.40|
+|拨打电话 MobilePhone| -2.40|-2.39|-2.40|
 |发生事故 Crash|       -1.00|-1.00|-1.00|
-|安全抵达 Goal|        +5.00|5.00|5.00|
+|安全抵达 Goal|        5.00|5.00|5.00|
 |终止 End|              0.00| 0.00|0.00|
-|**误差 RMSE**|**0.042**|**0.034**||
+|**误差 RMSE**|**0.039**|**0.030**|0.000|
 
 可以看到，改进的算法在速度上和精度上都比原始算法要好。最后一行不是状态值，是 RMSE 的误差值，原始算法误差为 0.042，改进算法为 0.034，越小越好。
 

@@ -1,7 +1,6 @@
 
 import tqdm
 import numpy as np
-import DriveDataModel as data
 import time
 
 # 反向计算G值，记录每个状态的G值，每次访问型
@@ -30,7 +29,7 @@ def MC_Sampling_Reverse(dataModel, start_state, episodes, gamma):
     V = V_value_count_pair[:,0] / V_value_count_pair[:,1]   # 计算平均值
     return V
 
-# MC1的改进，反向计算G值，记录每个状态的G值，每次访问型
+# MC1的改进，反向计算G值，记录每个状态的G值，首次访问型
 def MC_Sampling_Reverse_FirstVisit(dataModel, start_state, episodes, gamma):
     V_value_count_pair = np.zeros((dataModel.num_states, 2))  # state[total value, count of g]
     V_value_count_pair[:,1] = 1 # 避免被除数为0

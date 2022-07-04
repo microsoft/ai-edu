@@ -27,6 +27,6 @@ def print_V(dataModel, V):
         print(str.format("{0}:\t{1}", s.name, vv[s.value]))
 
 
-def RMSE(a,b):
-    err = np.sqrt(np.sum(np.square(a - b))/b.shape[0])
+def RMSE(x, y):
+    err = np.sqrt(np.sum(np.square(x - y))/y.shape[0])
     return err

@@ -13,7 +13,7 @@ if __name__=="__main__":
     start = time.time()
     gamma = 1.0
     start = time.time()
-    episodes = 5000        # 计算 10000 次的试验的均值作为数学期望值
+    episodes = 5000        # 计算 5000 次的试验的均值作为数学期望值
     V1 = {}
     for s in dataModel.S:   # 遍历每个状态
         v = algo.MC_Sequential(dataModel, s, episodes, gamma) # 采样计算价值函数

@@ -1,5 +1,3 @@
-import random
-from turtle import color
 import matplotlib.pyplot as plt
 import numpy as np
 

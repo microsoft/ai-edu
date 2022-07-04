@@ -21,4 +21,4 @@ if __name__=="__main__":
     print("耗时 :", end-start)
 
     V_groundTruth = env.Matrix(dataModel, 1)
-    print("MC-2 误差 =", helper.RMSE(V, V_groundTruth))
+    print("误差 =", helper.RMSE(V, V_groundTruth))

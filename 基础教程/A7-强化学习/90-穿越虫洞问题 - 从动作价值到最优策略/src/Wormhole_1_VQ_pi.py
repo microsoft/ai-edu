@@ -3,7 +3,7 @@ import Wormhole_0_Data as data              # 数据定义
 import GridWorld_Model as model           # 模型逻辑
 import Algorithm.Algo_PolicyValueFunction as algo     # 算法实现
 import common.DrawQpi as drawQ                     # 结果输出
-import common.PrintHelper as helper
+import common.CommonHelper as helper
 
 if __name__=="__main__":
     env = model.GridWorld(

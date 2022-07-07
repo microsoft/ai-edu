@@ -2,8 +2,8 @@
 import numpy as np
 import MC_102_SafetyDrive_DataModel as env
 import time
-import Algo_MonteCarlo as algo
-import common_helper as helper
+import Algorithm.Algo_MonteCarlo as algo
+import common.CommonHelper as helper
 
 
 if __name__=="__main__":

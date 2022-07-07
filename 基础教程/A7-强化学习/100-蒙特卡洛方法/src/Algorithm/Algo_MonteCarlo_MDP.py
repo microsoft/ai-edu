@@ -67,6 +67,8 @@ def MC_EveryVisit_Q(env, start_state, episodes, gamma):
     Value = np.zeros((nS, nA))  # G 的总和
     Count = np.zeros((nS, nA))  # G 的数量
     for episode in tqdm.trange(episodes):   # 多幕循环
+        # 重置环境，开始新的一幕采样
+        s, info = env.reset(return_info=True)
         Trajectory = []     # 一幕内的(状态,奖励)序列
         s = start_state
         done = False
@@ -76,7 +78,6 @@ def MC_EveryVisit_Q(env, start_state, episodes, gamma):
             Trajectory.append((s, action, reward))
             s = next_s
 
-        #print(Trajectory)
         num_step = len(Trajectory)
         G = 0
         # 从后向前遍历计算 G 值
@@ -86,12 +87,8 @@ def MC_EveryVisit_Q(env, start_state, episodes, gamma):
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1
 
-        # 重置环境，开始新的一幕采样
-        s, info = env.reset(return_info=True)
-
     Count[Count==0] = 1 # 把分母为0的填成1，主要是终止状态
     return Value / Count    # 求均值
-
 
 
 # MC3 - 增量更新

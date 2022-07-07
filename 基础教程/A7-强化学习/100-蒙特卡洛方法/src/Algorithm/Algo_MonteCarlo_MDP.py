@@ -73,7 +73,7 @@ def MC_EveryVisit_Q(env, start_state, episodes, gamma):
         s = start_state
         done = False
         while (done is False):            # 幕内循环
-            action = env.action_space.sample()
+            action = env.action_space.sample()  # 随机策略
             next_s, reward, done, info = env.step(action)
             Trajectory.append((s, action, reward))
             s = next_s
@@ -87,7 +87,7 @@ def MC_EveryVisit_Q(env, start_state, episodes, gamma):
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1
 
-    Count[Count==0] = 1 # 把分母为0的填成1，主要是终止状态
+    Count[Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
     return Value / Count    # 求均值
 
 

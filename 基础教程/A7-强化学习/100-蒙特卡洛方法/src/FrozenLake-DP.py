@@ -28,7 +28,7 @@ def policy_v2q(env,v,s=None,gamma=1.0):
     return q
 
 # 下面是策略评估
-def policy_evluate(env,policy,gamma=1.0,tolerant=1e-6):
+def policy_evluate(env,policy,gamma=1.0,tolerant=1e-4):
     v = np.zeros(env.observation_space.n)
     vs = np.zeros(env.observation_space.n)
     q = np.zeros(env.action_space.n)
@@ -68,7 +68,7 @@ def policy_iterative(env,gamma=1.0,tolerant=1e-6):
 
 if __name__=="__main__":
     # 下面尝试用随机策略玩
-    env = gym.make('FrozenLake-v1', map_name = "4x4", is_slippery=False)
+    env = gym.make('FrozenLake-v1', map_name = "4x4", is_slippery=True)
     random_policy = \
         np.ones((env.observation_space.n, env.action_space.n)) / env.action_space.n
     episode_rewards = [play_policy(env, random_policy) for _ in range(100)]
@@ -80,8 +80,8 @@ if __name__=="__main__":
     print('动作函数:')
     q_random = policy_v2q(env,v_random,s=None)
     print(q_random)
-    print('更新前策略是:')
-    print(random_policy)
+    #print('更新前策略是:')
+    #print(random_policy)
 
     exit(0)
 

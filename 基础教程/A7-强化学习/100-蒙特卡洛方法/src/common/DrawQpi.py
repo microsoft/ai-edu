@@ -1,20 +1,22 @@
 
 import numpy as np
 
-LEFT = 0x25c4 
-UP = 0x25b2
-RIGHT = 0x25ba
-DOWN = 0x25bc
-SPACE = 0x0020
-CENTER = 0x253c
-LINE = 0x2500
+LEFT, DOWN, RIGHT, UP = 0, 1, 2, 3
+
+LEFT_ARROW = 0x25c4 
+UP_ARROW = 0x25b2
+RIGHT_ARROW = 0x25ba
+DOWN_ARROW = 0x25bc
+EMPTY_SPACE = 0x0020
+CENTER_CROSS = 0x253c
+SEP_LINE = 0x2500
 
 class GridCell(object):
-    def __init__(self, policy):
+    def __init__(self, q):
         self.space = np.zeros((3,5), dtype=int)
-        self.space.fill(SPACE)     # 空格
-        self.space[1,2] = CENTER   # 中心
-        self.policy = np.round(policy, 4)
+        self.space.fill(EMPTY_SPACE)     # 空格
+        self.space[1,2] = CENTER_CROSS   # 中心
+        self.q = np.round(q, 4)
 
     # policy 是一个1x4的数组或矩阵,如[0.1,0.1,0.4,0.4]
     # 这种情况要在向上和向右的地方画两个箭头
@@ -22,34 +24,34 @@ class GridCell(object):
     # 0  ^
     # 1  o >
     # 2
-    
-        best_actions = np.argwhere(self.policy == np.max(self.policy))
-        pos = best_actions.flatten().tolist()
-        for a in pos:
-            if a == 0:      # left
-                self.space[1,0] = LEFT
-                self.space[1,1] = LINE
-            elif a == 3:    # up
-                self.space[0,2] = UP
-            elif a == 2:    # right
-                self.space[1,3] = LINE
-                self.space[1,4] = RIGHT
-            elif a == 1:    # down
-                self.space[2,2] = DOWN
+        if np.sum(q) != 0:
+            best_actions = np.argwhere(self.q == np.max(self.q))
+            pos = best_actions.flatten().tolist()
+            for action in pos:
+                if action == LEFT:      # left
+                    self.space[1,0] = LEFT_ARROW
+                    self.space[1,1] = SEP_LINE
+                elif action == UP:    # up
+                    self.space[0,2] = UP_ARROW
+                elif action == RIGHT:    # right
+                    self.space[1,3] = SEP_LINE
+                    self.space[1,4] = RIGHT_ARROW
+                elif action == DOWN:    # down
+                    self.space[2,2] = DOWN_ARROW
         
 
 class Grid(object):
-    def __init__(self, q, shape):
+    def __init__(self, Q, shape):
         self.array = np.zeros((shape[0]*3, shape[1]*5), dtype=int)
-        for i in range(len(q)):
+        for i in range(len(Q)):
             row = (int)(i / shape[0])
             col = (int)(i % shape[0])
-            policy = q[i]
-            cell = GridCell(policy)
+            q = Q[i]
+            cell = GridCell(q)
             self.array[row*3:row*3+3, col*5:col*5+5] = cell.space
 
-def draw(q, shape):
-    grid = Grid(q, shape)
+def draw(Q, shape):
+    grid = Grid(Q, shape)
     for j, rows in enumerate(grid.array):
         if (j % 3 == 0):
             print("+-----"*shape[1], end="")
@@ -63,14 +65,10 @@ def draw(q, shape):
     print("+-----"*shape[1])
 
 if __name__=="__main__":
-    q = np.array([
+    Q = np.array([
         [0.0155,  0.0164,  0.012,  0.015],
-        [5.63,  5.63,  5.63,  5.63],
+        [0.0,  0.0,  0.00,  0.00],
         [5.07,  3.06,  7.86 , 2.07],
         [8.73,  8.73,  8.73 , 8.73]
     ])
-    grid = Grid(q,(2,2))
-    for rows in grid.array:
-        for col in rows:
-            print(chr(col), end="")
-        print()
+    draw(Q, (2,2))

@@ -2,33 +2,11 @@ import numpy as np
 import tqdm
 import math
 
-# MC0 - 多次采样并随采样顺序正向计算 G 值，
-# 然后获得回报 G 的数学期望，即状态价值函数 v(start_state)
-def MC_Sequential_Q(dataModel, start_state, episodes, gamma):
-    G_sum = 0  # 定义最终的返回值，G 的平均数
-    # 循环多幕
-    for episode in tqdm.trange(episodes):
-        s = start_state # 把给定的起始状态作为当前状态
-        G = 0           # 设置本幕的初始值 G=0
-        t = 0           # 步数计数器
-        is_end = False
-        while not is_end:
-            s_next, reward, is_end = dataModel.step(s)
-            G += math.pow(gamma, t) * reward
-            t += 1
-            s = s_next
-        # end while
-        G_sum += G # 先暂时不计算平均值，而是简单地累加
-    # end for
-    v = G_sum / episodes   # 最后再一次性计算平均值，避免增加计算开销
-    return v
-
-
-
 
 # MC2-EveryVisit - 每次访问法
-def MC_EveryVisit_V(env, start_state, episodes, gamma):
+def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
     nS = env.observation_space.n
+    nA = env.action_space.n
     Value = np.zeros(nS)  # G 的总和
     Count = np.zeros(nS)  # G 的数量
 
@@ -37,7 +15,8 @@ def MC_EveryVisit_V(env, start_state, episodes, gamma):
         s = start_state
         done = False
         while (done is False):            # 幕内循环
-            action = env.action_space.sample()
+            #action = env.action_space.sample()
+            action = np.random.choice(nA, p=policy[s])
             next_s, reward, done, info = env.step(action)
             Trajectory.append((s, reward))
             s = next_s
@@ -61,7 +40,7 @@ def MC_EveryVisit_V(env, start_state, episodes, gamma):
 
 
 # MC2-EveryVisit - 每次访问法
-def MC_EveryVisit_Q(env, start_state, episodes, gamma):
+def MC_EveryVisit_Q(env, start_state, episodes, gamma, policy):
     nA = env.action_space.n
     nS = env.observation_space.n
     Value = np.zeros((nS, nA))  # G 的总和

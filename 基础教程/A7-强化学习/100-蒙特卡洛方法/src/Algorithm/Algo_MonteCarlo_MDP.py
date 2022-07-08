@@ -40,7 +40,7 @@ def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
 
 
 # MC2-EveryVisit - 每次访问法
-def MC_EveryVisit_Q(env, start_state, episodes, gamma, policy):
+def MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy):
     nA = env.action_space.n
     nS = env.observation_space.n
     Value = np.zeros((nS, nA))  # G 的总和
@@ -52,7 +52,7 @@ def MC_EveryVisit_Q(env, start_state, episodes, gamma, policy):
         s = start_state
         done = False
         while (done is False):            # 幕内循环
-            action = env.action_space.sample()  # 随机策略
+            action = np.random.choice(nA, p=policy[s])
             next_s, reward, done, info = env.step(action)
             Trajectory.append((s, action, reward))
             s = next_s
@@ -67,7 +67,8 @@ def MC_EveryVisit_Q(env, start_state, episodes, gamma, policy):
             Count[s,a] += 1     # 数量加 1
 
     Count[Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
-    return Value / Count    # 求均值
+    Q = Value / Count   # 求均值
+    return Q   
 
 
 # MC3 - 增量更新

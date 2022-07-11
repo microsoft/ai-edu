@@ -2,7 +2,6 @@ import numpy as np
 import tqdm
 import math
 
-
 # MC2-EveryVisit - 每次访问法
 def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
     nS = env.observation_space.n
@@ -70,6 +69,95 @@ def MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy):
     Q = Value / Count   # 求均值
     return Q   
 
+# MC2-EveryVisit - 每次访问法
+def MC_EveryVisit_Q_E_Greedy(env, start_state, episodes, gamma, policy, epsilon):
+    nA = env.action_space.n
+    nS = env.observation_space.n
+    Value = np.zeros((nS, nA))  # G 的总和
+    Count = np.zeros((nS, nA))  # G 的数量
+
+    other_p = epsilon / nA
+    best_p = 1 - epsilon + epsilon/nA
+
+    for episode in tqdm.trange(episodes):   # 多幕循环
+        # 重置环境，开始新的一幕采样
+        s, info = env.reset(return_info=True)
+        Trajectory = []     # 一幕内的(状态,奖励)序列
+        s = start_state
+        done = False
+        while (done is False):            # 幕内循环
+            action = np.random.choice(nA, p=policy[s])
+            next_s, reward, done, info = env.step(action)
+            Trajectory.append((s, action, reward))
+            s = next_s
+
+        num_step = len(Trajectory)
+        G = 0
+        # 从后向前遍历计算 G 值
+        for t in range(num_step-1, -1, -1):
+            s, a, r = Trajectory[t]
+            G = gamma * G + r
+            Value[s,a] += G     # 值累加
+            Count[s,a] += 1     # 数量加 1
+
+        Count[Count==0] = 1
+        Q = Value / Count   # 求均值
+        
+        for s in range(nS):
+            max_A = np.max(Q[s])
+            argmax_A = np.where(Q[s] == max_A)[0]
+            A = np.random.choice(argmax_A)
+            policy[s] = other_p
+            policy[s,A] = best_p
+
+    Count[Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
+    Q = Value / Count   # 求均值
+    return Q   
+
+
+
+# GLIE - Greedy in the Limit with Infinite Exploration
+def MC_EveryVisit_Q_GLIE(env, start_state, episodes, gamma, policy):
+    nA = env.action_space.n
+    nS = env.observation_space.n
+    Q = np.zeros((nS, nA))  # Q 动作价值
+    N = np.zeros((nS, nA))  # N 次数
+
+    for k in tqdm.trange(episodes):   # 多幕循环
+        # 重置环境，开始新的一幕采样
+        s, info = env.reset(return_info=True)
+        Trajectory = []     # 一幕内的(状态,奖励)序列
+        s = start_state
+        done = False
+        while (done is False):            # 幕内循环
+            action = np.random.choice(nA, p=policy[s])
+            next_s, reward, done, info = env.step(action)
+            Trajectory.append((s, action, reward))
+            s = next_s
+
+        num_step = len(Trajectory)
+        G = 0
+        # 从后向前遍历计算 G 值
+        for t in range(num_step-1, -1, -1):
+            s, a, r = Trajectory[t]
+            G = gamma * G + r
+            N[s,a] += 1     # 数量加 1
+            Q[s,a] += (G - Q[s,a])/N[s,a]
+
+        epsilon = 1 / (math.log(k+1)+1)
+        other_p = epsilon / nA
+        best_p = 1 - epsilon + epsilon/nA
+
+
+        # 更新策略        
+        for s in range(nS):
+            max_A = np.max(Q[s])
+            argmax_A = np.where(Q[s] == max_A)[0]
+            A = np.random.choice(argmax_A)
+            policy[s] = other_p
+            policy[s,A] = best_p
+
+    return Q
 
 # MC3 - 增量更新
 def MC_Incremental_Update(dataModel, start_state, episodes, alpha, gamma):

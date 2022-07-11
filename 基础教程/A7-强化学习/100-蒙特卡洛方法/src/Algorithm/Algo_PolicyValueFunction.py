@@ -10,9 +10,9 @@ def q_pi(p_s_r_d, gamma, V):
     return q
 
 # 式 (8.4.5) 计算 v_pi
-def v_pi(env, policy, s, actions, gamma, V, Q):
+def v_pi(policy, s, actions, gamma, V, Q):
     v = 0
-    for action in range(env.action_space.n):
+    for action in list(actions.keys()):  # actions 是一个字典数据，key 是动作
         q = q_pi(actions[action], gamma, V)
         # math: \sum_a \pi(a|s) q_\pi (s,a)
         v += policy[s][action] * q
@@ -30,7 +30,8 @@ def calculate_VQ_pi(env, policy, gamma, iteration):
         V_old = V.copy()    # 保存上一次的值以便检查收敛性
         # 遍历所有状态 s
         for s in range(env.observation_space.n):
-            V[s] = v_pi(env, policy, s, env.P[s], gamma, V, Q)
+            actions = env.P[s]
+            V[s] = v_pi(policy, s, actions, gamma, V, Q)
         # 检查收敛性
         if abs(V-V_old).max() < 1e-4:
             break

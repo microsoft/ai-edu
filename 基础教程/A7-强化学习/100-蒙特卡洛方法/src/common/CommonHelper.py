@@ -30,3 +30,19 @@ def print_V(dataModel, V):
 def RMSE(x, y):
     err = np.sqrt(np.sum(np.square(x - y))/y.shape[0])
     return err
+
+def test_policy(env, policy, episodes=100):
+    R = 0
+    for i in range(episodes):
+        s = env.reset()
+        done = False
+        while (done is False):            # 幕内循环
+            action = np.argmax(policy[s])
+            # action = np.random.choice(env.action_space.n, p=policy[s])
+            next_s, reward, done, info = env.step(action)
+            R += reward
+            if done == True and reward == 0:
+                print(s, action, next_s)
+            s = next_s
+
+    return R

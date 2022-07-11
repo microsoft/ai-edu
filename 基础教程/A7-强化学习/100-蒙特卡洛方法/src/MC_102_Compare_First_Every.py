@@ -1,7 +1,7 @@
 
 import numpy as np
 import MC_102_SafetyDrive_DataModel as env
-import common_helper as helper
+import common.CommonHelper as helper
 import tqdm
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -102,8 +102,8 @@ if __name__=="__main__":
         error = helper.RMSE(v, V_groundTruth)
         errors_every.append(error)
 
-    plt.plot(errors_first[5:], label="首次访问法")
-    plt.plot(errors_every[5:], label="每次访问法")
+    plt.plot(errors_first[10:], label="首次访问法")
+    plt.plot(errors_every[10:], label="每次访问法")
     plt.legend()
     plt.grid()
     plt.title("首次访问法 vs. 每次访问法")

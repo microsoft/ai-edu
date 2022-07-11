@@ -2,7 +2,7 @@ import numpy as np
 import Shoot_2_DataModel as dataModel
 import math
 import Algorithm.Algo_PolicyValueFunction as algo
-import common.PrintHelper as helper
+import common.CommonHelper as helper
 
 # 给指定的policy的前n/2个填0,后n/2个填1
 def fill_number(policy, pos, n):

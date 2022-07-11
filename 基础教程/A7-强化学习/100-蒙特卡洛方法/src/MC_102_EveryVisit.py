@@ -2,7 +2,7 @@
 import numpy as np
 import MC_102_SafetyDrive_DataModel as env
 import time
-import Algorithm.Algo_MonteCarlo as algo
+import Algorithm.Algo_MonteCarlo_MRP as algo
 import common.CommonHelper as helper
 
 

@@ -2,12 +2,13 @@ import numpy as np
 import tqdm
 import math
 
+# 来自于第六章
 # MC0 - 多次采样并随采样顺序正向计算 G 值，
 # 然后获得回报 G 的数学期望，即状态价值函数 v(start_state)
 def MC_Sequential_V(dataModel, start_state, episodes, gamma):
     G_sum = 0  # 定义最终的返回值，G 的平均数
     # 循环多幕
-    for episode in tqdm.trange(episodes):
+    for _ in tqdm.trange(episodes):
         s = start_state # 把给定的起始状态作为当前状态
         G = 0           # 设置本幕的初始值 G=0
         t = 0           # 步数计数器
@@ -28,25 +29,25 @@ def MC_Sequential_V(dataModel, start_state, episodes, gamma):
 def MC_FirstVisit_V(dataModel, start_state, episodes, gamma):
     Value = np.zeros(dataModel.nS)  # G 的总和
     Count = np.zeros(dataModel.nS)  # G 的数量
-    for episode in tqdm.trange(episodes):   # 多幕循环
-        TrajectoryState = []        # 一幕内的状态序列
-        TrajectoryReward = []       # 一幕内的奖励序列
+    for _ in tqdm.trange(episodes):   # 多幕循环
+        Episode_State = []        # 一幕内的状态序列
+        Episode_Reward = []       # 一幕内的奖励序列
         s = start_state
         is_end = False
         while (is_end is False):    # 幕内循环
             next_s, r, is_end = dataModel.step(s)   # 从环境获得下一个状态和奖励
-            TrajectoryState.append(s.value)
-            TrajectoryReward.append(r)
+            Episode_State.append(s.value)
+            Episode_Reward.append(r)
             s = next_s
-        assert(len(TrajectoryState) == len(TrajectoryReward))
-        num_step = len(TrajectoryState)
+        assert(len(Episode_State) == len(Episode_Reward))
+        num_step = len(Episode_State)
         G = 0
         # 从后向前遍历计算 G 值
         for t in range(num_step-1, -1, -1):
-            s = TrajectoryState[t]
-            r = TrajectoryReward[t]
+            s = Episode_State[t]
+            r = Episode_Reward[t]
             G = gamma * G + r
-            if not (s in TrajectoryState[0:t]):# 首次访问型
+            if not (s in Episode_State[0:t]):# 首次访问型
                 Value[s] += G     # 值累加
                 Count[s] += 1     # 数量加 1
     
@@ -58,20 +59,20 @@ def MC_FirstVisit_V(dataModel, start_state, episodes, gamma):
 def MC_EveryVisit_V(dataModel, start_state, episodes, gamma):
     Value = np.zeros(dataModel.nS)  # G 的总和
     Count = np.zeros(dataModel.nS)  # G 的数量
-    for episode in tqdm.trange(episodes):   # 多幕循环
-        Trajectory = []     # 一幕内的(状态,奖励)序列
+    for _ in tqdm.trange(episodes):   # 多幕循环
+        Episode = []     # 一幕内的(状态,奖励)序列
         s = start_state
         is_end = False
         while (is_end is False):            # 幕内循环
             next_s, reward, is_end = dataModel.step(s)   # 从环境获得下一个状态和奖励
-            Trajectory.append((s.value, reward))
+            Episode.append((s.value, reward))
             s = next_s
 
-        num_step = len(Trajectory)
+        num_step = len(Episode)
         G = 0
         # 从后向前遍历计算 G 值
         for t in range(num_step-1, -1, -1):
-            s, r = Trajectory[t]
+            s, r = Episode[t]
             G = gamma * G + r
             Value[s] += G     # 值累加
             Count[s] += 1     # 数量加 1

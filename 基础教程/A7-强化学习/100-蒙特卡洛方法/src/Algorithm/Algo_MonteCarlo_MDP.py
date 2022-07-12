@@ -2,30 +2,30 @@ import numpy as np
 import tqdm
 import math
 
-# MC2-EveryVisit - 每次访问法
+# MC 策略评估（预测）：每次访问法估算 V_pi
 def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
     nS = env.observation_space.n
     nA = env.action_space.n
     Value = np.zeros(nS)  # G 的总和
     Count = np.zeros(nS)  # G 的数量
 
-    for episode in tqdm.trange(episodes):   # 多幕循环
-        Trajectory = []     # 一幕内的(状态,奖励)序列
+    for _ in tqdm.trange(episodes):   # 多幕循环
+        Episode = []     # 一幕内的(状态,奖励)序列
         s = start_state
         done = False
         while (done is False):            # 幕内循环
             #action = env.action_space.sample()
             action = np.random.choice(nA, p=policy[s])
             next_s, reward, done, info = env.step(action)
-            Trajectory.append((s, reward))
+            Episode.append((s, reward))
             s = next_s
 
         #print(Trajectory)
-        num_step = len(Trajectory)
+        num_step = len(Episode)
         G = 0
         # 从后向前遍历计算 G 值
         for t in range(num_step-1, -1, -1):
-            s, r = Trajectory[t]
+            s, r = Episode[t]
             G = gamma * G + r
             Value[s] += G     # 值累加
             Count[s] += 1     # 数量加 1
@@ -38,7 +38,7 @@ def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
     return V    # 求均值
 
 
-# MC2-EveryVisit - 每次访问法
+# MC 策略评估（预测）：每次访问法估算 Q_pi
 def MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy):
     nA = env.action_space.n
     nS = env.observation_space.n
@@ -47,20 +47,20 @@ def MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy):
     for episode in tqdm.trange(episodes):   # 多幕循环
         # 重置环境，开始新的一幕采样
         s, info = env.reset(return_info=True)
-        Trajectory = []     # 一幕内的(状态,奖励)序列
+        Episode = []     # 一幕内的(状态,奖励)序列
         s = start_state
         done = False
         while (done is False):            # 幕内循环
             action = np.random.choice(nA, p=policy[s])
             next_s, reward, done, info = env.step(action)
-            Trajectory.append((s, action, reward))
+            Episode.append((s, action, reward))
             s = next_s
 
-        num_step = len(Trajectory)
+        num_step = len(Episode)
         G = 0
         # 从后向前遍历计算 G 值
         for t in range(num_step-1, -1, -1):
-            s, a, r = Trajectory[t]
+            s, a, r = Episode[t]
             G = gamma * G + r
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1

@@ -12,7 +12,7 @@ def get_groud_truth(env, policy, gamma):
 
 if __name__=="__main__":
     gamma = 1
-    episodes = 10000
+    episodes = 1000
     env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
     policy = np.ones((env.observation_space.n, env.action_space.n)) / env.action_space.n
     V_real, Q_real = get_groud_truth(env, policy, gamma)
@@ -25,11 +25,5 @@ if __name__=="__main__":
     V = algoMC.MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy)
     print(np.reshape(np.round(V,3),(4,4)))
 
-    Q = algoMC.MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy)
-    print(np.round(Q,3))
-    drawQ.draw(Q,(4,4))
-
-
     env.close()
     print(helper.RMSE(V, V_real))
-    print(helper.RMSE(Q, Q_real))

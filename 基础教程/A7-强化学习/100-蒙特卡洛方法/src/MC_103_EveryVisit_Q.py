@@ -1,0 +1,24 @@
+
+import numpy as np
+import MC_102_SafetyDrive_DataModel as env
+import time
+import Algorithm.Algo_MonteCarlo_MDP as algo
+import common.CommonHelper as helper
+
+
+if __name__=="__main__":
+    np.random.seed(15)
+    
+    print("---------- Every Visit ----------")
+    dataModel = env.DataModel()
+    start = time.time()
+    episodes = 20000        # 计算 10000 次的试验的均值作为数学期望值
+    gamma = 1.0
+    V = algo.MC_EveryVisit(dataModel, dataModel.S.Start, episodes, gamma)
+    print("gamma =", gamma)
+    helper.print_V(dataModel, V)
+    end = time.time()    
+    print("耗时 :", end-start)
+
+    V_groundTruth = env.Matrix(dataModel, 1)
+    print("误差 =", helper.RMSE(V, V_groundTruth))

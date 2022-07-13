@@ -12,11 +12,12 @@ def get_groud_truth(env, policy, gamma):
 
 if __name__=="__main__":
     gamma = 1
-    episodes = 1000
+    episodes = 50000
     env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
+    # 随机策略
     policy = np.ones((env.observation_space.n, env.action_space.n)) / env.action_space.n
-    V_real, Q_real = get_groud_truth(env, policy, gamma)
 
+    V_real, Q_real = get_groud_truth(env, policy, gamma)
 
     nA = env.action_space.n
     nS = env.observation_space.n

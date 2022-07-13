@@ -3,7 +3,7 @@ import tqdm
 import math
 
 # MC 策略评估（预测）：每次访问法估算 V_pi
-def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
+def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy, checkpoint=1000, delta=1e-3):
     nS = env.observation_space.n
     nA = env.action_space.n
     Value = np.zeros(nS)  # G 的总和
@@ -15,7 +15,7 @@ def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
         done = False
         while (done is False):            # 幕内循环
             action = np.random.choice(nA, p=policy[s])
-            next_s, reward, done, info = env.step(action)
+            next_s, reward, done, _ = env.step(action)
             Episode.append((s, reward))
             s = next_s
         # 从后向前遍历计算 G 值
@@ -26,13 +26,13 @@ def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy):
             Value[s] += G     # 值累加
             Count[s] += 1     # 数量加 1
         # 重置环境，开始新的一幕采样
-        s, info = env.reset(return_info=True)
+        start_state, _ = env.reset(return_info=True)
         # 检查是否收敛
-        if (episode + 1)%1000 == 0: 
+        if (episode + 1)%checkpoint == 0:
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
             V = Value / Count
             print(np.reshape(np.round(V,3),(4,4)))
-            if abs(V-V_old).max() < 1e-2:
+            if abs(V-V_old).max() < delta:
                 break
             V_old = V.copy()
     print("循环幕数 =",episode+1)

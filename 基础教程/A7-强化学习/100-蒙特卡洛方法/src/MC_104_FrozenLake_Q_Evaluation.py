@@ -20,6 +20,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
     Value = np.zeros((nS, nA))  # G 的总和
     Count = np.zeros((nS, nA))  # G 的数量
     Q_history = []
+    T_len = 0
     for episode in tqdm.trange(episodes):   # 多幕循环
         # 重置环境，开始新的一幕采样
         s, _ = env.reset(return_info=True)
@@ -31,6 +32,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
             Episode.append((s, action, reward))
             s = next_s
         
+        T_len += len(Episode)
         G = 0
         # 从后向前遍历计算 G 值
         for t in range(len(Episode)-1, -1, -1):
@@ -44,7 +46,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
             Q = Value / Count
             Q_history.append(Q)
-    return Q_history
+    return Q_history, T_len/episodes
 
 def get_groud_truth(env, policy, gamma):
     iteration = 100
@@ -66,8 +68,8 @@ def create_policy(env, args):
 
 if __name__=="__main__":
     gamma = 1
-    episodes = 50000
-    policy_names = ["正确方向", "随机方向","错误方向"]
+    episodes = 20000
+    policy_names = ["正确策略", "随机策略","错误策略"]
     policies = [
         # left, down, right, up
         (0.2,  0.3,  0.3,  0.2),
@@ -76,6 +78,7 @@ if __name__=="__main__":
     ]
     np.set_printoptions(suppress=True)
     for i, policy_data in enumerate(policies):
+        print(str.format("------ {0} ------", policy_names[i]))
         env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
         policy = create_policy(env, policy_data)
         print(policy)
@@ -84,15 +87,16 @@ if __name__=="__main__":
         nS = env.observation_space.n
         start_state, info = env.reset(seed=5, return_info=True)
         #Q_history = algoMC.MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy)
-        Q_history = MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy)
+        Q_history, T_len = MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy)
         Errors = []
         for Q in Q_history:
             error = helper.RMSE(Q, Q_real)
             Errors.append(error)
 
-        print("------ 状态价值函数 -----")
+        print("------ 动作价值函数 -----")
         print(np.round(Q,3))
         print("误差 =", error)
+        print("平均每幕长度 =", T_len)
         plt.plot(Errors, label=policy_names[i])
 
         #Q4 = np.round(Q,4)
@@ -101,7 +105,7 @@ if __name__=="__main__":
         env.close()
         print(helper.RMSE(Q, Q_real))
 
-    plt.title(u'策略评估 $V_\pi$ 的误差与循环次数的关系')
+    plt.title(u'策略评估 $Q_\pi$ 的误差与循环次数的关系')
     plt.xlabel(u'循环次数(x1000)')
     plt.ylabel(u'误差 RMSE')
     plt.legend()

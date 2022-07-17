@@ -21,13 +21,13 @@ def get_groud_truth(env, policy, gamma):
 def MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy, checkpoint=1000, delta=1e-3):
     nS = env.observation_space.n
     nA = env.action_space.n
-    Value = np.zeros(nS)  # G 的总和
-    Count = np.zeros(nS)  # G 的数量
+    Value = np.zeros(nS) # G 的总和
+    Count = np.zeros(nS) # G 的数量
     V_old = np.zeros(nS)
-    V_history = []
+    V_history = []       # 测试用
     for episode in tqdm.trange(episodes):   # 多幕循环
         Episode = []     # 一幕内的(状态,奖励)序列
-        s, _ = env.reset(return_info=True)
+        s, _ = env.reset(return_info=True)# 重置环境，开始新的一幕采样
         done = False
         while (done is False):            # 幕内循环
             action = np.random.choice(nA, p=policy[s])
@@ -41,7 +41,6 @@ def MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy, checkpoint=1000, d
             G = gamma * G + r
             Value[s] += G     # 值累加
             Count[s] += 1     # 数量加 1
-        # 重置环境，开始新的一幕采样
         # 检查是否收敛
         if (episode + 1)%checkpoint == 0: 
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
@@ -52,7 +51,7 @@ def MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy, checkpoint=1000, d
                 break
             V_old = V.copy()
     print("循环幕数 =",episode+1)
-    return V_history    # 求均值
+    return V_history    # 返回历史数据用于评测
 
 
 if __name__=="__main__":

@@ -46,3 +46,16 @@ def test_policy(env, policy, episodes=100):
             s = next_s
 
     return R
+
+def create_policy(env, args):
+    left = args[0]
+    down = args[1]
+    right = args[2]
+    up = args[3]
+    assert(left+down+right+up==1)
+    policy = np.zeros((env.observation_space.n, env.action_space.n))
+    policy[:, 0] = left
+    policy[:, 1] = down
+    policy[:, 2] = right
+    policy[:, 3] = up
+    return policy

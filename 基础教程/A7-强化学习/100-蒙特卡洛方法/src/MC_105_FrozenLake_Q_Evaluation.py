@@ -2,7 +2,7 @@ from cProfile import label
 from email import policy
 import numpy as np
 import gym
-import Algorithm.Algo_MonteCarlo_MDP as algoMC
+import Algorithm.Algo_MC_Policy_Evaulation as algoMC
 import Algorithm.Algo_PolicyValueFunction as algoDP
 import common.DrawQpi as drawQ
 import common.CommonHelper as helper
@@ -12,6 +12,20 @@ import matplotlib as mpl
 
 mpl.rcParams['font.sans-serif'] = ['SimHei']  
 mpl.rcParams['axes.unicode_minus'] = False
+
+def test_n_times(env, episodes, gamma, policy, checkpoint=1000, n=10):
+    Errors = []
+    for i in range(n):
+        Q_history, T_len = MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=checkpoint)
+        errors = []
+        for Q in Q_history:
+            error = helper.RMSE(Q, Q_real)
+            errors.append(error)
+        Errors.append(errors)
+    E_array = np.array(Errors)
+    E_mean = np.mean(E_array, axis=0)   # 求 n 次的误差平均值
+    return E_mean, T_len, Q, error
+
 
 # MC 策略评估（预测）：每次访问法估算 Q_pi
 def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
@@ -28,7 +42,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
         done = False
         while (done is False):            # 幕内循环
             action = np.random.choice(nA, p=policy[s])
-            next_s, reward, done, info = env.step(action)
+            next_s, reward, done, _ = env.step(action)
             Episode.append((s, action, reward))
             s = next_s
         
@@ -41,7 +55,6 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1
 
-        # 检查是否收敛
         if (episode + 1)%checkpoint == 0: 
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
             Q = Value / Count
@@ -67,7 +80,7 @@ def create_policy(env, args):
     return policy
 
 if __name__=="__main__":
-    gamma = 1
+    gamma = 0.9
     episodes = 20000
     policy_names = ["正确策略", "随机策略","错误策略"]
     policies = [
@@ -86,24 +99,14 @@ if __name__=="__main__":
         nA = env.action_space.n
         nS = env.observation_space.n
         start_state, info = env.reset(seed=5, return_info=True)
-        #Q_history = algoMC.MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy)
-        Q_history, T_len = MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy)
-        Errors = []
-        for Q in Q_history:
-            error = helper.RMSE(Q, Q_real)
-            Errors.append(error)
-
+        Errors, T_len, Q, error = test_n_times(env, episodes, gamma, policy, checkpoint=1000, n=1)    # n=10
         print("------ 动作价值函数 -----")
         print(np.round(Q,3))
         print("误差 =", error)
         print("平均每幕长度 =", T_len)
         plt.plot(Errors, label=policy_names[i])
-
-        #Q4 = np.round(Q,4)
-        #print(Q)
         drawQ.draw(Q,(4,4))
         env.close()
-        print(helper.RMSE(Q, Q_real))
 
     plt.title(u'策略评估 $Q_\pi$ 的误差与循环次数的关系')
     plt.xlabel(u'循环次数(x1000)')

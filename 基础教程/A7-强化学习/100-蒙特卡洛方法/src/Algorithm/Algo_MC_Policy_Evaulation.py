@@ -3,7 +3,7 @@ import tqdm
 import math
 
 # MC 策略评估（预测）：每次访问法估算 V_pi
-def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy, checkpoint=1000, delta=1e-3):
+def MC_EveryVisit_V_Policy(env, episodes, gamma, policy, checkpoint=1000, delta=1e-3):
     nS = env.observation_space.n
     nA = env.action_space.n
     Value = np.zeros(nS)  # G 的总和
@@ -11,7 +11,7 @@ def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy, checkpoint
     V_old = np.zeros(nS)
     for episode in tqdm.trange(episodes):   # 多幕循环
         Episode = []     # 一幕内的(状态,奖励)序列
-        s = start_state
+        s, _ = env.reset(return_info=True) # 重置环境，开始新的一幕采样
         done = False
         while (done is False):            # 幕内循环
             action = np.random.choice(nA, p=policy[s])
@@ -25,8 +25,7 @@ def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy, checkpoint
             G = gamma * G + r
             Value[s] += G     # 值累加
             Count[s] += 1     # 数量加 1
-        # 重置环境，开始新的一幕采样
-        start_state, _ = env.reset(return_info=True)
+        
         # 检查是否收敛
         if (episode + 1)%checkpoint == 0:
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
@@ -36,26 +35,26 @@ def MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy, checkpoint
                 break
             V_old = V.copy()
     print("循环幕数 =",episode+1)
-    return V    # 求均值
+    V = Value / Count    # 求均值
+    return V
 
 
 # MC 策略评估（预测）：每次访问法估算 Q_pi
-def MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy):
-    nA = env.action_space.n
-    nS = env.observation_space.n
-    Value = np.zeros((nS, nA))  # G 的总和
-    Count = np.zeros((nS, nA))  # G 的数量
+def MC_EveryVisit_Q_Policy(env, episodes, gamma, policy):
+    nA = env.action_space.n                 # 动作空间
+    nS = env.observation_space.n            # 状态空间
+    Value = np.zeros((nS, nA))              # G 的总和
+    Count = np.zeros((nS, nA))              # G 的数量
     for episode in tqdm.trange(episodes):   # 多幕循环
         # 重置环境，开始新的一幕采样
-        s, info = env.reset(return_info=True)
-        Episode = []     # 一幕内的(状态,奖励)序列
-        s = start_state
+        s, _ = env.reset(return_info=True)
+        Episode = []     # 一幕内的(状态,动作,奖励)序列
         done = False
         while (done is False):            # 幕内循环
             action = np.random.choice(nA, p=policy[s])
-            next_s, reward, done, info = env.step(action)
+            next_s, reward, done, _ = env.step(action)
             Episode.append((s, action, reward))
-            s = next_s
+            s = next_s  # 迭代
 
         num_step = len(Episode)
         G = 0
@@ -70,25 +69,40 @@ def MC_EveryVisit_Q_Policy(env, start_state, episodes, gamma, policy):
     Q = Value / Count   # 求均值
     return Q   
 
-# MC2-EveryVisit - 每次访问法
-def MC_EveryVisit_Q_E_Greedy(env, start_state, episodes, gamma, policy, epsilon):
+
+def get_start_state(env, start_state):
+    s = env.reset()
+    while s != start_state:     # 以随机选择的 s 为起始状态
+        action = np.random.choice(env.action_space.n)
+        next_s, _, done, _ = env.step(action)
+        s = next_s
+        if s == start_state:
+            break
+        if done is True:
+            s = env.reset()
+    return s
+
+# MC 控制 探索出发
+def MC_ES(env, episodes, gamma, policy):
     nA = env.action_space.n
     nS = env.observation_space.n
     Value = np.zeros((nS, nA))  # G 的总和
     Count = np.zeros((nS, nA))  # G 的数量
 
-    other_p = epsilon / nA
-    best_p = 1 - epsilon + epsilon/nA
-
     for episode in tqdm.trange(episodes):   # 多幕循环
         # 重置环境，开始新的一幕采样
-        s, info = env.reset(return_info=True)
+        start_state = np.random.choice(nS)
+        s = get_start_state(env, start_state)
+        assert(s == start_state)
+        # 找到了指定的 start_state，开始采样
         Trajectory = []     # 一幕内的(状态,奖励)序列
-        s = start_state
-        done = False
+        action = np.random.choice(nA)   # 起始动作也是随机的
+        next_s, reward, done, _ = env.step(action)
+        Trajectory.append((s, action, reward))
+        s = next_s
         while (done is False):            # 幕内循环
-            action = np.random.choice(nA, p=policy[s])
-            next_s, reward, done, info = env.step(action)
+            action = np.random.choice(nA, p=policy[s])  # 根据改进的策略采样
+            next_s, reward, done, _ = env.step(action)
             Trajectory.append((s, action, reward))
             s = next_s
 
@@ -108,12 +122,14 @@ def MC_EveryVisit_Q_E_Greedy(env, start_state, episodes, gamma, policy, epsilon)
             max_A = np.max(Q[s])
             argmax_A = np.where(Q[s] == max_A)[0]
             A = np.random.choice(argmax_A)
-            policy[s] = other_p
-            policy[s,A] = best_p
+            policy[s] = 0
+            policy[s,A] = 1
 
     Count[Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
     Q = Value / Count   # 求均值
     return Q   
+
+
 
 
 

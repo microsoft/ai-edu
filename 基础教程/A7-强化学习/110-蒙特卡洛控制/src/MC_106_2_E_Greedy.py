@@ -58,7 +58,7 @@ if __name__=="__main__":
 
     policy = helper.create_policy(env, (0.25,0.25,0.25,0.25))
     env.reset(seed=5)
-    algo = MC_E_Greedy(env, policy, episodes, gamma, 0.1)
+    algo = MC_E_Greedy(env, policy, episodes, gamma, 0.05)
     Q, policy = algo.policy_iteration()
     env.close()
     

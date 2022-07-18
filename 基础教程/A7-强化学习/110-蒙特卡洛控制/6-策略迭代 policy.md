@@ -1,3 +1,19 @@
+
+https://zhuanlan.zhihu.com/p/28498261
+
+理论证明策略迭代方法的正确
+
+- 可以比较policy iteration and value iteration
+- 可以绘图：结果图、曲线（趋势）图
+
+- maze  https://cs.stanford.edu/people/karpathy/reinforcejs/gridworld_dp.html
+
+$$
+\pi_*=\argmax_\pi v_\pi(s)
+$$
+
+
+
 ## 10.6 策略迭代 $\pi$
 
 

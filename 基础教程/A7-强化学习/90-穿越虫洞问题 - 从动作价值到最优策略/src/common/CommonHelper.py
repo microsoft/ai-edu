@@ -1,5 +1,6 @@
-
+import numpy as np
 from enum import Enum
+
 
 class SeperatorLines(Enum):
     empty = 0   # 打印空行
@@ -16,3 +17,12 @@ def print_seperator_line(style: SeperatorLines):
         print("-"*20)
     elif style == SeperatorLines.long:
         print("="*40)
+
+def extract_policy_from_Q(Q):
+    policy = np.zeros_like(Q)
+    for s in range(Q.shape[0]):
+        max_v = np.max(Q[s])
+        for a in range(Q[s].shape[0]):
+            if Q[s,a] == max_v:
+                policy[s, a] = 1
+    return policy

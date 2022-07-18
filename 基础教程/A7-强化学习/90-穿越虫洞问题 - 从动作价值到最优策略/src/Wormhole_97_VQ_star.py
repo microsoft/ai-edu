@@ -1,9 +1,9 @@
 import numpy as np
-import Wormhole_0_Data as data              # 数据定义
+import Wormhole_91_Data as data              # 数据定义
 import GridWorld_Model as model             # 模型逻辑
 import Algorithm.Algo_OptimalValueFunction as algo    # 算法实现
 import common.DrawQpi as drawQ                     # 结果输出
-import common.PrintHelper as helper
+import common.CommonHelper as helper
 
 if __name__=="__main__":
     env = model.GridWorld(
@@ -29,3 +29,6 @@ if __name__=="__main__":
     # 字符图形化显示
     helper.print_seperator_line(helper.SeperatorLines.long)
     drawQ.draw(Q_star, (data.GridWidth, data.GridHeight))
+
+    policy = helper.extract_policy_from_Q(Q_star)
+    print(policy.reshape(5,5,4))

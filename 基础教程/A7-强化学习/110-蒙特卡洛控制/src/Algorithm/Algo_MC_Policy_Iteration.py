@@ -26,7 +26,7 @@ class Policy_Iteration(object):
             done = False
             while (done is False):            # 幕内循环
                 action = np.random.choice(self.nA, p=self.policy[s])
-                next_s, reward, done, _ = self.env.step(action)
+                next_s, reward, done, info = self.env.step(action)
                 Episode.append((s, action, reward))
                 s = next_s
 
@@ -49,10 +49,9 @@ class Policy_Iteration(object):
 
     # 策略迭代
     def policy_iteration(self):
-        count = 0
+        self.initialize()
+        print("策略评估")
         while True:
-            self.initialize()
-            print("策略评估")
             Q = self.policy_evaluation(self.episodes)
             print("策略改进")
             old_policy = self.policy.copy()

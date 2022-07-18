@@ -15,29 +15,14 @@ mpl.rcParams['font.sans-serif'] = ['SimHei']
 mpl.rcParams['axes.unicode_minus'] = False
 
 
-class MC_E_Greedy(algoMC.Policy_Iteration):
-    def __init__(self, env, policy, episodes, gamma, epsilon):
-        super().__init__(env, policy, episodes, gamma)
-        self.epsilon = epsilon
-    
-    def initialize(self):
-        super().initialize()
-        self.other_p = self.epsilon / self.nA
-        self.best_p = 1 - self.epsilon + self.epsilon / self.nA
-
+class MC_Greedy(algoMC.Policy_Iteration):
     def policy_improvement(self, Q):
         for s in range(self.nS):
-            max_A = np.max(Q[s])
-            if max_A == 0:
-                self.policy[s] = 0
-            else:
-                argmax_A = np.where(Q[s] == max_A)[0]
-                A = np.random.choice(argmax_A)
-                self.policy[s] = self.other_p
-                self.policy[s,A] = self.best_p
+            arg = np.argmax(Q[s])
+            self.policy[s] = 0
+            self.policy[s, arg] = 1
 
         return self.policy
-
 
 
 def get_groud_truth(env, gamma):
@@ -59,7 +44,6 @@ if __name__=="__main__":
     policy = helper.create_policy(env, (0.25,0.25,0.25,0.25))
     env.reset(seed=5)
     algo = MC_Greedy(env, policy, episodes, gamma)
-    #algo = MC_E_Greedy(env, policy, episodes, gamma, 0.1)
     Q, policy = algo.policy_iteration()
     env.close()
     

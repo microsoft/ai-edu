@@ -16,16 +16,15 @@ mpl.rcParams['axes.unicode_minus'] = False
 
 
 class MC_E_Greedy(algoMC.Policy_Iteration):
-    def __init__(self, env, policy, episodes, gamma, epsilon):
-        super().__init__(env, policy, episodes, gamma)
+    def __init__(self, env, policy, gamma:float, episodes:int, final:int, epsilon:float):
+        super().__init__(env, policy, gamma, episodes, final)
         self.epsilon = epsilon
-    
-    def initialize(self):
-        super().initialize()
         self.other_p = self.epsilon / self.nA
         self.best_p = 1 - self.epsilon + self.epsilon / self.nA
-
+    
     def policy_improvement(self, Q):
+        print(np.sum(Q))
+
         for s in range(self.nS):
             if s in end_states:
                 self.policy[s] = 0
@@ -47,7 +46,9 @@ def get_groud_truth(env, gamma):
 
 if __name__=="__main__":
     gamma = 0.9
-    episodes = 1000
+    episodes = 10
+    final = 2000
+    epsilon = 0.05
     
     np.set_printoptions(suppress=True)
     env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
@@ -58,7 +59,7 @@ if __name__=="__main__":
 
     policy = helper.create_policy(env, (0.25,0.25,0.25,0.25))
     env.reset(seed=5)
-    algo = MC_E_Greedy(env, policy, episodes, gamma, 0.05)
+    algo = MC_E_Greedy(env, policy, gamma, episodes, final, epsilon)
     Q, policy = algo.policy_iteration()
     env.close()
     

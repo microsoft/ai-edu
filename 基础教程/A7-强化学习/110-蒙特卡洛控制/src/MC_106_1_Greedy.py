@@ -33,14 +33,14 @@ def get_groud_truth(env, gamma):
 
 if __name__=="__main__":
     gamma = 0.9
-    episodes = 100
+    episodes = 1000
     final = 2000
     
     np.set_printoptions(suppress=True)
-    env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
+    env = gym.make("FrozenLake-v1", desc=None, map_name = "8x8", is_slippery=False)
     Q_real = get_groud_truth(env, gamma)
     print(np.round(Q_real,3))
-    drawQ.draw(Q_real,(4,4))
+    drawQ.draw(Q_real,(8,8))
 
     policy = helper.create_policy(env, (0.25,0.25,0.25,0.25))
     env.reset(seed=5)
@@ -50,6 +50,6 @@ if __name__=="__main__":
     
     print("------ 最优动作价值函数 -----")
     print(np.round(Q,3))
-    drawQ.draw(policy,(4,4))
+    drawQ.draw(policy,(8,8))
     print(policy)
 

@@ -9,15 +9,24 @@ class SeperatorLines(Enum):
     middle = 2  # 打印30个'-'
     long = 3    # 打印40个'='
 
-def print_seperator_line(style: SeperatorLines):
+def print_seperator_line(style: SeperatorLines, info=None):
     if style == SeperatorLines.empty:
         print("")
     elif style == SeperatorLines.short:
-        print("-"*10)
+        if (info is None):
+            print("-"*10)
+        else:
+            print("----- " + info + " -----")
     elif style == SeperatorLines.middle:
-        print("-"*30)
+        if (info is None):
+            print("-"*30)
+        else:
+            print("-"*15 + info + "-"*15)
     elif style == SeperatorLines.long:
-        print("="*40)
+        if (info is None):
+            print("="*40)
+        else:
+            print("="*20 + info + "="*20)
 
 
 def print_V(dataModel, V):
@@ -47,6 +56,7 @@ def test_policy(env, policy, episodes=100):
 
     return R
 
+# 根据输入的4个概率值创建策略
 def create_policy(env, args):
     left = args[0]
     down = args[1]
@@ -58,4 +68,15 @@ def create_policy(env, args):
     policy[:, 1] = down
     policy[:, 2] = right
     policy[:, 3] = up
+    return policy
+
+# 从Q函数表格中抽取策略
+def extract_policy_from_Q(Q, end_states):
+    policy = np.zeros_like(Q)
+    for s in range(Q.shape[0]):
+        if s not in end_states:
+            max_v = np.max(Q[s])
+            for a in range(Q[s].shape[0]):
+                if Q[s,a] == max_v:
+                    policy[s, a] = 1
     return policy

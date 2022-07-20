@@ -1,5 +1,3 @@
-from cProfile import label
-from email import policy
 import numpy as np
 import gym
 import Algorithm.Algo_MC_Policy_Evaulation as algoMC
@@ -66,18 +64,6 @@ def get_groud_truth(env, policy, gamma):
     _, Q = algoDP.calculate_VQ_pi(env, policy, gamma, iteration)
     return Q
 
-def create_policy(env, args):
-    left = args[0]
-    down = args[1]
-    right = args[2]
-    up = args[3]
-    assert(left+down+right+up==1)
-    policy = np.zeros((env.observation_space.n, env.action_space.n))
-    policy[:, 0] = left
-    policy[:, 1] = down
-    policy[:, 2] = right
-    policy[:, 3] = up
-    return policy
 
 if __name__=="__main__":
     gamma = 0.9
@@ -89,11 +75,13 @@ if __name__=="__main__":
         (0.25, 0.25, 0.25, 0.25), 
         (0.3,  0.2,  0.2,  0.3)
     ]
+    end_states = [5, 7, 11, 12, 15]
     np.set_printoptions(suppress=True)
+
     for i, policy_data in enumerate(policies):
         print(str.format("------ {0} ------", policy_names[i]))
         env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
-        policy = create_policy(env, policy_data)
+        policy = helper.create_policy(env, policy_data)
         print(policy)
         Q_real = get_groud_truth(env, policy, gamma)
         nA = env.action_space.n
@@ -105,8 +93,10 @@ if __name__=="__main__":
         print("误差 =", error)
         print("平均每幕长度 =", T_len)
         plt.plot(Errors, label=policy_names[i])
-        drawQ.draw(Q,(4,4))
         env.close()
+        policy = helper.extract_policy_from_Q(Q, end_states)
+        print(policy)
+        drawQ.draw(policy,(4,4))
 
     plt.title(u'策略评估 $Q_\pi$ 的误差与循环次数的关系')
     plt.xlabel(u'循环次数(x1000)')

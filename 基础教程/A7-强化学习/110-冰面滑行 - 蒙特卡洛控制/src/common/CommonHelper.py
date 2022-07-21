@@ -47,15 +47,27 @@ def test_policy(env, policy, episodes=100):
 
     return R
 
-def create_policy(env, args):
+def create_policy(nS, nA, args):
     left = args[0]
     down = args[1]
     right = args[2]
     up = args[3]
     assert(left+down+right+up==1)
-    policy = np.zeros((env.observation_space.n, env.action_space.n))
+    policy = np.zeros((nS, nA))
     policy[:, 0] = left
     policy[:, 1] = down
     policy[:, 2] = right
     policy[:, 3] = up
+    return policy
+
+
+# 从Q函数表格中抽取策略
+def extract_policy_from_Q(Q, end_states):
+    policy = np.zeros_like(Q)
+    for s in range(Q.shape[0]):
+        if s not in end_states:
+            max_v = np.max(Q[s])
+            for a in range(Q[s].shape[0]):
+                if Q[s,a] == max_v:
+                    policy[s, a] = 1
     return policy

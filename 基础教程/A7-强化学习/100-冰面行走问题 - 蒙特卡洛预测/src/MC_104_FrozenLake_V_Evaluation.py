@@ -26,7 +26,7 @@ def MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy, checkpoint=1000, d
     V_old = np.zeros(nS)
     V_history = []       # 测试用
     for episode in tqdm.trange(episodes):   # 多幕循环
-        Episode = []     # 一幕内的(状态,奖励)序列
+        Episode = []     # 保存一幕内的(状态,奖励)序列
         s, _ = env.reset(return_info=True)# 重置环境，开始新的一幕采样
         done = False
         while (done is False):            # 幕内循环

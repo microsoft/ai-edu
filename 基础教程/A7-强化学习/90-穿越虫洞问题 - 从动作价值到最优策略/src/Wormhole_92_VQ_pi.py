@@ -1,6 +1,6 @@
 import numpy as np
-import Wormhole_0_Data as data              # 数据定义
-import GridWorld_Model as model           # 模型逻辑
+import Wormhole_91_Data as data              # 数据定义
+import common.GridWorld_Model as model           # 模型逻辑
 import Algorithm.Algo_PolicyValueFunction as algo     # 算法实现
 import common.DrawQpi as drawQ                     # 结果输出
 import common.CommonHelper as helper

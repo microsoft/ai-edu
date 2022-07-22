@@ -29,6 +29,7 @@ if __name__=="__main__":
         helper.print_seperator_line(helper.SeperatorLines.middle, "最优策略下的状态价值函数 V")
         print(np.reshape(np.round(V_star,3), (4,4)))
         helper.print_seperator_line(helper.SeperatorLines.middle, "最优策略下的动作价值函数 Q")
-        print(np.round(Q_star,3))
+        Q_star = np.round(Q_star,3)
+        print(Q_star)
         drawQ.draw(Q_star, (4,4))
         env.close()

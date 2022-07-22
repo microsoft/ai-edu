@@ -2,7 +2,7 @@
 import numpy as np
 import MC_102_SafetyDrive_DataModel as env
 import time
-import Algorithm.Algo_MonteCarlo as algo
+import Algorithm.Algo_MC_Value_Evaluation as algo
 import common.CommonHelper as helper
 
 
@@ -16,7 +16,7 @@ if __name__=="__main__":
     episodes = 5000        # 计算 5000 次的试验的均值作为数学期望值
     V1 = {}
     for s in dataModel.S:   # 遍历每个状态
-        v = algo.MC_Sequential(dataModel, s, episodes, gamma) # 采样计算价值函数
+        v = algo.MC_Sequential_V(dataModel, s, episodes, gamma) # 采样计算价值函数
         V1[s] = v            # 保存到字典中
     # 打印输出
     for key, value in V1.items():

@@ -1,6 +1,6 @@
 import numpy as np
 import gym
-import Algorithm.Algo_MonteCarlo_MDP as algoMC
+import Algorithm.Algo_MC_Policy_Evaulation as algoMC
 import Algorithm.Algo_PolicyValueFunction as algoDP
 import common.DrawQpi as drawQ
 import common.CommonHelper as helper
@@ -46,17 +46,17 @@ def MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy, checkpoint=1000, d
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
             V = Value / Count
             V_history.append(V)
-            print(np.reshape(np.round(V,3),(4,4)))
-            if abs(V-V_old).max() < delta:
-                break
-            V_old = V.copy()
-    print("循环幕数 =",episode+1)
+            #print(np.reshape(np.round(V,3),(4,4)))
+            #if abs(V-V_old).max() < delta:
+            #    break
+            #V_old = V.copy()
+    #print("循环幕数 =",episode+1)
     return V_history    # 返回历史数据用于评测
 
 
 if __name__=="__main__":
     gamma = 1
-    episodes = 50000
+    episodes = 30000
     env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
     # 随机策略
     nA = env.action_space.n
@@ -67,13 +67,20 @@ if __name__=="__main__":
     # MC
     start_state, info = env.reset(seed=5, return_info=True)
     # V = algoMC.MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy)
-    V_history = MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy)
-    env.close()
-
     Errors = []
-    for V in V_history:
-        error = helper.RMSE(V, V_real)
-        Errors.append(error)
+    for i in range(10):
+        Errors.append([])
+        V_history = MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy)
+        for V in V_history:
+            error = helper.RMSE(V, V_real)
+            Errors[i].append(error)
+    env.close()
+    EArray = np.array(Errors)
+    
+    Errors = np.mean(EArray, axis=0)
+  
+    
+    
 
     print("------ 状态价值函数 -----")
     print(np.reshape(np.round(V,3),(4,4)))

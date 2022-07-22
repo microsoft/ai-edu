@@ -56,7 +56,7 @@ def MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy, checkpoint=1000, d
 
 if __name__=="__main__":
     gamma = 1
-    episodes = 30000
+    episodes = 10000
     env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
     # 随机策略
     nA = env.action_space.n
@@ -67,6 +67,8 @@ if __name__=="__main__":
     # MC
     start_state, info = env.reset(seed=5, return_info=True)
     # V = algoMC.MC_EveryVisit_V_Policy(env, start_state, episodes, gamma, policy)
+    V_sum = np.zeros(nS)
+    V_count = 0
     Errors = []
     for i in range(10):
         Errors.append([])
@@ -74,13 +76,11 @@ if __name__=="__main__":
         for V in V_history:
             error = helper.RMSE(V, V_real)
             Errors[i].append(error)
+            V_sum += V
+            V_count += 1
     env.close()
-    EArray = np.array(Errors)
-    
-    Errors = np.mean(EArray, axis=0)
-  
-    
-    
+    EArray = np.array(Errors)  
+    Errors = np.mean(EArray, axis=0)    
 
     print("------ 状态价值函数 -----")
     print(np.reshape(np.round(V,3),(4,4)))
@@ -91,3 +91,8 @@ if __name__=="__main__":
     plt.ylabel(u'误差 RMSE')
     plt.grid()
     plt.show()
+
+    print("------ 平均值 状态价值函数 -----")
+    V_average = V_sum/V_count
+    print(V_average)
+    print(helper.RMSE(V_average, V_real))

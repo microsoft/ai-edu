@@ -11,7 +11,7 @@ def MC_EveryVisit_V_Policy(env, episodes, gamma, policy, checkpoint=1000, delta=
     V_old = np.zeros(nS)
     for episode in tqdm.trange(episodes):   # 多幕循环
         Episode = []     # 一幕内的(状态,奖励)序列
-        s, _ = env.reset(return_info=True) # 重置环境，开始新的一幕采样
+        s = env.reset() # 重置环境，开始新的一幕采样
         done = False
         while (done is False):            # 幕内循环
             action = np.random.choice(nA, p=policy[s])
@@ -30,7 +30,7 @@ def MC_EveryVisit_V_Policy(env, episodes, gamma, policy, checkpoint=1000, delta=
         if (episode + 1)%checkpoint == 0:
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
             V = Value / Count
-            print(np.reshape(np.round(V,3),(4,4)))
+            #print(np.reshape(np.round(V,3),(4,4)))
             if abs(V-V_old).max() < delta:
                 break
             V_old = V.copy()

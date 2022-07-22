@@ -63,9 +63,9 @@ class Policy_Iteration(object):
         return Q, self.policy
 
     def check_policy_diff(self, old_policy, new_policy):
-        if (self.check_policy_method == 0):
+        if (self.check_method == 0):
             return (old_policy == new_policy).all()
-        elif (self.check_policy_method == 1):
+        elif (self.check_method == 1):
             old_arg = np.argmax(old_policy, axis=1)
             new_arg = np.argmax(new_policy, axis=1)
             return (old_arg == new_arg).all()

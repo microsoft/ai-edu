@@ -18,26 +18,26 @@ def v_star(s, actions, gamma, V, Q):
         q = q_star(actions[action], gamma, V) # 计算 q*
         list_q.append(q)            # 加入列表
         Q[s,action] = q                  # 记录下所有的q(s,a)值,不需要再单独计算一次
-    return max(list_q)              # 返回几个q*中的最大值,即 v=max(q)
+    return 0 if not list_q else max(list_q)  # 返回几个q*中的最大值,即 v=max(q)
 
 def calculate_VQ_star(env, gamma, max_iteration):
-    V = np.zeros(env.observation_space.n)            # 初始化 V(s)
-    Q = np.zeros((env.observation_space.n, env.action_space.n))  # 初始化 Q(s,a)
+    V_star = np.zeros(env.observation_space.n)            # 初始化 V(s)
+    Q_star = np.zeros((env.observation_space.n, env.action_space.n))  # 初始化 Q(s,a)
     count = 0
     # 迭代
     while (count < max_iteration):
-        V_old = V.copy()
+        V_old = V_star.copy()
         # 遍历所有状态 s
         for s in range(env.observation_space.n):
             actions = env.P[s]
-            V[s] = v_star(s, actions, gamma, V, Q)
+            V_star[s] = v_star(s, actions, gamma, V_star, Q_star)
         # 检查收敛性
-        if abs(V-V_old).max() < 1e-4:
+        if abs(V_star-V_old).max() < 1e-4:
             break
         count += 1
     # end while
     print("迭代次数 = ",count)
-    return V, Q
+    return V_star, Q_star
 
 def get_policy(env, V, gamma):
     policy = np.zeros((env.nS, env.nA))    

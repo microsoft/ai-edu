@@ -30,7 +30,7 @@ def put_points(ax, num_total_points):
 
 if __name__=="__main__":
     np.random.seed(15)
-    fig = plt.figure()
+    fig = plt.figure(figsize=(8,2.2))
 
     ax = fig.add_subplot(141)
     put_points(ax, 100)

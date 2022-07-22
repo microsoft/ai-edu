@@ -25,7 +25,7 @@ class GridWorld(object):
         self.SpecialMove = SpecialMove
         self.Blocks = Blocks
         self.Policy = self.__init_policy(Policy)
-        self.P_S_R = self.__init_states(Transition, StepReward)
+        self.P = self.__init_states(Transition, StepReward)
 
     # 把统一的policy设置复制到每个状态上
     def __init_policy(self, Policy):
@@ -36,7 +36,7 @@ class GridWorld(object):
 
     # 用于生成状态->动作->转移->奖励字典
     def __init_states(self, Transition, StepReward):
-        P = {}
+        P_S_R_D = {}
         s_id = 0
         self.Pos2Sid = {}
         self.Sid2Pos = {}
@@ -47,7 +47,7 @@ class GridWorld(object):
                 s_id += 1
 
         for s, (x,y) in self.Sid2Pos.items():
-            P[s] = {}
+            P_S_R_D[s] = {}
             if (s in self.EndStates):
                 continue
             for action in self.Actions:
@@ -62,8 +62,8 @@ class GridWorld(object):
                         reward = self.SpecialReward[(s, s_next)]
                     list_probs.append((prob, s_next, reward, self.is_end(s_next)))
                 
-                P[s][action] = list_probs
-        return P
+                P_S_R_D[s][action] = list_probs
+        return P_S_R_D
 
     # 用于计算移动后的下一个状态
     # 左上角为 [0,0], 横向为 x, 纵向为 y
@@ -93,8 +93,11 @@ class GridWorld(object):
         self.curr_state = np.random.choice(self.StartStates)
         return self.curr_state
 
+    def close(self):
+        pass
+
     def step(self, a):
-        transitions = self.P_S_R[self.curr_state][a]
+        transitions = self.P[self.curr_state][a]
         num = len(transitions)
         if (num == 1):
             self.curr_state = transitions[0][1]

@@ -50,7 +50,7 @@ if __name__=="__main__":
     v3 = integral(f3, 0, 1, 10000)
     print("S3 =",v3)
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(9,3))
     ax = fig.add_subplot(131)
     show(ax, f1, 0.2, 1, 100, v1)
     ax = fig.add_subplot(132)

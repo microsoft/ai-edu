@@ -9,16 +9,24 @@ class SeperatorLines(Enum):
     middle = 2  # 打印30个'-'
     long = 3    # 打印40个'='
 
-def print_seperator_line(style: SeperatorLines):
+def print_seperator_line(style: SeperatorLines, info=None):
     if style == SeperatorLines.empty:
         print("")
     elif style == SeperatorLines.short:
-        print("-"*10)
+        if (info is None):
+            print("-"*10)
+        else:
+            print("----- " + info + " -----")
     elif style == SeperatorLines.middle:
-        print("-"*30)
+        if (info is None):
+            print("-"*30)
+        else:
+            print("-"*15 + info + "-"*15)
     elif style == SeperatorLines.long:
-        print("="*40)
-
+        if (info is None):
+            print("="*40)
+        else:
+            print("="*20 + info + "="*20)
 
 def print_V(dataModel, V):
     vv = np.around(V,2)
@@ -71,3 +79,10 @@ def extract_policy_from_Q(Q, end_states):
                 if Q[s,a] == max_v:
                     policy[s, a] = 1
     return policy
+
+def calculat_V_from_Q(Q, policy):
+    nS = Q.shape[0]
+    V = np.zeros(Q.shape[0])
+    for s in range(nS):
+        V[s] = np.dot(policy[s], Q[s])
+    return V

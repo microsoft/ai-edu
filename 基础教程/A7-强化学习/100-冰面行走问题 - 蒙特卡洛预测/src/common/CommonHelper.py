@@ -57,13 +57,14 @@ def test_policy(env, policy, episodes=100):
     return R
 
 # 根据输入的4个概率值创建策略
-def create_policy(env, args):
+def create_policy(nS, nA, args):
+    assert(nA == len(args))
     left = args[0]
     down = args[1]
     right = args[2]
     up = args[3]
     assert(left+down+right+up==1)
-    policy = np.zeros((env.observation_space.n, env.action_space.n))
+    policy = np.zeros((nS, nA))
     policy[:, 0] = left
     policy[:, 1] = down
     policy[:, 2] = right

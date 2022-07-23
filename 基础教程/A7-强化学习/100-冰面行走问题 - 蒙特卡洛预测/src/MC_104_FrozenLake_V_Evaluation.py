@@ -46,14 +46,7 @@ def MC_EveryVisit_V_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
             Count[Count==0] = 1 # 把分母为0的填成1，主要是对终止状态
             V = Value / Count
             V_history.append(V)
-            #print(np.reshape(np.round(V,3),(4,4)))
-            #if abs(V-V_old).max() < delta:
-            #    break
-            #V_old = V.copy()
-    #print("循环幕数 =",episode+1)
     return V_history    # 返回历史数据用于评测
-
-
 
 
 if __name__=="__main__":

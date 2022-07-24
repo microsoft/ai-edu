@@ -44,8 +44,8 @@ class Grid(object):
     def __init__(self, Q, shape):
         self.array = np.zeros((shape[0]*3, shape[1]*5), dtype=int)
         for i in range(len(Q)):
-            row = (int)(i / shape[0])
-            col = (int)(i % shape[0])
+            row = (int)(i / shape[1])
+            col = (int)(i % shape[1])
             q = Q[i]
             cell = GridCell(q)
             self.array[row*3:row*3+3, col*5:col*5+5] = cell.space

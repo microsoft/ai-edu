@@ -61,7 +61,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
 
 def get_groud_truth(env, policy, gamma):
     iteration = 100
-    _, Q = algoDP.calculate_VQ_pi(env, policy, gamma, iteration)
+    _, Q = algoDP.calculate_VQ_pi(env, policy, gamma, iteration, delta=1e-7)
     return Q
 
 
@@ -79,26 +79,31 @@ if __name__=="__main__":
     np.set_printoptions(suppress=True)
 
     for i, policy_data in enumerate(policies):
-        print(str.format("------ {0} ------", policy_names[i]))
+        helper.print_seperator_line(helper.SeperatorLines.long, policy_names[i])
         env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
-        policy = helper.create_policy(env, policy_data)
-        print(policy)
-        Q_real = get_groud_truth(env, policy, gamma)
         nA = env.action_space.n
         nS = env.observation_space.n
+        policy = helper.create_policy(nS, nA, policy_data)
+        helper.print_seperator_line(helper.SeperatorLines.short, "策略")
+        print(policy)
+        Q_real = get_groud_truth(env, policy, gamma)
+        
         start_state, info = env.reset(seed=5, return_info=True)
         Errors, T_len, Q, error = test_n_times(env, episodes, gamma, policy, checkpoint=1000, n=1)    # n=10
-        print("------ 动作价值函数 -----")
+        helper.print_seperator_line(helper.SeperatorLines.short, "动作价值函数")
         print(np.round(Q,3))
-        print("误差 =", error)
-        print("平均每幕长度 =", T_len)
+        helper.print_seperator_line(helper.SeperatorLines.short, "误差")
+        print("RMSE =", error)
+        helper.print_seperator_line(helper.SeperatorLines.short, "平均每幕长度")
+        print("Len =", T_len)
         plt.plot(Errors, label=policy_names[i])
         env.close()
         policy = helper.extract_policy_from_Q(Q, end_states)
+        helper.print_seperator_line(helper.SeperatorLines.short, "抽取出来的策略")
         print(policy)
         drawQ.draw(policy,(4,4))
 
-    plt.title(u'策略评估 $Q_\pi$ 的误差与循环次数的关系')
+    plt.title(u'三种策略的误差收敛情况比较')
     plt.xlabel(u'循环次数(x1000)')
     plt.ylabel(u'误差 RMSE')
     plt.legend()

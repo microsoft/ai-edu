@@ -21,7 +21,7 @@ def v_pi(policy, s, actions, gamma, V, Q):
     return v
 
 # 迭代法计算 v_pi
-def calculate_VQ_pi(env, policy, gamma, iteration):
+def calculate_VQ_pi(env, policy, gamma, iteration, delta=1e-4):
     V = np.zeros(env.observation_space.n)            # 初始化 V(s)
     Q = np.zeros((env.observation_space.n, env.action_space.n))  # 初始化 Q(s,a)
     count = 0   # 计数器，用于衡量性能和避免无限循环
@@ -33,7 +33,7 @@ def calculate_VQ_pi(env, policy, gamma, iteration):
             actions = env.P[s]
             V[s] = v_pi(policy, s, actions, gamma, V, Q)
         # 检查收敛性
-        if abs(V-V_old).max() < 1e-4:
+        if abs(V-V_old).max() < delta:
             break
         count += 1
     # end while

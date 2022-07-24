@@ -11,7 +11,7 @@ GridWidth, GridHeight = 4, 4
 # 起点，可以多个
 StartStates = [0]
 # 终点，可以多个
-EndStates = [0,15]
+EndStates = [15]
 # 动作空间
 LEFT, DOWN, RIGHT, UP  = 0, 1, 2, 3
 Actions = [LEFT, DOWN, RIGHT, UP]
@@ -23,8 +23,8 @@ Transition = [0.0, 1.0, 0.0, 0.0]
 StepReward = -1
 # 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
 SpecialReward = {
-    (1,0):0,
-    (4,0):0,
+    #(1,0):0,
+    #(4,0):0,
     (14,15):0,
     (11,15):0
 }
@@ -81,10 +81,14 @@ if __name__=="__main__":
     policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
     gamma = 1
     max_iteration = 1000
-    V_pi, Q_pi = algoPi.calculate_VQ_pi(env, policy, gamma, max_iteration)
-    print(np.round(V_pi,3).reshape(4,4))
+    V_pi, Q_pi = algoPi.calculate_VQ_pi(env, policy, gamma, max_iteration, delta=1e-6)
+    helper.print_seperator_line(helper.SeperatorLines.long, "动态规划解")
+    helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
+    print(np.around(V_pi,0).reshape(4,4))
+    helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
+    print(np.around(Q_pi,0))
     drawQ.draw(Q_pi, (4,4))
-    exit(0)
+    
 
     checkpoint = [100,200,300,400,500,1000]
     policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
@@ -94,5 +98,8 @@ if __name__=="__main__":
         helper.print_seperator_line(helper.SeperatorLines.long, str(checkpoint[i]))
         Q = Q_history[i]
         V = helper.calculat_V_from_Q(Q, policy)
+        helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
         print(np.round(V,0).reshape(4,4))
-        drawQ.draw(Q_history[i], (4,4))
+        helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
+        print(np.around(Q, 0))
+        drawQ.draw(Q, (4,4))

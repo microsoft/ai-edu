@@ -1,21 +1,17 @@
-from cProfile import label
-from email import policy
 import numpy as np
 import gym
-import Algorithm.Base_MC_Policy_Iteration as algoMC
 import Algorithm.Algo_OptimalValueFunction as algoDP
+import Algorithm.Base_MC_Policy_Iteration as base
 import common.DrawQpi as drawQ
 import common.CommonHelper as helper
-import tqdm
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import math
 
 mpl.rcParams['font.sans-serif'] = ['SimHei']  
 mpl.rcParams['axes.unicode_minus'] = False
 
 
-class MC_E_Greedy(algoMC.Policy_Iteration):
+class MC_E_Greedy(base.Policy_Iteration):
     def __init__(self, env, policy, gamma:float, episodes:int, final:int, epsilon:float):
         super().__init__(env, policy, gamma, episodes, final)
         self.epsilon = epsilon
@@ -46,24 +42,29 @@ def get_groud_truth(env, gamma):
 
 if __name__=="__main__":
     gamma = 0.9
-    episodes = 10
-    final = 2000
+    rough = 300
+    final = 10000
     epsilon = 0.05
     
     np.set_printoptions(suppress=True)
-    env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
+    #desc = ["SFHF","FFFF","HFHF","FFFF","FFFG"]
+    env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=True)
     end_states = [5, 7, 11, 12, 15]
+    helper.print_seperator_line(helper.SeperatorLines.long, "动态规划法")
     Q_real = get_groud_truth(env, gamma)
+    helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
     print(np.round(Q_real,3))
     drawQ.draw(Q_real,(4,4))
+    
 
     policy = helper.create_policy(env.observation_space.n, env.action_space.n, (0.25,0.25,0.25,0.25))
     env.reset(seed=5)
-    algo = MC_E_Greedy(env, policy, gamma, episodes, final, epsilon)
+    algo = MC_E_Greedy(env, policy, gamma, rough, final, epsilon)
     Q, policy = algo.policy_iteration()
     env.close()
-    
-    print("------ 最优动作价值函数 -----")
+
+    helper.print_seperator_line(helper.SeperatorLines.long, "蒙特卡洛法 - E-Greedy")
+    helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
     print(np.round(Q,3))
     drawQ.draw(Q,(4,4))
     print(policy)

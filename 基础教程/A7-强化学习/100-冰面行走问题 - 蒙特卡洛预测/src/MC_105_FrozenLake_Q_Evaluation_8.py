@@ -35,7 +35,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, checkpoint=1000):
     T_len = 0
     for episode in tqdm.trange(episodes):   # 多幕循环
         # 重置环境，开始新的一幕采样
-        s, _ = env.reset(return_info=True)
+        s = env.reset()
         Episode = []     # 一幕内的(状态,奖励)序列
         done = False
         while (done is False):            # 幕内循环
@@ -80,30 +80,29 @@ if __name__=="__main__":
 
     for i, policy_data in enumerate(policies):
         helper.print_seperator_line(helper.SeperatorLines.long, policy_names[i])
-        env = gym.make("FrozenLake-v1", map_name = "8x8", is_slippery=False)
-        print("policy =", policy_data)
-        policy = helper.create_policy(env, policy_data)
-
-        Q_real = get_groud_truth(env, policy, gamma)
-        helper.print_seperator_line(helper.SeperatorLines.short, "Q_real")
-        drawQ.draw(Q_real,(8,8))
-
+        env = gym.make("FrozenLake-v1", desc=None, map_name = "8x8", is_slippery=False)
         nA = env.action_space.n
         nS = env.observation_space.n
+        policy = helper.create_policy(nS, nA, policy_data)
+        helper.print_seperator_line(helper.SeperatorLines.short, "策略")
+        print(policy)
+        Q_real = get_groud_truth(env, policy, gamma)
         start_state, info = env.reset(seed=5, return_info=True)
         Errors, T_len, Q, error = test_n_times(env, episodes, gamma, policy, checkpoint=1000, n=1)    # n=10
         helper.print_seperator_line(helper.SeperatorLines.short, "动作价值函数")
         print(np.round(Q,3))
-        print("误差 =", error)
-        print("平均每幕长度 =", T_len)
+        helper.print_seperator_line(helper.SeperatorLines.short, "误差")
+        print("RMSE =", error)
+        helper.print_seperator_line(helper.SeperatorLines.short, "平均每幕长度")
+        print("Len =", T_len)
         plt.plot(Errors, label=policy_names[i])
         env.close()
         policy = helper.extract_policy_from_Q(Q, end_states)
-        helper.print_seperator_line(helper.SeperatorLines.short, "抽取的策略")
+        helper.print_seperator_line(helper.SeperatorLines.short, "抽取出来的策略")
         print(policy)
         drawQ.draw(policy,(8,8))
 
-    plt.title(u'策略评估 $Q_\pi$ 的误差与循环次数的关系')
+    plt.title(u'三种策略的误差收敛情况比较')
     plt.xlabel(u'循环次数(x1000)')
     plt.ylabel(u'误差 RMSE')
     plt.legend()

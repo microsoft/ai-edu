@@ -30,19 +30,13 @@ def get_groud_truth(env, gamma):
     _, Q = algoDP.calculate_VQ_star(env, gamma, iteration)
     return Q
 
-
 if __name__=="__main__":
-    gamma = 0.9
+    gamma = 1
     rough = 100
     final = 2000
     
     np.set_printoptions(suppress=True)
-    #desc = ["SFHF","FFFF","HFHF","FFFF","FFFG"]
-    env = gym.make("FrozenLake-v1", desc=None, map_name = "4x4", is_slippery=False)
-    end_states = [5, 7, 11, 12, 15]
-    Q_real = get_groud_truth(env, gamma)
-    print(np.round(Q_real,3))
-    #drawQ.draw(Q_real,(4,4))
+    env = gym.make('Blackjack-v1', sab=True)
     
 
     policy = helper.create_policy(env.observation_space.n, env.action_space.n, (0.25,0.25,0.25,0.25))

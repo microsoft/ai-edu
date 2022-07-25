@@ -4,18 +4,28 @@ import tqdm
 # 策略迭代
 class Policy_Iteration(object):
     # 初始化
-    def __init__(self, env, policy, gamma, rough, final, check_policy_method=0):
-        self.policy = policy                        # 初始策略
+    def __init__(self, env, policy_args, gamma, rough, final, check_policy_method=0):
         self.rough_episodes = rough                 # 粗预测的分幕循环次数
         self.final_episodes = final                 # 细预测的分幕循环次数
         self.env = env                              # 环境
         self.gamma = gamma                          # 折扣
         self.check_method = check_policy_method     # 迭代终止条件
         self.nA = self.env.action_space.n           # 动作空间
-        self.nS = self.env.observation_space.n      # 状态空间
         self.n_iteration = 0                        # 分幕循环次数总和
-        self.Value = np.zeros((self.nS, self.nA))   # G 的总和
-        self.Count = np.zeros((self.nS, self.nA))   # G 的数量
+        if env.spec.id == 'Blackjack-v1':
+            # 0-21=22, 0-10=11, A/noA=2, Hit/Stick=2
+            self.Value = np.zeros((22, 11, 2, self.nA))   # G 的总和
+            self.Count = np.zeros((22, 11, 2, self.nA))   # G 的数量
+        else:
+            self.nS = self.env.observation_space.n  # 状态空间
+            self.Value = np.zeros((self.nS, self.nA))
+            self.Count = np.zeros((self.nS, self.nA))
+        self.policy = self.init_policy(policy_args)
+
+    def init_policy(self, policy_args):
+        if self.env.spec.id == 'Blackjack-v1':
+            self.policy = np.zeros_like(self.Value)
+            self.policy[:,:,:] = policy_args
 
 
     # 策略评估

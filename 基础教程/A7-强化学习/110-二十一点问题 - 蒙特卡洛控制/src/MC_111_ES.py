@@ -15,12 +15,9 @@ mpl.rcParams['axes.unicode_minus'] = False
 class MC_Greedy(base.Policy_Iteration):
     def policy_improvement(self, Q):
         for s in range(self.nS):
-            if s in end_states:
-                self.policy[s] = 0
-            else:
-                arg = np.argmax(Q[s])
-                self.policy[s] = 0
-                self.policy[s, arg] = 1
+            arg = np.argmax(Q[s])
+            self.policy[s] = 0
+            self.policy[s, arg] = 1
 
         return self.policy
 
@@ -37,16 +34,10 @@ if __name__=="__main__":
     
     np.set_printoptions(suppress=True)
     env = gym.make('Blackjack-v1', sab=True)
-    
-
-    policy = helper.create_policy(env.observation_space.n, env.action_space.n, (0.25,0.25,0.25,0.25))
     env.reset(seed=5)
     algo = MC_Greedy(env, policy, gamma, rough, final)
     Q, policy = algo.policy_iteration()
     env.close()
     
-    print("------ 最优动作价值函数 -----")
-    print(np.round(Q,3))
-    drawQ.draw(policy,(4,4))
     print(policy)
 

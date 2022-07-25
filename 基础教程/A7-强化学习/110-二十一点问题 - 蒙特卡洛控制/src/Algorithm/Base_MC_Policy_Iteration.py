@@ -24,9 +24,9 @@ class Policy_Iteration(object):
 
     def init_policy(self, policy_args):
         if self.env.spec.id == 'Blackjack-v1':
-            self.policy = np.zeros_like(self.Value)
-            self.policy[:,:,:] = policy_args
-
+            policy = np.zeros_like(self.Value)
+            policy[:,:,:] = policy_args
+            return policy
 
     # 策略评估
     def policy_evaluation(self, episodes):
@@ -37,17 +37,18 @@ class Policy_Iteration(object):
             Episode = []     # 一幕内的(状态,奖励)序列
             done = False
             while (done is False):            # 幕内循环
-                action = np.random.choice(self.nA, p=self.policy[s])
+                int_s = (s[0], s[1], int(s[2]))
+                action = np.random.choice(self.nA, p=self.policy[int_s])
                 next_s, reward, done, _ = self.env.step(action)
-                Episode.append((s, action, reward))
+                Episode.append((int_s, action, reward))
                 s = next_s
             # 从后向前遍历计算 G 值
             G = 0
             for t in range(len(Episode)-1, -1, -1):
                 s, a, r = Episode[t]
                 G = self.gamma * G + r
-                self.Value[s,a] += G     # 值累加
-                self.Count[s,a] += 1     # 数量加 1
+                self.Value[s][a] += G     # 值累加
+                self.Count[s][a] += 1     # 数量加 1
         # 多幕循环结束，计算 Q 值
         self.Count[self.Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
         Q = self.Value / self.Count   # 求均值

@@ -3,12 +3,11 @@ import tqdm
 
 
 # MC 策略评估（预测）：每次访问法估算 V_pi
-def MC_EveryVisit_V_Policy(env, episodes, gamma, policy, checkpoint=1000, delta=1e-3):
+def MC_EveryVisit_V_Policy(env, episodes, gamma, policy):
     nS = env.observation_space.n
     nA = env.action_space.n
     Value = np.zeros(nS)  # G 的总和
     Count = np.zeros(nS)  # G 的数量
-    less_than_delta_count = 0
     for episode in tqdm.trange(episodes):   # 多幕循环
         Episode = []        # 一幕内的(状态,奖励)序列
         s = env.reset()     # 重置环境，开始新的一幕采样
@@ -26,18 +25,7 @@ def MC_EveryVisit_V_Policy(env, episodes, gamma, policy, checkpoint=1000, delta=
             Value[s] += G     # 值累加
             Count[s] += 1     # 数量加 1
         
-        # 检查是否收敛
-        if (episode+1)%checkpoint == 0:
-            Count[Count==0] = 1 # 把分母为0的填成1，主要是终止状态
-            V = Value / Count   # 求均值
-            if abs(V-V_old).max() < delta:          # 判定收敛
-                less_than_delta_count += 1          # 计数器 +1
-                if (less_than_delta_count == 3):    # 计数器到位
-                    break                           # 停止迭代
-            else:                                   # 没有持续收敛
-                less_than_delta_count = 0           # 计数器复位
-            V_old = V.copy()
-    print("循环幕数 =",episode+1)
+    Count[Count==0] = 1 # 把分母为0的填成1，主要是终止状态
     V = Value / Count    # 求均值
     return V
 

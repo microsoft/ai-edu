@@ -56,16 +56,14 @@ def test_policy(env, policy, episodes=100):
     return R
 
 def create_policy(nS, nA, args):
-    left = args[0]
-    down = args[1]
-    right = args[2]
-    up = args[3]
-    assert(left+down+right+up==1)
-    policy = np.zeros((nS, nA))
-    policy[:, 0] = left
-    policy[:, 1] = down
-    policy[:, 2] = right
-    policy[:, 3] = up
+    assert(nA == len(args))
+    shape = nS + (nA,)
+    policy = np.zeros(shape)
+    sum = 0
+    for i in range(nA):
+        sum += args[i]
+        policy[:][i] = args[i]
+    assert(sum == 1)
     return policy
 
 
@@ -86,3 +84,9 @@ def calculat_V_from_Q(Q, policy):
     for s in range(nS):
         V[s] = np.dot(policy[s], Q[s])
     return V
+
+
+if __name__=="__main__":
+    policy = create_policy(3, 2, (0.2,0.8))
+    print(policy)
+    print(policy[0,1])

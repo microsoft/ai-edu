@@ -72,11 +72,10 @@ def run_Q_ES(env, gamma, episodes, policy):
     for episode in tqdm.trange(episodes):
         s = env.reset()
         Episode = []     # 一幕内的(状态,动作,奖励)序列
-        done = False
 
         # ES - initial random choice
         int_s = (s[0], s[1], int(s[2]))
-        action = np.random.choice(2)
+        action = np.random.choice(2)        # 这里必须随机取，不能使用policy，才符合探索的含义
         next_s, reward, done, _ = env.step(action)
         Episode.append((int_s, action, reward))
         s = next_s  # 迭代
@@ -96,21 +95,14 @@ def run_Q_ES(env, gamma, episodes, policy):
             G = gamma * G + r
             Value[s][a] += G     # 值累加
             Count[s][a] += 1     # 数量加 1
+            # greedy policy
+            qs = Value[s] / Count[s]
+            policy[s] = 0
+            argmax = np.argmax(qs)
+            policy[s][argmax] = 1
 
-        # refine policy
-        Q = Value / Count
-        for i in range(Q.shape[0]):
-            for j in range(Q.shape[1]):
-                for k in range(Q.shape[2]):
-                    state = (i, j, k) 
-                    max_A = np.max(Q[state])    # 从几个动作中取最大值
-                    argmax_A = np.where(Q[state] == max_A)[0]
-                    policy[state] = 0
-                    if len(argmax_A > 1):
-                        idx = np.random.choice(argmax_A)
-                    policy[state][idx] = 1
 
-    return Q
+    return Value/Count
 
 
 def create_blackjack_policy(args):
@@ -124,38 +116,40 @@ def create_blackjack_policy(args):
 if __name__=="__main__":
     policy = create_blackjack_policy((0.5,0.5))
     gamma = 1
-    episodes = 1000
+    episodes = 500000
     env = gym.make('Blackjack-v1', sab=True)
     Q = run_Q_ES(env, gamma, episodes, policy)
     env.close()
 
-    state_value_no_usable_ace = np.max(Q[:, :, 0, :], axis=-1)
-    state_value_usable_ace = np.max(Q[:, :, 1, :], axis=-1)
+    state_value_no_usable_ace = np.max(Q[12:, 1:, 0, :], axis=-1)
+    state_value_usable_ace = np.max(Q[12:, 1:, 1, :], axis=-1)
 
     # get the optimal policy
-    action_no_usable_ace = np.argmax(Q[:, :, 0, :], axis=-1)
-    action_usable_ace = np.argmax(Q[:, :, 1, :], axis=-1)
+    action_no_usable_ace = np.argmax(Q[12:, 1:, 0, :], axis=-1)
+    action_usable_ace = np.argmax(Q[12:, 1:, 1, :], axis=-1)
+
+    print(Q[18,:,1,:])
 
     images = [action_usable_ace,
               state_value_usable_ace,
               action_no_usable_ace,
               state_value_no_usable_ace]
 
-    titles = ['Optimal policy with usable Ace',
-              'Optimal value with usable Ace',
-              'Optimal policy without usable Ace',
-              'Optimal value without usable Ace']
+    titles = ['最优策略（有可用的 A）',
+              '最优状态价值（有可用的 A）',
+              '最优策略（没有可用的 A）',
+              '最优状态价值（没有可用的 A）']
 
-    _, axes = plt.subplots(2, 2, figsize=(40, 30))
+    _, axes = plt.subplots(2, 2, figsize=(15,10))
     plt.subplots_adjust(wspace=0.1, hspace=0.2)
     axes = axes.flatten()
 
     for image, title, axis in zip(images, titles, axes):
-        fig = sns.heatmap(np.flipud(image), cmap="YlGnBu", ax=axis, xticklabels=range(1, 11),
+        fig = sns.heatmap(np.flipud(image), cmap="Blues", ax=axis, xticklabels=range(1, 11),
                           yticklabels=list(reversed(range(12, 22))))
-        fig.set_ylabel('player sum', fontsize=30)
-        fig.set_xlabel('dealer showing', fontsize=30)
-        fig.set_title(title, fontsize=30)
+        fig.set_ylabel('玩家点数总和', fontsize=15)
+        fig.set_xlabel('庄家明牌点数', fontsize=15)
+        fig.set_title(title, fontsize=15)
 
     plt.show()
 

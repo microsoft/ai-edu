@@ -11,6 +11,3 @@ if __name__=="__main__":
     policy = algo.get_policy(env, V_star, gamma)
     print(policy)
     print(Q_star)
-
-
-

@@ -57,7 +57,8 @@ def test_policy(env, policy, episodes=100):
 
 def create_policy(nS, nA, args):
     assert(nA == len(args))
-    shape = nS + (nA,)
+    #shape = nS + (nA,)
+    shape = (nS, nA)
     policy = np.zeros(shape)
     sum = 0
     for i in range(nA):

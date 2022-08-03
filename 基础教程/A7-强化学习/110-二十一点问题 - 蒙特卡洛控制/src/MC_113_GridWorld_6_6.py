@@ -6,11 +6,11 @@ import common.DrawQpi as drawQ
 import tqdm
 
 # 状态空间 = 空间宽度 x 空间高度
-GridWidth, GridHeight = 6, 6
+GridWidth, GridHeight = 4, 4
 # 起点，可以多个
-StartStates = [0]
+StartStates = list(range(15))
 # 终点，可以多个
-EndStates = [35]
+EndStates = [15]
 # 动作空间
 LEFT, DOWN, RIGHT, UP  = 0, 1, 2, 3
 Actions = [LEFT, DOWN, RIGHT, UP]
@@ -22,9 +22,29 @@ Transition = [0.0, 1.0, 0.0, 0.0]
 StepReward = 0
 # 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
 SpecialReward = {
-    (29,35):1,
-    (34,35):1
+    (11,15):1,
+    (14,15):1
 }
+
+SpecialReward = {
+    (0,0):-1,       # s0 -> s0 得到-1奖励
+    (1,1):-1,
+    (2,2):-1,
+    (3,3):-1,
+    (4,4):-1,
+    (5,5):-1,
+    (9,9):-1,
+    (10,10):-1,
+    (14,14):-1,
+    (15,15):-1,
+    (19,19):-1,
+    (20,20):-1,
+    (21,21):-1,
+    (22,22):-1,
+    (23,23):-1,
+    (24,24):-1,
+}
+
 # 特殊移动，用于处理类似虫洞场景
 SpecialMove = {
 }
@@ -47,7 +67,10 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy):
             action = np.random.choice(nA, p=policy[s])
             next_s, reward, done, _ = env.step(action)
             Episode.append((s, action, reward))
+            if (s == next_s and episode >=1000):
+                print(s, action, policy[s])
             s = next_s  # 迭代
+
 
         num_step = len(Episode)
         G = 0
@@ -58,13 +81,14 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy):
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1
 
-            # greedy policy
-            qs = Value[s] / Count[s]
-            if np.sum(qs) == 0:
-                continue
-            policy[s] = 0
-            argmax = np.argmax(qs)
-            policy[s][argmax] = 1
+            if (episode > 10):
+                # greedy policy
+                qs = Value[s] / Count[s]
+                if np.sum(qs) == 0:
+                    continue
+                policy[s] = 0
+                argmax = np.argmax(qs)
+                policy[s][argmax] = 1
 
 
     Q = Value / Count   # 求均值
@@ -86,12 +110,12 @@ if __name__=="__main__":
     #model.print_P(env.P_S_R)
     policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
     gamma = 1
-    max_iteration = 1000
+    max_iteration = 2000
 
     Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy)
     V = helper.calculat_V_from_Q(Q, policy)
     helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
-    print(np.round(V,0).reshape(6,6))
+    print(np.round(V,1).reshape(4,4))
     helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
-    print(np.around(Q, 0))
-    drawQ.draw(Q, (6,6))
+    print(np.around(Q, 1))
+    drawQ.draw(Q, (4,4))

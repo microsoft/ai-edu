@@ -22,38 +22,33 @@ Transition = [0.0, 1.0, 0.0, 0.0]
 StepReward = 0
 # 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
 SpecialReward = {
+    
+    # (0,0):-1,       # s0 -> s0 得到-1奖励
+    # (1,1):-1,
+    # (2,2):-1,
+    # (3,3):-1,
+    # (4,4):-1,
+    # (7,7):-1,
+    # (8,8):-1,
+    # (11,11):-1,
+    # (12,12):-1,
+    # (13,13):-1,
+    # (14,14):-1,
+    # (15,15):-1,
+    
     (11,15):1,
     (14,15):1
-}
-
-SpecialReward = {
-    (0,0):-1,       # s0 -> s0 得到-1奖励
-    (1,1):-1,
-    (2,2):-1,
-    (3,3):-1,
-    (4,4):-1,
-    (5,5):-1,
-    (9,9):-1,
-    (10,10):-1,
-    (14,14):-1,
-    (15,15):-1,
-    (19,19):-1,
-    (20,20):-1,
-    (21,21):-1,
-    (22,22):-1,
-    (23,23):-1,
-    (24,24):-1,
 }
 
 # 特殊移动，用于处理类似虫洞场景
 SpecialMove = {
 }
+
 # 墙
 Blocks = []
 
 # MC 策略评估（预测）：每次访问法估算 Q_pi
 def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
-    Q_history = []
     nA = env.action_space.n                 # 动作空间
     nS = env.observation_space.n            # 状态空间
     Value = np.zeros((nS, nA))              # G 的总和
@@ -67,7 +62,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
             action = np.random.choice(nA, p=policy[s])
             next_s, reward, done, _ = env.step(action)
             Episode.append((s, action, reward))
-            if (s == next_s and episode >=1000):
+            if (s == next_s and episode >=exploration):
                 print(s, action, policy[s])
             s = next_s  # 迭代
 
@@ -81,7 +76,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
             Count[s,a] += 1     # 数量加 1
 
             if (episode < exploration):
-                continue
+                continue    # 不做策略修改，充分探索
             # greedy policy
             qs = Value[s] / Count[s]
             if np.sum(qs) == 0:
@@ -111,7 +106,7 @@ if __name__=="__main__":
     policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
     gamma = 1
     max_iteration = 2000
-    exploration = 100
+    exploration = 1000
 
     Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)
     V = helper.calculat_V_from_Q(Q, policy)
@@ -120,3 +115,4 @@ if __name__=="__main__":
     helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
     print(np.around(Q, 1))
     drawQ.draw(Q, (4,4))
+    print(policy)

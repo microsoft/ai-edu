@@ -19,7 +19,7 @@ Policy = [0.25, 0.25, 0.25, 0.25]
 # 转移概率: [SlipLeft, MoveFront, SlipRight, SlipBack]
 Transition = [0.0, 1.0, 0.0, 0.0]
 # 每走一步的奖励值，可以是0或者-1
-StepReward = 0
+StepReward = -1
 # 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
 SpecialReward = {
     
@@ -36,8 +36,8 @@ SpecialReward = {
     # (14,14):-1,
     # (15,15):-1,
     
-    (11,15):1,
-    (14,15):1
+    (11,15):0,
+    (14,15):0
 }
 
 # 特殊移动，用于处理类似虫洞场景
@@ -52,7 +52,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
     nA = env.action_space.n                 # 动作空间
     nS = env.observation_space.n            # 状态空间
     Value = np.zeros((nS, nA))              # G 的总和
-    Count = np.ones((nS, nA))              # G 的数量
+    Count = np.zeros((nS, nA))              # G 的数量
     for episode in tqdm.trange(episodes):   # 多幕循环
         # 重置环境，开始新的一幕采样
         s = env.reset()
@@ -82,9 +82,13 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
             if np.sum(qs) == 0:
                 continue
             policy[s] = 0
-            argmax = np.argmax(qs)
-            policy[s][argmax] = 1
-
+            argmax = np.argwhere(qs==np.max(qs))
+                
+            p = 1 / argmax.shape[0]
+            for arg in argmax:
+                policy[s][arg[0]] = p
+            if argmax.shape[0] > 1:
+                print(policy[s])
 
     Q = Value / Count   # 求均值
  
@@ -92,10 +96,9 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
 
 
 
-
 if __name__=="__main__":
 
-    np.random.seed(15)
+    np.random.seed(5)
 
     env = model.GridWorld(
         GridWidth, GridHeight, StartStates, EndStates,  # 关于状态的参数

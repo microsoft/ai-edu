@@ -1,6 +1,6 @@
 import numpy as np
 import common.GridWorld_Model as model
-import Algorithm.Algo_PolicyValueFunction as algoPi
+import Algorithm.Algo_OptimalValueFunction as algo
 import common.CommonHelper as helper
 import common.DrawQpi as drawQ
 import tqdm
@@ -52,7 +52,7 @@ SpecialMove = {
 Blocks = []
 
 # MC 策略评估（预测）：每次访问法估算 Q_pi
-def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy):
+def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
     Q_history = []
     nA = env.action_space.n                 # 动作空间
     nS = env.observation_space.n            # 状态空间
@@ -71,7 +71,6 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy):
                 print(s, action, policy[s])
             s = next_s  # 迭代
 
-
         num_step = len(Episode)
         G = 0
         # 从后向前遍历计算 G 值
@@ -81,14 +80,15 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy):
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1
 
-            if (episode > 10):
-                # greedy policy
-                qs = Value[s] / Count[s]
-                if np.sum(qs) == 0:
-                    continue
-                policy[s] = 0
-                argmax = np.argmax(qs)
-                policy[s][argmax] = 1
+            if (episode < exploration):
+                continue
+            # greedy policy
+            qs = Value[s] / Count[s]
+            if np.sum(qs) == 0:
+                continue
+            policy[s] = 0
+            argmax = np.argmax(qs)
+            policy[s][argmax] = 1
 
 
     Q = Value / Count   # 求均值
@@ -111,8 +111,9 @@ if __name__=="__main__":
     policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
     gamma = 1
     max_iteration = 2000
+    exploration = 100
 
-    Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy)
+    Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)
     V = helper.calculat_V_from_Q(Q, policy)
     helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
     print(np.round(V,1).reshape(4,4))

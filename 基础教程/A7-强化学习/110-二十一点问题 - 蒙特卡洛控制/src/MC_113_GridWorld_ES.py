@@ -19,25 +19,23 @@ Policy = [0.25, 0.25, 0.25, 0.25]
 # 转移概率: [SlipLeft, MoveFront, SlipRight, SlipBack]
 Transition = [0.0, 1.0, 0.0, 0.0]
 # 每走一步的奖励值，可以是0或者-1
-StepReward = -1
+StepReward = 0
 # 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
 SpecialReward = {
-    
-    # (0,0):-1,       # s0 -> s0 得到-1奖励
-    # (1,1):-1,
-    # (2,2):-1,
-    # (3,3):-1,
-    # (4,4):-1,
-    # (7,7):-1,
-    # (8,8):-1,
-    # (11,11):-1,
-    # (12,12):-1,
-    # (13,13):-1,
-    # (14,14):-1,
-    # (15,15):-1,
-    
-    (11,15):0,
-    (14,15):0
+    (0,0):-1,       # s0 -> s0 得到-2奖励
+    (1,1):-1,
+    (2,2):-1,
+    (3,3):-1,
+    (4,4):-1,
+    (7,7):-1,
+    (8,8):-1,
+    (11,11):-1,
+    (12,12):-1,
+    (13,13):-1,
+    (14,14):-1,
+    (15,15):-1,
+    (11,15):1,
+    (14,15):1
 }
 
 # 特殊移动，用于处理类似虫洞场景
@@ -53,6 +51,7 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
     nS = env.observation_space.n            # 状态空间
     Value = np.zeros((nS, nA))              # G 的总和
     Count = np.zeros((nS, nA))              # G 的数量
+    Q = np.zeros((nS, nA))
     for episode in tqdm.trange(episodes):   # 多幕循环
         # 重置环境，开始新的一幕采样
         s = env.reset()
@@ -62,8 +61,12 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
             action = np.random.choice(nA, p=policy[s])
             next_s, reward, done, _ = env.step(action)
             Episode.append((s, action, reward))
-            if (s == next_s and episode >=exploration):
-                print(s, action, policy[s])
+            # if (s == next_s and episode >=exploration):
+            #     print(s, action, policy[s])
+            #     print(Q[s])
+            #     print(Value[s])
+            #     print(Count[s])
+            #     print(policy[s])               
             s = next_s  # 迭代
 
         num_step = len(Episode)
@@ -75,23 +78,20 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1
 
-            if (episode < exploration):
-                continue    # 不做策略修改，充分探索
+            if np.min(Count[s]) <= exploration:
+                continue    # 被除数为0，跳过
             # greedy policy
-            qs = Value[s] / Count[s]
-            if np.sum(qs) == 0:
-                continue
+            Q[s] = Value[s] / Count[s]
+            # 做策略改进
             policy[s] = 0
-            argmax = np.argwhere(qs==np.max(qs))
-                
+            argmax = np.argwhere(Q[s]==np.max(Q[s]))
             p = 1 / argmax.shape[0]
             for arg in argmax:
                 policy[s][arg[0]] = p
-            if argmax.shape[0] > 1:
-                print(policy[s])
 
+    Count[Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
     Q = Value / Count   # 求均值
- 
+
     return Q
 
 
@@ -109,7 +109,7 @@ if __name__=="__main__":
     policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
     gamma = 1
     max_iteration = 2000
-    exploration = 1000
+    exploration = 100
 
     Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)
     V = helper.calculat_V_from_Q(Q, policy)

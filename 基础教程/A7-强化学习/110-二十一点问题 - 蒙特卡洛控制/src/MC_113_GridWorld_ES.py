@@ -33,7 +33,6 @@ SpecialReward = {
     (12,12):-1,
     (13,13):-1,
     (14,14):-1,
-    (15,15):-1,
     (11,15):1,
     (14,15):1
 }
@@ -77,23 +76,22 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
             G = gamma * G + r
             Value[s,a] += G     # 值累加
             Count[s,a] += 1     # 数量加 1
-
+            # 判断该状态下被选择动作的最小次数
             if np.min(Count[s]) <= exploration:
-                continue    # 被除数为0，跳过
-            # greedy policy
-            Q[s] = Value[s] / Count[s]
-            # 做策略改进
-            policy[s] = 0
-            argmax = np.argwhere(Q[s]==np.max(Q[s]))
-            p = 1 / argmax.shape[0]
-            for arg in argmax:
+                continue        # 如果次数不够，则不做策略改进
+            if s==11:
+                print(s)
+            # 做策略改进，贪心算法
+            Q[s] = Value[s] / Count[s]  # 得到该状态下所有动作的 q 值
+            policy[s] = 0               # 先设置该状态所有策略为 0（后面再把有效的动作设置为非 0）
+            argmax = np.argwhere(Q[s]==np.max(Q[s]))    # 取最大值所在的位置（可能不止一个）
+            p = 1 / argmax.shape[0]                     # 概率平均分配给几个最大值
+            for arg in argmax:                          # 每个最大值位置都设置为相同的概率
                 policy[s][arg[0]] = p
 
     Count[Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
     Q = Value / Count   # 求均值
-
     return Q
-
 
 
 if __name__=="__main__":
@@ -108,7 +106,7 @@ if __name__=="__main__":
     #model.print_P(env.P_S_R)
     policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
     gamma = 1
-    max_iteration = 2000
+    max_iteration = 1000
     exploration = 100
 
     Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)

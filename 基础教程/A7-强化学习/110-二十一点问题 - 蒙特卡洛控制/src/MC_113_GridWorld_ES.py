@@ -79,8 +79,6 @@ def MC_EveryVisit_Q_Policy_test(env, episodes, gamma, policy, exploration):
             # 判断该状态下被选择动作的最小次数
             if np.min(Count[s]) <= exploration:
                 continue        # 如果次数不够，则不做策略改进
-            if s==11:
-                print(s)
             # 做策略改进，贪心算法
             Q[s] = Value[s] / Count[s]  # 得到该状态下所有动作的 q 值
             policy[s] = 0               # 先设置该状态所有策略为 0（后面再把有效的动作设置为非 0）
@@ -104,16 +102,26 @@ if __name__=="__main__":
         StepReward, SpecialReward,                      # 关于奖励的参数
         SpecialMove, Blocks)                            # 关于移动的限制
     #model.print_P(env.P_S_R)
-    policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
-    gamma = 1
-    max_iteration = 1000
-    exploration = 100
+    gamma = 0.9
+    max_iteration = 2000
+    explorations = [100,200,300,400,500]
 
-    Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)
-    V = helper.calculat_V_from_Q(Q, policy)
-    helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
+
+    V,Q = algo.calculate_VQ_star(env, gamma, max_iteration)
     print(np.round(V,1).reshape(4,4))
-    helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
     print(np.around(Q, 1))
     drawQ.draw(Q, (4,4))
-    print(policy)
+
+    exit(0)
+
+    for exploration in explorations:
+        policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
+        helper.print_seperator_line(helper.SeperatorLines.long, "探索次数="+str(exploration))
+        Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)
+        V = helper.calculat_V_from_Q(Q, policy)
+        helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
+        print(np.round(V,1).reshape(4,4))
+        helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
+        print(np.around(Q, 1))
+        drawQ.draw(Q, (4,4))
+        print(policy)

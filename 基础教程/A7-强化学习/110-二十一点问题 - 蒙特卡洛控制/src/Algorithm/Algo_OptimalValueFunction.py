@@ -29,6 +29,8 @@ def calculate_VQ_star(env, gamma, max_iteration):
         V_old = V.copy()
         # 遍历所有状态 s
         for s in range(env.observation_space.n):
+            if env.is_end(s):   # 终止状态v=0
+                continue            
             actions = env.P[s]
             V[s] = v_star(s, actions, gamma, V, Q)
         # 检查收敛性

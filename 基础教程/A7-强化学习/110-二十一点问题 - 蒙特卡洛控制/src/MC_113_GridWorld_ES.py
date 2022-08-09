@@ -17,7 +17,7 @@ Actions = [LEFT, DOWN, RIGHT, UP]
 # 初始策略
 Policy = [0.25, 0.25, 0.25, 0.25]
 # 转移概率: [SlipLeft, MoveFront, SlipRight, SlipBack]
-Transition = [0.0, 1.0, 0.0, 0.0]
+Transition = [0.1, 0.8, 0.1, 0.0]
 # 每走一步的奖励值，可以是0或者-1
 StepReward = 0
 # 特殊奖励 from s->s' then get r, 其中 s,s' 为状态序号，不是坐标位置
@@ -98,30 +98,83 @@ if __name__=="__main__":
 
     env = model.GridWorld(
         GridWidth, GridHeight, StartStates, EndStates,  # 关于状态的参数
-        Actions, Policy, Transition,                     # 关于动作的参数
+        Actions, Policy, Transition,                    # 关于动作的参数
         StepReward, SpecialReward,                      # 关于奖励的参数
         SpecialMove, Blocks)                            # 关于移动的限制
     #model.print_P(env.P_S_R)
     gamma = 0.9
-    max_iteration = 2000
-    explorations = [100,200,300,400,500]
+    max_iteration = 500
 
+    helper.print_seperator_line(helper.SeperatorLines.long, "精确解")
 
-    V,Q = algo.calculate_VQ_star(env, gamma, max_iteration)
-    print(np.round(V,1).reshape(4,4))
-    print(np.around(Q, 1))
-    drawQ.draw(Q, (4,4))
+    V_real,Q_real = algo.calculate_VQ_star(env, gamma, max_iteration)
+    helper.print_seperator_line(helper.SeperatorLines.short, "V 函数值")
+    print(np.round(V_real,1).reshape(4,4))
+    helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数值")
+    print(np.around(Q_real, 1))
+    helper.print_seperator_line(helper.SeperatorLines.short, "策略")
+    drawQ.draw(Q_real, (4,4))
 
-    exit(0)
+    ####################################
 
+    helper.print_seperator_line(helper.SeperatorLines.long, "试验探索次数")
+    explorations = [20,40,60,80]
     for exploration in explorations:
+        helper.print_seperator_line(helper.SeperatorLines.middle, "探索次数="+str(exploration))
         policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
-        helper.print_seperator_line(helper.SeperatorLines.long, "探索次数="+str(exploration))
         Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)
+        V = helper.calculat_V_from_Q(Q, policy)
+        #helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
+        #print(np.round(V,1).reshape(4,4))
+        #helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
+        #print(np.around(Q, 1))
+        #helper.print_seperator_line(helper.SeperatorLines.short, "策略")
+        #drawQ.draw(Q, (4,4))
+        #helper.print_seperator_line(helper.SeperatorLines.short, "策略概率值")
+        #print(policy)
+
+        Qs = []
+        for i in range(10):
+            q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, max_iteration)
+            Qs.append(q)
+        Q = np.array(Qs).mean(axis=0) 
+        V = helper.calculat_V_from_Q(Q, policy) 
+        helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
+        print(np.round(V,1).reshape(4,4))
+        helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
+        print(np.around(Q, 1))
+        helper.print_seperator_line(helper.SeperatorLines.short, "策略")
+        drawQ.draw(Q, (4,4))
+
+        #helper.print_seperator_line(helper.SeperatorLines.short, "RMSE误差")
+        #print("状态价值函数误差=", helper.RMSE(V_real, V))
+        #print("动作价值函数误差=", helper.RMSE(Q_real, Q))
+
+    ####################################################
+    """
+    helper.print_seperator_line(helper.SeperatorLines.long, "试验采样次数与误差的关系")
+    exploration = 100
+    iterations = [200,500,1000,2000]
+    for max_iteration in iterations:
+        policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
+        helper.print_seperator_line(helper.SeperatorLines.middle, "采样次数="+str(max_iteration))
+        Q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, exploration)
+        V = helper.calculat_V_from_Q(Q, policy)
+
+        Qs = []
+        for i in range(10):
+            q = MC_EveryVisit_Q_Policy_test(env, max_iteration, gamma, policy, max_iteration)
+            Qs.append(q)
+        Q = np.array(Qs).mean(axis=0) 
         V = helper.calculat_V_from_Q(Q, policy)
         helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")
         print(np.round(V,1).reshape(4,4))
         helper.print_seperator_line(helper.SeperatorLines.short, "Q 函数")
         print(np.around(Q, 1))
+        helper.print_seperator_line(helper.SeperatorLines.short, "策略")
         drawQ.draw(Q, (4,4))
-        print(policy)
+
+        helper.print_seperator_line(helper.SeperatorLines.short, "RMSE误差")
+        print("状态价值函数误差=", helper.RMSE(V_real, V))
+        print("动作价值函数误差=", helper.RMSE(Q_real, Q))
+    """

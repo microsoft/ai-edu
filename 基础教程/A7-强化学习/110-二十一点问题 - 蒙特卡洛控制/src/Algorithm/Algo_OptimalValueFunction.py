@@ -7,7 +7,7 @@ def q_star(p_s_r_d, gamma, V):
     # 遍历每个转移概率,以计算 q
     for p, s_next, reward, done in p_s_r_d:
         # math: \sum_{s'} p_{ss'}^a [ r_{ss'}^a + \gamma *  v_{\pi}(s')]
-        q += p * (reward + gamma * V[s_next] * (1-done))
+        q += p * (reward + gamma * V[s_next])
     return q
 
 # 式 (9.6.3) 计算 v*

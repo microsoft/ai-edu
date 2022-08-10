@@ -4,6 +4,7 @@ import numpy as np
 env = gym.make('Blackjack-v1', sab=True)
 print(env.action_space)
 print(env.observation_space)
+print(env.spec)
 for i in range(100):
     s = env.reset()
     Episode = []

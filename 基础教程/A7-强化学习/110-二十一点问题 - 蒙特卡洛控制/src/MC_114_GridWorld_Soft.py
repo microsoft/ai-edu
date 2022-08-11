@@ -1,6 +1,7 @@
 import numpy as np
 import common.GridWorld_Model as model
 import Algorithm.Algo_OptimalValueFunction as algo
+import Algorithm.Base_MC_Policy_Iteration as base
 import common.CommonHelper as helper
 import common.DrawQpi as drawQ
 import tqdm
@@ -44,51 +45,26 @@ SpecialMove = {
 # 墙
 Blocks = []
 
-# MC e-贪心策略
-def MC_Soft_Greedy_test(env, episodes, gamma, policy, epsilon):
-    nA = env.action_space.n                 # 动作空间
-    nS = env.observation_space.n            # 状态空间
-    Value = np.zeros((nS, nA))              # G 的总和
-    Count = np.zeros((nS, nA))              # G 的数量
-    Q = np.zeros((nS, nA))
-    
-    best_p = 1 - epsilon + epsilon / nA 
-    other_p = epsilon / nA
+class MC_SoftGreedy(base.Policy_Iteration):
+    def __init__(self, env, init_policy, gamma, epsilon):
+        super().__init__(env, init_policy, gamma)
+        self.epsilon = epsilon
+        self.best_p = 1 - epsilon + epsilon / self.nA 
+        self.other_p = epsilon / self.nA        
 
-    for episode in tqdm.trange(episodes):   # 多幕循环
-        # 重置环境，开始新的一幕采样
-        s = env.reset()
-        Episode = []     # 一幕内的(状态,动作,奖励)序列
-        done = False
-        while (done is False):            # 幕内循环
-            action = np.random.choice(nA, p=policy[s])
-            next_s, reward, done, _ = env.step(action)
-            Episode.append((s, action, reward))            
-            s = next_s  # 迭代
-
-        num_step = len(Episode)
-        G = 0
-        # 从后向前遍历计算 G 值
-        for t in range(num_step-1, -1, -1):
-            s, a, r = Episode[t]
-            G = gamma * G + r
-            Value[s,a] += G     # 值累加
-            Count[s,a] += 1     # 数量加 1
-            # 做策略改进，贪心算法
-            if np.min(Count[s]) == 0:
-                continue
-            Q[s] = Value[s] / Count[s]  # 得到该状态下所有动作的 q 值
-            policy[s] = other_p         # 先设置该状态所有策略为 epsilong/nA
-            argmax = np.argmax(Q[s])
-            policy[s, argmax] = best_p
-    Count[Count==0] = 1 # 把分母为0的填成1，主要是针对终止状态Count为0
-    Q = Value / Count   # 求均值
-    return Q
+    def policy_improvement(self, s):
+        # 做策略改进，贪心算法
+        if np.min(self.Count[s]) == 0:  # 避免被除数为 0
+            return
+        self.Q[s] = self.Value[s] / self.Count[s]  # 得到该状态下所有动作的 q 值
+        self.policy[s] = self.other_p         # 先设置该状态所有策略为 epsilong/nA
+        argmax = np.argmax(self.Q[s])
+        self.policy[s, argmax] = self.best_p
 
 
 if __name__=="__main__":
 
-    #np.random.seed(15)
+    np.random.seed(15)
 
     env = model.GridWorld(
         GridWidth, GridHeight, StartStates, EndStates,  # 关于状态的参数
@@ -105,7 +81,8 @@ if __name__=="__main__":
     for epsilon in epsilons:
         helper.print_seperator_line(helper.SeperatorLines.middle, "epsilon="+str(epsilon))
         policy = helper.create_policy(env.nS, env.nA, (0.25, 0.25, 0.25, 0.25))
-        Q = MC_Soft_Greedy_test(env, max_iteration, gamma, policy, epsilon)
+        mc = MC_SoftGreedy(env, policy, gamma, epsilon)
+        Q = mc.policy_iteration(max_iteration)
         V = helper.calculat_V_from_Q(Q, policy)
 
         helper.print_seperator_line(helper.SeperatorLines.short, "V 函数")

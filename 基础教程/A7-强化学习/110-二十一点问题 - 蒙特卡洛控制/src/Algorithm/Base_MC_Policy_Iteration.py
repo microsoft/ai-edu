@@ -20,14 +20,6 @@ class Policy_Iteration(object):
             self.Count = np.zeros((22, 11, 2, self.nA))   # G 的数量
         self.policy = init_policy
 
-    def init_policy(self, init_policy):
-        policy = np.zeros_like(self.Value)
-        if hasattr(self.env, "spec") is False:
-            policy[:] = init_policy
-        elif self.env.spec.id == 'Blackjack-v1':
-            policy[:,:,:] = init_policy
-        return policy
-
     def sampling_blackjack(self):
         s = self.env.reset()
         Episode = []     # 一幕内的(状态,奖励)序列
@@ -51,6 +43,13 @@ class Policy_Iteration(object):
             s = next_s  # 迭代
         return Episode
 
+    def calculate(self, Episode, t, G):
+        s, a, r = Episode[t]
+        G = self.gamma * G + r
+        self.Value[s][a] += G     # 值累加
+        self.Count[s][a] += 1     # 数量加 1      
+        return G, s
+
     # 策略评估
     def policy_evaluation(self, episodes):
         for _ in tqdm.trange(episodes):   # 多幕循环
@@ -70,6 +69,7 @@ class Policy_Iteration(object):
         Q = self.Value / self.Count   # 求均值
         return Q
 
+
     # 策略迭代
     def policy_iteration(self, episodes):
         for _ in tqdm.trange(episodes):   # 多幕循环
@@ -79,10 +79,7 @@ class Policy_Iteration(object):
             # 从后向前遍历计算 G 值
             G = 0
             for t in range(len(Episode)-1, -1, -1):
-                s, a, r = Episode[t]
-                G = self.gamma * G + r
-                self.Value[s][a] += G     # 值累加
-                self.Count[s][a] += 1     # 数量加 1      
+                G, s = self.calculate(Episode, t, G)
                 self.policy_improvement(s)
 
         # 多幕循环结束，计算 Q 值
@@ -91,7 +88,7 @@ class Policy_Iteration(object):
         return Q
 
     # 策略改进(算法重写此函数)
-    def policy_improvement(self, Q):
+    def policy_improvement(self, s):
         # change your policy here
         pass
 

@@ -46,6 +46,16 @@ SpecialMove = {
 Blocks = []
 
 
+class MC_Greedy(base.Policy_Iteration):
+    def policy_improvement(self, s):
+        # 做策略改进，贪心算法
+        self.Q[s] = self.Value[s] / self.Count[s]  # 得到该状态下所有动作的 q 值
+        self.policy[s] = 0               # 先设置该状态所有策略为 0（后面再把有效的动作设置为非 0）
+        argmax = np.argwhere(self.Q[s]==np.max(self.Q[s]))    # 取最大值所在的位置（可能不止一个）
+        p = 1 / argmax.shape[0]                     # 概率平均分配给几个最大值
+        for arg in argmax:                          # 每个最大值位置都设置为相同的概率
+            self.policy[s][arg[0]] = p
+
 class MC_ES(base.Policy_Iteration):
     def __init__(self, env, init_policy, gamma, exploration):
         super().__init__(env, init_policy, gamma)

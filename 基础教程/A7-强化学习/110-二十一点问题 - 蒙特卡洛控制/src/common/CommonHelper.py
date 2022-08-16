@@ -63,7 +63,7 @@ def create_policy(nS, nA, args):
     sum = 0
     for i in range(nA):
         sum += args[i]
-        policy[:][i] = args[i]
+        policy[:,i] = args[i]
     assert(sum == 1)
     return policy
 

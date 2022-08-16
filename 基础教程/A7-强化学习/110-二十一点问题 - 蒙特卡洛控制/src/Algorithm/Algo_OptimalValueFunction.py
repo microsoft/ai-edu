@@ -7,7 +7,7 @@ def q_star(p_s_r_d, gamma, V):
     # 遍历每个转移概率,以计算 q
     for p, s_next, reward, done in p_s_r_d:
         # math: \sum_{s'} p_{ss'}^a [ r_{ss'}^a + \gamma *  v_{\pi}(s')]
-        q += p * (reward + gamma * V[s_next] * (1-done))
+        q += p * (reward + gamma * V[s_next])
     return q
 
 # 式 (9.6.3) 计算 v*
@@ -29,6 +29,8 @@ def calculate_VQ_star(env, gamma, max_iteration):
         V_old = V.copy()
         # 遍历所有状态 s
         for s in range(env.observation_space.n):
+            if env.is_end(s):   # 终止状态v=0
+                continue            
             actions = env.P[s]
             V[s] = v_star(s, actions, gamma, V, Q)
         # 检查收敛性

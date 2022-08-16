@@ -104,9 +104,10 @@ class GridWorld(object):
             return transitions[0][1], transitions[0][2], transitions[0][3], transitions[0][0]
         else:
             self.p = [transitions[i][0] for i in range(num)]
-            item = np.random.choice(self.nA, p=self.p)
-            self.curr_state = item[0][1]
-            return item[1], item[2], item[3], item[0]
+            idx = np.random.choice(num, p=self.p)
+            item = transitions[idx]
+            self.curr_state = item[1]   # s
+            return item[1], item[2], item[3], item[0]   # s, r, done, p
         
 action_names = ['LEFT', 'UP', 'RIGHT', 'DOWN']
 

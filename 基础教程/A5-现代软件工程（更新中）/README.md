@@ -49,6 +49,7 @@
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
 |JD - Job Description|职位描述|
 |KA - Knowledge Area|知识领域|
+|mentor|导师，一个会给一个新员工指派一个导师来帮助 ta 熟悉工作流程。导师可以是领导，但通常是资深的同事。|
 |Microsoft Forms||
 |Papera||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|

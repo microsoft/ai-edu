@@ -44,6 +44,7 @@
 |Dev||
 |Dev Lead||
 |Dev Manager||
+|D&I（Diversity & Inclusive）|多元与包容|
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
 |Flight||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
@@ -51,6 +52,7 @@
 |KA - Knowledge Area|知识领域|
 |mentor|导师，一个会给一个新员工指派一个导师来帮助 ta 熟悉工作流程。导师可以是领导，但通常是资深的同事。|
 |Microsoft Forms||
+|Org (Orgnazation) | 微软内部划分的一个个大的组织，通常有上百人 |
 |Papera||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
 |Power Platform||

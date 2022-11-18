@@ -61,5 +61,6 @@
 |NLP||
 |UWP|Universal Windows Platform|
 |XAML||
+|WFH（Working From Home）|在家远程办公|
 
 我们把参考资料列表放在每一章的开始部分，而不是像通常的做法放在后面，以表示对原著和作者的崇高敬意。

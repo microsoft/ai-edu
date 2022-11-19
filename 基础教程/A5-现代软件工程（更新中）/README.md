@@ -56,8 +56,9 @@
 |Papera||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
 |Power Platform||
-|SDE||
 |RSDE||
+|SDE||
+|Transfer||
 |NLP||
 |UWP|Universal Windows Platform|
 |XAML||

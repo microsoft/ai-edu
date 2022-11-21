@@ -47,6 +47,8 @@
 |D&I（Diversity & Inclusive）|多元与包容|
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
 |Flight||
+|Hackathon||
+|Happy Hour||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
 |JD - Job Description|职位描述|
 |KA - Knowledge Area|知识领域|

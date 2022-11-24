@@ -46,6 +46,7 @@
 |Dev Manager||
 |D&I（Diversity & Inclusive）|多元与包容|
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
+|Feature Team||
 |Flight||
 |Hackathon||
 |Happy Hour||

@@ -40,6 +40,9 @@
 |AA||
 |Architect||
 |Bing Search|必应搜索，微软的全球搜索引擎|
+|Career Path||
+|Chromium||
+|Cortana|微软小娜|
 |Designer||
 |Dev||
 |Dev Lead||
@@ -48,6 +51,7 @@
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
 |Feature Team||
 |Flight||
+|FTE||
 |Hackathon||
 |Happy Hour||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
@@ -59,11 +63,15 @@
 |Papera||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
 |Power Platform||
+|Promotion||
 |RSDE||
 |SDE||
+|Solo||
+|Spot Reward||
 |Transfer||
 |NLP||
 |UWP|Universal Windows Platform|
+|Vendor|
 |XAML||
 |WFH（Working From Home）|在家远程办公|
 

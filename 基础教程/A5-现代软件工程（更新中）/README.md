@@ -39,6 +39,7 @@
 |--|--|
 |AA||
 |Architect||
+|Backlog||
 |Bing Search|必应搜索，微软的全球搜索引擎|
 |Career Path||
 |Chromium||
@@ -47,6 +48,7 @@
 |Dev||
 |Dev Lead||
 |Dev Manager||
+|DevOps||
 |D&I（Diversity & Inclusive）|多元与包容|
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
 |Feature Team||
@@ -68,6 +70,7 @@
 |SDE||
 |Solo||
 |Spot Reward||
+|Team worker||
 |Transfer||
 |NLP||
 |UWP|Universal Windows Platform|

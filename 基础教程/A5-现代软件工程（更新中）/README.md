@@ -57,6 +57,7 @@
 |Hackathon||
 |Happy Hour||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
+|INT Bed||
 |JD - Job Description|职位描述|
 |KA - Knowledge Area|知识领域|
 |mentor|导师，一个会给一个新员工指派一个导师来帮助 ta 熟悉工作流程。导师可以是领导，但通常是资深的同事。|
@@ -66,16 +67,19 @@
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
 |Power Platform||
 |Promotion||
+|PROD Bed||
 |RSDE||
 |SDE||
 |Solo||
 |Spot Reward||
 |Team worker||
+|Test Bed||
 |Transfer||
 |NLP||
 |UWP|Universal Windows Platform|
 |Vendor|
 |XAML||
 |WFH（Working From Home）|在家远程办公|
+|Work Life Balance||
 
 我们把参考资料列表放在每一章的开始部分，而不是像通常的做法放在后面，以表示对原著和作者的崇高敬意。

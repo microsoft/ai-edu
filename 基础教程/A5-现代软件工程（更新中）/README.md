@@ -31,6 +31,8 @@
 
 本书中有很多关于“木头”的故事，“木头”是一个虚构的人物，但是 TA 所经历的故事都是在真实事件基础上经过微小改编的，只不过故事的原主人公可能是笔者，也可能是笔者的同事或朋友。
 
+关于乐队
+
 
 
 词汇表
@@ -62,6 +64,7 @@
 |KA - Knowledge Area|知识领域|
 |mentor|导师，一个会给一个新员工指派一个导师来帮助 ta 熟悉工作流程。导师可以是领导，但通常是资深的同事。|
 |Microsoft Forms||
+|Milestone|里程碑|
 |Org (Orgnazation) | 微软内部划分的一个个大的组织，通常有上百人 |
 |Papera||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
@@ -76,6 +79,7 @@
 |Test Bed||
 |Transfer||
 |NLP||
+|UX - User Experience||
 |UWP|Universal Windows Platform|
 |Vendor|
 |XAML||

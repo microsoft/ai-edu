@@ -5,8 +5,8 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-train_data_name = "../../data/ch09.train.npz"
-test_data_name = "../../data/ch09.test.npz"
+train_data_name = "ch09.train.npz"
+test_data_name = "ch09.test.npz"
 
 def TargetFunction(x):
     p1 = 0.4 * (x**2)

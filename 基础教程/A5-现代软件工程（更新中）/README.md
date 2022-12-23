@@ -31,6 +31,8 @@
 
 本书中有很多关于“木头”的故事，“木头”是一个虚构的人物，但是 TA 所经历的故事都是在真实事件基础上经过微小改编的，只不过故事的原主人公可能是笔者，也可能是笔者的同事或朋友。
 
+关于乐队
+
 
 
 词汇表
@@ -39,24 +41,49 @@
 |--|--|
 |AA||
 |Architect||
+|Backlog||
 |Bing Search|必应搜索，微软的全球搜索引擎|
+|Career Path||
+|Chromium||
+|Cortana|微软小娜|
 |Designer||
 |Dev||
 |Dev Lead||
 |Dev Manager||
+|DevOps||
+|D&I（Diversity & Inclusive）|多元与包容|
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
+|Feature Team||
 |Flight||
+|FTE||
+|Hackathon||
+|Happy Hour||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
+|INT Bed||
 |JD - Job Description|职位描述|
 |KA - Knowledge Area|知识领域|
+|mentor|导师，一个会给一个新员工指派一个导师来帮助 ta 熟悉工作流程。导师可以是领导，但通常是资深的同事。|
 |Microsoft Forms||
+|Milestone|里程碑|
+|Org (Orgnazation) | 微软内部划分的一个个大的组织，通常有上百人 |
 |Papera||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
 |Power Platform||
-|SDE||
+|Promotion||
+|PROD Bed||
 |RSDE||
+|SDE||
+|Solo||
+|Spot Reward||
+|Team worker||
+|Test Bed||
+|Transfer||
 |NLP||
+|UX - User Experience||
 |UWP|Universal Windows Platform|
+|Vendor|
 |XAML||
+|WFH（Working From Home）|在家远程办公|
+|Work Life Balance||
 
 我们把参考资料列表放在每一章的开始部分，而不是像通常的做法放在后面，以表示对原著和作者的崇高敬意。

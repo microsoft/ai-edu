@@ -13133,7 +13133,7 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>原创教程，版权所有。</p>
 <p>同济子豪兄B站视频专栏：<a href="https://space.bilibili.com/1900783">https://space.bilibili.com/1900783</a></p>
@@ -13146,49 +13146,49 @@ div#notebook {
 <p>将已经训练好的模型放到测试集上预测，将测试集中特征逐一分别打乱，如果打乱某特征后预测准确率大大降低，就说明该特征重要，如果打乱某特征后预测准确率基本不变，就说明该特征不重要。</p>
 <p>赋予机器学习模型可解释性，打破机器学习模型的黑箱子，让我们能更加充分了解模型、改进模型、信任模型，并对每一个数据样本构建精准定制的数学模型。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23548;&#20837;&#24037;&#20855;&#21253;&#12289;&#39044;&#22788;&#29702;&#21518;&#25968;&#25454;&#38598;&#12289;&#26500;&#24314;&#38543;&#26426;&#26862;&#26519;&#20998;&#31867;&#27169;&#22411;">&#23548;&#20837;&#24037;&#20855;&#21253;&#12289;&#39044;&#22788;&#29702;&#21518;&#25968;&#25454;&#38598;&#12289;&#26500;&#24314;&#38543;&#26426;&#26862;&#26519;&#20998;&#31867;&#27169;&#22411;<a class="anchor-link" href="#&#23548;&#20837;&#24037;&#20855;&#21253;&#12289;&#39044;&#22788;&#29702;&#21518;&#25968;&#25454;&#38598;&#12289;&#26500;&#24314;&#38543;&#26426;&#26862;&#26519;&#20998;&#31867;&#27169;&#22411;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 运行本代码，忽略烦人的红色提示</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 运行本代码，忽略烦人的红色提示</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13218,11 +13218,11 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13230,7 +13230,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[3]:</div>
+    <div class="prompt output_prompt">Out[3]:
 
 
 
@@ -13243,24 +13243,24 @@ div#notebook {
             min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
             oob_score=False, random_state=None, verbose=0,
             warm_start=False)</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#32472;&#21046;Permutation-Importance&#22270;">&#32472;&#21046;Permutation Importance&#22270;<a class="anchor-link" href="#&#32472;&#21046;Permutation-Importance&#22270;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">eli5</span>
@@ -13268,11 +13268,11 @@ div#notebook {
 
 <span class="n">perm</span> <span class="o">=</span> <span class="n">PermutationImportance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 <span class="n">eli5</span><span class="o">.</span><span class="n">show_weights</span><span class="p">(</span><span class="n">perm</span><span class="p">,</span> <span class="n">feature_names</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13280,18 +13280,18 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+    <div class="prompt">
 
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>Using TensorFlow backend.
 </pre>
-</div>
-</div>
+
+
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[4]:</div>
+    <div class="prompt output_prompt">Out[4]:
 
 
 
@@ -13620,16 +13620,16 @@ div#notebook {
 
 
 
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
-    </div>
-  </div>
+
+
+
+
+
+    
+  
 </body>
 
  

@@ -13133,7 +13133,7 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>原创教程，版权所有。</p>
 <p>同济子豪兄B站视频专栏：<a href="https://space.bilibili.com/1900783">https://space.bilibili.com/1900783</a></p>
@@ -13144,164 +13144,164 @@ div#notebook {
 <p>2020-05-15</p>
 <h1 id="&#26412;&#33410;&#27010;&#36848;">&#26412;&#33410;&#27010;&#36848;<a class="anchor-link" href="#&#26412;&#33410;&#27010;&#36848;">&#182;</a></h1><p>安装本课程要用到的Python第三方工具包，包括科学计算、数据分析、可视化、机器学习、机器学习可解释性分析的常用工具包。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>在Ipython中，感叹号开头的python代码，可起到运行命令行命令的作用。</p>
 <p>你也可以直接将感叹号后面的内容复制粘贴到命令行中运行。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23433;&#35013;&#25968;&#25454;&#20998;&#26512;&#21450;&#21487;&#35270;&#21270;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;">&#23433;&#35013;&#25968;&#25454;&#20998;&#26512;&#21450;&#21487;&#35270;&#21270;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;<a class="anchor-link" href="#&#23433;&#35013;&#25968;&#25454;&#20998;&#26512;&#21450;&#21487;&#35270;&#21270;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install numpy pandas matplotlib seaborn wheel pandas_profiling jupyter notebook -i https://pypi.tuna.tsinghua.edu.cn/simple
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23433;&#35013;&#36741;&#21161;&#24037;&#20855;&#21253;">&#23433;&#35013;&#36741;&#21161;&#24037;&#20855;&#21253;<a class="anchor-link" href="#&#23433;&#35013;&#36741;&#21161;&#24037;&#20855;&#21253;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install graphviz pydotplus 
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>将graphviz的bin目录加到环境变量PATH中，比如对于Windows系统，将类似于<code>C:/Program Files (x86)/Graphviz2.38/bin/</code>的路径加入环境变量PATH。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import os</span>
 <span class="c1"># os.environ[&quot;PATH&quot;] += os.pathsep + &#39;C:/Program Files (x86)/Graphviz2.38/bin/&#39;</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;">&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;<a class="anchor-link" href="#&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install scikit-learn -i https://pypi.tuna.tsinghua.edu.cn/simple
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#21487;&#35299;&#37322;&#24615;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;">&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#21487;&#35299;&#37322;&#24615;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;<a class="anchor-link" href="#&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#21487;&#35299;&#37322;&#24615;&#31532;&#19977;&#26041;&#24037;&#20855;&#21253;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install pdpbox eli5 -i https://pypi.tuna.tsinghua.edu.cn/simple
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#21487;&#35299;&#37322;&#20998;&#26512;&#24037;&#20855;shap">&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#21487;&#35299;&#37322;&#20998;&#26512;&#24037;&#20855;shap<a class="anchor-link" href="#&#23433;&#35013;&#26426;&#22120;&#23398;&#20064;&#21487;&#35299;&#37322;&#20998;&#26512;&#24037;&#20855;shap">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install shap -i https://pypi.tuna.tsinghua.edu.cn/simple
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>如果安装shap库时遇到bug，提示<code>error: Microsoft Visual C++ 14.0 is required.</code></p>
 <p>请更换至linux或macos操作系统。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
-    </div>
-  </div>
+
+
+
+    
+  
 </body>
 
  

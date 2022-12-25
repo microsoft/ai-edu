@@ -13133,7 +13133,7 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>原创教程，版权所有。</p>
 <p>同济子豪兄B站视频专栏：<a href="https://space.bilibili.com/1900783">https://space.bilibili.com/1900783</a></p>
@@ -13145,19 +13145,19 @@ div#notebook {
 <h1 id="&#26412;&#33410;&#27010;&#36848;">&#26412;&#33410;&#27010;&#36848;<a class="anchor-link" href="#&#26412;&#33410;&#27010;&#36848;">&#182;</a></h1><p>对uci心脏病数据集进行特征预处理，介绍数据分析中定类、定序、定距、定比四大基本数据类型。</p>
 <p>将原始数据集中的定类离散特征转为One-Hot-Encoding独热编码，便于后续机器学习模型处理。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23548;&#20837;&#24037;&#20855;&#21253;&#21644;&#25968;&#25454;&#38598;">&#23548;&#20837;&#24037;&#20855;&#21253;&#21644;&#25968;&#25454;&#38598;<a class="anchor-link" href="#&#23548;&#20837;&#24037;&#20855;&#21253;&#21644;&#25968;&#25454;&#38598;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 运行本代码，忽略烦人的红色提示</span>
@@ -13165,37 +13165,37 @@ div#notebook {
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;heart.csv&quot;</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13203,32 +13203,32 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[3]:</div>
+    <div class="prompt output_prompt">Out[3]:
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
 <pre>(303, 14)</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13236,7 +13236,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[4]:</div>
+    <div class="prompt output_prompt">Out[4]:
 
 
 
@@ -13363,33 +13363,33 @@ div#notebook {
     </tr>
   </tbody>
 </table>
-</div>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#26597;&#30475;&#21508;&#21015;&#29305;&#24449;&#25968;&#25454;&#31867;&#22411;">&#26597;&#30475;&#21508;&#21015;&#29305;&#24449;&#25968;&#25454;&#31867;&#22411;<a class="anchor-link" href="#&#26597;&#30475;&#21508;&#21015;&#29305;&#24449;&#25968;&#25454;&#31867;&#22411;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13397,7 +13397,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[5]:</div>
+    <div class="prompt output_prompt">Out[5]:
 
 
 
@@ -13418,46 +13418,46 @@ ca            int64
 thal          int64
 target        int64
 dtype: object</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23558;&#31616;&#20889;&#30340;&#21015;&#21517;&#20462;&#25913;&#20026;&#23436;&#25972;&#30340;&#29305;&#24449;&#21517;&#31216;">&#23558;&#31616;&#20889;&#30340;&#21015;&#21517;&#20462;&#25913;&#20026;&#23436;&#25972;&#30340;&#29305;&#24449;&#21517;&#31216;<a class="anchor-link" href="#&#23558;&#31616;&#20889;&#30340;&#21015;&#21517;&#20462;&#25913;&#20026;&#23436;&#25972;&#30340;&#29305;&#24449;&#21517;&#31216;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;chest_pain_type&#39;</span><span class="p">,</span> <span class="s1">&#39;resting_blood_pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;cholesterol&#39;</span><span class="p">,</span> <span class="s1">&#39;fasting_blood_sugar&#39;</span><span class="p">,</span> <span class="s1">&#39;rest_ecg&#39;</span><span class="p">,</span> <span class="s1">&#39;max_heart_rate_achieved&#39;</span><span class="p">,</span>
        <span class="s1">&#39;exercise_induced_angina&#39;</span><span class="p">,</span> <span class="s1">&#39;st_depression&#39;</span><span class="p">,</span> <span class="s1">&#39;st_slope&#39;</span><span class="p">,</span> <span class="s1">&#39;num_major_vessels&#39;</span><span class="p">,</span> <span class="s1">&#39;thalassemia&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13465,7 +13465,7 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[7]:</div>
+    <div class="prompt output_prompt">Out[7]:
 
 
 
@@ -13592,24 +13592,24 @@ dtype: object</pre>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#21306;&#20998;-&#23450;&#31867;-&#23450;&#24207;-&#23450;&#36317;-&#23450;&#27604;-&#22235;&#31181;&#29305;&#24449;">&#21306;&#20998; &#23450;&#31867; &#23450;&#24207; &#23450;&#36317; &#23450;&#27604; &#22235;&#31181;&#29305;&#24449;<a class="anchor-link" href="#&#21306;&#20998;-&#23450;&#31867;-&#23450;&#24207;-&#23450;&#36317;-&#23450;&#27604;-&#22235;&#31181;&#29305;&#24449;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <table>
 <thead><tr>
@@ -13647,19 +13647,19 @@ dtype: object</pre>
 </tbody>
 </table>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23558;&#23450;&#31867;&#29305;&#24449;&#30001;&#25972;&#25968;&#32534;&#30721;&#36716;&#20026;&#23454;&#38469;&#23545;&#24212;&#30340;&#23383;&#31526;&#20018;">&#23558;&#23450;&#31867;&#29305;&#24449;&#30001;&#25972;&#25968;&#32534;&#30721;&#36716;&#20026;&#23454;&#38469;&#23545;&#24212;&#30340;&#23383;&#31526;&#20018;<a class="anchor-link" href="#&#23558;&#23450;&#31867;&#29305;&#24449;&#30001;&#25972;&#25968;&#32534;&#30721;&#36716;&#20026;&#23454;&#38469;&#23545;&#24212;&#30340;&#23383;&#31526;&#20018;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">][</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;female&#39;</span>
@@ -13690,24 +13690,24 @@ dtype: object</pre>
 <span class="n">df</span><span class="p">[</span><span class="s1">&#39;thalassemia&#39;</span><span class="p">][</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;thalassemia&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;reversable defect&#39;</span>
 <span class="c1"># df[&#39;target&#39;][df[&#39;target&#39;] == 0] = &#39;No Heart Disease&#39;</span>
 <span class="c1"># df[&#39;target&#39;][df[&#39;target&#39;] == 1] = &#39;Heart Disease&#39;</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13715,7 +13715,7 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[9]:</div>
+    <div class="prompt output_prompt">Out[9]:
 
 
 
@@ -13842,26 +13842,26 @@ dtype: object</pre>
     </tr>
   </tbody>
 </table>
-</div>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">columns</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13869,7 +13869,7 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[10]:</div>
+    <div class="prompt output_prompt">Out[10]:
 
 
 
@@ -13880,25 +13880,25 @@ dtype: object</pre>
        &#39;max_heart_rate_achieved&#39;, &#39;exercise_induced_angina&#39;, &#39;st_depression&#39;,
        &#39;st_slope&#39;, &#39;num_major_vessels&#39;, &#39;thalassemia&#39;, &#39;target&#39;],
       dtype=&#39;object&#39;)</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13906,7 +13906,7 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[11]:</div>
+    <div class="prompt output_prompt">Out[11]:
 
 
 
@@ -13927,55 +13927,55 @@ num_major_vessels            int64
 thalassemia                 object
 target                       int64
 dtype: object</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>在pandas中，</p>
 <p>离散的定类和定序特征列应该是<code>object</code>这样的对象类型。</p>
 <p>连续的定距和定比特征列应该是<code>int64</code>或者<code>float64</code>这样的浮点数类型。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23558;&#31163;&#25955;&#30340;&#23450;&#31867;&#21644;&#23450;&#24207;&#29305;&#24449;&#21015;&#36716;&#20026;One-Hot&#29420;&#28909;&#32534;&#30721;">&#23558;&#31163;&#25955;&#30340;&#23450;&#31867;&#21644;&#23450;&#24207;&#29305;&#24449;&#21015;&#36716;&#20026;One-Hot&#29420;&#28909;&#32534;&#30721;<a class="anchor-link" href="#&#23558;&#31163;&#25955;&#30340;&#23450;&#31867;&#21644;&#23450;&#24207;&#29305;&#24449;&#21015;&#36716;&#20026;One-Hot&#29420;&#28909;&#32534;&#30721;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">columns</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13983,7 +13983,7 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[13]:</div>
+    <div class="prompt output_prompt">Out[13]:
 
 
 
@@ -14003,25 +14003,25 @@ dtype: object</pre>
        &#39;thalassemia_fixed defect&#39;, &#39;thalassemia_normal&#39;,
        &#39;thalassemia_reversable defect&#39;, &#39;thalassemia_unknown&#39;],
       dtype=&#39;object&#39;)</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -14029,7 +14029,7 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[14]:</div>
+    <div class="prompt output_prompt">Out[14]:
 
 
 
@@ -14199,26 +14199,26 @@ dtype: object</pre>
   </tbody>
 </table>
 <p>5 rows × 27 columns</p>
-</div>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -14226,32 +14226,32 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[15]:</div>
+    <div class="prompt output_prompt">Out[15]:
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
 <pre>(303, 27)</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -14259,7 +14259,7 @@ dtype: object</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[16]:</div>
+    <div class="prompt output_prompt">Out[16]:
 
 
 
@@ -14293,49 +14293,49 @@ thalassemia_normal                             1.0
 thalassemia_reversable defect                  0.0
 thalassemia_unknown                            0.0
 Name: 0, dtype: float64</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#23558;&#22788;&#29702;&#22909;&#30340;&#25968;&#25454;&#38598;&#23548;&#20986;&#20026;csv&#25991;&#20214;">&#23558;&#22788;&#29702;&#22909;&#30340;&#25968;&#25454;&#38598;&#23548;&#20986;&#20026;csv&#25991;&#20214;<a class="anchor-link" href="#&#23558;&#22788;&#29702;&#22909;&#30340;&#25968;&#25454;&#38598;&#23548;&#20986;&#20026;csv&#25991;&#20214;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;process_heart.csv&#39;</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
-    </div>
-  </div>
+
+
+
+    
+  
 </body>
 
  

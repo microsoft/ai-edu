@@ -13133,7 +13133,7 @@ div#notebook {
     <div class="container" id="notebook-container">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>原创教程，版权所有。</p>
 <p>同济子豪兄B站视频专栏：<a href="https://space.bilibili.com/1900783">https://space.bilibili.com/1900783</a></p>
@@ -13144,19 +13144,19 @@ div#notebook {
 <p>2020-05-15</p>
 <h1 id="&#26412;&#33410;&#27010;&#36848;">&#26412;&#33410;&#27010;&#36848;<a class="anchor-link" href="#&#26412;&#33410;&#27010;&#36848;">&#182;</a></h1><p>在uci心脏病数据集上训练随机森林分类模型，在测试集上预测，获得预测结果。</p>
 
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#26500;&#24314;&#25968;&#25454;&#38598;&#12289;&#35757;&#32451;&#27169;&#22411;">&#26500;&#24314;&#25968;&#25454;&#38598;&#12289;&#35757;&#32451;&#27169;&#22411;<a class="anchor-link" href="#&#26500;&#24314;&#25968;&#25454;&#38598;&#12289;&#35757;&#32451;&#27169;&#22411;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13172,16 +13172,16 @@ div#notebook {
 <span class="c1"># 忽略烦人的红色提示</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 导入数据集，划分特征和标签</span>
@@ -13197,11 +13197,11 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13209,7 +13209,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[2]:</div>
+    <div class="prompt output_prompt">Out[2]:
 
 
 
@@ -13223,45 +13223,45 @@ div#notebook {
                        min_weight_fraction_leaf=0.0, n_estimators=100,
                        n_jobs=None, oob_score=False, random_state=None,
                        verbose=0, warm_start=False)</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#27169;&#22411;&#23545;&#27979;&#35797;&#38598;&#30340;&#39044;&#27979;&#32467;&#26524;">&#27169;&#22411;&#23545;&#27979;&#35797;&#38598;&#30340;&#39044;&#27979;&#32467;&#26524;<a class="anchor-link" href="#&#27169;&#22411;&#23545;&#27979;&#35797;&#38598;&#30340;&#39044;&#27979;&#32467;&#26524;">&#182;</a></h1>
-</div>
-</div>
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13269,7 +13269,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[4]:</div>
+    <div class="prompt output_prompt">Out[4]:
 
 
 
@@ -13278,38 +13278,38 @@ div#notebook {
 <pre>array([0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1,
        1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1,
        1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1])</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred_proba</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
 
-</div>
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred_proba</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13317,7 +13317,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[6]:</div>
+    <div class="prompt output_prompt">Out[6]:
 
 
 
@@ -13384,25 +13384,25 @@ div#notebook {
        [0.97540935, 0.02459065],
        [0.95634865, 0.04365135],
        [0.28273216, 0.71726784]])</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred_proba</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13410,7 +13410,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[7]:</div>
+    <div class="prompt output_prompt">Out[7]:
 
 
 
@@ -13429,25 +13429,25 @@ div#notebook {
        0.61123472, 0.79498066, 0.05720527, 0.16508268, 0.94472969,
        0.75966225, 0.82105322, 0.74208702, 0.02459065, 0.04365135,
        0.71726784])</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred_proba</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13455,7 +13455,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[8]:</div>
+    <div class="prompt output_prompt">Out[8]:
 
 
 
@@ -13468,25 +13468,25 @@ div#notebook {
         True,  True,  True, False, False, False,  True,  True,  True,
         True,  True,  True,  True, False,  True,  True, False, False,
         True,  True,  True,  True, False, False,  True])</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
+
+
+
+
+
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred</span>
-</pre></div>
+</pre>
 
-    </div>
-</div>
-</div>
+    
+
+
 
 <div class="output_wrapper">
 <div class="output">
@@ -13494,7 +13494,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[9]:</div>
+    <div class="prompt output_prompt">Out[9]:
 
 
 
@@ -13503,16 +13503,16 @@ div#notebook {
 <pre>array([0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1,
        1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1,
        1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1])</pre>
-</div>
 
-</div>
 
-</div>
-</div>
 
-</div>
-    </div>
-  </div>
+
+
+
+
+
+    
+  
 </body>
 
  

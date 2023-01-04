@@ -29,7 +29,7 @@ def get_next_pollution_value(ds, row, col):
 
 running_folder = os.path.dirname(__file__)
 #dataset = read_csv('PM25_data.csv',  parse_dates = [['year', 'month', 'day', 'hour']], index_col=0, date_parser=parse)
-dataset = read_csv(os.path.join(running_folder, 'PM25_data.csv'))
+dataset = read_csv(os.path.join(running_folder, 'ExtendedDataReader', 'data', 'PM25_data.csv'))
 dataset.drop('No', axis=1, inplace=True)
 dataset.drop('year', axis=1, inplace=True)
 
@@ -92,5 +92,11 @@ print(ds.head(24))
 
 pollution_x = ds.to_numpy()
 
-np.savez("ch19_pm25_train.npz", data=pollution_x[0:total-8760], label=pollution_y[0:total-8760])
-np.savez("ch19_pm25_test.npz", data=pollution_x[total-8760:], label=pollution_y[total-8760:])
+np.savez(
+    os.path.join(running_folder, 'ExtendedDataReader', 'data', 'ch19_pm25_train.npz'), 
+    data=pollution_x[0:total-8760], 
+    label=pollution_y[0:total-8760])
+np.savez(
+    os.path.join(running_folder, 'ExtendedDataReader', 'data', "ch19_pm25_test.npz"),
+    data=pollution_x[total-8760:], 
+    label=pollution_y[total-8760:])

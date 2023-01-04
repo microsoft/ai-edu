@@ -82,6 +82,7 @@ def model(learning_rate, optimizer):
     ShowContour(net, dr)
 
 if __name__ == '__main__':
+    print("this will use ch04 data, please run ch049_data.py if you don't have it yet.")
 
     dict = {
             OptimizerName.SGD:0.5, 

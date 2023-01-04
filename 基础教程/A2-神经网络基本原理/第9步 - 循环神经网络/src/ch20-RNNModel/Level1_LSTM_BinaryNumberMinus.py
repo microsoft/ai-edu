@@ -13,8 +13,8 @@ from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_3_0 import *
 from MiniFramework.LSTMCell_1_2 import *
 
-train_file = "../../data/ch19.train_minus.npz"
-test_file = "../../data/ch19.test_minus.npz"
+train_file = "ch19.train_minus.npz"
+test_file = "ch19.test_minus.npz"
 
 def load_data():
     dr = DataReader_2_0(train_file, test_file)

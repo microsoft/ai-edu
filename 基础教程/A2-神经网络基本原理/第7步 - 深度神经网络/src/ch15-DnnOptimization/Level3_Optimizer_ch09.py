@@ -50,6 +50,8 @@ def model(learning_rate, optimizer):
     ShowResult(net, dr, title)
 
 if __name__ == '__main__':
+    print("this will use ch09_2 data, please run ch09_2_data.py if you don't have it yet.")
+
     model(0.3, OptimizerName.AdaGrad)
     model(0.5, OptimizerName.AdaGrad)
     model(0.7, OptimizerName.AdaGrad)

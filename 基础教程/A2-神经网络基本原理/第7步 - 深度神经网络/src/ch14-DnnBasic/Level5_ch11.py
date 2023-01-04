@@ -92,6 +92,8 @@ def model_sigmoid(num_input, num_hidden, num_output, hp):
 
 
 if __name__ == '__main__':
+    print("this will use ch011 data, please run ch11_data.py if you don't have it yet.")
+
     dataReader = LoadData()
     num_input = dataReader.num_feature
     num_hidden = 8

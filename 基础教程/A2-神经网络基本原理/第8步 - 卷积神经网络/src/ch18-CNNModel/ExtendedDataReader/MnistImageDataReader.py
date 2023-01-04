@@ -1,16 +1,25 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+# coding: utf-8
+
+import numpy as np
 import struct
 from MiniFramework.DataReader_2_0 import *
+import os
+
+train_image_file = os.path.join(os.path.dirname(__file__), 'data', 'train-images-idx3-ubyte')
+train_label_file = os.path.join(os.path.dirname(__file__), 'data', 'train-labels-idx1-ubyte')
+test_image_file = os.path.join(os.path.dirname(__file__), 'data', 't10k-images-idx3-ubyte')
+test_label_file = os.path.join(os.path.dirname(__file__), 'data', 't10k-labels-idx1-ubyte')
 
 class MnistImageDataReader(DataReader_2_0):
     # mode: "image"=Nx1x28x28,  "vector"=1x784
-    def __init__(self, train_x, train_y, test_x, test_y, mode="image"):
-        self.train_image_file = train_x
-        self.train_label_file = train_y
-        self.test_image_file = test_x
-        self.test_label_file = test_y
+    def __init__(self, mode="image"):
+        self.train_image_file = train_image_file
+        self.train_label_file = train_label_file
+        self.test_image_file = test_image_file
+        self.test_label_file = test_label_file
         self.num_example = 0
         self.num_feature = 0
         self.num_category = 0
@@ -96,7 +105,7 @@ class MnistImageDataReader(DataReader_2_0):
         self.XTest = self.__NormalizeData(self.XTestRaw)
 
     def __NormalizeData(self, XRawData):
-        X_NEW = np.zeros(XRawData.shape).astype('float32')
+        X_NEW = np.zeros(XRawData.shape)
         x_max = np.max(XRawData)
         x_min = np.min(XRawData)
         X_NEW = (XRawData - x_min)/(x_max-x_min)
@@ -132,6 +141,17 @@ class MnistImageDataReader(DataReader_2_0):
             return self.XTest.reshape(self.num_test,-1), self.YTest
         elif self.mode == "image":
             return self.XTest, self.YTest
+
+    def GetBatchTestSamples(self, batch_size, iteration):
+        start = iteration * batch_size
+        end = start + batch_size
+        batch_X = self.XTest[start:end]
+        batch_Y = self.YTest[start:end]
+
+        if self.mode == "vector":
+            return batch_X.reshape(batch_size, -1), batch_Y
+        elif self.mode == "image":
+            return batch_X, batch_Y
 
     # permutation only affect along the first axis, so we need transpose the array first
     # see the comment of this class to understand the data format

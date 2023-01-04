@@ -4,9 +4,10 @@
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
+import os
 
-train_data_name = "../../data/ch16.train.npz"
-test_data_name = "../../data/ch16.test.npz"
+train_data_name = os.path.join(os.path.dirname(__file__), "ch16.train.npz")
+test_data_name = os.path.join(os.path.dirname(__file__), "ch16.test.npz")
 
 def TargetFunction(x):
     p1 = 4*np.sin(x)/3.1416

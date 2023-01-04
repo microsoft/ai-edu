@@ -53,6 +53,7 @@ def Net(subfolder, dataReader, num_input, num_hidden, num_output, params, show_h
 
 
 if __name__ == '__main__':
+    print("please copy MNIST data files(4) into 'ch16-DnnRegularization/ExtendedDataReader/data/' folder.")
 
     dataReader = LoadData()
     num_feature = dataReader.num_feature

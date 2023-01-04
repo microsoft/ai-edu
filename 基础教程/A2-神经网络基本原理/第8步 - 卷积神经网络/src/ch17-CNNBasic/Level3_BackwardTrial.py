@@ -5,8 +5,9 @@ import numpy as np
 from MiniFramework.jit_utility import *
 from matplotlib import pyplot as plt
 import cv2
+import os
 
-circle_pic = "circle.png"
+circle_pic = os.path.join(os.path.dirname(__file__), "circle.png")
 
 def normalize(x):
     min = np.min(x)
@@ -42,8 +43,8 @@ def train(x, w, b, y):
     return w
 
 
-def create_sample_image():
-    img_color = cv2.imread(circle_pic)
+def create_sample_image(file_name):
+    img_color = cv2.imdecode(np.fromfile(file_name, dtype=np.uint8), -1)
     img_gray = normalize(cv2.cvtColor(img_color, cv2.COLOR_RGB2GRAY))
     w = np.array([[0,-1,0],
                   [0, 2,0],
@@ -73,7 +74,7 @@ def show_result(img_gray, w_true, w_result):
 
 if __name__ == '__main__':
     # 创建样本数据
-    x, w_true, y = create_sample_image()
+    x, w_true, y = create_sample_image(circle_pic)
     # 随机初始化卷积核
     w_init = np.random.normal(0, 0.1, w_true.shape)
     # 训练

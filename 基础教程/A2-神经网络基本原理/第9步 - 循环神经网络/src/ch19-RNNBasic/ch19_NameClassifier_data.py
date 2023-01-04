@@ -41,9 +41,9 @@ def dedup(names):
 
 def generate_file():
 
-    files = findFiles(os.path.join(os.path.dirname(__file__), 'names/*.txt'))
+    files = findFiles(os.path.join(os.path.dirname(__file__), 'ExtendedDataReader', 'data', 'names/*.txt'))
     category = len(files)
-    file = open("ch19.name_language.txt", mode='w')
+    file = open(os.path.join(os.path.dirname(__file__), 'ExtendedDataReader', 'data', "ch19.name_language.txt"), mode='w')
 
     index = 0
     X = None

@@ -17,8 +17,8 @@ from torch.utils.data import TensorDataset, DataLoader
 from torch.nn.init import xavier_normal
 
 
-train_file = "../../data/ch19.train_minus.npz"
-test_file = "../../data/ch19.test_minus.npz"
+train_file = "ch19.train_minus.npz"
+test_file = "ch19.test_minus.npz"
 
 def load_data():
     dr = DataReader_2_0(train_file, test_file)

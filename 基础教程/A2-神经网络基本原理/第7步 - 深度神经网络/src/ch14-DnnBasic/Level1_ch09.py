@@ -63,5 +63,5 @@ def model():
     ShowResult(net, dataReader)
 
 if __name__ == '__main__':
-    print("Please copy data of ch09_2 to this folder.")
+    print("this will use ch09_2 data, please run ch09_2_data.py if you don't have it yet.")
     model()

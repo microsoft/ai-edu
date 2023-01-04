@@ -100,6 +100,7 @@ def model(dataReader):
     return net
 
 if __name__ == '__main__':
+    print("this will use ch10 data, please run ch10_data.py if you don't have it yet.")
     dr = load_data()
     net = model(dr)
     net.ShowLossHistory()

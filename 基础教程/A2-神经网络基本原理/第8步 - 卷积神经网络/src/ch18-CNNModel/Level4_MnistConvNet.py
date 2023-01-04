@@ -4,10 +4,10 @@
 from MiniFramework.NeuralNet_4_2 import *
 from ExtendedDataReader.MnistImageDataReader import *
 
-train_x = '../../Data/train-images-10'
-train_y = '../../Data/train-labels-10'
-test_x = '../../Data/test-images-10'
-test_y = '../../Data/test-labels-10'
+train_x = 'train-images-10'
+train_y = 'train-labels-10'
+test_x = 'test-images-10'
+test_y = 'test-labels-10'
 
 def LoadData():
     mdr = MnistImageDataReader(train_x, train_y, test_x, test_y, "image")

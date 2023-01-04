@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 from MiniFramework.NeuralNet_4_1 import *
 
-train_file = "../../data/ch09.train.npz"
-test_file = "../../data/ch09.test.npz"
+train_file = "ch09_2.train.npz"
+test_file = "ch09_2.test.npz"
 
 def ShowResult(net, dr, title):
     # draw test data

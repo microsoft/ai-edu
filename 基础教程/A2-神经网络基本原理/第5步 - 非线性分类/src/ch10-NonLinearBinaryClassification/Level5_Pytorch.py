@@ -11,8 +11,8 @@ import torch.nn.init as init
 import warnings
 warnings.filterwarnings('ignore')
 
-train_data_name = "../../Data/ch10.train.npz"
-test_data_name = "../../Data/ch10.test.npz"
+train_data_name = "ch10.train.npz"
+test_data_name = "ch10.test.npz"
 
 class Model(nn.Module):
     def __init__(self):

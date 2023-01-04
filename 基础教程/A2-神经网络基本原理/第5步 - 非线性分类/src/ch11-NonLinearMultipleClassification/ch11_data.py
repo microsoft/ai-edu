@@ -5,8 +5,8 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-train_data_name = "../../Data/ch11.train.npz"
-test_data_name = "../../Data/ch11.test.npz"
+train_data_name = "ch11.train.npz"
+test_data_name = "ch11.test.npz"
 
 def circle(x1,x2):
     r = np.sqrt(x1*x1 + x2*x2)

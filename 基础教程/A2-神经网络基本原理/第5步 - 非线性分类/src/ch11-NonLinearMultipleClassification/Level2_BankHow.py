@@ -8,8 +8,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from HelperClass2.NeuralNet_2_2 import *
 from HelperClass2.Visualizer_1_1 import *
 
-train_data_name = "../../Data/ch11.train.npz"
-test_data_name = "../../Data/ch11.test.npz"
+train_data_name = "ch11.train.npz"
+test_data_name = "ch11.test.npz"
 
 
 def Show3D(net, dr):
@@ -20,7 +20,7 @@ def Show3D(net, dr):
     shapes = ['o', 'x', 's']
 
     fig = plt.figure(figsize=(6,6))
-    ax = Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
     count = Y.shape[0]
     for i in range(count):
         for j in range(Y.shape[1]):
@@ -29,7 +29,7 @@ def Show3D(net, dr):
     plt.show()
 
     fig = plt.figure(figsize=(6,6))
-    ax = Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
     count = Y.shape[0]
     for i in range(count):
         for j in range(Y.shape[1]):

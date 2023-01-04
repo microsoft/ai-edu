@@ -9,8 +9,9 @@ from MiniFramework.NeuralNet_4_0 import *
 from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 
-train_file = "../../Data/ch14.Income.train.npz"
-test_file = "../../Data/ch14.Income.test.npz"
+train_file = os.path.join(os.path.dirname(__file__), "ExtendedDataReader", "data","ch14.Income.train.npz")
+test_file = os.path.join(os.path.dirname(__file__), "ExtendedDataReader", "data", "ch14.Income.test.npz")
+
 
 def LoadData():
     dr = DataReader_2_0(train_file, test_file)

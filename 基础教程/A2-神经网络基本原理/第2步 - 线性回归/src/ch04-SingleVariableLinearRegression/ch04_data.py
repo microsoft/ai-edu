@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-file_name = "../../data/ch04.npz"
+file_name = "ch04.npz"
 
 def TargetFunction(X):
     noise = np.random.normal(0,0.2,X.shape)

@@ -73,7 +73,7 @@ def ShowResultContour(net, dr):
 
 def ShowResult3D(net, dr):
     fig = plt.figure(figsize=(6,6))
-    ax = Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
     X,Y,Z = Prepare3DData(net, 50)
     ax.plot_surface(X,Y,Z,cmap='rainbow')
     ax.set_zlim(0,1)

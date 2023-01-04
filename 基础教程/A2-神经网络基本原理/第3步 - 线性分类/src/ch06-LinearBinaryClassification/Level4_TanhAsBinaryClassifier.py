@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from HelperClass.NeuralNet_1_2 import *
 from Level3_ShowBinaryResult import *
 
-file_name = "../../data/ch06.npz"
+file_name = "ch06.npz"
 
 # step 1
 class TanhNeuralNet(NeuralNet_1_2):

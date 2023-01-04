@@ -17,7 +17,7 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 
 
-file = "../../data/ch19.name_language.txt"
+file = "ch19.name_language.txt"
 
 def load_data():
     dr = NameDataReader()

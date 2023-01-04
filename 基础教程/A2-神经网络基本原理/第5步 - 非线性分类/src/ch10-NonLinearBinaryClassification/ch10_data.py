@@ -5,8 +5,8 @@ import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-train_data_name = "../../Data/ch10.train.npz"
-test_data_name = "../../Data/ch10.test.npz"
+train_data_name = "ch10.train.npz"
+test_data_name = "ch10.test.npz"
 
 def create_data(count, title):
     fig = plt.figure(figsize=(6,6))

@@ -2,13 +2,14 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
+import os
 import csv
 
-train_data = "../../Data/adult.data"
-test_data = "../../Data/adult.test"
+train_data =  os.path.join(os.path.dirname(__file__), "data", "adult.data")
+test_data =  os.path.join(os.path.dirname(__file__), "data", "adult.test")
 
-train_data_npz = "../../Data/ch14.Income.train.npz"
-test_data_npz = "../../Data/ch14.Income.test.npz"
+train_data_npz = os.path.join(os.path.dirname(__file__), "data","ch14.Income.train.npz")
+test_data_npz = os.path.join(os.path.dirname(__file__), "data", "ch14.Income.test.npz")
 
 workclass_list = ["Private", "Self-emp-not-inc", "Self-emp-inc", "Federal-gov", "Local-gov", "State-gov", "Without-pay", "Never-worked"]
 education_list = ["Bachelors", "Some-college", "11th", "HS-grad", "Prof-school", "Assoc-acdm", "Assoc-voc", "9th", "7th-8th", "12th", "Masters", "1st-4th", "10th", "Doctorate", "5th-6th", "Preschool"]
@@ -30,7 +31,7 @@ class IncomeDataProcessor(object):
             array_x = np.zeros((1,14))
             array_y = np.zeros((1,1))
             for row in reader:
-                if len(row) == 0:
+                if len(row) != 15:
                     continue
                 try:
                     row.index(" ?")
@@ -51,6 +52,8 @@ class IncomeDataProcessor(object):
                     array_x[0,11] = row[11]
                     array_x[0,12] = row[12]
                     array_x[0,13] = native_country_list.index(row[13].strip())
+                    if row[14][-1] == '.':
+                        row[14] = row[14].replace('.', '')
                     array_y[0,0] = label.index(row[14].strip())
 
                     if self.XData is None:

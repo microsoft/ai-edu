@@ -4,8 +4,8 @@
 from PIL import Image, ImageDraw
 import numpy as np
 
-train_data_name = "../../data/ch18.train_shape.npz"
-test_data_name = "../../data/ch18.test_shape.npz"
+train_data_name = "ch18.train_shape.npz"
+test_data_name = "ch18.test_shape.npz"
 
 def circle(drawObj):
     x0 = np.random.randint(0,14)

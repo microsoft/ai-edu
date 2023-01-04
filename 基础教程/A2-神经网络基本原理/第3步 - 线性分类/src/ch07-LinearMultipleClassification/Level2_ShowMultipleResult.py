@@ -9,7 +9,7 @@ import math
 from HelperClass.NeuralNet_1_2 import *
 from HelperClass.Visualizer_1_0 import *
 
-file_name = "../../data/ch07.npz"
+file_name = "ch07.npz"
 
 def ShowData(X,Y):
     fig = plt.figure(figsize=(6,6))

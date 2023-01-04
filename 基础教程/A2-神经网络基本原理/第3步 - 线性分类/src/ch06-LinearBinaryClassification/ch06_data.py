@@ -6,7 +6,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 
-file_name = "../../data/ch06.npz"
+file_name = "ch06.npz"
 
 def TargetFunction(x1,x2):
     y = 2*x1-0.5

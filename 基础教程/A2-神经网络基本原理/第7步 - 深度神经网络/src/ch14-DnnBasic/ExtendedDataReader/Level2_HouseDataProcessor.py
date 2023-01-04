@@ -3,13 +3,13 @@
 
 import numpy as np
 import csv
-import copy
+import os
 
-data_file_name = "../../Data/kc_house_data.csv"     # download from Kc
-train_data_file_name = "../../Data/kc_train.csv"    # download from DC
-test_data_file_name = "../../Data/kc_test.csv"      # download from DC
-train_file = "../../Data/ch14.house.train.npz"
-test_file = "../../Data/ch14.house.test.npz"
+data_file_name = os.path.join(os.path.dirname(__file__), "data", "kc_house_data.csv")     # download from Kc
+# train_data_file_name = "../../Data/kc_train.csv"    # download from DC
+# test_data_file_name = "../../Data/kc_test.csv"      # download from DC
+train_file = os.path.join(os.path.dirname(__file__), "data", "ch14.house.train.npz")
+test_file = os.path.join(os.path.dirname(__file__), "data", "ch14.house.test.npz")
 
 class HouseDataProcessor(object):
     def PrepareData(self, csv_file, npz_file):
@@ -139,5 +139,5 @@ if __name__ == '__main__':
     #dr = HouseDataProcessor()
     #dr.PrepareData(train_data_file_name, train_data)
     #dr.PrepareData(test_data_file_name, test_data)
-    dr = HouseSingleDataProcessor();
+    dr = HouseSingleDataProcessor()
     dr.PrepareData(data_file_name)

@@ -24,7 +24,7 @@ class DataReader_1_0(object):
             self.YTrain = data["label"]
             self.num_train = self.XTrain.shape[0]
         else:
-            raise Exception("Cannot find train file!!!")
+            raise Exception("Cannot find train file, please run ch04_data.py first")
         #end if
 
     # get batch training data

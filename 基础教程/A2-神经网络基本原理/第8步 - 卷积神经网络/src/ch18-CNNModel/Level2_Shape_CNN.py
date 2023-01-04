@@ -12,8 +12,8 @@ from ExtendedDataReader.GeometryDataReader import *
     先用SourceCode/Data/ch18_shape.py来生成训练数据集
 """
 
-train_data_name = "../../data/ch18.train_shape.npz"
-test_data_name = "../../data/ch18.test_shape.npz"
+train_data_name = "ch18.train_shape.npz"
+test_data_name = "ch18.test_shape.npz"
 
 name = ["circle","rectangle","triangle","diamond","line"]
 

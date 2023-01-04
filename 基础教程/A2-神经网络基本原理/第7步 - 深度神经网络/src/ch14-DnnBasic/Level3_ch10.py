@@ -11,8 +11,8 @@ from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 from MiniFramework.DataReader_2_0 import *
 
-train_data_name = "../../Data/ch10.train.npz"
-test_data_name = "../../Data/ch10.test.npz"
+train_data_name = "ch10.train.npz"
+test_data_name = "ch10.test.npz"
 
 def DrawTwoCategoryPoints(X1, X2, Y, xlabel="x1", ylabel="x2", title=None, show=False, isPredicate=False):
     colors = ['b', 'r']

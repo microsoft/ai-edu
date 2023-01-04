@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from HelperClass2.NeuralNet_2_2 import *
 from HelperClass2.Visualizer_1_1 import *
 
-train_data_name = "../../Data/ch11.train.npz"
-test_data_name = "../../Data/ch11.test.npz"
+train_data_name = "ch11.train.npz"
+test_data_name = "ch11.test.npz"
 
 if __name__ == '__main__':
     dataReader = DataReader_2_0(train_data_name, test_data_name)

@@ -3,7 +3,7 @@
 
 from HelperClass.NeuralNet_1_0 import *
 
-file_name = "../../data/ch04.npz"
+file_name = "ch04.npz"
 
 if __name__ == '__main__':
     sdr = DataReader_1_0(file_name)

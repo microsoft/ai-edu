@@ -7,8 +7,8 @@ from MiniFramework.DataReader_2_0 import *
 from MiniFramework.EnumDef_6_0 import *
 import random
 
-train_file = '../../Data/ch19_pm25_train.npz'
-test_file = '../../Data/ch19_pm25_test.npz'
+train_file = 'ch19_pm25_train.npz'
+test_file = 'ch19_pm25_test.npz'
 
 """
 field: year, month, day, hour, dew, temp, air_press, wind_direction, wind_speed

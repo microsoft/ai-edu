@@ -4,10 +4,10 @@
 from MiniFramework.NeuralNet_4_2 import *
 from ExtendedDataReader.MnistImageDataReader import *
 
-train_x = '../../Data/FashionMnistTrainX'
-train_y = '../../Data/FashionMnistTrainY'
-test_x = '../../Data/FashionMnistTestX'
-test_y = '../../Data/FashionMnistTestY'
+train_x = 'FashionMnistTrainX'
+train_y = 'FashionMnistTrainY'
+test_x = 'FashionMnistTestX'
+test_y = 'FashionMnistTestY'
 
 # 0-T恤 1-裤子 2-套衫 3-连衣裙 4-外套 5-凉鞋 6-衬衫 7-运动鞋 8-包 9-短靴
 names=["T-shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle Boot"]

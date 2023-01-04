@@ -6,7 +6,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-file_name = "../../data/ch05.npz"
+file_name = "ch05.npz"
 
 def TargetFunction(x1,x2):
     w1,w2,b = 2,5,10
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     print(Y.mean())
 
     fig = plt.figure()
-    ax = Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
     ax.scatter(X[:,0],X[:,1],Y)
     plt.show()
     

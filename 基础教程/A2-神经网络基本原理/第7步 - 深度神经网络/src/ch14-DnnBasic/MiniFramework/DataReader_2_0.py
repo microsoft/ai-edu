@@ -57,7 +57,7 @@ class DataReader_2_0(object):
             self.XTrain = self.XTrainRaw
             self.YTrain = self.YTrainRaw
         else:
-            raise Exception("Cannot find train file!!!")
+            raise Exception("Cannot find train file.")
         #end if
 
         test_file = Path(self.test_file_name)

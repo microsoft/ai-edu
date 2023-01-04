@@ -12,8 +12,8 @@ from ExtendedDataReader.GeometryDataReader import *
     先用SourceCode/Data/ch18_color.py来生成训练数据集
 """
 
-train_data_name = "../../data/ch18.train_color.npz"
-test_data_name = "../../data/ch18.test_color.npz"
+train_data_name = "ch18.train_color.npz"
+test_data_name = "ch18.test_color.npz"
 
 name = ["red","green","blue","yellow","cyan","pink"]
 

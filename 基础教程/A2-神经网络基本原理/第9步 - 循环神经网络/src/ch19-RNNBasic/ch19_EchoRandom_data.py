@@ -3,8 +3,8 @@
 
 import numpy as np
 
-train_data_name = "../../data/ch19.train_echo.npz"
-test_data_name = "../../data/ch19.test_echo.npz"
+train_data_name = "ch19.train_echo.npz"
+test_data_name = "ch19.test_echo.npz"
 
 def create_data(count, tt, filename):
     S = np.random.rand(count + tt - 1, 1)

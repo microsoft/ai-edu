@@ -3,7 +3,7 @@
 
 from HelperClass.NeuralNet_1_0 import *
 
-file_name = "../../data/ch04.npz"
+file_name = "ch04.npz"
 
 def ShowResult(net, dataReader):
     X,Y = dataReader.GetWholeTrainSamples()

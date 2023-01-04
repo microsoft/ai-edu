@@ -7,7 +7,7 @@ from HelperClass.NeuralNet_1_2 import *
 from HelperClass.HyperParameters_1_1 import *
 from HelperClass.Visualizer_1_0 import *
 
-file_name = "../../data/ch06.npz"
+file_name = "ch06.npz"
 
 def draw_split_line(net):
     b12 = -net.B[0,0]/net.W[1,0]

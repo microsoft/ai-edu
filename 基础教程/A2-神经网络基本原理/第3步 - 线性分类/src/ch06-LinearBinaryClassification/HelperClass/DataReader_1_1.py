@@ -28,7 +28,7 @@ class DataReader_1_1(object):
             self.XTrain = self.XRaw
             self.YTrain = self.YRaw
         else:
-            raise Exception("Cannot find train file!!!")
+            raise Exception("Cannot find train file, please run ch06_data.py first.")
         #end if
 
     # normalize data by extracting range from source data

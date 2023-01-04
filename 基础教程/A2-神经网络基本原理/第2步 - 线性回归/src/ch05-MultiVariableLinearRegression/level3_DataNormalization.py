@@ -7,13 +7,13 @@ from mpl_toolkits.mplot3d import Axes3D
 
 from HelperClass.NeuralNet_1_1 import *
 
-file_name = "../../data/ch05.npz"
+file_name = "ch05.npz"
 
 def ShowResult(net, reader):
     # draw example points
     X,Y = reader.GetWholeTrainSamples()
     fig = plt.figure()
-    ax = Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
     ax.scatter(X[:,0],X[:,1],Y)
     # draw fitting surface
     p = np.linspace(0,1)

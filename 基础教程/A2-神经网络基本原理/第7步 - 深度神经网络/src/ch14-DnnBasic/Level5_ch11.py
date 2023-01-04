@@ -11,8 +11,8 @@ from MiniFramework.ActivationLayer import *
 from MiniFramework.ClassificationLayer import *
 from MiniFramework.DataReader_2_0 import *
 
-train_file = "../../Data/ch11.train.npz"
-test_file = "../../Data/ch11.test.npz"
+train_file = "ch11.train.npz"
+test_file = "ch11.test.npz"
 
 def LoadData():
     dr = DataReader_2_0(train_file, test_file)
@@ -92,6 +92,8 @@ def model_sigmoid(num_input, num_hidden, num_output, hp):
 
 
 if __name__ == '__main__':
+    print("this will use ch011 data, please run ch11_data.py if you don't have it yet.")
+
     dataReader = LoadData()
     num_input = dataReader.num_feature
     num_hidden = 8

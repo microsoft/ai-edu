@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from MiniFramework.NeuralNet_4_2 import *
 from MiniFramework.ActivatorLayer import *
 
-train_file = "../../Data/ch16.train.npz"
-test_file = "../../Data/ch16.test.npz"
+train_file = os.path.join(os.path.dirname(__file__), "ch16.train.npz")
+test_file = os.path.join(os.path.dirname(__file__),  "ch16.test.npz")
 
 
 def Model(dataReader, num_input, num_hidden, num_output, params):
@@ -67,6 +67,7 @@ def SetParameters():
     return hp, num_hidden
 
 if __name__ == '__main__':
+    print("please run ch16_data.py first if you didn't have the data yet.")
     dr = LoadData()
     hp, num_hidden = SetParameters()
     net = Model(dr, 1, num_hidden, 1, hp)

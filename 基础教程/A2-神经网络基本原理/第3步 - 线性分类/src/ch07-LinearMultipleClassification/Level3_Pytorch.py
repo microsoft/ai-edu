@@ -13,7 +13,7 @@ from torch.optim import Adam
 import warnings
 warnings.filterwarnings('ignore')
 
-file_name = "../../data/ch07.npz"
+file_name = "ch07.npz"
 
 def ShowResult(W, B, X, Y, xt, yt):
     fig = plt.figure(figsize=(6,6))

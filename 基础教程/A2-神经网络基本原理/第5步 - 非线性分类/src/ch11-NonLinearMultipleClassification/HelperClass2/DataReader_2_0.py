@@ -59,7 +59,7 @@ class DataReader_2_0(object):
             self.XTrain = self.XTrainRaw
             self.YTrain = self.YTrainRaw
         else:
-            raise Exception("Cannot find train file!!!")
+            raise Exception("Cannot find train file, please run ch11_data.py first.")
         #end if
 
         test_file = Path(self.test_file_name)
@@ -76,7 +76,7 @@ class DataReader_2_0(object):
             self.XDev = self.XTest
             self.YDev = self.YTest
         else:
-            raise Exception("Cannot find test file!!!")
+            raise Exception("Cannot find test file, please run ch11_data.py first.")
         #end if
 
     # merge train/test data first, normalize, then split again

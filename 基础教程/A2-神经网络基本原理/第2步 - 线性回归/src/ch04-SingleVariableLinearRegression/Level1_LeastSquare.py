@@ -9,7 +9,7 @@ from pathlib import Path
 
 from HelperClass.DataReader_1_0 import *
 
-file_name = "../../data/ch04.npz"
+file_name = "ch04.npz"
 
 # 根据公式15
 def method1(X,Y,m):

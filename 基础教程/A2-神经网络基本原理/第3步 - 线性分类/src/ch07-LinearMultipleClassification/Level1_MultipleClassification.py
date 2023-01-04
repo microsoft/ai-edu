@@ -5,7 +5,7 @@ import numpy as np
 
 from HelperClass.NeuralNet_1_2 import *
 
-file_name = "../../data/ch07.npz"
+file_name = "ch07.npz"
 
 def inference(net, reader):
     xt_raw = np.array([5,1,7,6,5,6,2,7]).reshape(4,2)

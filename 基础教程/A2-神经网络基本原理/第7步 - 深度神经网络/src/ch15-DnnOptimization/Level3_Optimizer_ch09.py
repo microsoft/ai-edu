@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 from MiniFramework.NeuralNet_4_1 import *
 
-train_file = "../../data/ch09.train.npz"
-test_file = "../../data/ch09.test.npz"
+train_file = "ch09_2.train.npz"
+test_file = "ch09_2.test.npz"
 
 def ShowResult(net, dr, title):
     # draw test data
@@ -50,6 +50,8 @@ def model(learning_rate, optimizer):
     ShowResult(net, dr, title)
 
 if __name__ == '__main__':
+    print("this will use ch09_2 data, please run ch09_2_data.py if you don't have it yet.")
+
     model(0.3, OptimizerName.AdaGrad)
     model(0.5, OptimizerName.AdaGrad)
     model(0.7, OptimizerName.AdaGrad)

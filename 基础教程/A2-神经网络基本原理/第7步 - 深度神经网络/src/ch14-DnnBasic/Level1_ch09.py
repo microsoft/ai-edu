@@ -4,8 +4,8 @@
 from MiniFramework.NeuralNet_4_0 import *
 from MiniFramework.ActivationLayer import *
 
-train_file = "../../Data/ch09.train.npz"
-test_file = "../../Data/ch09.test.npz"
+train_file = "ch09_2.train.npz"
+test_file = "ch09_2.test.npz"
 
 def ShowResult(net, dr):
     fig = plt.figure(figsize=(12,5))
@@ -63,4 +63,5 @@ def model():
     ShowResult(net, dataReader)
 
 if __name__ == '__main__':
+    print("this will use ch09_2 data, please run ch09_2_data.py if you don't have it yet.")
     model()

@@ -4,8 +4,8 @@
 import numpy as np
 from HelperClass2.NeuralNet_2_1 import *
 
-train_data_name = "../../Data/ch10.train.npz"
-test_data_name = "../../Data/ch10.test.npz"
+train_data_name = "ch10.train.npz"
+test_data_name = "ch10.test.npz"
 
 if __name__ == '__main__':
     dataReader = DataReader_2_0(train_data_name, test_data_name)

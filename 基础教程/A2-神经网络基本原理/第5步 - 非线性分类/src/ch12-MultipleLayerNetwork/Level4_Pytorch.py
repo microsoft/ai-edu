@@ -11,8 +11,6 @@ import torch.nn.init as init
 import warnings
 warnings.filterwarnings('ignore')
 
-train_data_name = "../../Data/ch11.train.npz"
-test_data_name = "../../Data/ch11.test.npz"
 
 class Model(nn.Module):
     def __init__(self):
@@ -60,9 +58,9 @@ if __name__ == '__main__':
     dataReader.XDev = np.reshape(dataReader.XDev, [-1, 28 * 28])
     dataReader.YDev = np.argmax(dataReader.YDev, axis=1)
 
-    max_epoch = 500         # max_epoch
+    max_epoch = 50         # max_epoch
     batch_size = 64         # batch size
-    lr = 1e-4               # learning rate
+    lr = 1e-2               # learning rate
 
     # define model
     model = Model()

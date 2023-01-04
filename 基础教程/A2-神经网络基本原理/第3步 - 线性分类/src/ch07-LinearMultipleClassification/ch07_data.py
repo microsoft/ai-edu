@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-file_name = "../../data/ch07.npz"
+file_name = "ch07.npz"
 
 def fun1(x):
     y = 2.5 * x -10

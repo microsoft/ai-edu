@@ -10,8 +10,8 @@ from MiniFramework.ActivationLayer import *
 from MiniFramework.LossFunction_1_1 import *
 from MiniFramework.TrainingHistory_3_0 import *
 
-train_file = "../../data/ch19.train_echo.npz"
-test_file = "../../data/ch19.test_echo.npz"
+train_file = "ch19.train_echo.npz"
+test_file = "ch19.test_echo.npz"
 
 def load_data():
     dr = DataReader_2_0(train_file, test_file)
@@ -152,6 +152,7 @@ class net(object):
         show(range(0,count), X[:,0], range(0,count), self.t2.z,"test","predication")
         
 if __name__=='__main__':
+    print("Please make sure you already run ch19_EchoRnadom_data.py first to generate the data.")
     dr = load_data()
     count = dr.num_train
     show(range(0,count), dr.XTrain[:,0,0], range(1,count+1), dr.YTrain[:,1], "X", "Y")

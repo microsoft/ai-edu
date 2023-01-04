@@ -5,7 +5,7 @@ import numpy as np
 
 from HelperClass.DataReader_1_1 import *
 
-file_name = "../../data/ch05.npz"
+file_name = "ch05.npz"
 
 if __name__ == '__main__':
     reader = DataReader_1_1(file_name)

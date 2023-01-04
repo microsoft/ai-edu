@@ -4,13 +4,6 @@
 from MiniFramework.NeuralNet_4_1 import *
 from ExtendedDataReader.MnistImageDataReader import *
 
-file_1 = "../../Data/data_batch_1.bin"
-file_2 = "../../Data/data_batch_2.bin"
-file_3 = "../../Data/data_batch_3.bin"
-file_4 = "../../Data/data_batch_4.bin"
-file_5 = "../../Data/data_batch_5.bin"
-test_file = "../../Data/test_batch.bin"
-
 def LoadData():
     print("reading data...")
     dr = MnistImageDataReader("vector")

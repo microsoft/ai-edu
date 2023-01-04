@@ -2,13 +2,14 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
+import os
 from pathlib import Path
 from MiniFramework.DataReader_2_0 import *
 from MiniFramework.EnumDef_6_0 import *
 import random
 
-train_file = '../../Data/ch19_pm25_train.npz'
-test_file = '../../Data/ch19_pm25_test.npz'
+train_file = os.path.join(os.path.dirname(__file__), 'data', 'ch19_pm25_train.npz')
+test_file = os.path.join(os.path.dirname(__file__), 'data', 'ch19_pm25_test.npz')
 
 """
 field: year, month, day, hour, dew, temp, air_press, wind_direction, wind_speed

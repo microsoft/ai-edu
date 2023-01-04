@@ -5,7 +5,7 @@ import numpy as np
 
 from HelperClass.NeuralNet_1_2 import *
 
-file_name = "../../data/ch06.npz"
+file_name = "ch06.npz"
    
 # 主程序
 if __name__ == '__main__':

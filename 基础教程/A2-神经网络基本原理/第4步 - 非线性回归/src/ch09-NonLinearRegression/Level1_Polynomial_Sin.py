@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 from HelperClass.NeuralNet_1_2 import *
 
-file_name = "../../data/ch08.train.npz"
+file_name = "ch09_1.train.npz"
 
 class DataReaderEx(DataReader_1_3):
     def Add(self):

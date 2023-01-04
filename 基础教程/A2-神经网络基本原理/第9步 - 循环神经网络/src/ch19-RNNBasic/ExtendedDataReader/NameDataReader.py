@@ -5,12 +5,15 @@ import numpy as np
 from pathlib import Path
 import string
 import random
+import os
 from MiniFramework.DataReader_2_0 import *
 from MiniFramework.EnumDef_6_0 import *
 
 all_letters = string.ascii_letters[0:26] + " ,'"
 num_letter = len(all_letters)
 max_letter = 20
+
+data_file = os.path.join(os.path.dirname(__file__), "data", "ch19.name_language.txt")
 
 class NameData(object):
     def __init__(self, name, lang, lang_id):
@@ -41,8 +44,8 @@ class NameDataReader(DataReader_2_0):
         self.batch_id = 0
         self.name_id = 0
 
-    def ReadData(self, filename):
-        file = open(filename, 'r')
+    def ReadData(self):
+        file = open(data_file, 'r')
         lines = file.readlines()
         self.num_train = len(lines)
         for line in lines:

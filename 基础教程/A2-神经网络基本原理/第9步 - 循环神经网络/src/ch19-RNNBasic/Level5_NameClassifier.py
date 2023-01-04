@@ -4,7 +4,6 @@
 from matplotlib import pyplot as plt
 import numpy as np
 import os
-import math
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
@@ -17,11 +16,10 @@ from MiniFramework.HyperParameters_4_3 import *
 from MiniFramework.WeightsBias_2_1 import *
 from ExtendedDataReader.NameDataReader import *
 
-file = "../../data/ch19.name_language.txt"
 
 def load_data():
     dr = NameDataReader()
-    dr.ReadData(file)
+    dr.ReadData()
     dr.GenerateValidationSet(1000)
     return dr
 

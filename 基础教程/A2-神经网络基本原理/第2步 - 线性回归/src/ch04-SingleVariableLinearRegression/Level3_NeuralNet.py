@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 from HelperClass.DataReader_1_0 import *
 
-file_name = "../../data/ch04.npz"
+file_name = "ch04.npz"
 
 class NeuralNet_0_1(object):
     def __init__(self, eta):

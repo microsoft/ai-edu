@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 from HelperClass2.NeuralNet_2_0 import *
 
-train_data_name = "../../Data/ch08.train.npz"
-test_data_name = "../../Data/ch08.test.npz"
+train_data_name = "ch09_1.train.npz"
+test_data_name = "ch09_1.test.npz"
 
 def ShowResult2D(net, title):
     count = 21

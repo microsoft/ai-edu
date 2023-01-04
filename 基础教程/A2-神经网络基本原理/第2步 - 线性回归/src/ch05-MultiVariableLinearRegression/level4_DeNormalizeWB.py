@@ -5,7 +5,7 @@ import numpy as np
 
 from HelperClass.NeuralNet_1_1 import *
 
-file_name = "../../data/ch05.npz"
+file_name = "ch05.npz"
 
 # get real weights
 def DeNormalizeWeightsBias(net, dataReader):

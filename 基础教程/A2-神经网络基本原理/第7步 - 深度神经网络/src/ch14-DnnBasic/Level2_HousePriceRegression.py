@@ -8,8 +8,8 @@ from MiniFramework.DataReader_2_0 import *
 import numpy as np
 import csv
 
-train_file = "../../Data/ch14.house.train.npz"
-test_file = "../../Data/ch14.house.test.npz"
+train_file = os.path.join(os.path.dirname(__file__), "ExtendedDataReader", "data", "ch14.house.train.npz")
+test_file = os.path.join(os.path.dirname(__file__), "ExtendedDataReader", "data", "ch14.house.test.npz")
 
 class HouseDataReader(DataReader_2_0):
     def Drop(self):

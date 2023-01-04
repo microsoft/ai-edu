@@ -6,8 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-train_data_name = "../../data/ch18.train_color.npz"
-test_data_name = "../../data/ch18.test_color.npz"
+train_data_name = "ch18.train_color.npz"
+test_data_name = "ch18.test_color.npz"
 
 colors = [(255,0,0), (0,255,0), (0,0,255), (255,255,0), (0,255,255), (255,0,255)]
 

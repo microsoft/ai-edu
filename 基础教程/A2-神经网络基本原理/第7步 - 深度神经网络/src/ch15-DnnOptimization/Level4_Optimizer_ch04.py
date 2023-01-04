@@ -9,8 +9,8 @@ from matplotlib.colors import LogNorm
 
 from MiniFramework.NeuralNet_4_1 import *
 
-train_file = "../../data/ch04.npz"
-test_file = "../../data/ch04.npz"
+train_file = "ch04.npz"
+test_file = "ch04.npz"
 
 class NeuralNet_4_2(NeuralNet_4_1):
     def Hook(self):
@@ -82,6 +82,7 @@ def model(learning_rate, optimizer):
     ShowContour(net, dr)
 
 if __name__ == '__main__':
+    print("this will use ch04 data, please run ch049_data.py if you don't have it yet.")
 
     dict = {
             OptimizerName.SGD:0.5, 

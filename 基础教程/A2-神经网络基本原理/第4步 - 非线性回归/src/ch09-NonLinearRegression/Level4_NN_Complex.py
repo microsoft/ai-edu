@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 
 from HelperClass2.NeuralNet_2_0 import *
 
-train_data_name = "ch09.train.npz"
-test_data_name = "ch09.test.npz"
+train_data_name = "ch09_2.train.npz"
+test_data_name = "ch09_2.test.npz"
 
 def ShowResult(net, dataReader, title):
     # draw train data

@@ -13,7 +13,7 @@ from torch.optim import Adam
 import warnings
 warnings.filterwarnings('ignore')
 
-file_name = "../../data/ch06.npz"
+file_name = "ch06.npz"
 
 
 class Model(nn.Module):

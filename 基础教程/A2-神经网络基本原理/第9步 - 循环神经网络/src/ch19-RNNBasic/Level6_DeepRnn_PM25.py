@@ -348,7 +348,7 @@ if __name__=='__main__':
         net_type)
 
     n = net(hp, model)
-    #n.train(dataReader, checkpoint=1)
+    n.train(dataReader, checkpoint=1)
 
     n.load_parameters(ParameterType.Last)
     pred_steps = [8,4,2,1]

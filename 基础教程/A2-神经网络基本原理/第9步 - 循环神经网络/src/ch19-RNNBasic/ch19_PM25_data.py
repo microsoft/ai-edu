@@ -2,6 +2,7 @@
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import numpy as np
+import os
 import pandas as pd
 from pandas import read_csv
 
@@ -26,8 +27,9 @@ def get_next_pollution_value(ds, row, col):
     return next_value
 
 
-#dataset = read_csv('../../data/PM25_data.csv',  parse_dates = [['year', 'month', 'day', 'hour']], index_col=0, date_parser=parse)
-dataset = read_csv('../../data/PM25_data.csv')
+running_folder = os.path.dirname(__file__)
+#dataset = read_csv('PM25_data.csv',  parse_dates = [['year', 'month', 'day', 'hour']], index_col=0, date_parser=parse)
+dataset = read_csv(os.path.join(running_folder, 'ExtendedDataReader', 'data', 'PM25_data.csv'))
 dataset.drop('No', axis=1, inplace=True)
 dataset.drop('year', axis=1, inplace=True)
 
@@ -90,5 +92,11 @@ print(ds.head(24))
 
 pollution_x = ds.to_numpy()
 
-np.savez("../../data/ch19_pm25_train.npz", data=pollution_x[0:total-8760], label=pollution_y[0:total-8760])
-np.savez("../../data/ch19_pm25_test.npz", data=pollution_x[total-8760:], label=pollution_y[total-8760:])
+np.savez(
+    os.path.join(running_folder, 'ExtendedDataReader', 'data', 'ch19_pm25_train.npz'), 
+    data=pollution_x[0:total-8760], 
+    label=pollution_y[0:total-8760])
+np.savez(
+    os.path.join(running_folder, 'ExtendedDataReader', 'data', "ch19_pm25_test.npz"),
+    data=pollution_x[total-8760:], 
+    label=pollution_y[total-8760:])

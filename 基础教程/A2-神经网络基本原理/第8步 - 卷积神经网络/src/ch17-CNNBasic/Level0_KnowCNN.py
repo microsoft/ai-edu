@@ -4,6 +4,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 import cv2
+import os
 
 from MiniFramework.ConvWeightsBias import *
 from MiniFramework.ConvLayer import *
@@ -12,7 +13,7 @@ from MiniFramework.PoolingLayer import *
 from MiniFramework.HyperParameters_4_2 import *
 from MiniFramework.jit_utility import *
 
-circle_pic = "circle.png"
+circle_pic = os.path.join(os.path.dirname(__file__), "circle.png")
 
 def normalize(x, max_value=1):
     min = np.min(x)
@@ -21,7 +22,7 @@ def normalize(x, max_value=1):
     return x_n
 
 def try_filters(file_name):
-    img = cv2.imread(file_name)
+    img = cv2.imdecode(np.fromfile(file_name, dtype=np.uint8), -1)
     # cv2 format is:G B R, change it to R G B
     img1=img[:,:,[2,1,0]]
     #plt.imshow(img2)
@@ -86,8 +87,8 @@ def try_filters(file_name):
     plt.show()
     return z
 
-def conv_relu_pool():
-    img = cv2.imread(circle_pic)
+def conv_relu_pool(file_name):
+    img = cv2.imdecode(np.fromfile(file_name, dtype=np.uint8), -1)
     #img2 = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     batch_size = 1
     (height, width, input_channel) = img.shape
@@ -132,4 +133,4 @@ def conv_relu_pool():
     
 if __name__ == '__main__':
     try_filters(circle_pic)
-    conv_relu_pool()
+    conv_relu_pool(circle_pic)

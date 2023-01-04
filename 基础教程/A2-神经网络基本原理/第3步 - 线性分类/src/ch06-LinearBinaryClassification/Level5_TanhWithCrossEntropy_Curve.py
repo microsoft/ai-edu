@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-from HelperClass.ClassifierFunction import *
+from HelperClass.ClassifierFunction_1_0 import *
 
 # modified cross entropy function for tanh
 def target_function2(a,y):

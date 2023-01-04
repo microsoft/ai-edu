@@ -3,8 +3,8 @@
 
 import numpy as np
 
-train_data_name = "../../data/ch19.train_minus.npz"
-test_data_name = "../../data/ch19.test_minus.npz"
+train_data_name = "ch19.train_minus.npz"
+test_data_name = "ch19.test_minus.npz"
 
 def create_data():
     count = 1

@@ -10,8 +10,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from HelperClass2.NeuralNet_2_1 import *
 from Level2_XorGateHow import *
 
-train_data_name = "../../Data/ch10.train.npz"
-test_data_name = "../../Data/ch10.test.npz"
+train_data_name = "ch10.train.npz"
+test_data_name = "ch10.test.npz"
 
 def DrawSamplePoints(x1, x2, y, title, xlabel, ylabel, show=True):
     assert(x1.shape[0] == x2.shape[0])

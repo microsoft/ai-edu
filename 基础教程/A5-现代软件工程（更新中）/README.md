@@ -59,6 +59,8 @@
 |Hackathon||
 |Happy Hour||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
+|InfiniBand||
+|Instant Answer|即使应答，是一种具有比较丰富的信息与格式的搜索结果|
 |INT Bed||
 |JD - Job Description|职位描述|
 |KA - Knowledge Area|知识领域|
@@ -79,6 +81,7 @@
 |Test Bed||
 |Transfer||
 |NLP||
+|URL||
 |UX - User Experience||
 |UWP|Universal Windows Platform|
 |Vendor|

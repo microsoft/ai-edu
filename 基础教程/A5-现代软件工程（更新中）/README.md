@@ -43,6 +43,7 @@
 |Architect||
 |Backlog||
 |Bing Search|必应搜索，微软的全球搜索引擎|
+|Bug||
 |Career Path||
 |Chromium||
 |Cortana|微软小娜|
@@ -55,6 +56,7 @@
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
 |Feature Team||
 |Flight||
+|Fix Bug||
 |FTE||
 |Hackathon||
 |Happy Hour||
@@ -74,6 +76,7 @@
 |Promotion||
 |PROD Bed||
 |RSDE||
+|Root Cause||
 |SDE||
 |Solo||
 |Spot Reward||

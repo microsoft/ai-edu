@@ -1,4 +1,5 @@
-书名：现代软件工程 架构之路
+
+书名：软件工程·最佳实践
 作者：胡晓武 ......
 
 
@@ -21,17 +22,17 @@
 
 理论知识
 
-经验技能
-
-协作能力
+最佳实践
 
 
 
-### 关于“木头”
+
+
+#### 关于“木头”
 
 本书中有很多关于“木头”的故事，“木头”是一个虚构的人物，但是 TA 所经历的故事都是在真实事件基础上经过微小改编的，只不过故事的原主人公可能是笔者，也可能是笔者的同事或朋友。
 
-关于乐队
+#### 关于乐队
 
 
 
@@ -43,6 +44,7 @@
 |Architect||
 |Backlog||
 |Bing Search|必应搜索，微软的全球搜索引擎|
+|Bug||
 |Career Path||
 |Chromium||
 |Cortana|微软小娜|
@@ -55,10 +57,13 @@
 |Feature|特性，是指一组功能的组合所表现出来的产品特性|
 |Feature Team||
 |Flight||
+|Fix Bug||
 |FTE||
 |Hackathon||
 |Happy Hour||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
+|InfiniBand||
+|Instant Answer|即使应答，是一种具有比较丰富的信息与格式的搜索结果|
 |INT Bed||
 |JD - Job Description|职位描述|
 |KA - Knowledge Area|知识领域|
@@ -72,6 +77,7 @@
 |Promotion||
 |PROD Bed||
 |RSDE||
+|Root Cause||
 |SDE||
 |Solo||
 |Spot Reward||
@@ -79,6 +85,7 @@
 |Test Bed||
 |Transfer||
 |NLP||
+|URL||
 |UX - User Experience||
 |UWP|Universal Windows Platform|
 |Vendor|

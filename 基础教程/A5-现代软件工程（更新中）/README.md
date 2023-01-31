@@ -87,7 +87,7 @@
 |NLP||
 |URL||
 |UX - User Experience||
-|UWP|Universal Windows Platform|
+|UWP（Universal Windows Platform）|通用 Windows 平台，但是常指的是的应用|
 |Vendor|
 |XAML||
 |WFH（Working From Home）|在家远程办公|

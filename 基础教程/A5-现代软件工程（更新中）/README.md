@@ -27,7 +27,8 @@
 
 #### 感谢
 
-邹欣，沈园，董航，陈洋，
+郭百宁、Lily Sun、程彪、韦青、邹欣、沈园、董航、陈洋、贺秋时、吴淞芮、强红军
+
 
 
 
@@ -64,6 +65,7 @@
 |FTE||
 |Hackathon||
 |Happy Hour||
+|Hire/No Hire||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
 |InfiniBand||
 |Instant Answer|即使应答，是一种具有比较丰富的信息与格式的搜索结果|
@@ -81,6 +83,8 @@
 |PROD Bed||
 |RSDE||
 |Root Cause||
+|re-org||
+|Screening||
 |SDE||
 |Solo||
 |Spot Reward||

@@ -3,6 +3,9 @@
 
 从前面的学习中我们知道，系统架构都是为产品战略服务的，失败的架构也是由失败的策略所决定的。因此，我们根据系统架构可以反向推出产品战略。
 
+https://blog.csdn.net/lclfans1983/article/details/115659312
+康威定律
+
 <img src="img/Slide4.SVG"/>
 
 图 xxxx 亚马逊 Alexa 与 微软 Cortana 的对比

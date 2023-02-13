@@ -15,8 +15,7 @@ def derivative_function(theta):
     return np.array([2*x,2*np.sin(y)*np.cos(y)])
 
 def show_3d_surface(x, y, z):
-    fig = plt.figure()
-    ax = Axes3D(fig)
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
  
     u = np.linspace(-3, 3, 100)
     v = np.linspace(-3, 3, 100)
@@ -27,7 +26,7 @@ def show_3d_surface(x, y, z):
             R[i, j] = X[i, j]**2 + np.sin(Y[i, j])**2
 
     ax.plot_surface(X, Y, R, cmap='rainbow')
-    plt.plot(x,y,z,c='black')
+    plt.plot(x,y,z, linewidth=2, color='black')
     plt.show()
 
 if __name__ == '__main__':

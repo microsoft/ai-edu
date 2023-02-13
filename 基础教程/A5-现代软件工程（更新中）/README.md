@@ -25,10 +25,16 @@
 最佳实践
 
 
+#### 感谢
+
+郭百宁、Lily Sun、程彪、韦青、邹欣、沈园、董航、陈洋、贺秋时、吴淞芮、强红军
+
 
 
 
 #### 关于“木头”
+
+“木头”是一名软件工程师，给自己起了一个网名叫“木头”，为人也是有些木讷，在本书中，“木头”同学将成为所有故事的主角。
 
 本书中有很多关于“木头”的故事，“木头”是一个虚构的人物，但是 TA 所经历的故事都是在真实事件基础上经过微小改编的，只不过故事的原主人公可能是笔者，也可能是笔者的同事或朋友。
 
@@ -61,6 +67,7 @@
 |FTE||
 |Hackathon||
 |Happy Hour||
+|Hire/No Hire||
 |IC - Indiviudal Contributer|个人贡献者（普通员工或群众，区别于管理者）|
 |InfiniBand||
 |Instant Answer|即使应答，是一种具有比较丰富的信息与格式的搜索结果|
@@ -78,6 +85,8 @@
 |PROD Bed||
 |RSDE||
 |Root Cause||
+|re-org||
+|Screening||
 |SDE||
 |Solo||
 |Spot Reward||
@@ -87,7 +96,7 @@
 |NLP||
 |URL||
 |UX - User Experience||
-|UWP|Universal Windows Platform|
+|UWP（Universal Windows Platform）|通用 Windows 平台，但是常指的是的应用|
 |Vendor|
 |XAML||
 |WFH（Working From Home）|在家远程办公|

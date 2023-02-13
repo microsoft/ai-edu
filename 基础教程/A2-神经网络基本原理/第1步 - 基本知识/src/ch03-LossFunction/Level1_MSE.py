@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import LogNorm
 
-file_name = "../../data/ch03.npz"
+file_name = "ch03.npz"
 
 def TargetFunction(x,w,b):
     y = w*x + b
@@ -125,8 +125,7 @@ def show_all_4b(x,y,n,w,b):
 
         
 def show_3d_surface(x,y,m,w,b):
-    fig = plt.figure()
-    ax = Axes3D(fig)
+    fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 
     X = x.reshape(m,1)
     Y = y.reshape(m,1)

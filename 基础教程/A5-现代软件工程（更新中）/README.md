@@ -79,6 +79,7 @@
 |Milestone|里程碑|
 |Org (Orgnazation) | 微软内部划分的一个个大的组织，通常有上百人 |
 |Papera||
+|Pipeline||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
 |Power Platform||
 |Promotion||

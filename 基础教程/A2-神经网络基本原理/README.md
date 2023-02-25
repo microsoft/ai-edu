@@ -56,22 +56,22 @@
 
 |网络结构名称|网络结构图|应用领域|
 |---|----|----|
-|单入<br>单出<br>一层|<img src="img/setup1.png"/>|一元线性回归|
-|多入<br>单出<br>一层|<img src="img/setup2.png"/>|多元线性回归|
-|多入<br>单出<br>一层|<img src="img/BinaryClassifierNN.png"/>|线性二分类<br>|
-|多入<br>多出<br>一层|<img src="img/MultipleClassifierNN.png"/>|线性多分类<br>|
-|单入<br>单出<br>两层|<img src="img/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|
-|多入<br>单出<br>两层|<img src="img/xor_nn.png"/>|非线性二分类|
-|多入<br>多出<br>两层|<img src="img/nn11.png"/>|非线性多分类|
-|多入<br>多出<br>三层|<img src="img/nn3.png"/>|非线性多分类|
-|多层全连接网络|<img src="img/mnist_net.png"/>|非线性多分类|
-|带批归一化层的多层全连接网络|<img src="img/bn_mnist.png"/>|非线性多分类|
-|带丢弃层的多层全连接网络|<img src="img/dropout_net.png"/>|非线性多分类|
-|简单的卷积神经网络|<img src="img/conv_net.png"/>|非线性多分类|
-|复杂的卷积神经网络|<img src="img/mnist_net18.png"/>|非线性多分类|
-|单向循环神经网络|<img src="img/bptt_simple.png"/>|非线性多分类|
-|双向循环神经网络|<img src="img/bi_rnn_net_right.png"/>|非线性多分类|
-|深度循环神经网络|<img src="img/deep_rnn_net.png"/>|非线性多分类|
+|单入<br>单出<br>一层|<img src="./img/setup1.png"/>|一元线性回归|
+|多入<br>单出<br>一层|<img src="./img/setup2.png"/>|多元线性回归|
+|多入<br>单出<br>一层|<img src="./img/BinaryClassifierNN.png"/>|线性二分类<br>|
+|多入<br>多出<br>一层|<img src="./img/MultipleClassifierNN.png"/>|线性多分类<br>|
+|单入<br>单出<br>两层|<img src="./img/nn.png"/>|一元非线性回归/拟合<br>可以拟合任意复杂函数|
+|多入<br>单出<br>两层|<img src="./img/xor_nn.png"/>|非线性二分类|
+|多入<br>多出<br>两层|<img src="./img/nn11.png"/>|非线性多分类|
+|多入<br>多出<br>三层|<img src="./img/nn3.png"/>|非线性多分类|
+|多层全连接网络|<img src="./img/mnist_net.png"/>|非线性多分类|
+|带批归一化层的多层全连接网络|<img src="./img/bn_mnist.png"/>|非线性多分类|
+|带丢弃层的多层全连接网络|<img src="./img/dropout_net.png"/>|非线性多分类|
+|简单的卷积神经网络|<img src="./img/conv_net.png"/>|非线性多分类|
+|复杂的卷积神经网络|<img src="./img/mnist_net18.png"/>|非线性多分类|
+|单向循环神经网络|<img src="./img/bptt_simple.png"/>|非线性多分类|
+|双向循环神经网络|<img src="./img/bi_rnn_net_right.png"/>|非线性多分类|
+|深度循环神经网络|<img src="./img/deep_rnn_net.png"/>|非线性多分类|
 
 ## 写在后面
 

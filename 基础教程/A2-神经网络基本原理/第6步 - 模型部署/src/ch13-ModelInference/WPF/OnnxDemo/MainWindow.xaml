@@ -1,0 +1,20 @@
+﻿<Window x:Class="OnnxDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OnnxDemo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <Grid Width="336" Height="336">
+                <InkCanvas x:Name="inkCanvas" Width="336" Height="336" Background="Black"/>
+            </Grid>
+
+            <TextBlock x:Name="lbResult" FontSize="26" HorizontalAlignment="Center"/>
+
+            <Button x:Name="btnClean" Content="Clean" Click="BtnClean_Click" FontSize="26"/>
+        </StackPanel>
+    </Grid>
+</Window>

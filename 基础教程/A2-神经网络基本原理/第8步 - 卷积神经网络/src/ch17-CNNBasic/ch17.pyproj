@@ -1,0 +1,76 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>5d4fb01a-4f60-4851-8c54-58573e7c39ed</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>Level4_Col2Img_Test.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>ch14</Name>
+    <RootNamespace>ch14</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ExtendedDataReader\MnistImageDataReader.py" />
+    <Compile Include="ExtendedDataReader\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Level0_KnowCNN.py" />
+    <Compile Include="Level4_Col2Img_Test.py" />
+    <Compile Include="Level3_BackwardTrial.py" />
+    <Compile Include="Level5_PoolLayer_Test.py" />
+    <Compile Include="Level4_BackwardTest.py" />
+    <Compile Include="Level2_Img2Col_Test.py" />
+    <Compile Include="Level2_Numba_Test.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MiniFramework\ActivationLayer.py" />
+    <Compile Include="MiniFramework\BatchNormLayer.py" />
+    <Compile Include="MiniFramework\ClassificationLayer.py" />
+    <Compile Include="MiniFramework\DataReader_2_0.py" />
+    <Compile Include="MiniFramework\DropoutLayer.py" />
+    <Compile Include="MiniFramework\EnumDef_6_0.py" />
+    <Compile Include="MiniFramework\FCLayer_2_0.py" />
+    <Compile Include="MiniFramework\HyperParameters_4_2.py" />
+    <Compile Include="MiniFramework\LossFunction_1_1.py" />
+    <Compile Include="MiniFramework\NeuralNet_4_2.py" />
+    <Compile Include="MiniFramework\Optimizer_1_0.py" />
+    <Compile Include="MiniFramework\TrainingHistory_3_0.py" />
+    <Compile Include="MiniFramework\WeightsBias_2_1.py" />
+    <Compile Include="MiniFramework\ConvWeightsBias.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MiniFramework\ConvLayer.py" />
+    <Compile Include="MiniFramework\jit_utility.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MiniFramework\Layer.py" />
+    <Compile Include="MiniFramework\PoolingLayer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MiniFramework\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MiniFramework\" />
+    <Folder Include="ExtendedDataReader\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>

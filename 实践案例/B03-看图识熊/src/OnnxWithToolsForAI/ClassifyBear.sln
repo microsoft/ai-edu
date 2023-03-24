@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifyBear", "ClassifyBear\ClassifyBear.csproj", "{31F98D6A-D7CE-4276-92FD-772F16547F79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{3D9A9F2D-ACB4-44FD-8BE9-10D045B86904}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31F98D6A-D7CE-4276-92FD-772F16547F79}.Debug|x64.ActiveCfg = Debug|x64
+		{31F98D6A-D7CE-4276-92FD-772F16547F79}.Debug|x64.Build.0 = Debug|x64
+		{31F98D6A-D7CE-4276-92FD-772F16547F79}.Release|x64.ActiveCfg = Release|x64
+		{31F98D6A-D7CE-4276-92FD-772F16547F79}.Release|x64.Build.0 = Release|x64
+		{3D9A9F2D-ACB4-44FD-8BE9-10D045B86904}.Debug|x64.ActiveCfg = Debug|x64
+		{3D9A9F2D-ACB4-44FD-8BE9-10D045B86904}.Debug|x64.Build.0 = Debug|x64
+		{3D9A9F2D-ACB4-44FD-8BE9-10D045B86904}.Release|x64.ActiveCfg = Release|x64
+		{3D9A9F2D-ACB4-44FD-8BE9-10D045B86904}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D44CE3F-8CF9-4986-A791-B7731EAA6430}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,7 @@
+if 0 <= m + delta < len(arr) and arr[m + delta] == tn:
+    if delta < 0:
+        high = m - 1
+    else:
+        low = m + 1
+else:
+    return m

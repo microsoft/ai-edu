@@ -51,7 +51,7 @@ def merge_markdown_content(folder_path, file_name):
             # Write the file name as the title of the content, followed by a newline character
             file3.write(file + "\n")
             # Replace any image path text in the content with the new location using re.sub()
-            content1 = re.sub(r"\!\[(.*?)\]\((.*?)\)", r"![\1](file3/\2)", content1)
+            content1 = re.sub(r"img\/\w+\.(JPG|SVG|jpg|svg)", r"![\1](file3/\2)", content1)
             # Write the content to the new file
             file3.write(content1)
 

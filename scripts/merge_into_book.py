@@ -60,7 +60,7 @@ def merge_markdown_files(folder_path, file_name):
             relative_path = os.path.relpath(os.path.abspath(dirpath),current_root_dir)
             # print(f'relative_path {relative_path}')
             # Replace any image path text in the content with the new location using re.sub()
-            content1 = re.sub(r"img\/(\w+\.(JPG|SVG|jpg|svg))", f"{repr(relative_path)[1:-1]}/img/\g<1>", content1)
+            content1 = re.sub(r"img\/(\w+\.(JPG|SVG|jpg|svg|png))", f"{repr(relative_path)[1:-1]}/img/\g<1>", content1)
             # Write the content to the new file
             file3.write(content1+ "\n")
 

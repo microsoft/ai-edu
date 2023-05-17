@@ -47,13 +47,19 @@
 |英文|解释|
 |--|--|
 |AA||
-|Architect||
+|Alogrithm|
+|Architect|
+|Azure||
 |Backlog||
 |Bing Search|必应搜索，微软的全球搜索引擎|
 |Bug||
+|C#|
 |Career Path||
 |Chromium||
+|Cloud|
+|Code|
 |Cortana|微软小娜|
+|Data Structure|
 |Designer||
 |Dev||
 |Dev Lead||
@@ -74,6 +80,8 @@
 |INT Bed||
 |JD - Job Description|职位描述|
 |KA - Knowledge Area|知识领域|
+|Life Cycle|
+|Mac OS|
 |mentor|导师，一个会给一个新员工指派一个导师来帮助 ta 熟悉工作流程。导师可以是领导，但通常是资深的同事。|
 |Microsoft Forms||
 |Milestone|里程碑|
@@ -82,25 +90,36 @@
 |Pipeline||
 |PM（Program Manager）|微软的过程管理职位，过程经理或程序经理|
 |Power Platform||
+|Program|
 |Promotion||
 |PROD Bed||
+|Python|
 |RSDE||
+|Roadmap|
 |Root Cause||
 |re-org||
+|Release|
 |Screening||
 |SDE||
+|Service|
 |Solo||
+|Solution|
 |Spot Reward||
 |Team worker||
+|Testing|
 |Test Bed||
 |Transfer||
 |NLP||
 |URL||
+|Upgrade|产品升级|
 |UX - User Experience||
 |UWP（Universal Windows Platform）|通用 Windows 平台，但是常指的是的应用|
 |Vendor|
+|VS - Visual Studio|
+|VSCode - Visual Studio Code|
 |XAML||
 |WFH（Working From Home）|在家远程办公|
+|Windows 10|
 |Work Life Balance||
 
 我们把参考资料列表放在每一章的开始部分，而不是像通常的做法放在后面，以表示对原著和作者的崇高敬意。

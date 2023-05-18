@@ -51,7 +51,7 @@
 |AA||
 |Alogrithm|
 |Architect|
-|Azure||
+|Azure|微软云服务与产品|
 |Backlog||
 |Bing Search|必应搜索，微软的全球搜索引擎|
 |Bug||

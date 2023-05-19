@@ -44,7 +44,40 @@
 
 
 
-词汇表
+此表中包含在本书中用英文单词表示的词汇，有几种情况：
+
+- 品牌或产品，如 Windows，没必要翻译成中文。
+- 缩写，如 PM，没有准确的中文对应。
+- 语言，如 Python，没有中文对应。
+- 专有名词，如 Bug，中文较长，代码或设计中的缺陷。
+
+本书中的常用英文词汇表
+
+|英文|类型|解释|
+|:-:|-|-|
+|Azure|品牌|微软云服务|
+|Bing|品牌|微软必应搜索引擎|
+|Bug|专有名词|软件开发中的设计或代码缺陷|
+|C#|编程语言|
+|Designer|专有名词|视觉和交互设计师，与“美工”区别较大|
+|DEV|缩写|Developer，开发人员|
+|Dev Lead|专有名词|处于基层开发小组中的组长，与组员有上下级关系|
+|Dev Manager|专有名词|处于基层开发团队中的经理，与团队成员有上下级关系|
+|Feature Team|专有名词|负责软件产品局部功能的小组，包含Dev、Designer、PM|
+|FTE|缩写|Full Time Employee，全职/正式员工|
+|HR|缩写|Human Resource，人力资源|
+|Office|品牌|微软办公套件|
+|PM|缩写|Project/Program/Product Manager，项目/过程/产品经理的统称|
+|Python|编程语言|
+|SDE|缩写|Software Development Engineer，软件开发工程师|
+|Tech Lead|专有名词|处于基层开发小组中的技术负责人，与组员没有上下级关系|
+|Teams|品牌|微软在线会议系统|
+|Vendor|专有名词|合同员工，非正式员工，由合作公司派遣来协助工作|
+|V-Dev|专有名词|有开发技能的合同工|
+|V-Test|专有名词|有测试技能的合同工|
+|VS|缩写|Visual Studio，软件开发工具|
+|VSCode|缩写|Visual Studio Code，软件开发工具|
+
 
 |英文|解释|
 |--|--|

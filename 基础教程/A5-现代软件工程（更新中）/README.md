@@ -64,15 +64,20 @@
 |DEV|缩写|Developer，开发人员|
 |Dev Lead|专有名词|处于基层开发小组中的组长，与组员有上下级关系|
 |Dev Manager|专有名词|处于基层开发团队中的经理，与团队成员有上下级关系|
+|DevOps|专有名词|开发人员项目工作流网站|
 |Feature Team|专有名词|负责软件产品局部功能的小组，包含Dev、Designer、PM|
 |FTE|缩写|Full Time Employee，全职/正式员工|
 |HR|缩写|Human Resource，人力资源|
+|Lead|专有名词|小组领导，通常是 Senior 级别|
+|Manager|专有名词|大组领导或经理，通常是 Principle 级别|
 |ML|缩写|Machine Learning，机器学习|
 |Office|产品名称|微软办公套件|
 |PM|缩写|Project/Program/Product Manager，项目/过程/产品经理的统称|
+|Principle|专有名词|直译没有意义，通常被译为“首席”，如首席工程师|
 |Python|编程语言|
 |SDE|缩写|Software Development Engineer，软件开发工程师|
-|Tech Lead|专有名词|处于基层开发小组中的技术负责人，与组员没有上下级关系|
+|Senior|专有名词|表示职位级别，高级工程师或高级PM|
+|Tech Lead|专有名词|处于基层开发小组中的技术指导（组长），与组员没有上下级关系|
 |Teams|产品名称|微软在线会议系统|
 |Team Worker|专有名词|善于团队合作的人|
 |Vendor|专有名词|合同员工，非正式员工，由合作公司派遣来协助工作|

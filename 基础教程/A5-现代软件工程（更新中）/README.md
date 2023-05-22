@@ -59,6 +59,7 @@
 
 |英文|类型|解释|
 |:-:|-|-|
+|AI|缩写|Artifical Intelligence，人工智能|
 |Azure|产品名称|微软云服务|
 |Bing|产品名称|微软必应搜索引擎|
 |Bug|专有名词|软件开发中的设计或代码缺陷|
@@ -71,6 +72,7 @@
 |DevOps|专有名词|开发人员项目工作流网站|
 |Feature Team|专有名词|负责软件产品局部功能的小组，包含Dev、Designer、PM|
 |FTE|缩写|Full Time Employee，全职/正式员工|
+|GPU|缩写|Graphics Processing Unit，图形处理单元，用于深度学习中的矩阵运算|
 |HR|缩写|Human Resource，人力资源|
 |Lead|专有名词|小组领导，通常是 Senior 级别|
 |Manager|专有名词|大组领导或经理，通常是 Principle 级别|

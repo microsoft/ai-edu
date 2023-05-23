@@ -60,6 +60,7 @@
 |英文|类型|解释|
 |:-:|-|-|
 |AI|缩写|Artifical Intelligence，人工智能|
+|APP|缩写|Application，一般指手机应用程序|
 |Azure|产品名称|微软云服务|
 |Bing|产品名称|微软必应搜索引擎|
 |Bug|专有名词|软件开发中的设计或代码缺陷|

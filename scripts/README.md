@@ -22,7 +22,8 @@ Please install the below tools and make sure they are added to Path.
 - https://pandoc.org/installing.html
 - https://miktex.org/download
 
-To check whether these binaries are available, open your terminal and provide:
+To check whether these binaries are available, open your terminal and type:
+
 ```powershell
 pandoc --version
 pdflatex --version

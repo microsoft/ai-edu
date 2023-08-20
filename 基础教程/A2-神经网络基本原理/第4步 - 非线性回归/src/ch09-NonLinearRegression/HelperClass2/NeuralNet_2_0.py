@@ -27,9 +27,9 @@ class NeuralNet_2_0(object):
         print(self.subfolder)
 
         self.wb1 = WeightsBias_1_0(self.hp.num_input, self.hp.num_hidden, self.hp.init_method, self.hp.eta)
-        self.wb1.InitializeWeights(self.subfolder, False)
+        self.wb1.InitializeWeights(self.subfolder, True)
         self.wb2 = WeightsBias_1_0(self.hp.num_hidden, self.hp.num_output, self.hp.init_method, self.hp.eta)
-        self.wb2.InitializeWeights(self.subfolder, False)
+        self.wb2.InitializeWeights(self.subfolder, True)
 
     def __create_subfolder(self):
         if self.model_name != None:

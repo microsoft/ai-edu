@@ -41,8 +41,9 @@ def DrawThreeCategoryPoints(X1, X2, Y_onehot, xlabel="x1", ylabel="x2", title=No
         else:
             plt.scatter(X1[i], X2[i], color=colors[j], marker=shapes[j], zorder=10)
     #end for
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
+    
+    plt.xlabel("$" + xlabel + "$")
+    plt.ylabel("$" + ylabel + "$")
     if title is not None:
         plt.title(title)
     if show:

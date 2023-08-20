@@ -4,6 +4,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle
+import matplotlib as mpl
+
+mpl.rcParams['font.sans-serif'] = ['SimHei']  
+mpl.rcParams['axes.unicode_minus']=False
 
 # 帮助类，用于记录损失函数值极其对应的权重/迭代次数
 class TrainingHistory_2_0(object):
@@ -37,9 +41,9 @@ class TrainingHistory_2_0(object):
         p2, = axes.plot(self.epoch_seq, self.loss_train)
         p1, = axes.plot(self.epoch_seq, self.loss_val)
         axes.legend([p1,p2], ["validation","train"])
-        axes.set_title("Loss")
-        axes.set_ylabel("loss")
-        axes.set_xlabel("epoch")
+        axes.set_title("验证集损失函数曲线")
+        axes.set_ylabel("损失函数值")
+        axes.set_xlabel("迭代次数")
         if xmin != None or xmax != None or ymin != None or ymax != None:
             axes.axis([xmin, xmax, ymin, ymax])
         
@@ -49,9 +53,9 @@ class TrainingHistory_2_0(object):
         p2, = axes.plot(self.epoch_seq, self.accuracy_train)
         p1, = axes.plot(self.epoch_seq, self.accuracy_val)
         axes.legend([p1,p2], ["validation","train"])
-        axes.set_title("Accuracy")
-        axes.set_ylabel("accuracy")
-        axes.set_xlabel("epoch")
+        axes.set_title("验证集准确率曲线")
+        axes.set_ylabel("准确率")
+        axes.set_xlabel("迭代次数")
         
         title = params.toString()
         plt.suptitle(title)

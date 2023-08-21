@@ -3,6 +3,10 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.rcParams['font.sans-serif'] = ['SimHei']  
+mpl.rcParams['axes.unicode_minus']=False
 
 from HelperClass2.NeuralNet_2_2 import *
 from HelperClass2.Visualizer_1_1 import *
@@ -16,7 +20,7 @@ if __name__ == '__main__':
     dataReader.NormalizeY(NetType.MultipleClassifier, base=1)
 
     fig = plt.figure(figsize=(6,6))
-    DrawThreeCategoryPoints(dataReader.XTrainRaw[:,0], dataReader.XTrainRaw[:,1], dataReader.YTrain, "Source Data")
+    DrawThreeCategoryPoints(dataReader.XTrainRaw[:,0], dataReader.XTrainRaw[:,1], dataReader.YTrain, title="源数据")
     plt.show()
 
     dataReader.NormalizeX()

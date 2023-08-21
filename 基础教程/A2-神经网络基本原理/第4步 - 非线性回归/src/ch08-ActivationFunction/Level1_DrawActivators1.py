@@ -3,6 +3,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 from Activators.Relu import *
 from Activators.Elu import *
@@ -13,6 +14,9 @@ from Activators.Step import *
 from Activators.Tanh import *
 from Activators.BenIdentity import *
 
+mpl.rcParams['font.sans-serif'] = ['SimHei']  
+mpl.rcParams['axes.unicode_minus']=False
+
 def Draw(start,end,func,lable1,lable2):
     z = np.linspace(start, end, 200)
     a = func.forward(z)
@@ -22,12 +26,13 @@ def Draw(start,end,func,lable1,lable2):
     p2, = plt.plot(z,da)
     plt.legend([p1,p2], [lable1, lable2])
     plt.grid()
-    plt.xlabel("input : z")
-    plt.ylabel("output : a")
+    plt.xlabel("输入 : $z$")
+    plt.ylabel("输出 : $a$")
     plt.title(lable1)
     plt.show()
 
 if __name__ == '__main__':
-    Draw(-7,7,CSigmoid(),"Sigmoid Function","Derivative of Sigmoid")
-    Draw(-7,7,CSigmoid(),"Logistic Function","Derivative of Logistic")
-    Draw(-5,5,CStep(0.3),"Step Function","Derivative of Step")
+    Draw(-7,7,CSigmoid(),"Sigmoid 函数","导数")
+    Draw(-7,7,CSigmoid(),"Logistic 函数","导数")
+    Draw(-7,7,CTanh(),"Tanh 函数","导数")
+    Draw(-5,5,CStep(0.3),"Step 函数","导数")
